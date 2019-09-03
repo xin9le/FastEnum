@@ -24,6 +24,11 @@ namespace FastEnum.Tests
 
 
         [Fact]
+        public void IsFlags()
+            => FastEnum<SByteEnum>.IsFlags.Should().Be(false);
+
+
+        [Fact]
         public void Values()
         {
             var expect = new[]

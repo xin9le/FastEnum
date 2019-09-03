@@ -1,4 +1,8 @@
-﻿namespace FastEnum.Tests
+﻿using System;
+
+
+
+namespace FastEnum.Tests
 {
     public enum SByteEnum : sbyte
     {
@@ -61,5 +65,15 @@
         MinValue = ulong.MinValue,
         Zero = 0,
         MaxValue = ulong.MaxValue,
+    }
+
+
+    [Flags]
+    public enum Flags
+    {
+        Zero = 0,
+        One = 1,
+        Two = 2,
+        Four = 4,
     }
 }

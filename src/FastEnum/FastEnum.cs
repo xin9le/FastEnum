@@ -88,214 +88,214 @@ namespace FastEnum
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static T Parse(string name)
-            => TryParseInternal(name, out var value)
-            ? value
-            : throw new ArgumentException(nameof(name));
+        public static T Parse(string value)
+            => TryParseInternal(value, out var result)
+            ? result
+            : throw new ArgumentException(nameof(value));
 
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// The return value indicates whether the conversion succeeded.
         /// </summary>
-        /// <param name="name"></param>
         /// <param name="value"></param>
+        /// <param name="result"></param>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse(string name, out T value)
-            => TryParseInternal(name, out value);
+        public static bool TryParse(string value, out T result)
+            => TryParseInternal(value, out result);
 
 
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// The return value indicates whether the conversion succeeded.
         /// </summary>
-        /// <param name="name"></param>
         /// <param name="value"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        private static bool TryParseInternal(string name, out T value)
+        private static bool TryParseInternal(string value, out T result)
         {
             //--- check by name
-            if (MemberByName.TryGetValue(name, out var member))
+            if (MemberByName.TryGetValue(value, out var member))
             {
-                value = member.Value;
+                result = member.Value;
                 return true;
             }
 
             //--- check by value
-            value = default;  // for GetTypeCode()
-            return value.GetTypeCode() switch
+            result = default;  // for GetTypeCode()
+            return result.GetTypeCode() switch
             {
-                TypeCode.SByte => TryParseSByte(name, out value),
-                TypeCode.Byte => TryParseByte(name, out value),
-                TypeCode.Int16 => TryParseInt16(name, out value),
-                TypeCode.UInt16 => TryParseUInt16(name, out value),
-                TypeCode.Int32 => TryParseInt32(name, out value),
-                TypeCode.UInt32 => TryParseUInt32(name, out value),
-                TypeCode.Int64 => TryParseInt64(name, out value),
-                TypeCode.UInt64 => TryParseUInt64(name, out value),
+                TypeCode.SByte => TryParseSByte(value, out result),
+                TypeCode.Byte => TryParseByte(value, out result),
+                TypeCode.Int16 => TryParseInt16(value, out result),
+                TypeCode.UInt16 => TryParseUInt16(value, out result),
+                TypeCode.Int32 => TryParseInt32(value, out result),
+                TypeCode.UInt32 => TryParseUInt32(value, out result),
+                TypeCode.Int64 => TryParseInt64(value, out result),
+                TypeCode.UInt64 => TryParseUInt64(value, out result),
                 _ => false,  // could not convert
             };
 
 
             #region Local Functions
-            static bool TryParseByte(string name, out T value)
+            static bool TryParseByte(string value, out T result)
             {
-                if (byte.TryParse(name, out var n))
+                if (byte.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, byte>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, byte>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseSByte(string name, out T value)
+            static bool TryParseSByte(string value, out T result)
             {
-                if (sbyte.TryParse(name, out var n))
+                if (sbyte.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, sbyte>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, sbyte>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseInt16(string name, out T value)
+            static bool TryParseInt16(string value, out T result)
             {
-                if (short.TryParse(name, out var n))
+                if (short.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, short>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, short>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseUInt16(string name, out T value)
+            static bool TryParseUInt16(string value, out T result)
             {
-                if (ushort.TryParse(name, out var n))
+                if (ushort.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, ushort>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, ushort>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseInt32(string name, out T value)
+            static bool TryParseInt32(string value, out T result)
             {
-                if (int.TryParse(name, out var n))
+                if (int.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, int>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, int>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseUInt32(string name, out T value)
+            static bool TryParseUInt32(string value, out T result)
             {
-                if (uint.TryParse(name, out var n))
+                if (uint.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, uint>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, uint>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseInt64(string name, out T value)
+            static bool TryParseInt64(string value, out T result)
             {
-                if (long.TryParse(name, out var n))
+                if (long.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, long>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, long>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
 
 
-            static bool TryParseUInt64(string name, out T value)
+            static bool TryParseUInt64(string value, out T result)
             {
-                if (ulong.TryParse(name, out var n))
+                if (ulong.TryParse(value, out var converted))
                 {
                     for (var i = 0; i < Values.Length; i++)
                     {
-                        var v = Values[i];
-                        ref var temp = ref Unsafe.As<T, ulong>(ref v);
-                        if (n == temp)
+                        var defined = Values[i];
+                        ref var temp = ref Unsafe.As<T, ulong>(ref defined);
+                        if (converted == temp)
                         {
-                            value = v;
+                            result = defined;
                             return true;
                         }
                     }
                 }
-                value = default;
+                result = default;
                 return false;
             }
             #endregion

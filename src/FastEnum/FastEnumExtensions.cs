@@ -47,57 +47,57 @@ namespace FastEnum
             {
                 case TypeCode.Byte:
                     {
-                        var v = Unsafe.As<T, byte>(ref value);
-                        var f = Unsafe.As<T, byte>(ref flags);
+                        ref var v = ref Unsafe.As<T, byte>(ref value);
+                        ref var f = ref Unsafe.As<T, byte>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.SByte:
                     {
-                        var v = Unsafe.As<T, sbyte>(ref value);
-                        var f = Unsafe.As<T, sbyte>(ref flags);
+                        ref var v = ref Unsafe.As<T, sbyte>(ref value);
+                        ref var f = ref Unsafe.As<T, sbyte>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.Int16:
                     {
-                        var v = Unsafe.As<T, short>(ref value);
-                        var f = Unsafe.As<T, short>(ref flags);
+                        ref var v = ref Unsafe.As<T, short>(ref value);
+                        ref var f = ref Unsafe.As<T, short>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.UInt16:
                     {
-                        var v = Unsafe.As<T, ushort>(ref value);
-                        var f = Unsafe.As<T, ushort>(ref flags);
+                        ref var v = ref Unsafe.As<T, ushort>(ref value);
+                        ref var f = ref Unsafe.As<T, ushort>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.Int32:
                     {
-                        var v = Unsafe.As<T, int>(ref value);
-                        var f = Unsafe.As<T, int>(ref flags);
+                        ref var v = ref Unsafe.As<T, int>(ref value);
+                        ref var f = ref Unsafe.As<T, int>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.UInt32:
                     {
-                        var v = Unsafe.As<T, uint>(ref value);
-                        var f = Unsafe.As<T, uint>(ref flags);
+                        ref var v = ref Unsafe.As<T, uint>(ref value);
+                        ref var f = ref Unsafe.As<T, uint>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.Int64:
                     {
-                        var v = Unsafe.As<T, long>(ref value);
-                        var f = Unsafe.As<T, long>(ref flags);
+                        ref var v = ref Unsafe.As<T, long>(ref value);
+                        ref var f = ref Unsafe.As<T, long>(ref flags);
                         return (v & f) == f;
                     }
 
                 case TypeCode.UInt64:
                     {
-                        var v = Unsafe.As<T, ulong>(ref value);
-                        var f = Unsafe.As<T, ulong>(ref flags);
+                        ref var v = ref Unsafe.As<T, ulong>(ref value);
+                        ref var f = ref Unsafe.As<T, ulong>(ref flags);
                         return (v & f) == f;
                     }
 

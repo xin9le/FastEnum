@@ -9,18 +9,12 @@ namespace FastEnum.Tests
     {
         [Fact]
         public void Type()
-        {
-            var t = FastEnum<SByteEnum>.Type;
-            t.Should().Be<SByteEnum>();
-        }
+            => FastEnum<SByteEnum>.Type.Should().Be<SByteEnum>();
 
 
         [Fact]
         public void UnderlyingType()
-        {
-            var t = FastEnum<SByteEnum>.UnderlyingType;
-            t.Should().Be<sbyte>();
-        }
+            => FastEnum<SByteEnum>.UnderlyingType.Should().Be<sbyte>();
 
 
         [Fact]

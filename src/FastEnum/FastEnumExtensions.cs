@@ -7,7 +7,7 @@ namespace FastEnum
 {
     public static class FastEnumExtensions
     {
-        public static FastEnum<T>.Member ToMember<T>(this T value)
+        public static Member<T> ToMember<T>(this T value)
             where T : Enum
             => FastEnum<T>.MemberByValue[value];
 

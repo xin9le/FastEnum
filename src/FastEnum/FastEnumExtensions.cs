@@ -45,17 +45,17 @@ namespace FastEnum
         {
             switch (value.GetTypeCode())
             {
-                case TypeCode.Byte:
-                    {
-                        ref var v = ref Unsafe.As<T, byte>(ref value);
-                        ref var f = ref Unsafe.As<T, byte>(ref flags);
-                        return (v & f) == f;
-                    }
-
                 case TypeCode.SByte:
                     {
                         ref var v = ref Unsafe.As<T, sbyte>(ref value);
                         ref var f = ref Unsafe.As<T, sbyte>(ref flags);
+                        return (v & f) == f;
+                    }
+
+                case TypeCode.Byte:
+                    {
+                        ref var v = ref Unsafe.As<T, byte>(ref value);
+                        ref var f = ref Unsafe.As<T, byte>(ref flags);
                         return (v & f) == f;
                     }
 

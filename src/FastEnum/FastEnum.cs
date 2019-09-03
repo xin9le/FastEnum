@@ -147,366 +147,189 @@ namespace FastEnum
                 TypeCode.UInt32 => TryParseUInt32(value, ignoreCase, out result),
                 TypeCode.Int64 => TryParseInt64(value, ignoreCase, out result),
                 TypeCode.UInt64 => TryParseUInt64(value, ignoreCase, out result),
-                _ => false,  // could not convert
+                _ => throw new InvalidOperationException(),
             };
 
 
             #region Local Functions
             static bool TryParseSByte(string value, bool ignoreCase, out T result)
             {
-                var isParsed = sbyte.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (sbyte.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<sbyte, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, sbyte>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseByte(string value, bool ignoreCase, out T result)
             {
-                var isParsed = byte.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (byte.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<byte, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, byte>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseInt16(string value, bool ignoreCase, out T result)
             {
-                var isParsed = short.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (short.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<short, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, short>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseUInt16(string value, bool ignoreCase, out T result)
             {
-                var isParsed = ushort.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (ushort.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<ushort, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, ushort>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseInt32(string value, bool ignoreCase, out T result)
             {
-                var isParsed = int.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (int.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<int, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, int>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseUInt32(string value, bool ignoreCase, out T result)
             {
-                var isParsed = uint.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (uint.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<uint, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, uint>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseInt64(string value, bool ignoreCase, out T result)
             {
-                var isParsed = long.TryParse(value, out var converted);
-                for (var i = 0; i < Members.Length; i++)
+                //--- check by value if convert succeeded
+                if (long.TryParse(value, out var converted))
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
+                    ref var @enum = ref Unsafe.As<long, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
                     {
-                        ref var temp = ref Unsafe.As<T, long>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
-                    if (ignoreCase)
-                    {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = @enum;
+                        return true;
                     }
                     else
                     {
-                        if (value == member.Name)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
+                        result = default;
+                        return false;
                     }
                 }
-
-                //--- could not converted
-                result = default;
-                return false;
+                return TryParseName(value, ignoreCase, out result);
             }
 
 
             static bool TryParseUInt64(string value, bool ignoreCase, out T result)
             {
-                var isParsed = ulong.TryParse(value, out var converted);
+                //--- check by value if convert succeeded
+                if (ulong.TryParse(value, out var converted))
+                {
+                    ref var @enum = ref Unsafe.As<ulong, T>(ref converted);
+                    if (MemberByValue.ContainsKey(@enum))
+                    {
+                        result = @enum;
+                        return true;
+                    }
+                    else
+                    {
+                        result = default;
+                        return false;
+                    }
+                }
+                return TryParseName(value, ignoreCase, out result);
+            }
+
+
+            static bool TryParseName(string value, bool ignoreCase, out T result)
+            {
                 for (var i = 0; i < Members.Length; i++)
                 {
                     var member = Members[i];
                     var defined = member.Value;
-
-                    //--- check by value
-                    if (isParsed)
-                    {
-                        ref var temp = ref Unsafe.As<T, ulong>(ref defined);
-                        if (converted == temp)
-                        {
-                            //--- matched
-                            result = defined;
-                            return true;
-                        }
-                    }
-
-                    //--- check by name
                     if (ignoreCase)
                     {
                         if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
                         {
-                            //--- matched
                             result = defined;
                             return true;
                         }
@@ -515,14 +338,12 @@ namespace FastEnum
                     {
                         if (value == member.Name)
                         {
-                            //--- matched
                             result = defined;
                             return true;
                         }
                     }
                 }
 
-                //--- could not converted
                 result = default;
                 return false;
             }

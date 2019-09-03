@@ -66,7 +66,7 @@ namespace FastEnum
             Type = typeof(T);
             UnderlyingType = Enum.GetUnderlyingType(Type);
             Values = Enum.GetValues(Type) as T[];
-            Names = Enum.GetNames(Type);
+            Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
             Members = Values.Select(x => new Member<T>(x)).ToArray();
             MemberByValue = Members.ToDictionary(x => x.Value);
             MemberByName = Members.ToDictionary(x => x.Name);

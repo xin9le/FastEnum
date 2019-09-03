@@ -28,6 +28,12 @@ namespace FastEnum
 
 
         /// <summary>
+        /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+        /// </summary>
+        public static bool IsFlags { get; }
+
+
+        /// <summary>
         /// Retrieves an array of the values of the constants in a specified enumeration.
         /// </summary>
         public static T[] Values { get; }
@@ -60,6 +66,7 @@ namespace FastEnum
         {
             Type = typeof(T);
             UnderlyingType = Enum.GetUnderlyingType(Type);
+            IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
             Values = Enum.GetValues(Type) as T[];
             Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
             Members = Values.Select(x => new Member<T>(x)).ToArray();

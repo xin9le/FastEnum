@@ -41,7 +41,7 @@ namespace FastEnum
         {
             var type = typeof(T);
             this.Value = value;
-            this.Name = Enum.GetName(type, value);
+            this.Name = string.Intern(Enum.GetName(type, value));
             this.FieldInfo = type.GetField(this.Name);
         }
         #endregion

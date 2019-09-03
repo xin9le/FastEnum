@@ -49,12 +49,6 @@ namespace FastEnum
         /// Retrieves a member information of the constants in a specified enumeration by value.
         /// </summary>
         internal static Dictionary<T, Member<T>> MemberByValue { get; }
-
-
-        /// <summary>
-        /// Retrieves a member information of the constants in a specified enumeration by name.
-        /// </summary>
-        private static Dictionary<string, Member<T>> MemberByName { get; }
         #endregion
 
 
@@ -70,7 +64,6 @@ namespace FastEnum
             Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
             Members = Values.Select(x => new Member<T>(x)).ToArray();
             MemberByValue = Members.ToDictionary(x => x.Value);
-            MemberByName = Members.ToDictionary(x => x.Name);
         }
         #endregion
 

@@ -69,10 +69,7 @@ namespace FastEnum
                 var f = Unsafe.As<T, ulong>(ref flags);
                 return (v & f) == f;
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+            throw new InvalidOperationException();
         }
     }
 }

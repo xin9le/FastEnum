@@ -90,8 +90,8 @@ namespace FastEnum
         /// <param name="name"></param>
         /// <returns></returns>
         public static T Parse(string name)
-            => MemberByName.TryGetValue(name, out var member)
-            ? member.Value
+            => TryParse(name, out var value)
+            ? value
             : throw new ArgumentException(nameof(name));
 
 

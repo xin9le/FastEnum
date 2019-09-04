@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Flags;
+using TEnum = FastEnum.Tests.Models.Flags;
 
 
 
-namespace FastEnum.Tests
+namespace FastEnum.Tests.Cases
 {
     public class FlagsTest
     {

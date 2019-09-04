@@ -2,7 +2,7 @@
 
 
 
-namespace FastEnum.Tests
+namespace FastEnum.Tests.Models
 {
     public enum SByteEnum : sbyte
     {

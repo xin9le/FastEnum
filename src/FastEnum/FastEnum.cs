@@ -332,10 +332,11 @@ namespace FastEnum
         {
             if (ignoreCase)
             {
-                for (var i = 0; i < Members.Length; i++)
+                var left = name.AsSpan();
+                foreach (var member in Members)
                 {
-                    var member = Members[i];
-                    if (string.Compare(name, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
+                    var right = member.Name.AsSpan();
+                    if (left.Equals(right, StringComparison.OrdinalIgnoreCase))
                     {
                         result = member.Value;
                         return true;

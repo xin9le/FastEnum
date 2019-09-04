@@ -86,6 +86,15 @@ namespace FastEnum
 
 
         /// <summary>
+        /// Returns an indication whether a constant with a specified name exists in a specified enumeration.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsDefined(string name)
+            => TryParseName(name, false, out _);
+
+
+        /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// </summary>
         /// <param name="value"></param>
@@ -325,36 +334,45 @@ namespace FastEnum
                 }
                 return TryParseName(value, ignoreCase, out result);
             }
+            #endregion
+        }
 
 
-            static bool TryParseName(string value, bool ignoreCase, out T result)
+        /// <summary>
+        /// Converts the string representation of the name of one or more enumerated constants to an equivalent enumerated object.
+        /// A parameter specifies whether the operation is case-sensitive.
+        /// The return value indicates whether the conversion succeeded.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ignoreCase"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private static bool TryParseName(string name, bool ignoreCase, out T result)
+        {
+            for (var i = 0; i < Members.Length; i++)
             {
-                for (var i = 0; i < Members.Length; i++)
+                var member = Members[i];
+                var defined = member.Value;
+                if (ignoreCase)
                 {
-                    var member = Members[i];
-                    var defined = member.Value;
-                    if (ignoreCase)
+                    if (string.Compare(name, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        if (string.Compare(value, member.Name, StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            result = defined;
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (value == member.Name)
-                        {
-                            result = defined;
-                            return true;
-                        }
+                        result = defined;
+                        return true;
                     }
                 }
-
-                result = default;
-                return false;
+                else
+                {
+                    if (name == member.Name)
+                    {
+                        result = defined;
+                        return true;
+                    }
+                }
             }
-            #endregion
+
+            result = default;
+            return false;
         }
         #endregion
     }

@@ -58,9 +58,9 @@ namespace FastEnum.Tests.Cases
         {
             var expect = new[]
             {
-                new Member<TEnum>(TEnum.Zero),
-                new Member<TEnum>(TEnum.MaxValue),
-                new Member<TEnum>(TEnum.MinValue),
+                new Member<TEnum>(nameof(TEnum.Zero)),
+                new Member<TEnum>(nameof(TEnum.MaxValue)),
+                new Member<TEnum>(nameof(TEnum.MinValue)),
             };
             var actual = FastEnum<TEnum>.Members;
 
@@ -83,6 +83,12 @@ namespace FastEnum.Tests.Cases
             FastEnum<TEnum>.IsDefined(TEnum.Zero).Should().BeTrue();
             FastEnum<TEnum>.IsDefined(TEnum.MaxValue).Should().BeTrue();
             FastEnum<TEnum>.IsDefined((TEnum)123).Should().BeFalse();
+
+            FastEnum<TEnum>.IsDefined(nameof(TEnum.MinValue)).Should().BeTrue();
+            FastEnum<TEnum>.IsDefined(nameof(TEnum.Zero)).Should().BeTrue();
+            FastEnum<TEnum>.IsDefined(nameof(TEnum.MaxValue)).Should().BeTrue();
+            FastEnum<TEnum>.IsDefined("123").Should().BeFalse();
+            FastEnum<TEnum>.IsDefined("zero").Should().BeFalse();
         }
 
 

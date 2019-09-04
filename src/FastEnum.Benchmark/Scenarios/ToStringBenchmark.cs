@@ -37,7 +37,7 @@ namespace FastEnum.Benchmark.Scenarios
         {
             for (var i = 0; i < LoopCount; i++)
             {
-                _ = _ = Value.ToName();
+                _ = Value.ToName();
             }
         }
     }

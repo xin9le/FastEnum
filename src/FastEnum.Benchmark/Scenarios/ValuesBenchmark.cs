@@ -24,11 +24,9 @@ namespace FastEnum.Benchmark.Scenarios
         [Benchmark(Baseline = true)]
         public void NetCore()
         {
-            int _;
             for (var i = 0; i < LoopCount; i++)
             {
-                var a = Enum.GetValues(typeof(Fruits));
-                _ = a.Length;
+                _ = Enum.GetValues(typeof(Fruits));
             }
         }
 
@@ -36,11 +34,9 @@ namespace FastEnum.Benchmark.Scenarios
         [Benchmark]
         public void FastEnum()
         {
-            int _;
             for (var i = 0; i < LoopCount; i++)
             {
-                var a = FastEnum<Fruits>.Values;
-                _ = a.Length;
+                _ = FastEnum<Fruits>.Values;
             }
         }
     }

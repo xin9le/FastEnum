@@ -76,7 +76,7 @@ namespace FastEnum
             Values = Enum.GetValues(Type) as T[];
             Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
             Members = Names.Select(x => new Member<T>(x)).ToArray();
-            MemberByValue = Members.ToDictionary(x => x.Value);
+            MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToDictionary(x => x.Value);
             MemberByName = Members.ToDictionary(x => x.Name);
         }
         #endregion

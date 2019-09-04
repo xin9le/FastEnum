@@ -36,13 +36,13 @@ namespace FastEnum
         /// <summary>
         /// Creates instance.
         /// </summary>
-        /// <param name="value"></param>
-        internal Member(T value)
+        /// <param name="name"></param>
+        internal Member(string name)
         {
             var type = typeof(T);
-            this.Value = value;
-            this.Name = string.Intern(Enum.GetName(type, value));
-            this.FieldInfo = type.GetField(this.Name);
+            this.Value = (T)Enum.Parse(type, name);
+            this.Name = name;
+            this.FieldInfo = type.GetField(name);
         }
         #endregion
     }

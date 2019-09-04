@@ -69,7 +69,7 @@ namespace FastEnum
             IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
             Values = Enum.GetValues(Type) as T[];
             Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
-            Members = Values.Select(x => new Member<T>(x)).ToArray();
+            Members = Names.Select(x => new Member<T>(x)).ToArray();
             MemberByValue = Members.ToDictionary(x => x.Value);
         }
         #endregion

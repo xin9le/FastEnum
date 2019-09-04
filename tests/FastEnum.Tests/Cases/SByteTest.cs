@@ -88,7 +88,7 @@ namespace FastEnum.Tests.Cases
             FastEnum<TEnum>.IsDefined(nameof(TEnum.Zero)).Should().BeTrue();
             FastEnum<TEnum>.IsDefined(nameof(TEnum.MaxValue)).Should().BeTrue();
             FastEnum<TEnum>.IsDefined("123").Should().BeFalse();
-            FastEnum<TEnum>.IsDefined("zero").Should().BeFalse();
+            FastEnum<TEnum>.IsDefined("minvalue").Should().BeFalse();
         }
 
 

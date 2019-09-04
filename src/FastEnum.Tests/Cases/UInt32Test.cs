@@ -211,16 +211,5 @@ namespace FastEnum.Tests.Cases
             TEnum.MinValue.ToName().Should().Be(nameof(TEnum.MinValue));
             TEnum.MaxValue.ToName().Should().Be(nameof(TEnum.MaxValue));
         }
-
-
-        [Fact]
-        public void Has()
-        {
-            TEnum.MinValue.Has(TEnum.MinValue).Should().BeTrue();
-            TEnum.MaxValue.Has(TEnum.MaxValue).Should().BeTrue();
-
-            TEnum.MinValue.Has(TEnum.MaxValue).Should().BeFalse();
-            TEnum.MaxValue.Has(TEnum.MinValue).Should().BeTrue();
-        }
     }
 }

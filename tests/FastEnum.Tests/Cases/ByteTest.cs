@@ -31,7 +31,6 @@ namespace FastEnum.Tests.Cases
             var expect = new[]
             {
                 TUnderlying.MinValue,
-                default,
                 TUnderlying.MaxValue,
             };
             var actual = FastEnum<TEnum>.Values;
@@ -45,7 +44,6 @@ namespace FastEnum.Tests.Cases
             var expect = new[]
             {
                 nameof(TEnum.MinValue),
-                nameof(TEnum.Zero),
                 nameof(TEnum.MaxValue),
             };
             var actual = FastEnum<TEnum>.Names;
@@ -58,9 +56,8 @@ namespace FastEnum.Tests.Cases
         {
             var expect = new[]
             {
-                new Member<TEnum>(nameof(TEnum.Zero)),
-                new Member<TEnum>(nameof(TEnum.MaxValue)),
                 new Member<TEnum>(nameof(TEnum.MinValue)),
+                new Member<TEnum>(nameof(TEnum.MaxValue)),
             };
             var actual = FastEnum<TEnum>.Members;
 
@@ -80,15 +77,13 @@ namespace FastEnum.Tests.Cases
         public void IsDefined()
         {
             FastEnum<TEnum>.IsDefined(TEnum.MinValue).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(TEnum.Zero).Should().BeTrue();
             FastEnum<TEnum>.IsDefined(TEnum.MaxValue).Should().BeTrue();
             FastEnum<TEnum>.IsDefined((TEnum)123).Should().BeFalse();
 
             FastEnum<TEnum>.IsDefined(nameof(TEnum.MinValue)).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(nameof(TEnum.Zero)).Should().BeTrue();
             FastEnum<TEnum>.IsDefined(nameof(TEnum.MaxValue)).Should().BeTrue();
             FastEnum<TEnum>.IsDefined("123").Should().BeFalse();
-            FastEnum<TEnum>.IsDefined("zero").Should().BeFalse();
+            FastEnum<TEnum>.IsDefined("minvalue").Should().BeFalse();
         }
 
 
@@ -98,7 +93,6 @@ namespace FastEnum.Tests.Cases
             var parameters = new[]
             {
                 (value: TEnum.MinValue, name: nameof(TEnum.MinValue), valueString: ((TUnderlying)TEnum.MinValue).ToString()),
-                (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero).ToString()),
                 (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString()),
             };
             foreach (var x in parameters)
@@ -120,7 +114,6 @@ namespace FastEnum.Tests.Cases
             var parameters = new[]
             {
                 (value: TEnum.MinValue, name: nameof(TEnum.MinValue), valueString: ((TUnderlying)TEnum.MinValue).ToString()),
-                (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero).ToString()),
                 (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString()),
             };
             foreach (var x in parameters)
@@ -142,7 +135,6 @@ namespace FastEnum.Tests.Cases
             var parameters = new[]
             {
                 (value: TEnum.MinValue, name: nameof(TEnum.MinValue), valueString: ((TUnderlying)TEnum.MinValue).ToString()),
-                (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero).ToString()),
                 (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString()),
             };
             foreach (var x in parameters)
@@ -172,7 +164,6 @@ namespace FastEnum.Tests.Cases
             var parameters = new[]
             {
                 (value: TEnum.MinValue, name: nameof(TEnum.MinValue), valueString: ((TUnderlying)TEnum.MinValue).ToString()),
-                (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero).ToString()),
                 (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString()),
             };
             foreach (var x in parameters)
@@ -218,7 +209,6 @@ namespace FastEnum.Tests.Cases
         public void ToName()
         {
             TEnum.MinValue.ToName().Should().Be(nameof(TEnum.MinValue));
-            TEnum.Zero.ToName().Should().Be(nameof(TEnum.Zero));
             TEnum.MaxValue.ToName().Should().Be(nameof(TEnum.MaxValue));
         }
 
@@ -226,15 +216,11 @@ namespace FastEnum.Tests.Cases
         [Fact]
         public void Has()
         {
-            //--- true
             TEnum.MinValue.Has(TEnum.MinValue).Should().BeTrue();
-            TEnum.Zero.Has(TEnum.Zero).Should().BeTrue();
             TEnum.MaxValue.Has(TEnum.MaxValue).Should().BeTrue();
-            TEnum.MinValue.Has(TEnum.Zero).Should().BeTrue();
 
-            //--- false
-            TEnum.Zero.Has(TEnum.MaxValue).Should().BeFalse();
-            TEnum.MaxValue.Has(TEnum.MinValue).Should().BeFalse();
+            TEnum.MinValue.Has(TEnum.MaxValue).Should().BeFalse();
+            TEnum.MaxValue.Has(TEnum.MinValue).Should().BeTrue();
         }
     }
 }

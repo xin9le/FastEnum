@@ -15,7 +15,6 @@ namespace FastEnum.Tests.Models
     public enum ByteEnum : byte
     {
         MinValue = byte.MinValue,
-        Zero = 0,
         MaxValue = byte.MaxValue,
     }
 
@@ -31,7 +30,6 @@ namespace FastEnum.Tests.Models
     public enum UInt16Enum : ushort
     {
         MinValue = ushort.MinValue,
-        Zero = 0,
         MaxValue = ushort.MaxValue,
     }
 
@@ -47,7 +45,6 @@ namespace FastEnum.Tests.Models
     public enum UInt32Enum : uint
     {
         MinValue = uint.MinValue,
-        Zero = 0,
         MaxValue = uint.MaxValue,
     }
 
@@ -63,7 +60,6 @@ namespace FastEnum.Tests.Models
     public enum UInt64Enum : ulong
     {
         MinValue = ulong.MinValue,
-        Zero = 0,
         MaxValue = ulong.MaxValue,
     }
 

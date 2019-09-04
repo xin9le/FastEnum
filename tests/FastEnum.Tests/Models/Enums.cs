@@ -72,4 +72,12 @@ namespace FastEnum.Tests.Models
         Two = 2,
         Four = 4,
     }
+
+
+    public enum CornerCase : byte
+    {
+        MinValue = byte.MinValue,  // Name is different, but value is same as other member.
+        Zero = 0,
+        MaxValue = byte.MaxValue,
+    }
 }

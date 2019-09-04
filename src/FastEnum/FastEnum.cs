@@ -161,8 +161,7 @@ namespace FastEnum
         /// <returns></returns>
         private static bool TryParseInternal(string value, bool ignoreCase, out T result)
         {
-            result = default;  // for GetTypeCode()
-            return result.GetTypeCode() switch
+            return Type.GetTypeCode(Type) switch
             {
                 TypeCode.SByte => TryParseSByte(value, ignoreCase, out result),
                 TypeCode.Byte => TryParseByte(value, ignoreCase, out result),

@@ -43,7 +43,8 @@ namespace FastEnum
         public static bool Has<T>(this T value, T flags)
             where T : Enum
         {
-            switch (value.GetTypeCode())
+            var code = Type.GetTypeCode(FastEnum<T>.Type);
+            switch (code)
             {
                 case TypeCode.SByte:
                     {

@@ -14,6 +14,8 @@ namespace FastEnum.Benchmark
             {
                 typeof(ValuesBenchmark),
                 typeof(NamesBenchmark),
+                typeof(TryParseBenchmark),
+                typeof(TryParseIgnoreCaseBenchmark),
             });
             switcher.Run(args, new BenchmarkConfig());
         }

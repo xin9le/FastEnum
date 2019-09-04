@@ -15,7 +15,7 @@ namespace FastEnum.Benchmark.Scenarios
         public void Setup()
         {
             var a = Enum.GetNames(typeof(Fruits));
-            var b = FastEnum<Fruits>.Values;
+            var b = FastEnum<Fruits>.Names;
             _ = a.Length;
             _ = b.Length;
         }

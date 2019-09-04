@@ -82,7 +82,7 @@ namespace FastEnum
         #endregion
 
 
-        #region Utilities
+        #region IsDefined
         /// <summary>
         /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
         /// </summary>
@@ -99,8 +99,10 @@ namespace FastEnum
         /// <returns></returns>
         public static bool IsDefined(string name)
             => TryParseName(name, false, out _);
+        #endregion
 
 
+        #region Parse / TryParse
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
         /// </summary>

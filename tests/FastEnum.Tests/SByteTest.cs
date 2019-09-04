@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
+using TEnum = FastEnum.Tests.SByteEnum;
+using TUnderlying = System.SByte;
 
 
 
@@ -9,17 +11,17 @@ namespace FastEnum.Tests
     {
         [Fact]
         public void Type()
-            => FastEnum<SByteEnum>.Type.Should().Be<SByteEnum>();
+            => FastEnum<TEnum>.Type.Should().Be<TEnum>();
 
 
         [Fact]
         public void UnderlyingType()
-            => FastEnum<SByteEnum>.UnderlyingType.Should().Be<sbyte>();
+            => FastEnum<TEnum>.UnderlyingType.Should().Be<TUnderlying>();
 
 
         [Fact]
         public void IsFlags()
-            => FastEnum<SByteEnum>.IsFlags.Should().Be(false);
+            => FastEnum<TEnum>.IsFlags.Should().Be(false);
 
 
         [Fact]
@@ -27,11 +29,11 @@ namespace FastEnum.Tests
         {
             var expect = new[]
             {
-                sbyte.MinValue,
+                TUnderlying.MinValue,
                 default,
-                sbyte.MaxValue,
+                TUnderlying.MaxValue,
             };
-            var actual = FastEnum<SByteEnum>.Values;
+            var actual = FastEnum<TEnum>.Values;
             actual.Should().BeEquivalentTo(expect);
         }
 
@@ -41,11 +43,11 @@ namespace FastEnum.Tests
         {
             var expect = new[]
             {
-                nameof(SByteEnum.MinValue),
-                nameof(SByteEnum.Zero),
-                nameof(SByteEnum.MaxValue),
+                nameof(TEnum.MinValue),
+                nameof(TEnum.Zero),
+                nameof(TEnum.MaxValue),
             };
-            var actual = FastEnum<SByteEnum>.Names;
+            var actual = FastEnum<TEnum>.Names;
             actual.Should().BeEquivalentTo(expect);
         }
 
@@ -55,11 +57,11 @@ namespace FastEnum.Tests
         {
             var expect = new[]
             {
-                new Member<SByteEnum>(SByteEnum.Zero),
-                new Member<SByteEnum>(SByteEnum.MaxValue),
-                new Member<SByteEnum>(SByteEnum.MinValue),
+                new Member<TEnum>(TEnum.Zero),
+                new Member<TEnum>(TEnum.MaxValue),
+                new Member<TEnum>(TEnum.MinValue),
             };
-            var actual = FastEnum<SByteEnum>.Members;
+            var actual = FastEnum<TEnum>.Members;
 
             actual.Length.Should().Be(expect.Length);
             for (var i = 0; i < expect.Length; i++)

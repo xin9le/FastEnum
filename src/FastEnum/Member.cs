@@ -41,10 +41,12 @@ namespace FastEnum
         /// <param name="name"></param>
         internal Member(string name)
         {
-            var type = typeof(T);
-            this.Value = (T)Enum.Parse(type, name);
+            this.Value
+                = Enum.TryParse<T>(name, out var value)
+                ? value
+                : throw new ArgumentException(nameof(name));
             this.Name = name;
-            this.FieldInfo = type.GetField(name);
+            this.FieldInfo = typeof(T).GetField(name);
         }
         #endregion
 

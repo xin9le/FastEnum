@@ -13,9 +13,8 @@ namespace FastEnum.Benchmark
             var switcher = new BenchmarkSwitcher(new[]
             {
                 typeof(ValuesBenchmark),
+                typeof(NamesBenchmark),
             });
-
-            args = new[] { "0" };
             switcher.Run(args, new BenchmarkConfig());
         }
     }

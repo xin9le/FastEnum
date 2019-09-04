@@ -161,24 +161,26 @@ namespace FastEnum
         /// <returns></returns>
         private static bool TryParseInternal(string value, bool ignoreCase, out T result)
         {
+            if (!StartsNumber(value[0]))
+                return TryParseName(value, ignoreCase, out result);
+
             return Type.GetTypeCode(Type) switch
             {
-                TypeCode.SByte => TryParseSByte(value, ignoreCase, out result),
-                TypeCode.Byte => TryParseByte(value, ignoreCase, out result),
-                TypeCode.Int16 => TryParseInt16(value, ignoreCase, out result),
-                TypeCode.UInt16 => TryParseUInt16(value, ignoreCase, out result),
-                TypeCode.Int32 => TryParseInt32(value, ignoreCase, out result),
-                TypeCode.UInt32 => TryParseUInt32(value, ignoreCase, out result),
-                TypeCode.Int64 => TryParseInt64(value, ignoreCase, out result),
-                TypeCode.UInt64 => TryParseUInt64(value, ignoreCase, out result),
+                TypeCode.SByte => TryParseSByte(value, out result),
+                TypeCode.Byte => TryParseByte(value, out result),
+                TypeCode.Int16 => TryParseInt16(value, out result),
+                TypeCode.UInt16 => TryParseUInt16(value, out result),
+                TypeCode.Int32 => TryParseInt32(value, out result),
+                TypeCode.UInt32 => TryParseUInt32(value, out result),
+                TypeCode.Int64 => TryParseInt64(value, out result),
+                TypeCode.UInt64 => TryParseUInt64(value, out result),
                 _ => throw new InvalidOperationException(),
             };
 
 
             #region Local Functions
-            static bool TryParseSByte(string value, bool ignoreCase, out T result)
+            static bool TryParseSByte(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (sbyte.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<sbyte, T>(ref converted);
@@ -187,19 +189,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseByte(string value, bool ignoreCase, out T result)
+            static bool TryParseByte(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (byte.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<byte, T>(ref converted);
@@ -208,19 +205,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseInt16(string value, bool ignoreCase, out T result)
+            static bool TryParseInt16(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (short.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<short, T>(ref converted);
@@ -229,19 +221,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseUInt16(string value, bool ignoreCase, out T result)
+            static bool TryParseUInt16(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (ushort.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<ushort, T>(ref converted);
@@ -250,19 +237,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseInt32(string value, bool ignoreCase, out T result)
+            static bool TryParseInt32(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (int.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<int, T>(ref converted);
@@ -271,19 +253,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseUInt32(string value, bool ignoreCase, out T result)
+            static bool TryParseUInt32(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (uint.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<uint, T>(ref converted);
@@ -292,19 +269,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseInt64(string value, bool ignoreCase, out T result)
+            static bool TryParseInt64(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (long.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<long, T>(ref converted);
@@ -313,19 +285,14 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
 
 
-            static bool TryParseUInt64(string value, bool ignoreCase, out T result)
+            static bool TryParseUInt64(string value, out T result)
             {
-                //--- check by value if convert succeeded
                 if (ulong.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<ulong, T>(ref converted);
@@ -334,16 +301,22 @@ namespace FastEnum
                         result = @enum;
                         return true;
                     }
-                    else
-                    {
-                        result = default;
-                        return false;
-                    }
                 }
-                return TryParseName(value, ignoreCase, out result);
+                result = default;
+                return false;
             }
             #endregion
         }
+
+
+        /// <summary>
+        /// Checks whether specified charactor is number.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool StartsNumber(char c)
+            => char.IsDigit(c) || c == '-' || c == '+';
 
 
         /// <summary>
@@ -380,6 +353,6 @@ namespace FastEnum
             result = default;
             return false;
         }
-        #endregion
+       #endregion
     }
 }

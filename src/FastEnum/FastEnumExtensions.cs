@@ -18,7 +18,7 @@ namespace FastEnum
         /// <param name="value"></param>
         /// <returns></returns>
         public static Member<T> ToMember<T>(this T value)
-            where T : Enum
+            where T : struct, Enum
             => FastEnum<T>.MemberByValue[value];
 
 
@@ -29,7 +29,7 @@ namespace FastEnum
         /// <param name="value"></param>
         /// <returns></returns>
         public static string ToName<T>(this T value)
-            where T : Enum
+            where T : struct, Enum
             => value.ToMember().Name;
 
 
@@ -41,7 +41,7 @@ namespace FastEnum
         /// <param name="flags">An enumeration value.</param>
         /// <returns>true if the bit field or bit fields that are set in flag are also set in the current instance; otherwise, false.</returns>
         public static bool Has<T>(this T value, T flags)
-            where T : Enum
+            where T : struct, Enum
         {
             var code = Type.GetTypeCode(FastEnum<T>.Type);
             switch (code)

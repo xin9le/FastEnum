@@ -12,7 +12,7 @@ namespace FastEnum
     /// </summary>
     /// <typeparam name="T">Enum type</typeparam>
     public sealed class Member<T>
-        where T : Enum
+        where T : struct, Enum
     {
         #region Properties
         /// <summary>

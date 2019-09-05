@@ -11,6 +11,7 @@ namespace FastEnum.Internals
     /// </summary>
     internal static class EnumerableExtensions
     {
+        #region FrozenDictionary
         /// <summary>
         /// Converts to <see cref="FrozenDictionary{TKey, TValue}"/>.
         /// </summary>
@@ -34,8 +35,10 @@ namespace FastEnum.Internals
         /// <returns></returns>
         public static FrozenDictionary<TKey, TValue> ToFrozenDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
             => FrozenDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+        #endregion
 
 
+        #region String Specialized FrozenDictionary
         /// <summary>
         /// Converts to <see cref="StringKeyFrozenDictionary{TValue}"/>.
         /// </summary>
@@ -57,6 +60,32 @@ namespace FastEnum.Internals
         /// <returns></returns>
         public static StringKeyFrozenDictionary<TValue> ToStringKeyFrozenDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
             => StringKeyFrozenDictionary<TValue>.Create(source, keySelector, valueSelector);
+        #endregion
+
+
+        #region Int Specialized FrozenDictionary
+        /// <summary>
+        /// Converts to <see cref="IntKeyFrozenDictionary{TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        public static IntKeyFrozenDictionary<TValue> ToIntKeyFrozenDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, int> keySelector)
+            => IntKeyFrozenDictionary<TValue>.Create(source, keySelector);
+
+
+        /// <summary>
+        /// Converts to <see cref="IntKeyFrozenDictionary{TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="valueSelector"></param>
+        /// <returns></returns>
+        public static IntKeyFrozenDictionary<TValue> ToIntKeyFrozenDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
+            => IntKeyFrozenDictionary<TValue>.Create(source, keySelector, valueSelector);
+        #endregion
 
 
         /// <summary>

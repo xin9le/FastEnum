@@ -20,6 +20,7 @@ namespace FastEnum.Benchmark
                 typeof(IsDefinedNameBenchmark),
                 typeof(ToStringBenchmark),
                 typeof(DictionaryEnumKeyBenchmark),
+                typeof(DictionaryIntKeyBenchmark),
                 typeof(DictionaryStringKeyBenchmark),
                 typeof(EnumMemberAttributeBenchmark),
             });

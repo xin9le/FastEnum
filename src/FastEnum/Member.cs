@@ -43,7 +43,7 @@ namespace FastEnum
         /// <summary>
         /// Gets the labels of specified enumration member.
         /// </summary>
-        internal FrozenDictionary<int, string> Labels { get; }
+        internal IntKeyFrozenDictionary<string> Labels { get; }
         #endregion
 
 
@@ -61,7 +61,7 @@ namespace FastEnum
             this.Name = name;
             this.FieldInfo = typeof(T).GetField(name);
             this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
-            this.Labels = this.FieldInfo.GetCustomAttributes<LabelAttribute>().ToFrozenDictionary(x => x.Index, x => x.Value);
+            this.Labels = this.FieldInfo.GetCustomAttributes<LabelAttribute>().ToIntKeyFrozenDictionary(x => x.Index, x => x.Value);
         }
         #endregion
 

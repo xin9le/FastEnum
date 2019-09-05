@@ -34,6 +34,17 @@ namespace FastEnum
 
 
         /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined<T>(this T value)
+            where T : struct, Enum
+            => FastEnum<T>.IsDefined(value);
+
+
+        /// <summary>
         /// Gets the <see cref="EnumMemberAttribute.Value"/> of specified enumration member.
         /// </summary>
         /// <typeparam name="T"></typeparam>

@@ -8,38 +8,24 @@ namespace FastEnum.Benchmark.Scenarios
 {
     public class ToStringBenchmark
     {
-        private const int LoopCount = 10000;
         private const Fruits Value = Fruits.Pineapple;
 
 
         [GlobalSetup]
         public void Setup()
         {
-            var a = Enum.GetNames(typeof(Fruits));
-            var b = FastEnum<Fruits>.Values;
-            _ = a.Length;
-            _ = b.Length;
+            _ = Enum.GetNames(typeof(Fruits));
+            _ = FastEnum<Fruits>.Values;
         }
 
 
         [Benchmark(Baseline = true)]
-        public void NetCore()
-        {
-            for (var i = 0; i < LoopCount; i++)
-            {
-                _ = Value.ToString();
-            }
-        }
+        public string NetCore()
+            => Value.ToString();
 
 
         [Benchmark]
         public void FastEnum()
-        {
-            for (var i = 0; i < LoopCount; i++)
-            {
-                _ = Value.ToName();
-            }
-        }
+            => Value.ToName();
     }
-
 }

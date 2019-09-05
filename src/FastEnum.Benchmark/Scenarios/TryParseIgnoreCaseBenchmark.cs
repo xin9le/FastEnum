@@ -8,7 +8,6 @@ namespace FastEnum.Benchmark.Scenarios
 {
     public class TryParseIgnoreCaseBenchmark
     {
-        private const int LoopCount = 10000;
         private const string Value = nameof(Fruits.WaterMelon);
         //private const string Value = "10";
 
@@ -16,31 +15,18 @@ namespace FastEnum.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            var a = Enum.GetNames(typeof(Fruits));
-            var b = FastEnum<Fruits>.Values;
-            _ = a.Length;
-            _ = b.Length;
+            _ = Enum.GetNames(typeof(Fruits));
+            _ = FastEnum<Fruits>.Values;
         }
 
 
         [Benchmark(Baseline = true)]
-        public void NetCore()
-        {
-            for (var i = 0; i < LoopCount; i++)
-            {
-                _ = Enum.TryParse<Fruits>(Value, true, out var _);
-            }
-        }
+        public bool NetCore()
+            => Enum.TryParse<Fruits>(Value, true, out _);
 
 
         [Benchmark]
-        public void FastEnum()
-        {
-            for (var i = 0; i < LoopCount; i++)
-            {
-                _ = FastEnum<Fruits>.TryParse(Value, true, out var _);
-            }
-        }
+        public bool FastEnum()
+            => FastEnum<Fruits>.TryParse(Value, true, out _);
     }
-
 }

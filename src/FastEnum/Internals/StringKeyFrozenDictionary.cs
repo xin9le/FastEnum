@@ -38,7 +38,7 @@ namespace FastEnum.Internals
         /// <param name="loadFactor"></param>
         private StringKeyFrozenDictionary(int bucketSize, float loadFactor)
         {
-            this.Buckets = new Entry[bucketSize];
+            this.Buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
             this.LoadFactor = loadFactor;
         }
         #endregion

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using FastEnum.Internals;
 
 
 
@@ -54,13 +54,13 @@ namespace FastEnum
         /// <summary>
         /// Retrieves a member information of the constants in a specified enumeration by value.
         /// </summary>
-        internal static Dictionary<T, Member<T>> MemberByValue { get; }
+        internal static FrozenDictionary<T, Member<T>> MemberByValue { get; }
 
 
         /// <summary>
         /// Retrieves a member information of the constants in a specified enumeration by name.
         /// </summary>
-        private static Dictionary<string, Member<T>> MemberByName { get; }
+        private static StringKeyFrozenDictionary<Member<T>> MemberByName { get; }
         #endregion
 
 
@@ -76,8 +76,8 @@ namespace FastEnum
             Values = Enum.GetValues(Type) as T[];
             Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
             Members = Names.Select(x => new Member<T>(x)).ToArray();
-            MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToDictionary(x => x.Value);
-            MemberByName = Members.ToDictionary(x => x.Name);
+            MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
+            MemberByName = Members.ToStringKeyFrozenDictionary(x => x.Name);
         }
         #endregion
 
@@ -354,6 +354,6 @@ namespace FastEnum
             result = default;
             return false;
         }
-       #endregion
+        #endregion
     }
 }

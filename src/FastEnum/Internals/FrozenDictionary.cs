@@ -106,7 +106,7 @@ namespace FastEnum.Internals
                     while (e != null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
-                        AddToBuckets(nextBucket, key, newEntry, default, out resultingValue);
+                        AddToBuckets(nextBucket, key, newEntry, default, out _);
                         e = e.Next;
                     }
                 }

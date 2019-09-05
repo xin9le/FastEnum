@@ -38,10 +38,19 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
+        /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetEnumMemberValue<T>(this T value)
+        public static string GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
             where T : struct, Enum
-            => value.ToMember().EnumMemberAttribute?.Value;
+        {
+            var attr = value.ToMember().EnumMemberAttribute;
+            if (attr != null)
+                return attr.Value;
+
+            return throwIfNotFound
+                ? throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.")
+                : default(string);
+        }
 
 
         /// <summary>
@@ -49,9 +58,18 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
+        /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetLabel<T>(this T value, int index = 0)
+        public static string GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
-            => value.ToMember().Labels.GetValueOrDefault(index);
+        {
+            var labels = value.ToMember().Labels;
+            if (labels.TryGetValue(index, out var label))
+                return label;
+
+            return throwIfNotFound
+                ? throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.")
+                : default(string);
+        }
     }
 }

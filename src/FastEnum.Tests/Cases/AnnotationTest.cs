@@ -36,7 +36,11 @@ namespace FastEnum.Tests.Cases
         {
             TEnum.Zero.GetEnumMemberValue().Should().Be("_zero_");
             TEnum.One.GetEnumMemberValue().Should().BeNull();
-            TEnum.Two.GetEnumMemberValue().Should().BeNull();
+            TEnum.Two.GetEnumMemberValue(throwIfNotFound: false).Should().BeNull();
+            FluentActions
+                .Invoking(() => TEnum.Two.GetEnumMemberValue(throwIfNotFound: true))
+                .Should()
+                .Throw<NotFoundException>();
         }
 
 
@@ -49,7 +53,11 @@ namespace FastEnum.Tests.Cases
             TEnum.One.GetLabel(0).Should().Be("いち");
             TEnum.One.GetLabel(1).Should().Be("壱");
 
-            TEnum.Two.GetLabel(0).Should().BeNull();
+            TEnum.Two.GetLabel(0, throwIfNotFound: false).Should().BeNull();
+            FluentActions
+                .Invoking(() => TEnum.Two.GetLabel(0, throwIfNotFound: true))
+                .Should()
+                .Throw<NotFoundException>();
         }
     }
 }

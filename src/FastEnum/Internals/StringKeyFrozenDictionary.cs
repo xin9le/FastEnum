@@ -275,9 +275,14 @@ namespace FastEnum.Internals
         {
             var hash = key.GetHashCode();
             var index = hash & this.Buckets.Length - 1;
-            var entry = this.Buckets[index];
+            if ((uint)index >= (uint)this.Buckets.Length)
+            {
+                // ↑↑ optimize range check
+                // https://ufcpp.net/blog/2018/12/arrayindex/
+                goto NotFound;
+            }
 
-            var next = entry;
+            var next = this.Buckets[index];
             while (next != null)
             {
                 if (next.Key == key)
@@ -288,6 +293,7 @@ namespace FastEnum.Internals
                 next = next.Next;
             }
 
+            NotFound:
             value = default;
             return false;
         }

@@ -24,8 +24,9 @@ namespace FastEnum.Benchmark.Scenarios
         [Benchmark(Baseline = true)]
         public string NetCore()
         {
-            var name = Value.ToString();
-            var info = typeof(Fruits).GetField(name);
+            var type = typeof(Fruits);
+            var name = Enum.GetName(type, Value);
+            var info = type.GetField(name);
             var attr = info.GetCustomAttribute<EnumMemberAttribute>();
             return attr?.Value;
         }

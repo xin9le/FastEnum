@@ -1,8 +1,14 @@
-﻿namespace FastEnum.Benchmark.Models
+﻿using System.Runtime.Serialization;
+
+
+
+namespace FastEnum.Benchmark.Models
 {
     public enum Fruits : byte
     {
         Unknown = 0,
+
+        [EnumMember(Value = "🍎")]
         Apple,
         Banana,
         Peach,

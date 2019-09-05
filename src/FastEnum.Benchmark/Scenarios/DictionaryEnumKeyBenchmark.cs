@@ -9,7 +9,7 @@ using FastEnum.Internals;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class EnumKeyDictionaryBenchmark
+    public class DictionaryEnumKeyBenchmark
     {
         private const Fruits LookupKey = Fruits.Pear;
 

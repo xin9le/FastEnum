@@ -9,7 +9,7 @@ using FastEnum.Internals;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class StringKeyDictionaryBenchmark
+    public class DictionaryStringKeyBenchmark
     {
         private const string LookupKey = nameof(Fruits.Apple);
 

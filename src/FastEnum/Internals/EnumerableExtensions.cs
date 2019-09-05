@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace FastEnum.Internals
 {
+    /// <summary>
+    /// Provides <see cref="IEnumerable{T}"/> extension methods.
+    /// </summary>
     internal static class EnumerableExtensions
     {
         /// <summary>
@@ -31,6 +34,29 @@ namespace FastEnum.Internals
         /// <returns></returns>
         public static FrozenDictionary<TKey, TValue> ToFrozenDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
             => FrozenDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+
+
+        /// <summary>
+        /// Converts to <see cref="StringKeyFrozenDictionary{TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        public static StringKeyFrozenDictionary<TValue> ToStringKeyFrozenDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
+            => StringKeyFrozenDictionary<TValue>.Create(source, keySelector);
+
+
+        /// <summary>
+        /// Converts to <see cref="StringKeyFrozenDictionary{TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="valueSelector"></param>
+        /// <returns></returns>
+        public static StringKeyFrozenDictionary<TValue> ToStringKeyFrozenDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+            => StringKeyFrozenDictionary<TValue>.Create(source, keySelector, valueSelector);
 
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 
 
@@ -27,9 +28,15 @@ namespace FastEnum
 
 
         /// <summary>
-        /// Gets the <see cref="FieldInfo"/> of specified enumration member.
+        /// Gets the <see cref="System.Reflection.FieldInfo"/> of specified enumration member.
         /// </summary>
         public FieldInfo FieldInfo { get; }
+
+
+        /// <summary>
+        /// Gets the <see cref="System.Runtime.Serialization.EnumMemberAttribute"/> of specified enumration member.
+        /// </summary>
+        public EnumMemberAttribute EnumMemberAttribute { get; }
         #endregion
 
 
@@ -46,6 +53,7 @@ namespace FastEnum
                 : throw new ArgumentException(nameof(name));
             this.Name = name;
             this.FieldInfo = typeof(T).GetField(name);
+            this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
         }
         #endregion
 

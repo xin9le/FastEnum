@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 
 
@@ -67,7 +68,10 @@ namespace FastEnum.Tests.Models
     [Flags]
     public enum Flags
     {
+        [EnumMember(Value = "_zero_")]
         Zero = 0,
+
+        [EnumMember]
         One = 1,
         Two = 2,
         Four = 4,

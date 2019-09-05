@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 
 
@@ -30,5 +31,16 @@ namespace FastEnum
         public static string ToName<T>(this T value)
             where T : struct, Enum
             => value.ToMember().Name;
+
+
+        /// <summary>
+        /// Gets the <see cref="EnumMemberAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetEnumMemberValue<T>(this T value)
+            where T : struct, Enum
+            => value.ToMember().EnumMemberAttribute?.Value;
     }
 }

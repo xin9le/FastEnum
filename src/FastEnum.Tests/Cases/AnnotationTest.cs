@@ -6,7 +6,7 @@ using TEnum = FastEnum.Tests.Models.Flags;
 
 namespace FastEnum.Tests.Cases
 {
-    public class FlagsTest
+    public class AnnotationTest
     {
         [Fact]
         public void IsFlags()

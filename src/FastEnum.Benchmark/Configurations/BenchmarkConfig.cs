@@ -15,7 +15,7 @@ namespace FastEnum.Benchmark.Configurations
             this.Add(MarkdownExporter.GitHub);
             this.Add(DefaultConfig.Instance);
             this.Add(MemoryDiagnoser.Default);
-            this.Add(StatisticColumn.AllStatistics);
+            //this.Add(StatisticColumn.AllStatistics);
             this.Add(Job.ShortRun);
         }
     }

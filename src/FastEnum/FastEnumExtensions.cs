@@ -42,5 +42,16 @@ namespace FastEnum
         public static string GetEnumMemberValue<T>(this T value)
             where T : struct, Enum
             => value.ToMember().EnumMemberAttribute?.Value;
+
+
+        /// <summary>
+        /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetLabel<T>(this T value, int index = 0)
+            where T : struct, Enum
+            => value.ToMember().Labels.GetValueOrDefault(index);
     }
 }

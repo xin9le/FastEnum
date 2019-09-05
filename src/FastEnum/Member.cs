@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using FastEnum.Internals;
 
 
 
@@ -37,6 +38,12 @@ namespace FastEnum
         /// Gets the <see cref="System.Runtime.Serialization.EnumMemberAttribute"/> of specified enumration member.
         /// </summary>
         public EnumMemberAttribute EnumMemberAttribute { get; }
+
+
+        /// <summary>
+        /// Gets the labels of specified enumration member.
+        /// </summary>
+        internal FrozenDictionary<int, string> Labels { get; }
         #endregion
 
 
@@ -54,6 +61,7 @@ namespace FastEnum
             this.Name = name;
             this.FieldInfo = typeof(T).GetField(name);
             this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
+            this.Labels = this.FieldInfo.GetCustomAttributes<LabelAttribute>().ToFrozenDictionary(x => x.Index, x => x.Value);
         }
         #endregion
 

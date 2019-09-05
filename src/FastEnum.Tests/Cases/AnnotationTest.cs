@@ -38,5 +38,18 @@ namespace FastEnum.Tests.Cases
             TEnum.One.GetEnumMemberValue().Should().BeNull();
             TEnum.Two.GetEnumMemberValue().Should().BeNull();
         }
+
+
+        [Fact]
+        public void GetLabel()
+        {
+            TEnum.Zero.GetLabel(0).Should().Be("ぜろ");
+            TEnum.Zero.GetLabel(1).Should().Be("零");
+
+            TEnum.One.GetLabel(0).Should().Be("いち");
+            TEnum.One.GetLabel(1).Should().Be("壱");
+
+            TEnum.Two.GetLabel(0).Should().BeNull();
+        }
     }
 }

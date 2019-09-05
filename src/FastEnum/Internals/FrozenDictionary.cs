@@ -131,7 +131,7 @@ namespace FastEnum.Internals
             //--- please pass 'key + newEntry' or 'key + value'.
             static bool AddToBuckets(Entry[] buckets, TKey newKey, Entry newEntry, TValue value, out TValue resultingValue)
             {
-                var hash = newEntry?.Hash ?? newKey.GetHashCode();
+                var hash = newEntry?.Hash ?? EqualityComparer<TKey>.Default.GetHashCode(newKey);
                 var index = hash & (buckets.Length - 1);
                 if (buckets[index] == null)
                 {
@@ -272,7 +272,7 @@ namespace FastEnum.Internals
         /// <returns>true if the object that implements the <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an element that has the specified key; otherwise, false.</returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
-            var hash = key.GetHashCode();
+            var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
             var index = hash & this.Buckets.Length - 1;
             var entry = this.Buckets[index];
 

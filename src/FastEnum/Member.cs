@@ -59,75 +59,11 @@ namespace FastEnum
         {
             #region IEqualityComparer implementations
             public bool Equals(Member<T> x, Member<T> y)
-            {
-                var left = x.Value;
-                var right = y.Value;
-                switch (left.GetTypeCode())
-                {
-                    case TypeCode.SByte:
-                        {
-                            ref var l = ref Unsafe.As<T, sbyte>(ref left);
-                            ref var r = ref Unsafe.As<T, sbyte>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.Byte:
-                        {
-                            ref var l = ref Unsafe.As<T, byte>(ref left);
-                            ref var r = ref Unsafe.As<T, byte>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.Int16:
-                        {
-                            ref var l = ref Unsafe.As<T, short>(ref left);
-                            ref var r = ref Unsafe.As<T, short>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.UInt16:
-                        {
-                            ref var l = ref Unsafe.As<T, ushort>(ref left);
-                            ref var r = ref Unsafe.As<T, ushort>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.Int32:
-                        {
-                            ref var l = ref Unsafe.As<T, int>(ref left);
-                            ref var r = ref Unsafe.As<T, int>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.UInt32:
-                        {
-                            ref var l = ref Unsafe.As<T, uint>(ref left);
-                            ref var r = ref Unsafe.As<T, uint>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.Int64:
-                        {
-                            ref var l = ref Unsafe.As<T, long>(ref left);
-                            ref var r = ref Unsafe.As<T, long>(ref right);
-                            return l == r;
-                        }
-
-                    case TypeCode.UInt64:
-                        {
-                            ref var l = ref Unsafe.As<T, ulong>(ref left);
-                            ref var r = ref Unsafe.As<T, ulong>(ref right);
-                            return l == r;
-                        }
-
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
+                => EqualityComparer<T>.Default.Equals(x.Value, y.Value);
 
 
             public int GetHashCode(Member<T> obj)
-                => obj.Value.GetHashCode();
+                => EqualityComparer<T>.Default.GetHashCode(obj.Value);
             #endregion
         }
         #endregion

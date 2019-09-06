@@ -14,6 +14,11 @@ namespace FastEnum
     public static class FastEnum<T>
         where T : struct, Enum
     {
+        #region Constants
+        private const string IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
+        #endregion
+
+
         #region Properties
         /// <summary>
         /// Returns the type of the specified enumeration.
@@ -90,6 +95,134 @@ namespace FastEnum
         /// <returns></returns>
         public static bool IsDefined(T value)
             => MemberByValue.ContainsKey(value);
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(sbyte value)
+        {
+            if (UnderlyingType == typeof(sbyte))
+            {
+                ref var @enum = ref Unsafe.As<sbyte, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(byte value)
+        {
+            if (UnderlyingType == typeof(byte))
+            {
+                ref var @enum = ref Unsafe.As<byte, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(short value)
+        {
+            if (UnderlyingType == typeof(short))
+            {
+                ref var @enum = ref Unsafe.As<short, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(ushort value)
+        {
+            if (UnderlyingType == typeof(ushort))
+            {
+                ref var @enum = ref Unsafe.As<ushort, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(int value)
+        {
+            if (UnderlyingType == typeof(int))
+            {
+                ref var @enum = ref Unsafe.As<int, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(uint value)
+        {
+            if (UnderlyingType == typeof(uint))
+            {
+                ref var @enum = ref Unsafe.As<uint, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(long value)
+        {
+            if (UnderlyingType == typeof(long))
+            {
+                ref var @enum = ref Unsafe.As<long, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
+
+
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDefined(ulong value)
+        {
+            if (UnderlyingType == typeof(ulong))
+            {
+                ref var @enum = ref Unsafe.As<ulong, T>(ref value);
+                return IsDefined(@enum);
+            }
+            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+        }
 
 
         /// <summary>

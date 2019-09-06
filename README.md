@@ -1,6 +1,8 @@
 # FastEnum
 FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum`.
 
+[![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
+
 
 
 # Performance

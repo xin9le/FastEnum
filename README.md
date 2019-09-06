@@ -141,7 +141,7 @@ var value = attr.Value;  // _apple_
 FastEnum provides the `LabelAttribute` that allows multiple text annotation for each enumeration member.
 
 ```cs
-enum Fruits
+enum Company
 {
     [Label("Apple, Inc.")]
     [Label("AAPL", 1)]
@@ -149,8 +149,8 @@ enum Fruits
 }
 
 //--- FastEnum
-var label_0 = Fruits.Apple.GetLabel();   // Apple, Inc.
-var label_1 = Fruits.Apple.GetLabel(1);  // AAPL
+var label_0 = Company.Apple.GetLabel();   // Apple, Inc.
+var label_1 = Company.Apple.GetLabel(1);  // AAPL
 
 //--- .NET
 Not supported.

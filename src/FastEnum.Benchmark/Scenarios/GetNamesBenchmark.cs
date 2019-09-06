@@ -6,7 +6,7 @@ using FastEnum.Benchmark.Models;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class NamesBenchmark
+    public class GetNamesBenchmark
     {
         [GlobalSetup]
         public void Setup()

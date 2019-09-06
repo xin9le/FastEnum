@@ -12,8 +12,8 @@ namespace FastEnum.Benchmark
         {
             var switcher = new BenchmarkSwitcher(new[]
             {
-                typeof(ValuesBenchmark),
-                typeof(NamesBenchmark),
+                typeof(GetValuesBenchmark),
+                typeof(GetNamesBenchmark),
                 typeof(TryParseBenchmark),
                 typeof(TryParseIgnoreCaseBenchmark),
                 typeof(IsDefinedByteBenchmark),

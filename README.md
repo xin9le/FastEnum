@@ -24,7 +24,7 @@ Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical 
 Simple to use like following, you don't confuse. The biggest limitation of this library is that it only provides a generics version, however almost cases covered.
 
 
-## Get values
+### Get values
 
 ```cs
 //--- FastEnum
@@ -35,7 +35,7 @@ var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
 ```
 
 
-## Get names
+### Get names
 
 ```cs
 //--- FastEnum
@@ -47,7 +47,7 @@ var names = Enum.GetNames(typeof(Fruits));
 
 
 
-## Convert to name
+### Convert to name
 
 ```cs
 //--- FastEnum
@@ -59,7 +59,7 @@ var name = Enum.GetName(typeof(Fruits), Fruits.Apple);
 ```
 
 
-## Check whether value is defined
+### Check whether value is defined
 
 ```cs
 //--- FastEnum
@@ -75,7 +75,7 @@ var defined = Enum.IsDefined(typeof(Fruits), "Apple");
 ```
 
 
-## Parse / TryParse
+### Parse / TryParse
 
 ```cs
 //--- FastEnum
@@ -102,7 +102,7 @@ var ok = Enum.TryParse(typeof(Fruits), "123", out var value);
 ```
 
 
-## Get field member information
+### Get field member information
 
 ```cs
 //--- FastEnum
@@ -114,7 +114,7 @@ Not supported.
 
 
 
-## Get `EnumMemberAttribute.Value`
+### Get `EnumMemberAttribute.Value`
 
 ```cs
 enum Fruits
@@ -136,7 +136,7 @@ var value = attr.Value;  // _apple_
 
 
 
-## Get label
+### Get label
 
 FastEnum provides the `LabelAttribute` that allows multiple text annotation for each enumeration member.
 

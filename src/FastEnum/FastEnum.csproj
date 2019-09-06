@@ -4,6 +4,22 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>8.0</LangVersion>
         <Nullable>disable</Nullable>
+        <!-- NuGet -->
+        <IsPackable>true</IsPackable>
+        <PackageId>FastEnum</PackageId>
+        <Version>1.0.0.0</Version>
+        <Description>The fastest enum utilities for C#/.NET. Provided methods are all achieved zero allocation and faster than System.Enum.</Description>
+        <PackageProjectUrl>https://github.com/xin9le/FastEnum</PackageProjectUrl>
+        <PackageIconUrl></PackageIconUrl>
+        <PackageTags>Enum, Utility</PackageTags>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <Company />
+        <Authors>xin9le</Authors>
+        <Copyright>Copyright© xin9le, All rights reserved.</Copyright>
+        <PackageReleaseNotes />
     </PropertyGroup>
 
     <ItemGroup>

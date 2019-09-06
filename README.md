@@ -119,19 +119,19 @@ Not supported.
 ```cs
 enum Fruits
 {
-    [EnumMember(Value = "🍎")]
+    [EnumMember(Value = "_apple_")]
     Apple = 0,
 }
 
 //--- FastEnum
-var value = Fruits.Apple.GetEnumMemberValue();  // 🍎
+var value = Fruits.Apple.GetEnumMemberValue();  // _apple_
 
 //--- .NET
 var type = typeof(Fruits);
 var name = Enum.GetName(type, Fruits.Apple);
 var info = type.GetField(name);
 var attr = info.GetCustomAttribute<EnumMemberAttribute>();
-var value = attr.Value;  // 🍎
+var value = attr.Value;  // _apple_
 ```
 
 

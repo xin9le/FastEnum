@@ -1,6 +1,8 @@
 # FastEnum
 FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum`.
 
+[![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
+
 
 
 # Performance
@@ -141,7 +143,7 @@ var value = attr.Value;  // _apple_
 FastEnum provides the `LabelAttribute` that allows multiple text annotation for each enumeration member.
 
 ```cs
-enum Fruits
+enum Company
 {
     [Label("Apple, Inc.")]
     [Label("AAPL", 1)]
@@ -149,8 +151,8 @@ enum Fruits
 }
 
 //--- FastEnum
-var label_0 = Fruits.Apple.GetLabel();   // Apple, Inc.
-var label_1 = Fruits.Apple.GetLabel(1);  // AAPL
+var label_0 = Company.Apple.GetLabel();   // Apple, Inc.
+var label_1 = Company.Apple.GetLabel(1);  // AAPL
 
 //--- .NET
 Not supported.

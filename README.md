@@ -1,5 +1,5 @@
 # FastEnum
-FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easier to use than `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum`.
+FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum`.
 
 
 

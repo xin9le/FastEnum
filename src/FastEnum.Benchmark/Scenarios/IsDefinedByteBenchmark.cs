@@ -6,9 +6,9 @@ using FastEnum.Benchmark.Models;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class IsDefinedValueBenchmark
+    public class IsDefinedByteBenchmark
     {
-        private const Fruits Value = Fruits.Pineapple;
+        private const byte Value = (byte)Fruits.Cherry;
 
 
         [GlobalSetup]

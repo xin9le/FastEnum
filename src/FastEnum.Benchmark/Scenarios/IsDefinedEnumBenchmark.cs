@@ -6,9 +6,9 @@ using FastEnum.Benchmark.Models;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class IsDefinedNameBenchmark
+    public class IsDefinedEnumBenchmark
     {
-        private const string Value = nameof(Fruits.Pineapple);
+        private const Fruits Value = Fruits.Pineapple;
 
 
         [GlobalSetup]
@@ -25,7 +25,7 @@ namespace FastEnum.Benchmark.Scenarios
 
 
         [Benchmark]
-        public bool FastEnum()
+        public void FastEnum()
             => FastEnum<Fruits>.IsDefined(Value);
     }
 }

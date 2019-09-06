@@ -61,7 +61,10 @@ namespace FastEnum
             this.Name = name;
             this.FieldInfo = typeof(T).GetField(name);
             this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
-            this.Labels = this.FieldInfo.GetCustomAttributes<LabelAttribute>().ToIntKeyFrozenDictionary(x => x.Index, x => x.Value);
+            this.Labels
+                = this.FieldInfo
+                .GetCustomAttributes<LabelAttribute>()
+                .ToIntKeyFrozenDictionary(x => x.Index, x => string.Intern(x.Value));
         }
         #endregion
 

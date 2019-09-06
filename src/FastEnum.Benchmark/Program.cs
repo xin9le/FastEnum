@@ -14,6 +14,7 @@ namespace FastEnum.Benchmark
             {
                 typeof(GetValuesBenchmark),
                 typeof(GetNamesBenchmark),
+                typeof(GetNameBenchmark),
                 typeof(TryParseBenchmark),
                 typeof(TryParseIgnoreCaseBenchmark),
                 typeof(IsDefinedByteBenchmark),

@@ -160,7 +160,7 @@ Not supported.
 
 # Installation
 
-Getting started from downloading NuGet package.
+Getting started from downloading [NuGet](https://www.nuget.org/packages/FastEnum) package.
 
 ```
 PM> Install-Package FastEnum

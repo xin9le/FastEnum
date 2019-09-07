@@ -167,7 +167,7 @@ namespace FastEnum.Tests.Cases
                 FastEnum.Parse<TEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
                 FastEnum.Parse<TEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
             }
-            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
         }
 
 

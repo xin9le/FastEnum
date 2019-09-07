@@ -157,9 +157,12 @@ namespace FastEnum
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.IsDefined(value);
+            => Cache<T>.IsContinuous
+            ? Cache<T>.UnderlyingOperation.InBitween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
+            : Cache<T>.MemberByValue.ContainsKey(value);
 
 
         /// <summary>
@@ -390,148 +393,16 @@ namespace FastEnum
             if (!IsNumeric(value[0]))
                 return TryParseName(value, ignoreCase, out result);
 
-            return Cache<T>.TypeCode switch
+            if (Cache<T>.UnderlyingOperation.TryParse(value, out var @enum))
             {
-                TypeCode.SByte => TryParseSByte(value, out result),
-                TypeCode.Byte => TryParseByte(value, out result),
-                TypeCode.Int16 => TryParseInt16(value, out result),
-                TypeCode.UInt16 => TryParseUInt16(value, out result),
-                TypeCode.Int32 => TryParseInt32(value, out result),
-                TypeCode.UInt32 => TryParseUInt32(value, out result),
-                TypeCode.Int64 => TryParseInt64(value, out result),
-                TypeCode.UInt64 => TryParseUInt64(value, out result),
-                _ => throw new InvalidOperationException(),
-            };
-
-
-            #region Local Functions
-            static bool TryParseSByte(string value, out T result)
-            {
-                if (sbyte.TryParse(value, out var converted))
+                if (IsDefined(@enum))
                 {
-                    ref var @enum = ref Unsafe.As<sbyte, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
+                    result = @enum;
+                    return true;
                 }
-                result = default;
-                return false;
             }
-
-
-            static bool TryParseByte(string value, out T result)
-            {
-                if (byte.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<byte, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt16(string value, out T result)
-            {
-                if (short.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<short, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt16(string value, out T result)
-            {
-                if (ushort.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<ushort, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt32(string value, out T result)
-            {
-                if (int.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<int, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt32(string value, out T result)
-            {
-                if (uint.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<uint, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt64(string value, out T result)
-            {
-                if (long.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<long, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt64(string value, out T result)
-            {
-                if (ulong.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<ulong, T>(ref converted);
-                    if (IsDefined(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-            #endregion
+            result = default;
+            return false;
         }
 
 
@@ -596,17 +467,17 @@ namespace FastEnum
             #region Fields
             public static readonly Type Type;
             public static readonly Type UnderlyingType;
-            public static readonly TypeCode TypeCode;
             public static readonly T[] Values;
             public static readonly string[] Names;
             public static readonly Member<T>[] Members;
-            public static T MinValue;  // no readonly for performance
-            public static T MaxValue;  // no readonly for performance
+            public static readonly T MinValue;
+            public static readonly T MaxValue;
             public static readonly bool IsEmpty;
             public static readonly bool IsContinuous;
             public static readonly bool IsFlags;
             public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
             public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
+            public static readonly IUnderlyingOperation<T> UnderlyingOperation;
             #endregion
 
 
@@ -615,7 +486,6 @@ namespace FastEnum
             {
                 Type = typeof(T);
                 UnderlyingType = Enum.GetUnderlyingType(Type);
-                TypeCode = Type.GetTypeCode(Type);
                 Values = Enum.GetValues(Type) as T[];
                 Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
                 Members = Names.Select(x => new Member<T>(x)).ToArray();
@@ -625,6 +495,19 @@ namespace FastEnum
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
+                UnderlyingOperation
+                    = Type.GetTypeCode(Type) switch
+                    {
+                        TypeCode.SByte => new SByteOperation<T>() as IUnderlyingOperation<T>,
+                        TypeCode.Byte => new ByteOperation<T>(),
+                        TypeCode.Int16 => new Int16Operation<T>(),
+                        TypeCode.UInt16 => new UInt16Operation<T>(),
+                        TypeCode.Int32 => new Int32Operation<T>(),
+                        TypeCode.UInt32 => new UInt32Operation<T>(),
+                        TypeCode.Int64 => new Int64Operation<T>(),
+                        TypeCode.UInt64 => new UInt64Operation<T>(),
+                        _ => throw new InvalidOperationException(),
+                    };
                 IsContinuous = IsContinuousInternal();
             }
             #endregion
@@ -636,146 +519,10 @@ namespace FastEnum
                 if (IsEmpty)
                     return false;
 
-                var count = MemberByValue.Count;  // distincted count
-                switch (TypeCode)
-                {
-                    case TypeCode.SByte:
-                        {
-                            ref var min = ref Unsafe.As<T, sbyte>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, sbyte>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.Byte:
-                        {
-                            ref var min = ref Unsafe.As<T, byte>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, byte>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.Int16:
-                        {
-                            ref var min = ref Unsafe.As<T, short>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, short>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.UInt16:
-                        {
-                            ref var min = ref Unsafe.As<T, ushort>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, ushort>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.Int32:
-                        {
-                            ref var min = ref Unsafe.As<T, int>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, int>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.UInt32:
-                        {
-                            ref var min = ref Unsafe.As<T, uint>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, uint>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.Int64:
-                        {
-                            ref var min = ref Unsafe.As<T, long>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, long>(ref MaxValue);
-                            return (max - min) == (count - 1);
-                        }
-
-                    case TypeCode.UInt64:
-                        {
-                            ref var min = ref Unsafe.As<T, ulong>(ref MinValue);
-                            ref var max = ref Unsafe.As<T, ulong>(ref MaxValue);
-                            return (max - min) == (ulong)(count - 1);
-                        }
-
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-
-
-            public static bool IsDefined(T value)
-            {
-                if (IsContinuous)
-                {
-                    switch (TypeCode)
-                    {
-                        case TypeCode.SByte:
-                            {
-                                ref var val = ref Unsafe.As<T, sbyte>(ref value);
-                                ref var min = ref Unsafe.As<T, sbyte>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, sbyte>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.Byte:
-                            {
-                                ref var val = ref Unsafe.As<T, byte>(ref value);
-                                ref var min = ref Unsafe.As<T, byte>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, byte>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.Int16:
-                            {
-                                ref var val = ref Unsafe.As<T, short>(ref value);
-                                ref var min = ref Unsafe.As<T, short>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, short>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.UInt16:
-                            {
-                                ref var val = ref Unsafe.As<T, ushort>(ref value);
-                                ref var min = ref Unsafe.As<T, ushort>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, ushort>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.Int32:
-                            {
-                                ref var val = ref Unsafe.As<T, int>(ref value);
-                                ref var min = ref Unsafe.As<T, int>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, int>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.UInt32:
-                            {
-                                ref var val = ref Unsafe.As<T, uint>(ref value);
-                                ref var min = ref Unsafe.As<T, uint>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, uint>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.Int64:
-                            {
-                                ref var val = ref Unsafe.As<T, long>(ref value);
-                                ref var min = ref Unsafe.As<T, long>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, long>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        case TypeCode.UInt64:
-                            {
-                                ref var val = ref Unsafe.As<T, ulong>(ref value);
-                                ref var min = ref Unsafe.As<T, ulong>(ref MinValue);
-                                ref var max = ref Unsafe.As<T, ulong>(ref MaxValue);
-                                return (min <= val) && (val <= max);
-                            }
-
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                }
-                return MemberByValue.ContainsKey(value);
+                var subtract = UnderlyingOperation.Subtract(MaxValue, MinValue);
+                var count = MemberByValue.Count - 1;
+                ref var temp = ref Unsafe.As<int, T>(ref count);  // todo: NO GOOD!! must fix!!
+                return EqualityComparer<T>.Default.Equals(subtract, temp);
             }
             #endregion
         }

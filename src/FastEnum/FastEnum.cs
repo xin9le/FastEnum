@@ -383,7 +383,7 @@ namespace FastEnum
         private static bool TryParseInternal<T>(string value, bool ignoreCase, out T result)
             where T : struct, Enum
         {
-            if (!StartsNumber(value[0]))
+            if (!IsNumeric(value[0]))
                 return TryParseName(value, ignoreCase, out result);
 
             return Cache<T>.TypeCode switch
@@ -537,7 +537,7 @@ namespace FastEnum
         /// <param name="c"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool StartsNumber(char c)
+        private static bool IsNumeric(char c)
             => char.IsDigit(c) || c == '-' || c == '+';
 
 

@@ -464,20 +464,20 @@ namespace FastEnum
         private static class Cache<T>
             where T : struct, Enum
         {
-            #region Fields
-            public static readonly Type Type;
-            public static readonly Type UnderlyingType;
-            public static readonly T[] Values;
-            public static readonly string[] Names;
-            public static readonly Member<T>[] Members;
-            public static readonly T MinValue;
-            public static readonly T MaxValue;
-            public static readonly bool IsEmpty;
-            public static readonly bool IsContinuous;
-            public static readonly bool IsFlags;
-            public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
-            public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
-            public static readonly IUnderlyingOperation<T> UnderlyingOperation;
+            #region Properties
+            public static Type Type { get; }
+            public static Type UnderlyingType { get; }
+            public static T[] Values { get; }
+            public static string[] Names { get; }
+            public static Member<T>[] Members { get; }
+            public static T MinValue { get; }
+            public static T MaxValue { get; }
+            public static bool IsEmpty { get; }
+            public static bool IsContinuous { get; }
+            public static bool IsFlags { get; }
+            public static FrozenDictionary<T, Member<T>> MemberByValue { get; }
+            public static FrozenStringKeyDictionary<Member<T>> MemberByName { get; }
+            public static IUnderlyingOperation<T> UnderlyingOperation { get; }
             #endregion
 
 

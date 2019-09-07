@@ -11,12 +11,12 @@ namespace FastEnum.Tests.Cases
     public class Int32Test
     {
         [Fact]
-        public void UnderlyingType()
+        public void GetUnderlyingType()
             => FastEnum.GetUnderlyingType<TEnum>().Should().Be<TUnderlying>();
 
 
         [Fact]
-        public void Values()
+        public void GetValues()
         {
             var expect = new[]
             {
@@ -30,7 +30,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Names()
+        public void GetNames()
         {
             var expect = new[]
             {
@@ -44,7 +44,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Members()
+        public void GetMembers()
         {
             var expect = new[]
             {

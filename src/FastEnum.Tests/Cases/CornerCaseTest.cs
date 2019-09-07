@@ -11,7 +11,7 @@ namespace FastEnum.Tests.Cases
     public class CornerCase
     {
         [Fact]
-        public void Values()
+        public void GetValues()
         {
             var expect = Enum.GetValues(typeof(TEnum));
             var actual = FastEnum.GetValues<TEnum>();
@@ -20,7 +20,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Names()
+        public void GetNames()
         {
             var expect = Enum.GetNames(typeof(TEnum));
             var actual = FastEnum.GetNames<TEnum>();
@@ -29,7 +29,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Members()
+        public void GetMembers()
         {
             var expect = new[]
             {

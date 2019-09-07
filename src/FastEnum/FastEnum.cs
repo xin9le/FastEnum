@@ -586,7 +586,7 @@ namespace FastEnum
         /// Provides cache for enum type members.
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
-        internal static class Cache<T>
+        private static class Cache<T>
             where T : struct, Enum
         {
             #region Fields

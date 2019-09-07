@@ -386,7 +386,7 @@ namespace FastEnum
             if (!StartsNumber(value[0]))
                 return TryParseName(value, ignoreCase, out result);
 
-            return Type.GetTypeCode(typeof(T)) switch
+            return Cache<T>.TypeCode switch
             {
                 TypeCode.SByte => TryParseSByte(value, out result),
                 TypeCode.Byte => TryParseByte(value, out result),
@@ -603,6 +603,12 @@ namespace FastEnum
 
 
             /// <summary>
+            /// Returns the type code of the specified enumeration.
+            /// </summary>
+            public static TypeCode TypeCode { get; }
+
+
+            /// <summary>
             /// Retrieves an array of the values of the constants in a specified enumeration.
             /// </summary>
             public static T[] Values { get; }
@@ -674,6 +680,7 @@ namespace FastEnum
             {
                 Type = typeof(T);
                 UnderlyingType = Enum.GetUnderlyingType(Type);
+                TypeCode = Type.GetTypeCode(Type);
                 Values = Enum.GetValues(Type) as T[];
                 Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
                 Members = Names.Select(x => new Member<T>(x)).ToArray();
@@ -696,7 +703,7 @@ namespace FastEnum
                 var minValue = MinValue.Value;
                 var maxValue = MaxValue.Value;
                 var count = MemberByValue.Count;  // distincted count
-                switch (Type.GetTypeCode(Type))
+                switch (TypeCode)
                 {
                     case TypeCode.SByte:
                         {

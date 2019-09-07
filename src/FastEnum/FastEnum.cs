@@ -707,57 +707,57 @@ namespace FastEnum
                 {
                     case TypeCode.SByte:
                         {
-                            var min = Unsafe.As<T, sbyte>(ref minValue);
-                            var max = Unsafe.As<T, sbyte>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, sbyte>(ref minValue);
+                            ref var max = ref Unsafe.As<T, sbyte>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Byte:
                         {
-                            var min = Unsafe.As<T, byte>(ref minValue);
-                            var max = Unsafe.As<T, byte>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, byte>(ref minValue);
+                            ref var max = ref Unsafe.As<T, byte>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int16:
                         {
-                            var min = Unsafe.As<T, short>(ref minValue);
-                            var max = Unsafe.As<T, short>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, short>(ref minValue);
+                            ref var max = ref Unsafe.As<T, short>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt16:
                         {
-                            var min = Unsafe.As<T, ushort>(ref minValue);
-                            var max = Unsafe.As<T, ushort>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, ushort>(ref minValue);
+                            ref var max = ref Unsafe.As<T, ushort>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int32:
                         {
-                            var min = Unsafe.As<T, int>(ref minValue);
-                            var max = Unsafe.As<T, int>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, int>(ref minValue);
+                            ref var max = ref Unsafe.As<T, int>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt32:
                         {
-                            var min = Unsafe.As<T, uint>(ref minValue);
-                            var max = Unsafe.As<T, uint>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, uint>(ref minValue);
+                            ref var max = ref Unsafe.As<T, uint>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int64:
                         {
-                            var min = Unsafe.As<T, long>(ref minValue);
-                            var max = Unsafe.As<T, long>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, long>(ref minValue);
+                            ref var max = ref Unsafe.As<T, long>(ref maxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt64:
                         {
-                            var min = Unsafe.As<T, ulong>(ref minValue);
-                            var max = Unsafe.As<T, ulong>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, ulong>(ref minValue);
+                            ref var max = ref Unsafe.As<T, ulong>(ref maxValue);
                             return (max - min) == (ulong)(count - 1);
                         }
 

@@ -406,7 +406,7 @@ namespace FastEnum
                 if (sbyte.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<sbyte, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -422,7 +422,7 @@ namespace FastEnum
                 if (byte.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<byte, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -438,7 +438,7 @@ namespace FastEnum
                 if (short.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<short, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -454,7 +454,7 @@ namespace FastEnum
                 if (ushort.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<ushort, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -470,7 +470,7 @@ namespace FastEnum
                 if (int.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<int, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -486,7 +486,7 @@ namespace FastEnum
                 if (uint.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<uint, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -502,7 +502,7 @@ namespace FastEnum
                 if (long.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<long, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;
@@ -518,7 +518,7 @@ namespace FastEnum
                 if (ulong.TryParse(value, out var converted))
                 {
                     ref var @enum = ref Unsafe.As<ulong, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
+                    if (IsDefined(@enum))
                     {
                         result = @enum;
                         return true;

@@ -110,6 +110,18 @@ namespace FastEnum
         #endregion
 
 
+        #region IsEmpty
+        /// <summary>
+        /// Returns whether no fields in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsEmpty<T>()
+            where T : struct, Enum
+            => GetValues<T>().Count == 0;
+        #endregion
+
+
         #region IsContinuous
         /// <summary>
         /// Returns whether the values of the constants in a specified enumeration are continuous.

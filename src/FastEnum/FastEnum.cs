@@ -96,7 +96,7 @@ namespace FastEnum
         /// <returns></returns>
         public static T? GetMinValue<T>()
             where T : struct, Enum
-            => Cache<T>.MinValue;
+            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MinValue;
 
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace FastEnum
         /// <returns></returns>
         public static T? GetMaxValue<T>()
             where T : struct, Enum
-            => Cache<T>.MaxValue;
+            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MaxValue;
         #endregion
 
 
@@ -155,7 +155,7 @@ namespace FastEnum
         /// <returns></returns>
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.MemberByValue.ContainsKey(value);
+            => Cache<T>.IsDefined(value);
 
 
         /// <summary>
@@ -589,93 +589,24 @@ namespace FastEnum
         internal static class Cache<T>
             where T : struct, Enum
         {
-            #region Properties
-            /// <summary>
-            /// Returns the type of the specified enumeration.
-            /// </summary>
-            public static Type Type { get; }
-
-
-            /// <summary>
-            /// Returns the underlying type of the specified enumeration.
-            /// </summary>
-            public static Type UnderlyingType { get; }
-
-
-            /// <summary>
-            /// Returns the type code of the specified enumeration.
-            /// </summary>
-            public static TypeCode TypeCode { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the values of the constants in a specified enumeration.
-            /// </summary>
-            public static T[] Values { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the names of the constants in a specified enumeration.
-            /// </summary>
-            public static string[] Names { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the member information of the constants in a specified enumeration.
-            /// </summary>
-            public static Member<T>[] Members { get; }
-
-
-            /// <summary>
-            /// Returns the minimum value.
-            /// </summary>
-            public static T? MinValue { get; }
-
-
-            /// <summary>
-            /// Returns the maximum value.
-            /// </summary>
-            public static T? MaxValue { get; }
-
-
-            /// <summary>
-            /// Returns whether no fields in a specified enumeration.
-            /// </summary>
-            /// <typeparam name="T">Enum type</typeparam>
-            /// <returns></returns>
-            public static bool IsEmpty
-                => Values.Length == 0;
-
-
-            /// <summary>
-            /// Returns whether the values of the constants in a specified enumeration are continuous.
-            /// </summary>
-            public static bool IsContinuous { get; }
-
-
-            /// <summary>
-            /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-            /// </summary>
-            public static bool IsFlags { get; }
-
-
-            /// <summary>
-            /// Retrieves a member information of the constants in a specified enumeration by value.
-            /// </summary>
-            public static FrozenDictionary<T, Member<T>> MemberByValue { get; }
-
-
-            /// <summary>
-            /// Retrieves a member information of the constants in a specified enumeration by name.
-            /// </summary>
-            public static FrozenStringKeyDictionary<Member<T>> MemberByName { get; }
+            #region Fields
+            public static readonly Type Type;
+            public static readonly Type UnderlyingType;
+            public static readonly TypeCode TypeCode;
+            public static readonly T[] Values;
+            public static readonly string[] Names;
+            public static readonly Member<T>[] Members;
+            public static T MinValue;  // no readonly for performance
+            public static T MaxValue;  // no readonly for performance
+            public static readonly bool IsEmpty;
+            public static readonly bool IsContinuous;
+            public static readonly bool IsFlags;
+            public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
+            public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
             #endregion
 
 
             #region Constructors
-            /// <summary>
-            /// Called when this type is used for the first time.
-            /// </summary>
             static Cache()
             {
                 Type = typeof(T);
@@ -684,8 +615,9 @@ namespace FastEnum
                 Values = Enum.GetValues(Type) as T[];
                 Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
                 Members = Names.Select(x => new Member<T>(x)).ToArray();
-                MinValue = Values.Select(x => (T?)x).Min();
-                MaxValue = Values.Select(x => (T?)x).Max();
+                MinValue = Values.DefaultIfEmpty().Min();
+                MaxValue = Values.DefaultIfEmpty().Max();
+                IsEmpty = Values.Length == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
@@ -700,70 +632,146 @@ namespace FastEnum
                 if (IsEmpty)
                     return false;
 
-                var minValue = MinValue.Value;
-                var maxValue = MaxValue.Value;
                 var count = MemberByValue.Count;  // distincted count
                 switch (TypeCode)
                 {
                     case TypeCode.SByte:
                         {
-                            ref var min = ref Unsafe.As<T, sbyte>(ref minValue);
-                            ref var max = ref Unsafe.As<T, sbyte>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, sbyte>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, sbyte>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Byte:
                         {
-                            ref var min = ref Unsafe.As<T, byte>(ref minValue);
-                            ref var max = ref Unsafe.As<T, byte>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, byte>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, byte>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int16:
                         {
-                            ref var min = ref Unsafe.As<T, short>(ref minValue);
-                            ref var max = ref Unsafe.As<T, short>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, short>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, short>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt16:
                         {
-                            ref var min = ref Unsafe.As<T, ushort>(ref minValue);
-                            ref var max = ref Unsafe.As<T, ushort>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, ushort>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, ushort>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int32:
                         {
-                            ref var min = ref Unsafe.As<T, int>(ref minValue);
-                            ref var max = ref Unsafe.As<T, int>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, int>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, int>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt32:
                         {
-                            ref var min = ref Unsafe.As<T, uint>(ref minValue);
-                            ref var max = ref Unsafe.As<T, uint>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, uint>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, uint>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.Int64:
                         {
-                            ref var min = ref Unsafe.As<T, long>(ref minValue);
-                            ref var max = ref Unsafe.As<T, long>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, long>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, long>(ref MaxValue);
                             return (max - min) == (count - 1);
                         }
 
                     case TypeCode.UInt64:
                         {
-                            ref var min = ref Unsafe.As<T, ulong>(ref minValue);
-                            ref var max = ref Unsafe.As<T, ulong>(ref maxValue);
+                            ref var min = ref Unsafe.As<T, ulong>(ref MinValue);
+                            ref var max = ref Unsafe.As<T, ulong>(ref MaxValue);
                             return (max - min) == (ulong)(count - 1);
                         }
 
                     default:
                         throw new InvalidOperationException();
                 }
+            }
+
+
+            public static bool IsDefined(T value)
+            {
+                if (IsContinuous)
+                {
+                    switch (TypeCode)
+                    {
+                        case TypeCode.SByte:
+                            {
+                                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                                ref var min = ref Unsafe.As<T, sbyte>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, sbyte>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.Byte:
+                            {
+                                ref var val = ref Unsafe.As<T, byte>(ref value);
+                                ref var min = ref Unsafe.As<T, byte>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, byte>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.Int16:
+                            {
+                                ref var val = ref Unsafe.As<T, short>(ref value);
+                                ref var min = ref Unsafe.As<T, short>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, short>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.UInt16:
+                            {
+                                ref var val = ref Unsafe.As<T, ushort>(ref value);
+                                ref var min = ref Unsafe.As<T, ushort>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, ushort>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.Int32:
+                            {
+                                ref var val = ref Unsafe.As<T, int>(ref value);
+                                ref var min = ref Unsafe.As<T, int>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, int>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.UInt32:
+                            {
+                                ref var val = ref Unsafe.As<T, uint>(ref value);
+                                ref var min = ref Unsafe.As<T, uint>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, uint>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.Int64:
+                            {
+                                ref var val = ref Unsafe.As<T, long>(ref value);
+                                ref var min = ref Unsafe.As<T, long>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, long>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        case TypeCode.UInt64:
+                            {
+                                ref var val = ref Unsafe.As<T, ulong>(ref value);
+                                ref var min = ref Unsafe.As<T, ulong>(ref MinValue);
+                                ref var max = ref Unsafe.As<T, ulong>(ref MaxValue);
+                                return (min <= val) && (val <= max);
+                            }
+
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                }
+                return MemberByValue.ContainsKey(value);
             }
             #endregion
         }

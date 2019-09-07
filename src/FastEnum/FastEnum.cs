@@ -118,7 +118,7 @@ namespace FastEnum
         /// <returns></returns>
         public static bool IsEmpty<T>()
             where T : struct, Enum
-            => GetValues<T>().Count == 0;
+            => Cache<T>.IsEmpty;
         #endregion
 
 
@@ -633,6 +633,15 @@ namespace FastEnum
 
 
             /// <summary>
+            /// Returns whether no fields in a specified enumeration.
+            /// </summary>
+            /// <typeparam name="T">Enum type</typeparam>
+            /// <returns></returns>
+            public static bool IsEmpty
+                => Values.Length == 0;
+
+
+            /// <summary>
             /// Returns whether the values of the constants in a specified enumeration are continuous.
             /// </summary>
             public static bool IsContinuous { get; }
@@ -681,8 +690,8 @@ namespace FastEnum
             #region Utility
             private static bool IsContinuousInternal()
             {
-                if (!MaxValue.HasValue) return false;  // empty enum
-                if (!MinValue.HasValue) return false;  // empty enum
+                if (IsEmpty)
+                    return false;
 
                 var minValue = MinValue.Value;
                 var maxValue = MaxValue.Value;

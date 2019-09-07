@@ -119,4 +119,8 @@ namespace FastEnum.Tests.Models
         D = 2,
         E = 4,  // Not continuous value
     }
+
+
+    public enum EmptyEnum
+    {}
 }

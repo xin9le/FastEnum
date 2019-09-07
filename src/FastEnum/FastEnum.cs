@@ -54,7 +54,7 @@ namespace FastEnum
         #endregion
 
 
-        #region GetNames
+        #region GetNames / GetName
         /// <summary>
         /// Retrieves an array of the names of the constants in a specified enumeration.
         /// </summary>
@@ -63,10 +63,20 @@ namespace FastEnum
         public static IReadOnlyList<string> GetNames<T>()
             where T : struct, Enum
             => Cache<T>.Names;
+
+
+        /// <summary>
+        /// Retrieves the name of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static string GetName<T>(T value)
+            where T : struct, Enum
+            => GetMember(value).Name;
         #endregion
 
 
-        #region GetMembers
+        #region GetMembers / GetMember
         /// <summary>
         /// Retrieves an array of the member information of the constants in a specified enumeration.
         /// </summary>
@@ -75,6 +85,18 @@ namespace FastEnum
         public static IReadOnlyList<Member<T>> GetMembers<T>()
             where T : struct, Enum
             => Cache<T>.Members;
+
+
+        /// <summary>
+        /// Retrieves the member information of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static Member<T> GetMember<T>(T value)
+            where T : struct, Enum
+            => Cache<T>.MemberByValue.TryGetValue(value, out var member)
+            ? member
+            : throw new ArgumentException(nameof(value));
         #endregion
 
 

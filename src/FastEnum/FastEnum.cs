@@ -18,18 +18,6 @@ namespace FastEnum
         #endregion
 
 
-        #region IsFlags
-        /// <summary>
-        /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-        /// </summary>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsFlags<T>()
-            where T : struct, Enum
-            => Cache<T>.IsFlags;
-        #endregion
-
-
         #region GetUnderlyingType
         /// <summary>
         /// Returns the underlying type of the specified enumeration.
@@ -97,6 +85,52 @@ namespace FastEnum
             => Cache<T>.MemberByValue.TryGetValue(value, out var member)
             ? member
             : throw new ArgumentException(nameof(value));
+        #endregion
+
+
+        #region GetMinValue / GetMaxValue
+        /// <summary>
+        /// Returns the minimum value.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static T? GetMinValue<T>()
+            where T : struct, Enum
+            => Cache<T>.MinValue;
+
+
+        /// <summary>
+        /// Returns the maximum value.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static T? GetMaxValue<T>()
+            where T : struct, Enum
+            => Cache<T>.MaxValue;
+        #endregion
+
+
+        #region IsContinuous
+        /// <summary>
+        /// Returns whether the values of the constants in a specified enumeration are continuous.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsContinuous<T>()
+            where T : struct, Enum
+            => Cache<T>.IsContinuous;
+        #endregion
+
+
+        #region IsFlags
+        /// <summary>
+        /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsFlags<T>()
+            where T : struct, Enum
+            => Cache<T>.IsFlags;
         #endregion
 
 
@@ -557,12 +591,6 @@ namespace FastEnum
 
 
             /// <summary>
-            /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-            /// </summary>
-            public static bool IsFlags { get; }
-
-
-            /// <summary>
             /// Retrieves an array of the values of the constants in a specified enumeration.
             /// </summary>
             public static T[] Values { get; }
@@ -578,6 +606,30 @@ namespace FastEnum
             /// Retrieves an array of the member information of the constants in a specified enumeration.
             /// </summary>
             public static Member<T>[] Members { get; }
+
+
+            /// <summary>
+            /// Returns the minimum value.
+            /// </summary>
+            public static T? MinValue { get; }
+
+
+            /// <summary>
+            /// Returns the maximum value.
+            /// </summary>
+            public static T? MaxValue { get; }
+
+
+            /// <summary>
+            /// Returns whether the values of the constants in a specified enumeration are continuous.
+            /// </summary>
+            public static bool IsContinuous { get; }
+
+
+            /// <summary>
+            /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+            /// </summary>
+            public static bool IsFlags { get; }
 
 
             /// <summary>
@@ -601,12 +653,89 @@ namespace FastEnum
             {
                 Type = typeof(T);
                 UnderlyingType = Enum.GetUnderlyingType(Type);
-                IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 Values = Enum.GetValues(Type) as T[];
                 Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
                 Members = Names.Select(x => new Member<T>(x)).ToArray();
+                MinValue = Values.Select(x => (T?)x).Min();
+                MaxValue = Values.Select(x => (T?)x).Max();
+                IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
+                IsContinuous = IsContinuousInternal();
+            }
+            #endregion
+
+
+            #region Utility
+            private static bool IsContinuousInternal()
+            {
+                if (!MaxValue.HasValue) return false;  // empty enum
+                if (!MinValue.HasValue) return false;  // empty enum
+
+                var minValue = MinValue.Value;
+                var maxValue = MaxValue.Value;
+                var count = MemberByValue.Count;  // distincted count
+                switch (Type.GetTypeCode(Type))
+                {
+                    case TypeCode.SByte:
+                        {
+                            var min = Unsafe.As<T, sbyte>(ref minValue);
+                            var max = Unsafe.As<T, sbyte>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.Byte:
+                        {
+                            var min = Unsafe.As<T, byte>(ref minValue);
+                            var max = Unsafe.As<T, byte>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.Int16:
+                        {
+                            var min = Unsafe.As<T, short>(ref minValue);
+                            var max = Unsafe.As<T, short>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.UInt16:
+                        {
+                            var min = Unsafe.As<T, ushort>(ref minValue);
+                            var max = Unsafe.As<T, ushort>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.Int32:
+                        {
+                            var min = Unsafe.As<T, int>(ref minValue);
+                            var max = Unsafe.As<T, int>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.UInt32:
+                        {
+                            var min = Unsafe.As<T, uint>(ref minValue);
+                            var max = Unsafe.As<T, uint>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.Int64:
+                        {
+                            var min = Unsafe.As<T, long>(ref minValue);
+                            var max = Unsafe.As<T, long>(ref maxValue);
+                            return (max - min) == (count - 1);
+                        }
+
+                    case TypeCode.UInt64:
+                        {
+                            var min = Unsafe.As<T, ulong>(ref minValue);
+                            var max = Unsafe.As<T, ulong>(ref maxValue);
+                            return (max - min) == (ulong)(count - 1);
+                        }
+
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             #endregion
         }

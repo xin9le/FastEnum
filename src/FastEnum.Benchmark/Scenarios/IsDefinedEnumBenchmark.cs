@@ -34,6 +34,6 @@ namespace FastEnum.Benchmark.Scenarios
 
         [Benchmark]
         public void FastEnum()
-            => _FastEnum.IsDefined<Fruits>(Value);
+            => _FastEnum.IsDefined(Value);
     }
 }

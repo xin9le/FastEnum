@@ -68,6 +68,16 @@ namespace FastEnum
         }
         #endregion
 
+        /// <summary>
+        /// Gets the Attribute of specified enumration member.
+        /// </summary>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        public TAttribute GetAttribute<TAttribute>()
+            where TAttribute : Attribute
+        {
+            return FastEnum.EnumAttributeCache<T, TAttribute>.Cache[Value];
+        }
+
 
         #region Classes
         /// <summary>

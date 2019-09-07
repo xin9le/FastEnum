@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 
 
@@ -8,7 +9,7 @@ namespace FastEnum.Benchmark.Models
     {
         Unknown = 0,
 
-        [EnumMember(Value = "🍎")]
+        [EnumMember(Value = "🍎"), Description("It is a rose family")]
         Apple,
         Banana,
         Peach,

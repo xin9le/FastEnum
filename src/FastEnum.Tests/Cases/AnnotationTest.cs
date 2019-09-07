@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.Flags;
+using TEnum = FastEnum.Tests.Models.AnnotationEnum;
 
 
 

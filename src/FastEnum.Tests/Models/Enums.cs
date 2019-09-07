@@ -66,7 +66,7 @@ namespace FastEnum.Tests.Models
 
 
     [Flags]
-    public enum Flags
+    public enum AnnotationEnum
     {
         [EnumMember(Value = "_zero_")]
         [Label("ぜろ")]
@@ -83,7 +83,7 @@ namespace FastEnum.Tests.Models
     }
 
 
-    public enum CornerCase : byte
+    public enum SameValueEnum : byte
     {
         MinValue = byte.MinValue,  // Name is different, but value is same as other member.
         Zero = 0,

@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.CornerCase;
+using TEnum = FastEnum.Tests.Models.SameValueEnum;
 using TUnderlying = System.Byte;
 
 

@@ -89,4 +89,34 @@ namespace FastEnum.Tests.Models
         Zero = 0,
         MaxValue = byte.MaxValue,
     }
+
+
+    public enum ContinuousValueEnum
+    {
+        A = -1,
+        B,
+        C,
+        D,
+        E,
+    }
+
+
+    public enum ContinuousValueContainsSameValueEnum
+    {
+        A = -1,
+        B = 0,
+        C = 1,
+        D = 1,  // Name is different, but value is same as other member.
+        E = 2,
+    }
+
+
+    public enum NotContinuousValueEnum
+    {
+        A = -1,
+        B = 0,
+        C = 1,
+        D = 2,
+        E = 4,  // Not continuous value
+    }
 }

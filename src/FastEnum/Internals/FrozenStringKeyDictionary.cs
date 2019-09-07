@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 
 
@@ -271,6 +272,7 @@ namespace FastEnum.Internals
         /// This parameter is passed uninitialized.
         /// </param>
         /// <returns>true if the object that implements the <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an element that has the specified key; otherwise, false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGetValue(string key, out TValue value)
         {
             var hash = key.GetHashCode();

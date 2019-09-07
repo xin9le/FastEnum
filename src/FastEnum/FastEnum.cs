@@ -58,6 +58,7 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetName<T>(T value)
             where T : struct, Enum
             => GetMember(value).Name;
@@ -80,6 +81,7 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Member<T> GetMember<T>(T value)
             where T : struct, Enum
             => Cache<T>.MemberByValue.TryGetValue(value, out var member)
@@ -94,6 +96,7 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetMinValue<T>()
             where T : struct, Enum
             => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MinValue;
@@ -104,6 +107,7 @@ namespace FastEnum
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetMaxValue<T>()
             where T : struct, Enum
             => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MaxValue;

@@ -16,11 +16,6 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void IsFlags()
-            => FastEnum.IsFlags<TEnum>().Should().Be(false);
-
-
-        [Fact]
         public void Values()
         {
             var expect = new[]
@@ -69,6 +64,39 @@ namespace FastEnum.Tests.Cases
                 a.FieldInfo.Should().Be(e.FieldInfo);
             }
         }
+
+
+        [Fact]
+        public void GetMinValue()
+        {
+            var min = FastEnum.GetMinValue<TEnum>();
+            min.Should().NotBeNull();
+            min.Should().Be(TUnderlying.MinValue);
+        }
+
+
+        [Fact]
+        public void GetMaxValue()
+        {
+            var min = FastEnum.GetMaxValue<TEnum>();
+            min.Should().NotBeNull();
+            min.Should().Be(TUnderlying.MaxValue);
+        }
+
+
+        [Fact]
+        public void IsEmpty()
+            => FastEnum.IsEmpty<TEnum>().Should().Be(false);
+
+
+        [Fact]
+        public void IsContinuous()
+            => FastEnum.IsContinuous<TEnum>().Should().Be(false);
+
+
+        [Fact]
+        public void IsFlags()
+            => FastEnum.IsFlags<TEnum>().Should().Be(false);
 
 
         [Fact]

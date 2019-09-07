@@ -43,7 +43,7 @@ namespace FastEnum
         /// <summary>
         /// Gets the labels of specified enumration member.
         /// </summary>
-        internal IntKeyFrozenDictionary<string> Labels { get; }
+        internal FrozenIntKeyDictionary<string> Labels { get; }
         #endregion
 
 
@@ -64,7 +64,7 @@ namespace FastEnum
             this.Labels
                 = this.FieldInfo
                 .GetCustomAttributes<LabelAttribute>()
-                .ToIntKeyFrozenDictionary(x => x.Index, x => string.Intern(x.Value));
+                .ToFrozenIntKeyDictionary(x => x.Index, x => string.Intern(x.Value));
         }
         #endregion
 

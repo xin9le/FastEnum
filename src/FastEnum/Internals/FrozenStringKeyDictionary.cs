@@ -16,7 +16,7 @@ namespace FastEnum.Internals
     /// 
     /// This class is string specialized <see cref="FrozenDictionary{TKey, TValue}"/>.
     /// </remarks>
-    internal sealed class StringKeyFrozenDictionary<TValue> : IReadOnlyDictionary<string, TValue>
+    internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<string, TValue>
     {
         #region Constants
         private static readonly Func<TValue, TValue> PassThrough = x => x;
@@ -36,7 +36,7 @@ namespace FastEnum.Internals
         /// </summary>
         /// <param name="bucketSize"></param>
         /// <param name="loadFactor"></param>
-        private StringKeyFrozenDictionary(int bucketSize, float loadFactor)
+        private FrozenStringKeyDictionary(int bucketSize, float loadFactor)
         {
             this.Buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
             this.LoadFactor = loadFactor;
@@ -46,24 +46,24 @@ namespace FastEnum.Internals
 
         #region Create
         /// <summary>
-        /// Creates a <see cref="StringKeyFrozenDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
+        /// Creates a <see cref="FrozenStringKeyDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        public static StringKeyFrozenDictionary<TValue> Create(IEnumerable<TValue> source, Func<TValue, string> keySelector)
+        public static FrozenStringKeyDictionary<TValue> Create(IEnumerable<TValue> source, Func<TValue, string> keySelector)
             => Create(source, keySelector, PassThrough);
 
 
         /// <summary>
-        ///  Creates a <see cref="StringKeyFrozenDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
+        ///  Creates a <see cref="FrozenStringKeyDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <param name="valueSelector"></param>
         /// <returns></returns>
-        public static StringKeyFrozenDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+        public static FrozenStringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
@@ -72,7 +72,7 @@ namespace FastEnum.Internals
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var bucketSize = source.CountIfMaterialized() ?? CalculateCapacity(initialSize, loadFactor);
-            var result = new StringKeyFrozenDictionary<TValue>(bucketSize, loadFactor);
+            var result = new FrozenStringKeyDictionary<TValue>(bucketSize, loadFactor);
 
             foreach (var x in source)
             {
@@ -318,7 +318,7 @@ namespace FastEnum.Internals
 
         #region Inner Classes
         /// <summary>
-        /// Represents <see cref="StringKeyFrozenDictionary{TValue}"/> entry.
+        /// Represents <see cref="FrozenStringKeyDictionary{TValue}"/> entry.
         /// </summary>
         private class Entry
         {

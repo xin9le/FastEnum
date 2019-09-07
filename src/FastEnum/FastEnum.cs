@@ -589,7 +589,7 @@ namespace FastEnum
             /// <summary>
             /// Retrieves a member information of the constants in a specified enumeration by name.
             /// </summary>
-            public static StringKeyFrozenDictionary<Member<T>> MemberByName { get; }
+            public static FrozenStringKeyDictionary<Member<T>> MemberByName { get; }
             #endregion
 
 
@@ -606,7 +606,7 @@ namespace FastEnum
                 Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
                 Members = Names.Select(x => new Member<T>(x)).ToArray();
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
-                MemberByName = Members.ToStringKeyFrozenDictionary(x => x.Name);
+                MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
             }
             #endregion
         }

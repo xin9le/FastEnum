@@ -33,7 +33,7 @@ namespace FastEnum.Tests.Cases
         public void IntKey()
         {
             var values = Enumerable.Range(0, Count);
-            var dic = values.ToIntKeyFrozenDictionary(x => x);
+            var dic = values.ToFrozenIntKeyDictionary(x => x);
 
             dic.Count.Should().Be(Count);
             dic.TryGetValue(-1, out _).Should().BeFalse();
@@ -52,7 +52,7 @@ namespace FastEnum.Tests.Cases
                 = Enumerable.Range(0, Count)
                 .Select(_ => Guid.NewGuid().ToString())
                 .ToArray();
-            var dic = values.ToStringKeyFrozenDictionary(x => x);
+            var dic = values.ToFrozenStringKeyDictionary(x => x);
 
             dic.Count.Should().Be(Count);
             dic.TryGetValue(string.Empty, out _).Should().BeFalse();

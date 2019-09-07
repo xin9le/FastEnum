@@ -19,7 +19,7 @@ namespace FastEnum
         /// <returns></returns>
         public static Member<T> ToMember<T>(this T value)
             where T : struct, Enum
-            => FastEnum<T>.MemberByValue[value];
+            => FastEnum.Cache<T>.MemberByValue[value];
 
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace FastEnum
         /// <returns></returns>
         public static bool IsDefined<T>(this T value)
             where T : struct, Enum
-            => FastEnum<T>.IsDefined(value);
+            => FastEnum.IsDefined(value);
 
 
         /// <summary>

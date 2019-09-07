@@ -1,6 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using FastEnum.Benchmark.Models;
+using _FastEnum = FastEnum.FastEnum;
 
 
 
@@ -15,7 +16,7 @@ namespace FastEnum.Benchmark.Scenarios
         public void Setup()
         {
             _ = Enum.GetNames(typeof(Fruits));
-            _ = FastEnum<Fruits>.Values;
+            _ = _FastEnum.GetValues<Fruits>();
         }
 
 

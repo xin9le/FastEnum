@@ -22,7 +22,7 @@ namespace FastEnum.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            var members = FastEnum<Fruits>.Members;
+            var members = FastEnum.GetMembers<Fruits>();
             this.Standard = members.ToDictionary(x => (int)x.Value);
             this.GenericsKeyFrozen = members.ToFrozenDictionary(x => (int)x.Value);
             this.IntKeyFrozen = members.ToIntKeyFrozenDictionary(x => (int)x.Value);

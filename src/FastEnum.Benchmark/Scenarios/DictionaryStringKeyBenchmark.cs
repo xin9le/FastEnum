@@ -23,11 +23,11 @@ namespace FastEnum.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            var members = FastEnum<Fruits>.Members;
+            var members = FastEnum.GetMembers<Fruits>();
             this.Standard = members.ToDictionary(x => x.Name);
             this.GenericsKeyFrozen = members.ToFrozenDictionary(x => x.Name);
             this.StringKeyFrozen = members.ToStringKeyFrozenDictionary(x => x.Name);
-            this.Table = new Hashtable(members.Length);
+            this.Table = new Hashtable(members.Count);
             foreach (var x in members)
                 this.Table[x.Name] = x;
         }

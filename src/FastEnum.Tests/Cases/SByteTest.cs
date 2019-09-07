@@ -11,18 +11,13 @@ namespace FastEnum.Tests.Cases
     public class SByteTest
     {
         [Fact]
-        public void Type()
-            => FastEnum<TEnum>.Type.Should().Be<TEnum>();
-
-
-        [Fact]
         public void UnderlyingType()
-            => FastEnum<TEnum>.UnderlyingType.Should().Be<TUnderlying>();
+            => FastEnum.GetUnderlyingType<TEnum>().Should().Be<TUnderlying>();
 
 
         [Fact]
         public void IsFlags()
-            => FastEnum<TEnum>.IsFlags.Should().Be(false);
+            => FastEnum.IsFlags<TEnum>().Should().Be(false);
 
 
         [Fact]
@@ -34,7 +29,7 @@ namespace FastEnum.Tests.Cases
                 default,
                 TUnderlying.MaxValue,
             };
-            var actual = FastEnum<TEnum>.Values;
+            var actual = FastEnum.GetValues<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
 
@@ -48,7 +43,7 @@ namespace FastEnum.Tests.Cases
                 nameof(TEnum.Zero),
                 nameof(TEnum.MaxValue),
             };
-            var actual = FastEnum<TEnum>.Names;
+            var actual = FastEnum.GetNames<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
 
@@ -62,9 +57,9 @@ namespace FastEnum.Tests.Cases
                 new Member<TEnum>(nameof(TEnum.MaxValue)),
                 new Member<TEnum>(nameof(TEnum.MinValue)),
             };
-            var actual = FastEnum<TEnum>.Members;
+            var actual = FastEnum.GetMembers<TEnum>();
 
-            actual.Length.Should().Be(expect.Length);
+            actual.Count.Should().Be(expect.Length);
             for (var i = 0; i < expect.Length; i++)
             {
                 var a = actual[i];
@@ -79,26 +74,26 @@ namespace FastEnum.Tests.Cases
         [Fact]
         public void IsDefined()
         {
-            FastEnum<TEnum>.IsDefined(TEnum.MinValue).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(TEnum.Zero).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(TEnum.MaxValue).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined((TEnum)123).Should().BeFalse();
+            FastEnum.IsDefined<TEnum>(TEnum.MinValue).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>(TEnum.Zero).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>(TEnum.MaxValue).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>((TEnum)123).Should().BeFalse();
 
             TEnum.MinValue.IsDefined().Should().BeTrue();
             TEnum.Zero.IsDefined().Should().BeTrue();
             TEnum.MaxValue.IsDefined().Should().BeTrue();
 
-            FastEnum<TEnum>.IsDefined(nameof(TEnum.MinValue)).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(nameof(TEnum.Zero)).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(nameof(TEnum.MaxValue)).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined("123").Should().BeFalse();
-            FastEnum<TEnum>.IsDefined("minvalue").Should().BeFalse();
+            FastEnum.IsDefined<TEnum>(nameof(TEnum.MinValue)).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>(nameof(TEnum.Zero)).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>(nameof(TEnum.MaxValue)).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
+            FastEnum.IsDefined<TEnum>("minvalue").Should().BeFalse();
 
-            FastEnum<TEnum>.IsDefined(TUnderlying.MinValue).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined(TUnderlying.MaxValue).Should().BeTrue();
-            FastEnum<TEnum>.IsDefined((TUnderlying)123).Should().BeFalse();
+            FastEnum.IsDefined<TEnum>(TUnderlying.MinValue).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>(TUnderlying.MaxValue).Should().BeTrue();
+            FastEnum.IsDefined<TEnum>((TUnderlying)123).Should().BeFalse();
             FluentActions
-                .Invoking(() => FastEnum<TEnum>.IsDefined((byte)123))
+                .Invoking(() => FastEnum.IsDefined<TEnum>((byte)123))
                 .Should()
                 .Throw<ArgumentException>();
         }
@@ -115,14 +110,14 @@ namespace FastEnum.Tests.Cases
             };
             foreach (var x in parameters)
             {
-                FastEnum<TEnum>.Parse(x.name).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString.ToLower()).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString.ToUpper()).Should().Be(x.value);
-                FluentActions.Invoking(() => FastEnum<TEnum>.Parse(x.name.ToLower())).Should().Throw<ArgumentException>();
-                FluentActions.Invoking(() => FastEnum<TEnum>.Parse(x.name.ToUpper())).Should().Throw<ArgumentException>();
+                FastEnum.Parse<TEnum>(x.name).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToLower()).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToUpper()).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
             }
-            FluentActions.Invoking(() => FastEnum<TEnum>.Parse("ABCDE")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
         }
 
 
@@ -137,14 +132,14 @@ namespace FastEnum.Tests.Cases
             };
             foreach (var x in parameters)
             {
-                FastEnum<TEnum>.Parse(x.name).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.name.ToLower(), true).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.name.ToUpper(), true).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString.ToLower(), true).Should().Be(x.value);
-                FastEnum<TEnum>.Parse(x.valueString.ToUpper(), true).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.name).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.name.ToLower(), true).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.name.ToUpper(), true).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
             }
-            FluentActions.Invoking(() => FastEnum<TEnum>.Parse("ABCDE")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
         }
 
 
@@ -159,22 +154,22 @@ namespace FastEnum.Tests.Cases
             };
             foreach (var x in parameters)
             {
-                FastEnum<TEnum>.TryParse(x.name, out var r1).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.name, out var r1).Should().BeTrue();
                 r1.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString, out var r2).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString, out var r2).Should().BeTrue();
                 r2.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString.ToLower(), out var r3).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
                 r3.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
                 r4.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.name.ToLower(), out var _).Should().BeFalse();
-                FastEnum<TEnum>.TryParse(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<TEnum>(x.name.ToLower(), out var _).Should().BeFalse();
+                FastEnum.TryParse<TEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
             }
-            FastEnum<TEnum>.TryParse("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("ABCDE", out var _).Should().BeFalse();
         }
 
 
@@ -189,26 +184,26 @@ namespace FastEnum.Tests.Cases
             };
             foreach (var x in parameters)
             {
-                FastEnum<TEnum>.TryParse(x.name, true, out var r1).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.name, true, out var r1).Should().BeTrue();
                 r1.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.name.ToLower(), true, out var r2).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
                 r2.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
                 r3.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString, true, out var r4).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString, true, out var r4).Should().BeTrue();
                 r4.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
                 r5.Should().Be(x.value);
 
-                FastEnum<TEnum>.TryParse(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+                FastEnum.TryParse<TEnum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
                 r6.Should().Be(x.value);
             }
 
-            FastEnum<TEnum>.TryParse("ABCDE", true, out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("ABCDE", true, out var _).Should().BeFalse();
         }
 
 

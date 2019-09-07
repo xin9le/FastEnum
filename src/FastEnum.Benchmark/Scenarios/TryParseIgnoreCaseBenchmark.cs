@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnum.Benchmark.Models;
+using _FastEnum = FastEnum.FastEnum;
 
 
 
@@ -18,7 +19,7 @@ namespace FastEnum.Benchmark.Scenarios
         {
             _ = Enum.GetNames(typeof(Fruits));
             _ = Enums.GetValues<Fruits>();
-            _ = FastEnum<Fruits>.Values;
+            _ = _FastEnum.GetValues<Fruits>();
         }
 
 
@@ -34,6 +35,6 @@ namespace FastEnum.Benchmark.Scenarios
 
         [Benchmark]
         public bool FastEnum()
-            => FastEnum<Fruits>.TryParse(Value, true, out _);
+            => _FastEnum.TryParse<Fruits>(Value, true, out _);
     }
 }

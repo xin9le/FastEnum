@@ -10,7 +10,7 @@ namespace FastEnum.Tests.Cases
     {
         [Fact]
         public void IsFlags()
-            => FastEnum<TEnum>.IsFlags.Should().Be(true);
+            => FastEnum.IsFlags<TEnum>().Should().Be(true);
 
 
         [Fact]

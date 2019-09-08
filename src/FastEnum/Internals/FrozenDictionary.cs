@@ -71,14 +71,16 @@ namespace FastEnum.Internals
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
-            var bucketSize = source.CountIfMaterialized() ?? CalculateCapacity(initialSize, loadFactor);
+            var size = source.CountIfMaterialized() ?? initialSize;
+            var bucketSize = CalculateCapacity(size, loadFactor);
             var result = new FrozenDictionary<TKey, TValue>(bucketSize, loadFactor);
 
             foreach (var x in source)
             {
                 var key = keySelector(x);
                 var value = valueSelector(x);
-                result.TryAddInternal(key, value, out _);
+                if (!result.TryAddInternal(key, value, out _))
+                    throw new ArgumentException($"Key was already exists. Key:{key}");
             }
 
             return result;
@@ -275,14 +277,7 @@ namespace FastEnum.Internals
         public bool TryGetValue(TKey key, out TValue value)
         {
             var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
-            var index = hash & this.buckets.Length - 1;
-            if ((uint)index >= (uint)this.buckets.Length)
-            {
-                // ↑↑ optimize range check
-                // https://ufcpp.net/blog/2018/12/arrayindex/
-                goto NotFound;
-            }
-
+            var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
             while (next != null)
             {
@@ -293,8 +288,6 @@ namespace FastEnum.Internals
                 }
                 next = next.Next;
             }
-
-            NotFound:
             value = default;
             return false;
         }

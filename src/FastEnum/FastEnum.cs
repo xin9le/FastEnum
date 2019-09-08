@@ -521,8 +521,7 @@ namespace FastEnum
 
                 var subtract = UnderlyingOperation.Subtract(MaxValue, MinValue);
                 var count = MemberByValue.Count - 1;
-                ref var temp = ref Unsafe.As<int, T>(ref count);  // todo: NO GOOD!! must fix!!
-                return EqualityComparer<T>.Default.Equals(subtract, temp);
+                return UnderlyingOperation.Equals(subtract, count);
             }
             #endregion
         }

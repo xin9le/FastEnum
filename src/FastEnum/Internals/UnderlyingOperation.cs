@@ -13,6 +13,7 @@ namespace FastEnum.Internals
         where T : struct, Enum
     {
         T Subtract(T left, T right);
+        bool Equals(T left, int right);
         bool InBitween(T value, T min, T max);
         bool TryParse(string text, out T result);
     }
@@ -32,6 +33,13 @@ namespace FastEnum.Internals
             ref var r = ref Unsafe.As<T, sbyte>(ref right);
             var result = (sbyte)(l - r);
             return Unsafe.As<sbyte, T>(ref result);
+        }
+
+
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, sbyte>(ref left);
+            return l == right;
         }
 
 
@@ -70,6 +78,13 @@ namespace FastEnum.Internals
         }
 
 
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, byte>(ref left);
+            return l == right;
+        }
+
+
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
@@ -102,6 +117,13 @@ namespace FastEnum.Internals
             ref var r = ref Unsafe.As<T, short>(ref right);
             var result = (short)(l - r);
             return Unsafe.As<short, T>(ref result);
+        }
+
+
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, short>(ref left);
+            return l == right;
         }
 
 
@@ -140,6 +162,13 @@ namespace FastEnum.Internals
         }
 
 
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, ushort>(ref left);
+            return l == right;
+        }
+
+
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
@@ -172,6 +201,13 @@ namespace FastEnum.Internals
             ref var r = ref Unsafe.As<T, int>(ref right);
             var result = l - r;
             return Unsafe.As<int, T>(ref result);
+        }
+
+
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, int>(ref left);
+            return l == right;
         }
 
 
@@ -210,6 +246,13 @@ namespace FastEnum.Internals
         }
 
 
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, uint>(ref left);
+            return l == right;
+        }
+
+
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
@@ -245,6 +288,13 @@ namespace FastEnum.Internals
         }
 
 
+        public bool Equals(T left, int right)
+        {
+            ref var l = ref Unsafe.As<T, long>(ref left);
+            return l == right;
+        }
+
+
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
@@ -277,6 +327,16 @@ namespace FastEnum.Internals
             ref var r = ref Unsafe.As<T, ulong>(ref right);
             var result = l - r;
             return Unsafe.As<ulong, T>(ref result);
+        }
+
+
+        public bool Equals(T left, int right)
+        {
+            if (right < 0)
+                return false;
+
+            ref var l = ref Unsafe.As<T, ulong>(ref left);
+            return l == (ulong)right;
         }
 
 

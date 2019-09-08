@@ -27,6 +27,7 @@ namespace FastEnum.Internals
     internal sealed class SByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, sbyte>(ref left);
@@ -36,6 +37,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, sbyte>(ref left);
@@ -43,6 +45,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
@@ -52,6 +55,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -69,6 +73,7 @@ namespace FastEnum.Internals
     internal sealed class ByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, byte>(ref left);
@@ -78,6 +83,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, byte>(ref left);
@@ -85,6 +91,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
@@ -94,6 +101,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -111,6 +119,7 @@ namespace FastEnum.Internals
     internal sealed class Int16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, short>(ref left);
@@ -120,6 +129,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, short>(ref left);
@@ -127,6 +137,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
@@ -136,6 +147,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -153,6 +165,7 @@ namespace FastEnum.Internals
     internal sealed class UInt16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, ushort>(ref left);
@@ -162,6 +175,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, ushort>(ref left);
@@ -169,6 +183,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
@@ -178,6 +193,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -195,6 +211,7 @@ namespace FastEnum.Internals
     internal sealed class Int32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, int>(ref left);
@@ -204,6 +221,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, int>(ref left);
@@ -211,6 +229,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
@@ -220,6 +239,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -237,6 +257,7 @@ namespace FastEnum.Internals
     internal sealed class UInt32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, uint>(ref left);
@@ -246,6 +267,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, uint>(ref left);
@@ -253,6 +275,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
@@ -262,6 +285,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -279,6 +303,7 @@ namespace FastEnum.Internals
     internal sealed class Int64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, long>(ref left);
@@ -288,6 +313,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             ref var l = ref Unsafe.As<T, long>(ref left);
@@ -295,6 +321,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
@@ -304,6 +331,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;
@@ -321,6 +349,7 @@ namespace FastEnum.Internals
     internal sealed class UInt64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
             ref var l = ref Unsafe.As<T, ulong>(ref left);
@@ -330,6 +359,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(T left, int right)
         {
             if (right < 0)
@@ -340,6 +370,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool InBitween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
@@ -349,6 +380,7 @@ namespace FastEnum.Internals
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
         {
             result = default;

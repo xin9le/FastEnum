@@ -29,11 +29,11 @@ namespace FastEnum.Benchmark.Scenarios
 
         [Benchmark]
         public string EnumsNet()
-            => Value.GetName();
+            => Enums.GetName(Value);
 
 
         [Benchmark]
         public string FastEnum()
-            => Value.ToName();
+            => _FastEnum.GetName(Value);
     }
 }

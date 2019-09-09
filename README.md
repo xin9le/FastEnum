@@ -1,5 +1,5 @@
 # FastEnum
-FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum`.
+FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum` / `Enums.NET`.
 
 [![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
 
@@ -7,7 +7,7 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to us
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/64415012-6acae400-d0cf-11e9-9fbb-c0af92ae503e.png)
+![image](https://user-images.githubusercontent.com/4776688/64526273-d0240c80-d33d-11e9-80cc-7acb59759c07.png)
 
 
 
@@ -30,7 +30,7 @@ Simple to use like following, you don't confuse. The biggest limitation of this 
 
 ```cs
 //--- FastEnum
-var values = FastEnum<Fruits>.Values;
+var values = FastEnum.GetValues<Fruits>();
 
 //--- .NET
 var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
@@ -41,7 +41,7 @@ var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
 
 ```cs
 //--- FastEnum
-var names = FastEnum<Fruits>.Names;
+var names = FastEnum.GetNames<Fruits>();
 
 //--- .NET
 var names = Enum.GetNames(typeof(Fruits));
@@ -54,6 +54,7 @@ var names = Enum.GetNames(typeof(Fruits));
 ```cs
 //--- FastEnum
 var name = Fruits.Apple.ToName();
+var name = FastEnum.GetName(Fruits.Apple);
 
 //--- .NET
 var name = Fruits.Apple.ToString();
@@ -65,9 +66,9 @@ var name = Enum.GetName(typeof(Fruits), Fruits.Apple);
 
 ```cs
 //--- FastEnum
-var defined = FastEnum<Fruits>.IsDefined(Fruits.Apple);
-var defined = FastEnum<Fruits>.IsDefined(123);
-var defined = FastEnum<Fruits>.IsDefined("Apple");
+var defined = FastEnum.IsDefined(Fruits.Apple);
+var defined = FastEnum.IsDefined<Fruits>(123);
+var defined = FastEnum.IsDefined<Fruits>("Apple");
 var defined = Fruits.Apple.IsDefined();
 
 //--- .NET
@@ -81,8 +82,8 @@ var defined = Enum.IsDefined(typeof(Fruits), "Apple");
 
 ```cs
 //--- FastEnum
-var value = FastEnum<Fruits>.Parse("Apple");
-var value = FastEnum<Fruits>.Parse("123");
+var value = FastEnum.Parse<Fruits>("Apple");
+var value = FastEnum.Parse<Fruits>("123");
 
 //--- .NET
 var value = Enum.Parse<Fruits>("Apple");
@@ -93,8 +94,8 @@ var value = Enum.Parse(typeof(Fruits), "123");
 
 ```cs
 //--- FastEnum
-var ok = FastEnum<Fruits>.TryParse("Apple", out var value);
-var ok = FastEnum<Fruits>.TryParse("123", out var value);
+var ok = FastEnum.TryParse<Fruits>("Apple", out var value);
+var ok = FastEnum.TryParse<Fruits>("123", out var value);
 
 //--- .NET
 var ok = Enum.TryParse<Fruits>("Apple", out var value);

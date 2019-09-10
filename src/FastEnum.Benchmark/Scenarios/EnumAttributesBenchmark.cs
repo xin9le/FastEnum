@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using BenchmarkDotNet.Attributes;
@@ -9,7 +10,7 @@ using _FastEnum = FastEnum.FastEnum;
 
 namespace FastEnum.Benchmark.Scenarios
 {
-    public class EnumAttributeBenchmark
+    public class EnumAttributesBenchmark
     {
         private const Fruits Value = Fruits.Apple;
 
@@ -23,24 +24,25 @@ namespace FastEnum.Benchmark.Scenarios
         }
 
         [Benchmark(Baseline = true)]
-        public string NetCore()
+        public string[] NetCore()
         {
             var type = typeof(Fruits);
             var name = Enum.GetName(type, Value);
             var info = type.GetField(name);
-            var attr = info.GetCustomAttribute<DescriptionAttribute>();
-            return attr?.Description;
+            var attr = info.GetCustomAttributes<ColorAttribute>();
+            return attr.Select(x => x.Color).ToArray();
         }
 
         [Benchmark]
-        public string EnumsNet()
-            => EnumsNET.Enums.GetAttributes(Value).Get<DescriptionAttribute>()?.Description;
+        public string[] EnumsNet()
+            => EnumsNET.Enums.GetAttributes(Value).GetAll<ColorAttribute>().Select(x => x.Color).ToArray();
 
         [Benchmark]
-        public string FastEnumFromMember()
-            => Value.ToMember().GetAttribute<DescriptionAttribute>()?.Description;
+        public string[] FastEnumFromMember()
+            => Value.ToMember().GetAttributes<ColorAttribute>().Select(x => x.Color).ToArray();
         [Benchmark]
-        public string FastEnumDirect()
-            => Value.GetAttribute<Fruits, DescriptionAttribute>()?.Description;
+        public string[] FastEnumDirect()
+            => Value.GetAttributes<Fruits, ColorAttribute>().Select(x => x.Color).ToArray();
     }
+
 }

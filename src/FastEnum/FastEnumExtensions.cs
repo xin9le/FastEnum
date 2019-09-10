@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 
@@ -100,5 +104,19 @@ namespace FastEnum
                 ? throw new NotFoundException($"{typeof(TAttribute)} is not found.")
                 : attr;
         }
+
+        /// <summary>
+        /// Gets the Attribute of specified enumration member.
+        /// </summary>
+        /// <typeparam name="T">Enum Type</typeparam>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        /// <param name="value"></param>
+        /// <param name="throwIfNotFound"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IReadOnlyList<TAttribute> GetAttributes<T, TAttribute>(this T value)
+           where T : struct, Enum
+           where TAttribute : Attribute
+            => FastEnum.EnumAttributesCache<T, TAttribute>.Cache[value];
     }
 }

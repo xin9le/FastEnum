@@ -11,7 +11,7 @@ namespace FastEnum.Benchmark
         static void Main(string[] args)
         {
             var switcher = new BenchmarkSwitcher(new[]
-            {
+                {
                 typeof(GetValuesBenchmark),
                 typeof(GetNamesBenchmark),
                 typeof(GetNameBenchmark),
@@ -26,6 +26,7 @@ namespace FastEnum.Benchmark
                 typeof(DictionaryStringKeyBenchmark),
                 typeof(EnumMemberAttributeBenchmark),
                 typeof(EnumAttributeBenchmark),
+                typeof(EnumAttributesBenchmark),
             });
             switcher.Run(args, new BenchmarkConfig());
         }

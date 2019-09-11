@@ -12,7 +12,7 @@ namespace FastEnum
     /// Represents the member information of the constant in the specified enumeration.
     /// </summary>
     /// <typeparam name="T">Enum type</typeparam>
-    public sealed class Member<T>
+    public readonly struct Member<T>
         where T : struct, Enum
     {
         #region Properties

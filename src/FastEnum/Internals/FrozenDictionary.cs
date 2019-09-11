@@ -96,7 +96,7 @@ namespace FastEnum.Internals
         /// <param name="value"></param>
         /// <param name="resultingValue"></param>
         /// <returns></returns>
-        private bool TryAddInternal(TKey key, TValue value, out TValue resultingValue)
+        private bool TryAddInternal(TKey key, in TValue value, out TValue resultingValue)
         {
             var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
             if (this.buckets.Length < nextCapacity)
@@ -132,7 +132,7 @@ namespace FastEnum.Internals
 
             #region Local Functions
             //--- please pass 'key + newEntry' or 'key + value'.
-            static bool AddToBuckets(Entry[] buckets, TKey newKey, Entry newEntry, TValue value, out TValue resultingValue)
+            static bool AddToBuckets(Entry[] buckets, TKey newKey, Entry newEntry, in TValue value, out TValue resultingValue)
             {
                 var hash = newEntry?.Hash ?? EqualityComparer<TKey>.Default.GetHashCode(newKey);
                 var index = hash & (buckets.Length - 1);
@@ -321,7 +321,7 @@ namespace FastEnum.Internals
             public readonly int Hash;
             public Entry Next;
 
-            public Entry(TKey key, TValue value, int hash)
+            public Entry(TKey key, in TValue value, int hash)
             {
                 this.Key = key;
                 this.Value = value;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
-using FastEnum.Internals;
+using FastEnumUtility.Internals;
 using FluentAssertions;
 using Xunit;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class FrozenDictionaryTest
     {

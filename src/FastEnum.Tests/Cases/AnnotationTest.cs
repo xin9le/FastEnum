@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.AnnotationEnum;
+using TEnum = FastEnumUtility.Tests.Models.AnnotationEnum;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class AnnotationTest
     {

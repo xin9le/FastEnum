@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>FastEnumUtility.Tests</RootNamespace>
+        <LangVersion>8.0</LangVersion>
+        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

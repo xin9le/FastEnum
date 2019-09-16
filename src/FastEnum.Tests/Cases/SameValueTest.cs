@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.SameValueEnum;
+using TEnum = FastEnumUtility.Tests.Models.SameValueEnum;
 using TUnderlying = System.Byte;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class CornerCase
     {

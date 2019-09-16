@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 
 
-namespace FastEnum.Internals
+namespace FastEnumUtility.Internals
 {
     /// <summary>
     /// Provides underlying type specified operation interface.

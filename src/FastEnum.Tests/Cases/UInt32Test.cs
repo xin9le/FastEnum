@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.UInt32Enum;
+using TEnum = FastEnumUtility.Tests.Models.UInt32Enum;
 using TUnderlying = System.UInt32;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class UInt32Test
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using FastEnum.Benchmark.Models;
-using _FastEnum = FastEnum.FastEnum;
+using FastEnumUtility.Benchmark.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 
 
-namespace FastEnum.Benchmark.Scenarios
+namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class ToStringBenchmark
     {

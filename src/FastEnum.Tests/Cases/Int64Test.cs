@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.Int64Enum;
+using TEnum = FastEnumUtility.Tests.Models.Int64Enum;
 using TUnderlying = System.Int64;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class Int64Test
     {

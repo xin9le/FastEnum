@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using FastEnum.Benchmark.Models;
-using FastEnum.Internals;
+using FastEnumUtility.Benchmark.Models;
+using FastEnumUtility.Internals;
 
 
 
-namespace FastEnum.Benchmark.Scenarios
+namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class DictionaryIntKeyBenchmark
     {

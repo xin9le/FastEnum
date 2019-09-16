@@ -2,7 +2,7 @@
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Provides the label annotaion to be tagged to enum type fields.

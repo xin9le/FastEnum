@@ -2,7 +2,7 @@
 
 
 
-namespace FastEnum.Benchmark.Models
+namespace FastEnumUtility.Benchmark.Models
 {
     public enum Fruits : byte
     {

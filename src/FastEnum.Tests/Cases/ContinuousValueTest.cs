@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Xunit;
-using FastEnum.Tests.Models;
+using FastEnumUtility.Tests.Models;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class ContinuousValueTest
     {

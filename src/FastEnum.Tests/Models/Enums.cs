@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 
 
-namespace FastEnum.Tests.Models
+namespace FastEnumUtility.Tests.Models
 {
     public enum SByteEnum : sbyte
     {

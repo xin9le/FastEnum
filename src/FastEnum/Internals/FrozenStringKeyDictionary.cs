@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 
 
-namespace FastEnum.Internals
+namespace FastEnumUtility.Internals
 {
     /// <summary>
     /// Provides a read-only dictionary that contents are fixed at the time of instance creation.

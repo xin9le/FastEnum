@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
-using FastEnum.Benchmark.Models;
-using _FastEnum = FastEnum.FastEnum;
+using FastEnumUtility.Benchmark.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 
 
-namespace FastEnum.Benchmark.Scenarios
+namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class GetValuesBenchmark
     {

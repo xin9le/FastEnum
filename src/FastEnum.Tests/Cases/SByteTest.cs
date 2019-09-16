@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.SByteEnum;
+using TEnum = FastEnumUtility.Tests.Models.SByteEnum;
 using TUnderlying = System.SByte;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class SByteTest
     {

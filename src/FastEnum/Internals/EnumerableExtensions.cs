@@ -4,7 +4,7 @@ using System.Linq;
 
 
 
-namespace FastEnum.Internals
+namespace FastEnumUtility.Internals
 {
     /// <summary>
     /// Provides <see cref="IEnumerable{T}"/> extension methods.

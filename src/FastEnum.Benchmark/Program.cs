@@ -1,10 +1,10 @@
 ﻿using BenchmarkDotNet.Running;
-using FastEnum.Benchmark.Configurations;
-using FastEnum.Benchmark.Scenarios;
+using FastEnumUtility.Benchmark.Configurations;
+using FastEnumUtility.Benchmark.Scenarios;
 
 
 
-namespace FastEnum.Benchmark
+namespace FastEnumUtility.Benchmark
 {
     class Program
     {

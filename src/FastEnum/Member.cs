@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using FastEnum.Internals;
+using FastEnumUtility.Internals;
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Represents the member information of the constant in the specified enumeration.

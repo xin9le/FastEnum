@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using FastEnum.Internals;
+using FastEnumUtility.Internals;
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Provides high performance utilitis for enum type.

@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Provides <see cref="Enum"/> extension methods.

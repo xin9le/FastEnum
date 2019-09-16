@@ -6,7 +6,7 @@ using BenchmarkDotNet.Jobs;
 
 
 
-namespace FastEnum.Benchmark.Configurations
+namespace FastEnumUtility.Benchmark.Configurations
 {
     internal sealed class BenchmarkConfig : ManualConfig
     {

@@ -7,9 +7,7 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to us
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/64526273-d0240c80-d33d-11e9-80cc-7acb59759c07.png)
-
-
+![image](https://user-images.githubusercontent.com/4776688/64533678-f900cd80-d34e-11e9-8319-e9cebf573703.png)
 
 ``` ini
 BenchmarkDotNet=v0.11.5, OS=Windows 10.0.18362

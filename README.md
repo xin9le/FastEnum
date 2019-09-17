@@ -1,5 +1,5 @@
 # FastEnum
-FastEnum is **the fastest** enum utilities for C#/.NET. It's designed easy to use like `System.Enum`. And provided methods are all achieved zero allocation and faster than `System.Enum` / `Enums.NET`.
+FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .NET Core, and also faster than [Enums.NET](https://github.com/TylerBrinkley/Enums.NET) that is similar library. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature.
 
 [![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
 
@@ -18,128 +18,86 @@ Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical 
 ```
 
 
+# Support Platform
+
+- .NET Standard 2.0
+
+
 
 # How to use
 
-Simple to use like following, you don't confuse. The biggest limitation of this library is that it only provides a generics version, however almost cases covered.
-
-
-### Get values
+This library super easy to use like `System.Enum` that is standard of .NET. Look below:
 
 ```cs
 //--- FastEnum
 var values = FastEnum.GetValues<Fruits>();
+var names = FastEnum.GetNames<Fruits>();
+var name = FastEnum.GetName<Fruits>(Fruits.Apple);
+var name = Fruits.Apple.ToName();
+var defined = FastEnum.IsDefined<Fruits>(123);
+var parse = FastEnum.Parse<Fruits>("Apple");
+var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
+```
 
+```cs
 //--- .NET
 var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
-```
-
-
-### Get names
-
-```cs
-//--- FastEnum
-var names = FastEnum.GetNames<Fruits>();
-
-//--- .NET
 var names = Enum.GetNames(typeof(Fruits));
-```
-
-
-
-### Convert to name
-
-```cs
-//--- FastEnum
-var name = Fruits.Apple.ToName();
-var name = FastEnum.GetName(Fruits.Apple);
-
-//--- .NET
-var name = Fruits.Apple.ToString();
 var name = Enum.GetName(typeof(Fruits), Fruits.Apple);
-```
-
-
-### Check whether value is defined
-
-```cs
-//--- FastEnum
-var defined = FastEnum.IsDefined(Fruits.Apple);
-var defined = FastEnum.IsDefined<Fruits>(123);
-var defined = FastEnum.IsDefined<Fruits>("Apple");
-var defined = Fruits.Apple.IsDefined();
-
-//--- .NET
-var defined = Enum.IsDefined(typeof(Fruits), Fruits.Apple);
+var name = Fruits.Apple.ToString();
 var defined = Enum.IsDefined(typeof(Fruits), 123);
-var defined = Enum.IsDefined(typeof(Fruits), "Apple");
+var parse = Enum.Parse<Fruits>("Apple");
+var tryParse = Enum.TryParse<Fruits>("Apple", out var value);
 ```
 
+As you can see, the replacement from `System.Enum` is very easy. You never confuse.
 
-### Parse / TryParse
+
+
+# More features
+
+There are some functions that are often used for enum, and you can be used more conveniently by including them together.
+
+
+## 1. Gets pairwised member information
+
+Sometimes you want value / name pair of enum. `Member<TEnum>` can be used under such cases. `FieldInfo` is also included, so please use it for reflection code.
+
 
 ```cs
-//--- FastEnum
-var value = FastEnum.Parse<Fruits>("Apple");
-var value = FastEnum.Parse<Fruits>("123");
-
-//--- .NET
-var value = Enum.Parse<Fruits>("Apple");
-var value = Enum.Parse<Fruits>("123");
-var value = Enum.Parse(typeof(Fruits), "Apple");
-var value = Enum.Parse(typeof(Fruits), "123");
-```
-
-```cs
-//--- FastEnum
-var ok = FastEnum.TryParse<Fruits>("Apple", out var value);
-var ok = FastEnum.TryParse<Fruits>("123", out var value);
-
-//--- .NET
-var ok = Enum.TryParse<Fruits>("Apple", out var value);
-var ok = Enum.TryParse<Fruits>("123", out var value);
-var ok = Enum.TryParse(typeof(Fruits), "Apple", out var value);
-var ok = Enum.TryParse(typeof(Fruits), "123", out var value);
-```
-
-
-### Get field member information
-
-```cs
-//--- FastEnum
-var member = Fruits.Apple.ToMember();
-
-//--- .NET
-Not supported.
-```
-
-
-
-### Get `EnumMemberAttribute.Value`
-
-```cs
-enum Fruits
+class Member<TEnum>
 {
-    [EnumMember(Value = "_apple_")]
+    public TEnum Value { get; }
+    public string Name { get; }
+    public FieldInfo FieldInfo { get; }
+    // etc...
+}
+
+var member = Fruits.Apple.ToMember();
+```
+
+
+## 2. Gets `EnumMemberAttribute.Value`
+
+I often see the developer using `EnumMemberAttribute` as an alias for field name. So FastEnum provides an API that the value can be quickly obtained from the `EnumMemberAttribute.Value` property.
+
+
+```cs
+enum Company
+{
+    [EnumMember(Value = "Apple, Inc.")]
     Apple = 0,
 }
 
-//--- FastEnum
-var value = Fruits.Apple.GetEnumMemberValue();  // _apple_
-
-//--- .NET
-var type = typeof(Fruits);
-var name = Enum.GetName(type, Fruits.Apple);
-var info = type.GetField(name);
-var attr = info.GetCustomAttribute<EnumMemberAttribute>();
-var value = attr.Value;  // _apple_
+var value = Company.Apple.GetEnumMemberValue();  // Apple, Inc.
 ```
 
 
 
-### Get label
+## 3. Adds multiple label annotations to a field
 
-FastEnum provides the `LabelAttribute` that allows multiple text annotation for each enumeration member.
+Multiple attributes can’t be attached to the same field, since `EnumMemberAttribute` is specified `AllowMultiple = false`. It’s inconvenient and I don’t like it personally, so I often use my own `LabelAttribute` as an alternative. You can use it conveniently as follows, because FastEnum provides this feature.
+
 
 ```cs
 enum Company
@@ -149,13 +107,46 @@ enum Company
     Apple = 0,
 }
 
-//--- FastEnum
-var label_0 = Company.Apple.GetLabel();   // Apple, Inc.
-var label_1 = Company.Apple.GetLabel(1);  // AAPL
-
-//--- .NET
-Not supported.
+var x1 = Company.Apple.GetLabel();   // Apple, Inc.
+var x2 = Company.Apple.GetLabel(1);  // AAPL
 ```
+
+
+# Limitation
+
+## 1. Provides only generics API
+FastEnum provides only generics version method because of performance reason. `System.Enum` provides `System.Type` argument overload, but that’s too slow because of boxing occuration. If you need to use the method that passes `System.Type` type, please use `System.Enum` version.
+
+
+
+## 2. Can’t parse comma-separated string
+`System.Enum.Parse` can parse like following string. I think that it isn’t well known because it is a specification that exists quietly.
+
+
+```cs
+//--- Assuming there is an enum type like following...
+[Flags]
+enum Fruits
+{
+    Apple = 1,
+    Lemon = 2,
+    Melon = 4,
+    Banana = 8,
+}
+
+//--- Passes comma-separated string
+var value = Enum.Parse<Fruits>("Apple, Melon");
+Console.WriteLine((int)value);  // 5
+```
+
+It seems to be a useful function when performing flag processing, but if tries to add such a comma-separated analysis, the overhead will come out, so cutting this feature off makes speed up. I think that in most cases there is no problem, because this feature is rarely used (at least I have NEVER used for 12 years).
+
+
+
+# Why fast ?
+
+As you might expect, it’s because cached internally. It takes the approach of **Static Type Caching**, so the reading cost is **almost zero**. Based on this, I use techniques for avoiding allocation, and create specialized dictionary for specific key internally.
+
 
 
 

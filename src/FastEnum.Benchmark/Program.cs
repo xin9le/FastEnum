@@ -25,6 +25,7 @@ namespace FastEnumUtility.Benchmark
                 typeof(DictionaryIntKeyBenchmark),
                 typeof(DictionaryStringKeyBenchmark),
                 typeof(EnumMemberAttributeBenchmark),
+                typeof(ForEachBenchmark),
             });
             switcher.Run(args, new BenchmarkConfig());
         }

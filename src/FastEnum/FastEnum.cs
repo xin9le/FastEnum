@@ -467,9 +467,9 @@ namespace FastEnumUtility
             #region Fields
             public static readonly Type Type;
             public static readonly Type UnderlyingType;
-            public static readonly T[] Values;
-            public static readonly string[] Names;
-            public static readonly Member<T>[] Members;
+            public static readonly ReadOnlyArray<T> Values;
+            public static readonly ReadOnlyArray<string> Names;
+            public static readonly ReadOnlyArray<Member<T>> Members;
             public static readonly T MinValue;
             public static readonly T MaxValue;
             public static readonly bool IsEmpty;
@@ -486,12 +486,12 @@ namespace FastEnumUtility
             {
                 Type = typeof(T);
                 UnderlyingType = Enum.GetUnderlyingType(Type);
-                Values = Enum.GetValues(Type) as T[];
-                Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
-                Members = Names.Select(x => new Member<T>(x)).ToArray();
+                Values = (Enum.GetValues(Type) as T[]).AsReadOnly();
+                Names = Enum.GetNames(Type).Select(string.Intern).ToReadOnlyArray();
+                Members = Names.Select(x => new Member<T>(x)).ToReadOnlyArray();
                 MinValue = Values.DefaultIfEmpty().Min();
                 MaxValue = Values.DefaultIfEmpty().Max();
-                IsEmpty = Values.Length == 0;
+                IsEmpty = Values.Count == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);

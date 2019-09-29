@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 
 
-namespace FastEnum.Tests.Models
+namespace FastEnumUtility.Tests.Models
 {
     public enum SByteEnum : sbyte
     {
@@ -66,7 +66,7 @@ namespace FastEnum.Tests.Models
 
 
     [Flags]
-    public enum Flags
+    public enum AnnotationEnum
     {
         [EnumMember(Value = "_zero_")]
         [Label("ぜろ")]
@@ -83,10 +83,44 @@ namespace FastEnum.Tests.Models
     }
 
 
-    public enum CornerCase : byte
+    public enum SameValueEnum : byte
     {
         MinValue = byte.MinValue,  // Name is different, but value is same as other member.
         Zero = 0,
         MaxValue = byte.MaxValue,
     }
+
+
+    public enum ContinuousValueEnum
+    {
+        A = -1,
+        B,
+        C,
+        D,
+        E,
+    }
+
+
+    public enum ContinuousValueContainsSameValueEnum
+    {
+        A = -1,
+        B = 0,
+        C = 1,
+        D = 1,  // Name is different, but value is same as other member.
+        E = 2,
+    }
+
+
+    public enum NotContinuousValueEnum
+    {
+        A = -1,
+        B = 0,
+        C = 1,
+        D = 2,
+        E = 4,  // Not continuous value
+    }
+
+
+    public enum EmptyEnum
+    {}
 }

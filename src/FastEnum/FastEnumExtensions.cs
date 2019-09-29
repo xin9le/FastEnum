@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Provides <see cref="Enum"/> extension methods.
@@ -23,7 +23,7 @@ namespace FastEnum
         /// <returns></returns>
         public static Member<T> ToMember<T>(this T value)
             where T : struct, Enum
-            => FastEnum.Cache<T>.MemberByValue[value];
+            => FastEnum.GetMember(value);
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace FastEnum
         /// <returns></returns>
         public static string ToName<T>(this T value)
             where T : struct, Enum
-            => value.ToMember().Name;
+            => FastEnum.GetName(value);
 
 
         /// <summary>

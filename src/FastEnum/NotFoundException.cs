@@ -2,7 +2,7 @@
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Represents an exception that is thrown when not found something.

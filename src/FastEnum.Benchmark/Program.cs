@@ -1,10 +1,10 @@
 ﻿using BenchmarkDotNet.Running;
-using FastEnum.Benchmark.Configurations;
-using FastEnum.Benchmark.Scenarios;
+using FastEnumUtility.Benchmark.Configurations;
+using FastEnumUtility.Benchmark.Scenarios;
 
 
 
-namespace FastEnum.Benchmark
+namespace FastEnumUtility.Benchmark
 {
     class Program
     {
@@ -25,6 +25,7 @@ namespace FastEnum.Benchmark
                 typeof(DictionaryIntKeyBenchmark),
                 typeof(DictionaryStringKeyBenchmark),
                 typeof(EnumMemberAttributeBenchmark),
+                typeof(ForEachBenchmark),
                 typeof(EnumAttributeBenchmark),
                 typeof(EnumAttributesBenchmark),
             });

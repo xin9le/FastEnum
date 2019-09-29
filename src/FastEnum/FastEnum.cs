@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using FastEnum.Internals;
+using FastEnumUtility.Internals;
 
 
 
-namespace FastEnum
+namespace FastEnumUtility
 {
     /// <summary>
     /// Provides high performance utilitis for enum type.
@@ -16,18 +16,6 @@ namespace FastEnum
     {
         #region Constants
         private const string IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
-        #endregion
-
-
-        #region IsFlags
-        /// <summary>
-        /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-        /// </summary>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsFlags<T>()
-            where T : struct, Enum
-            => Cache<T>.IsFlags;
         #endregion
 
 
@@ -55,7 +43,7 @@ namespace FastEnum
         #endregion
 
 
-        #region GetNames
+        #region GetNames / GetName
         /// <summary>
         /// Retrieves an array of the names of the constants in a specified enumeration.
         /// </summary>
@@ -64,10 +52,21 @@ namespace FastEnum
         public static IReadOnlyList<string> GetNames<T>()
             where T : struct, Enum
             => Cache<T>.Names;
+
+
+        /// <summary>
+        /// Retrieves the name of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetName<T>(T value)
+            where T : struct, Enum
+            => GetMember(value).Name;
         #endregion
 
 
-        #region GetMembers
+        #region GetMembers / GetMember
         /// <summary>
         /// Retrieves an array of the member information of the constants in a specified enumeration.
         /// </summary>
@@ -76,6 +75,79 @@ namespace FastEnum
         public static IReadOnlyList<Member<T>> GetMembers<T>()
             where T : struct, Enum
             => Cache<T>.Members;
+
+
+        /// <summary>
+        /// Retrieves the member information of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Member<T> GetMember<T>(T value)
+            where T : struct, Enum
+            => Cache<T>.MemberByValue.TryGetValue(value, out var member)
+            ? member
+            : throw new ArgumentException(nameof(value));
+        #endregion
+
+
+        #region GetMinValue / GetMaxValue
+        /// <summary>
+        /// Returns the minimum value.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetMinValue<T>()
+            where T : struct, Enum
+            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MinValue;
+
+
+        /// <summary>
+        /// Returns the maximum value.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetMaxValue<T>()
+            where T : struct, Enum
+            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MaxValue;
+        #endregion
+
+
+        #region IsEmpty
+        /// <summary>
+        /// Returns whether no fields in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsEmpty<T>()
+            where T : struct, Enum
+            => Cache<T>.IsEmpty;
+        #endregion
+
+
+        #region IsContinuous
+        /// <summary>
+        /// Returns whether the values of the constants in a specified enumeration are continuous.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsContinuous<T>()
+            where T : struct, Enum
+            => Cache<T>.IsContinuous;
+        #endregion
+
+
+        #region IsFlags
+        /// <summary>
+        /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static bool IsFlags<T>()
+            where T : struct, Enum
+            => Cache<T>.IsFlags;
         #endregion
 
 
@@ -86,9 +158,12 @@ namespace FastEnum
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.MemberByValue.ContainsKey(value);
+            => Cache<T>.IsContinuous
+            ? Cache<T>.UnderlyingOperation.InBitween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
+            : Cache<T>.MemberByValue.ContainsKey(value);
 
 
         /// <summary>
@@ -316,151 +391,19 @@ namespace FastEnum
         private static bool TryParseInternal<T>(string value, bool ignoreCase, out T result)
             where T : struct, Enum
         {
-            if (!StartsNumber(value[0]))
+            if (!IsNumeric(value[0]))
                 return TryParseName(value, ignoreCase, out result);
 
-            return Type.GetTypeCode(typeof(T)) switch
+            if (Cache<T>.UnderlyingOperation.TryParse(value, out var @enum))
             {
-                TypeCode.SByte => TryParseSByte(value, out result),
-                TypeCode.Byte => TryParseByte(value, out result),
-                TypeCode.Int16 => TryParseInt16(value, out result),
-                TypeCode.UInt16 => TryParseUInt16(value, out result),
-                TypeCode.Int32 => TryParseInt32(value, out result),
-                TypeCode.UInt32 => TryParseUInt32(value, out result),
-                TypeCode.Int64 => TryParseInt64(value, out result),
-                TypeCode.UInt64 => TryParseUInt64(value, out result),
-                _ => throw new InvalidOperationException(),
-            };
-
-
-            #region Local Functions
-            static bool TryParseSByte(string value, out T result)
-            {
-                if (sbyte.TryParse(value, out var converted))
+                if (IsDefined(@enum))
                 {
-                    ref var @enum = ref Unsafe.As<sbyte, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
+                    result = @enum;
+                    return true;
                 }
-                result = default;
-                return false;
             }
-
-
-            static bool TryParseByte(string value, out T result)
-            {
-                if (byte.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<byte, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt16(string value, out T result)
-            {
-                if (short.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<short, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt16(string value, out T result)
-            {
-                if (ushort.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<ushort, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt32(string value, out T result)
-            {
-                if (int.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<int, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt32(string value, out T result)
-            {
-                if (uint.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<uint, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseInt64(string value, out T result)
-            {
-                if (long.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<long, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-
-
-            static bool TryParseUInt64(string value, out T result)
-            {
-                if (ulong.TryParse(value, out var converted))
-                {
-                    ref var @enum = ref Unsafe.As<ulong, T>(ref converted);
-                    if (Cache<T>.MemberByValue.ContainsKey(@enum))
-                    {
-                        result = @enum;
-                        return true;
-                    }
-                }
-                result = default;
-                return false;
-            }
-            #endregion
+            result = default;
+            return false;
         }
 
 
@@ -470,7 +413,7 @@ namespace FastEnum
         /// <param name="c"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool StartsNumber(char c)
+        private static bool IsNumeric(char c)
             => char.IsDigit(c) || c == '-' || c == '+';
 
 
@@ -519,73 +462,67 @@ namespace FastEnum
         /// Provides cache for enum type members.
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
-        internal static class Cache<T>
+        private static class Cache<T>
             where T : struct, Enum
         {
-            #region Properties
-            /// <summary>
-            /// Returns the type of the specified enumeration.
-            /// </summary>
-            public static Type Type { get; }
-
-
-            /// <summary>
-            /// Returns the underlying type of the specified enumeration.
-            /// </summary>
-            public static Type UnderlyingType { get; }
-
-
-            /// <summary>
-            /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-            /// </summary>
-            public static bool IsFlags { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the values of the constants in a specified enumeration.
-            /// </summary>
-            public static T[] Values { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the names of the constants in a specified enumeration.
-            /// </summary>
-            public static string[] Names { get; }
-
-
-            /// <summary>
-            /// Retrieves an array of the member information of the constants in a specified enumeration.
-            /// </summary>
-            public static Member<T>[] Members { get; }
-
-
-            /// <summary>
-            /// Retrieves a member information of the constants in a specified enumeration by value.
-            /// </summary>
-            public static FrozenDictionary<T, Member<T>> MemberByValue { get; }
-
-
-            /// <summary>
-            /// Retrieves a member information of the constants in a specified enumeration by name.
-            /// </summary>
-            public static StringKeyFrozenDictionary<Member<T>> MemberByName { get; }
+            #region Fields
+            public static readonly Type Type;
+            public static readonly Type UnderlyingType;
+            public static readonly ReadOnlyArray<T> Values;
+            public static readonly ReadOnlyArray<string> Names;
+            public static readonly ReadOnlyArray<Member<T>> Members;
+            public static readonly T MinValue;
+            public static readonly T MaxValue;
+            public static readonly bool IsEmpty;
+            public static readonly bool IsContinuous;
+            public static readonly bool IsFlags;
+            public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
+            public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
+            public static readonly IUnderlyingOperation<T> UnderlyingOperation;
             #endregion
 
 
             #region Constructors
-            /// <summary>
-            /// Called when this type is used for the first time.
-            /// </summary>
             static Cache()
             {
                 Type = typeof(T);
                 UnderlyingType = Enum.GetUnderlyingType(Type);
+                Values = (Enum.GetValues(Type) as T[]).AsReadOnly();
+                Names = Enum.GetNames(Type).Select(string.Intern).ToReadOnlyArray();
+                Members = Names.Select(x => new Member<T>(x)).ToReadOnlyArray();
+                MinValue = Values.DefaultIfEmpty().Min();
+                MaxValue = Values.DefaultIfEmpty().Max();
+                IsEmpty = Values.Count == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
-                Values = Enum.GetValues(Type) as T[];
-                Names = Enum.GetNames(Type).Select(string.Intern).ToArray();
-                Members = Names.Select(x => new Member<T>(x)).ToArray();
                 MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
-                MemberByName = Members.ToStringKeyFrozenDictionary(x => x.Name);
+                MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
+                UnderlyingOperation
+                    = Type.GetTypeCode(Type) switch
+                    {
+                        TypeCode.SByte => new SByteOperation<T>() as IUnderlyingOperation<T>,
+                        TypeCode.Byte => new ByteOperation<T>(),
+                        TypeCode.Int16 => new Int16Operation<T>(),
+                        TypeCode.UInt16 => new UInt16Operation<T>(),
+                        TypeCode.Int32 => new Int32Operation<T>(),
+                        TypeCode.UInt32 => new UInt32Operation<T>(),
+                        TypeCode.Int64 => new Int64Operation<T>(),
+                        TypeCode.UInt64 => new UInt64Operation<T>(),
+                        _ => throw new InvalidOperationException(),
+                    };
+                IsContinuous = IsContinuousInternal();
+            }
+            #endregion
+
+
+            #region Utility
+            private static bool IsContinuousInternal()
+            {
+                if (IsEmpty)
+                    return false;
+
+                var subtract = UnderlyingOperation.Subtract(MaxValue, MinValue);
+                var count = MemberByValue.Count - 1;
+                return UnderlyingOperation.Equals(subtract, count);
             }
             #endregion
         }

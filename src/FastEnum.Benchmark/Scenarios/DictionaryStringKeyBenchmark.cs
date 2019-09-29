@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using FastEnum.Benchmark.Models;
-using FastEnum.Internals;
+using FastEnumUtility.Benchmark.Models;
+using FastEnumUtility.Internals;
 
 
 
-namespace FastEnum.Benchmark.Scenarios
+namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class DictionaryStringKeyBenchmark
     {
@@ -16,7 +16,7 @@ namespace FastEnum.Benchmark.Scenarios
 
         private Dictionary<string, Member<Fruits>> Standard { get; set; }
         private FrozenDictionary<string, Member<Fruits>> GenericsKeyFrozen { get; set; }
-        private StringKeyFrozenDictionary<Member<Fruits>> StringKeyFrozen { get; set; }
+        private FrozenStringKeyDictionary<Member<Fruits>> StringKeyFrozen { get; set; }
         private Hashtable Table { get; set; }
 
 
@@ -26,7 +26,7 @@ namespace FastEnum.Benchmark.Scenarios
             var members = FastEnum.GetMembers<Fruits>();
             this.Standard = members.ToDictionary(x => x.Name);
             this.GenericsKeyFrozen = members.ToFrozenDictionary(x => x.Name);
-            this.StringKeyFrozen = members.ToStringKeyFrozenDictionary(x => x.Name);
+            this.StringKeyFrozen = members.ToFrozenStringKeyDictionary(x => x.Name);
             this.Table = new Hashtable(members.Count);
             foreach (var x in members)
                 this.Table[x.Name] = x;
@@ -44,7 +44,7 @@ namespace FastEnum.Benchmark.Scenarios
 
 
         [Benchmark]
-        public bool StringKeyFrozenDictionary()
+        public bool FrozenStringKeyDictionary()
             => this.StringKeyFrozen.TryGetValue(LookupKey, out _);
 
 

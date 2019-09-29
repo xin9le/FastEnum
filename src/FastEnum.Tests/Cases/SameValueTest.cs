@@ -1,17 +1,17 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.CornerCase;
+using TEnum = FastEnumUtility.Tests.Models.SameValueEnum;
 using TUnderlying = System.Byte;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class CornerCase
     {
         [Fact]
-        public void Values()
+        public void GetValues()
         {
             var expect = Enum.GetValues(typeof(TEnum));
             var actual = FastEnum.GetValues<TEnum>();
@@ -20,7 +20,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Names()
+        public void GetNames()
         {
             var expect = Enum.GetNames(typeof(TEnum));
             var actual = FastEnum.GetNames<TEnum>();
@@ -29,7 +29,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Members()
+        public void GetMembers()
         {
             var expect = new[]
             {
@@ -119,7 +119,7 @@ namespace FastEnum.Tests.Cases
                 FastEnum.Parse<TEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
                 FastEnum.Parse<TEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
             }
-            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
         }
 
 

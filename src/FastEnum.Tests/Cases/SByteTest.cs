@@ -1,27 +1,22 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using TEnum = FastEnum.Tests.Models.SByteEnum;
+using TEnum = FastEnumUtility.Tests.Models.SByteEnum;
 using TUnderlying = System.SByte;
 
 
 
-namespace FastEnum.Tests.Cases
+namespace FastEnumUtility.Tests.Cases
 {
     public class SByteTest
     {
         [Fact]
-        public void UnderlyingType()
+        public void GetUnderlyingType()
             => FastEnum.GetUnderlyingType<TEnum>().Should().Be<TUnderlying>();
 
 
         [Fact]
-        public void IsFlags()
-            => FastEnum.IsFlags<TEnum>().Should().Be(false);
-
-
-        [Fact]
-        public void Values()
+        public void GetValues()
         {
             var expect = new[]
             {
@@ -35,7 +30,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Names()
+        public void GetNames()
         {
             var expect = new[]
             {
@@ -49,7 +44,7 @@ namespace FastEnum.Tests.Cases
 
 
         [Fact]
-        public void Members()
+        public void GetMembers()
         {
             var expect = new[]
             {
@@ -69,6 +64,39 @@ namespace FastEnum.Tests.Cases
                 a.FieldInfo.Should().Be(e.FieldInfo);
             }
         }
+
+
+        [Fact]
+        public void GetMinValue()
+        {
+            var min = FastEnum.GetMinValue<TEnum>();
+            min.Should().NotBeNull();
+            min.Should().Be(TUnderlying.MinValue);
+        }
+
+
+        [Fact]
+        public void GetMaxValue()
+        {
+            var min = FastEnum.GetMaxValue<TEnum>();
+            min.Should().NotBeNull();
+            min.Should().Be(TUnderlying.MaxValue);
+        }
+
+
+        [Fact]
+        public void IsEmpty()
+            => FastEnum.IsEmpty<TEnum>().Should().Be(false);
+
+
+        [Fact]
+        public void IsContinuous()
+            => FastEnum.IsContinuous<TEnum>().Should().Be(false);
+
+
+        [Fact]
+        public void IsFlags()
+            => FastEnum.IsFlags<TEnum>().Should().Be(false);
 
 
         [Fact]
@@ -139,7 +167,7 @@ namespace FastEnum.Tests.Cases
                 FastEnum.Parse<TEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
                 FastEnum.Parse<TEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
             }
-            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
         }
 
 

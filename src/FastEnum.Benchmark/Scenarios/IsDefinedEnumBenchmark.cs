@@ -1,12 +1,12 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
-using FastEnum.Benchmark.Models;
-using _FastEnum = FastEnum.FastEnum;
+using FastEnumUtility.Benchmark.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 
 
-namespace FastEnum.Benchmark.Scenarios
+namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class IsDefinedEnumBenchmark
     {
@@ -34,6 +34,6 @@ namespace FastEnum.Benchmark.Scenarios
 
         [Benchmark]
         public void FastEnum()
-            => _FastEnum.IsDefined<Fruits>(Value);
+            => _FastEnum.IsDefined(Value);
     }
 }

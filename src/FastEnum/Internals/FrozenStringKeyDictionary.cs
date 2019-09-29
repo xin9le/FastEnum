@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 
 
-namespace FastEnum.Internals
+namespace FastEnumUtility.Internals
 {
     /// <summary>
     /// Provides a read-only dictionary that contents are fixed at the time of instance creation.
@@ -14,9 +15,9 @@ namespace FastEnum.Internals
     /// Reference:
     /// https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack.UnityClient/Assets/Scripts/MessagePack/Internal/ThreadsafeTypeKeyHashTable.cs
     /// 
-    /// This class is int specialized <see cref="FrozenDictionary{TKey, TValue}"/>.
+    /// This class is string specialized <see cref="FrozenDictionary{TKey, TValue}"/>.
     /// </remarks>
-    internal sealed class IntKeyFrozenDictionary<TValue> : IReadOnlyDictionary<int, TValue>
+    internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<string, TValue>
     {
         #region Constants
         private static readonly Func<TValue, TValue> PassThrough = x => x;
@@ -24,9 +25,9 @@ namespace FastEnum.Internals
 
 
         #region Properties
-        private Entry[] Buckets { get; set; }
-        private int Size { get; set; }
-        private float LoadFactor { get; }
+        private Entry[] buckets;
+        private int size;
+        private readonly float loadFactor;
         #endregion
 
 
@@ -36,34 +37,34 @@ namespace FastEnum.Internals
         /// </summary>
         /// <param name="bucketSize"></param>
         /// <param name="loadFactor"></param>
-        private IntKeyFrozenDictionary(int bucketSize, float loadFactor)
+        private FrozenStringKeyDictionary(int bucketSize, float loadFactor)
         {
-            this.Buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-            this.LoadFactor = loadFactor;
+            this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+            this.loadFactor = loadFactor;
         }
         #endregion
 
 
         #region Create
         /// <summary>
-        /// Creates a <see cref="IntKeyFrozenDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
+        /// Creates a <see cref="FrozenStringKeyDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        public static IntKeyFrozenDictionary<TValue> Create(IEnumerable<TValue> source, Func<TValue, int> keySelector)
+        public static FrozenStringKeyDictionary<TValue> Create(IEnumerable<TValue> source, Func<TValue, string> keySelector)
             => Create(source, keySelector, PassThrough);
 
 
         /// <summary>
-        ///  Creates a <see cref="IntKeyFrozenDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
+        ///  Creates a <see cref="FrozenStringKeyDictionary{TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <param name="valueSelector"></param>
         /// <returns></returns>
-        public static IntKeyFrozenDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
+        public static FrozenStringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
@@ -71,14 +72,16 @@ namespace FastEnum.Internals
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
-            var bucketSize = source.CountIfMaterialized() ?? CalculateCapacity(initialSize, loadFactor);
-            var result = new IntKeyFrozenDictionary<TValue>(bucketSize, loadFactor);
+            var size = source.CountIfMaterialized() ?? initialSize;
+            var bucketSize = CalculateCapacity(size, loadFactor);
+            var result = new FrozenStringKeyDictionary<TValue>(bucketSize, loadFactor);
 
             foreach (var x in source)
             {
                 var key = keySelector(x);
                 var value = valueSelector(x);
-                result.TryAddInternal(key, value, out _);
+                if (!result.TryAddInternal(key, value, out _))
+                    throw new ArgumentException($"Key was already exists. Key:{key}");
             }
 
             return result;
@@ -94,16 +97,16 @@ namespace FastEnum.Internals
         /// <param name="value"></param>
         /// <param name="resultingValue"></param>
         /// <returns></returns>
-        private bool TryAddInternal(int key, TValue value, out TValue resultingValue)
+        private bool TryAddInternal(string key, TValue value, out TValue resultingValue)
         {
-            var nextCapacity = CalculateCapacity(this.Size + 1, this.LoadFactor);
-            if (this.Buckets.Length < nextCapacity)
+            var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
+            if (this.buckets.Length < nextCapacity)
             {
                 //--- rehash
                 var nextBucket = new Entry[nextCapacity];
-                for (int i = 0; i < this.Buckets.Length; i++)
+                for (int i = 0; i < this.buckets.Length; i++)
                 {
-                    var e = this.Buckets[i];
+                    var e = this.buckets[i];
                     while (e != null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -113,24 +116,24 @@ namespace FastEnum.Internals
                 }
 
                 var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-                this.Buckets = nextBucket;
+                this.buckets = nextBucket;
                 if (success)
-                    this.Size++;
+                    this.size++;
 
                 return success;
             }
             else
             {
-                var success = AddToBuckets(this.Buckets, key, null, value, out resultingValue);
+                var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
                 if (success)
-                    this.Size++;
+                    this.size++;
 
                 return success;
             }
 
             #region Local Functions
             //--- please pass 'key + newEntry' or 'key + value'.
-            static bool AddToBuckets(Entry[] buckets, int newKey, Entry newEntry, TValue value, out TValue resultingValue)
+            static bool AddToBuckets(Entry[] buckets, string newKey, Entry newEntry, TValue value, out TValue resultingValue)
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
@@ -210,7 +213,7 @@ namespace FastEnum.Internals
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public TValue GetValueOrDefault(int key, TValue defaultValue = default)
+        public TValue GetValueOrDefault(string key, TValue defaultValue = default)
             => this.TryGetValue(key, out var value)
             ? value
             : defaultValue;
@@ -223,7 +226,7 @@ namespace FastEnum.Internals
         /// </summary>
         /// <param name="key">The key to locate.</param>
         /// <returns>The element that has the specified key in the read-only dictionary.</returns>
-        public TValue this[int key]
+        public TValue this[string key]
             => this.TryGetValue(key, out var value)
             ? value
             : throw new KeyNotFoundException();
@@ -232,7 +235,7 @@ namespace FastEnum.Internals
         /// <summary>
         /// Gets an enumerable collection that contains the keys in the read-only dictionary.
         /// </summary>
-        public IEnumerable<int> Keys
+        public IEnumerable<string> Keys
             => throw new NotImplementedException();
 
 
@@ -247,7 +250,7 @@ namespace FastEnum.Internals
         /// Gets the number of elements in the collection.
         /// </summary>
         public int Count
-            => this.Size;
+            => this.size;
 
 
         /// <summary>
@@ -257,7 +260,7 @@ namespace FastEnum.Internals
         /// <returns>
         /// true if the read-only dictionary contains an element that has the specified key; otherwise, false.
         /// </returns>
-        public bool ContainsKey(int key)
+        public bool ContainsKey(string key)
             => this.TryGetValue(key, out _);
 
 
@@ -271,18 +274,12 @@ namespace FastEnum.Internals
         /// This parameter is passed uninitialized.
         /// </param>
         /// <returns>true if the object that implements the <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an element that has the specified key; otherwise, false.</returns>
-        public bool TryGetValue(int key, out TValue value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryGetValue(string key, out TValue value)
         {
             var hash = key.GetHashCode();
-            var index = hash & this.Buckets.Length - 1;
-            if ((uint)index >= (uint)this.Buckets.Length)
-            {
-                // ↑↑ optimize range check
-                // https://ufcpp.net/blog/2018/12/arrayindex/
-                goto NotFound;
-            }
-
-            var next = this.Buckets[index];
+            var index = hash & (this.buckets.Length - 1);
+            var next = this.buckets[index];
             while (next != null)
             {
                 if (next.Key == key)
@@ -292,8 +289,6 @@ namespace FastEnum.Internals
                 }
                 next = next.Next;
             }
-
-            NotFound:
             value = default;
             return false;
         }
@@ -303,7 +298,7 @@ namespace FastEnum.Internals
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<KeyValuePair<int, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, TValue>> GetEnumerator()
             => throw new NotImplementedException();
 
 
@@ -318,16 +313,16 @@ namespace FastEnum.Internals
 
         #region Inner Classes
         /// <summary>
-        /// Represents <see cref="StringKeyFrozenDictionary{TValue}"/> entry.
+        /// Represents <see cref="FrozenStringKeyDictionary{TValue}"/> entry.
         /// </summary>
         private class Entry
         {
-            public int Key { get; }
-            public TValue Value { get; }
-            public int Hash { get; }
-            public Entry Next { get; set; }
+            public readonly string Key;
+            public readonly TValue Value;
+            public readonly int Hash;
+            public Entry Next;
 
-            public Entry(int key, TValue value, int hash)
+            public Entry(string key, TValue value, int hash)
             {
                 this.Key = key;
                 this.Value = value;

@@ -14,7 +14,7 @@ namespace FastEnumUtility.Internals
     {
         T Subtract(T left, T right);
         bool Equals(T left, int right);
-        bool InBitween(T value, T min, T max);
+        bool InBetween(T value, T min, T max);
         bool TryParse(string text, out T result);
     }
 
@@ -46,7 +46,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
             ref var lower = ref Unsafe.As<T, sbyte>(ref min);
@@ -92,7 +92,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
             ref var lower = ref Unsafe.As<T, byte>(ref min);
@@ -138,7 +138,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
             ref var lower = ref Unsafe.As<T, short>(ref min);
@@ -184,7 +184,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
             ref var lower = ref Unsafe.As<T, ushort>(ref min);
@@ -230,7 +230,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
             ref var lower = ref Unsafe.As<T, int>(ref min);
@@ -276,7 +276,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
             ref var lower = ref Unsafe.As<T, uint>(ref min);
@@ -322,7 +322,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
             ref var lower = ref Unsafe.As<T, long>(ref min);
@@ -371,7 +371,7 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBitween(T value, T min, T max)
+        public bool InBetween(T value, T min, T max)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
             ref var lower = ref Unsafe.As<T, ulong>(ref min);

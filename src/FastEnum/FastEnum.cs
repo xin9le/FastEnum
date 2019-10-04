@@ -161,7 +161,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
             => Cache<T>.IsContinuous
-            ? Cache<T>.UnderlyingOperation.InBitween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
+            ? Cache<T>.UnderlyingOperation.InBetween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
             : Cache<T>.MemberByValue.ContainsKey(value);
 
 

@@ -58,6 +58,8 @@ namespace FastEnumUtility.Tests.Cases
                 .Invoking(() => TEnum.Two.GetLabel(0, throwIfNotFound: true))
                 .Should()
                 .Throw<NotFoundException>();
+
+            TEnum.Four.GetLabel(2).Should().BeNull();
         }
     }
 }

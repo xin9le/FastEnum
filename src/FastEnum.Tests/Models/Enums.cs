@@ -79,6 +79,8 @@ namespace FastEnumUtility.Tests.Models
         One = 1,
 
         Two = 2,
+
+        [Label(null, 2)]
         Four = 4,
     }
 

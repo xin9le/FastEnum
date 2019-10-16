@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using FastEnumUtility.Internals;
 
@@ -524,6 +525,36 @@ namespace FastEnumUtility
                 return UnderlyingOperation.Equals(subtract, count);
             }
             #endregion
+        }
+
+        /// <summary>
+        /// Provides cache for enum attributes.
+        /// </summary>
+        /// <typeparam name="T">Enum Type</typeparam>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        internal static class EnumAttributeCache<T, TAttribute>
+               where T : struct, Enum
+               where TAttribute : Attribute
+        {
+            internal static FrozenDictionary<T, TAttribute> Cache { get; } = GetValues<T>()
+                .ToFrozenDictionary(
+                x => x,
+                x => x.ToMember().FieldInfo.GetCustomAttribute<TAttribute>());
+        }
+
+        /// <summary>
+        /// Provides cache for enum attributes.
+        /// </summary>
+        /// <typeparam name="T">Enum Type</typeparam>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        internal static class EnumAttributesCache<T, TAttribute>
+               where T : struct, Enum
+               where TAttribute : Attribute
+        {
+            internal static FrozenDictionary<T, IReadOnlyList<TAttribute>> Cache { get; } = GetValues<T>()
+                .ToFrozenDictionary(
+                x => x,
+                x => x.ToMember().FieldInfo.GetCustomAttributes<TAttribute>().ToArray() as IReadOnlyList<TAttribute>);
         }
         #endregion
     }

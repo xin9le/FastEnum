@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using FastEnumUtility.Internals;
 
@@ -72,6 +73,23 @@ namespace FastEnumUtility
         }
         #endregion
 
+        /// <summary>
+        /// Gets the Attribute of specified enumration member.
+        /// </summary>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TAttribute GetAttribute<TAttribute>()
+            where TAttribute : Attribute
+            => FastEnum.EnumAttributeCache<T, TAttribute>.Cache[Value];
+
+        /// <summary>
+        /// Gets the Attributes of specified enumration member.
+        /// </summary>
+        /// <typeparam name="TAttribute">Attribute Type</typeparam>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IReadOnlyList<TAttribute> GetAttributes<TAttribute>()
+            where TAttribute : Attribute
+            => FastEnum.EnumAttributesCache<T, TAttribute>.Cache[Value];
 
         #region Classes
         /// <summary>

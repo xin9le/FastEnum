@@ -68,19 +68,33 @@ namespace FastEnumUtility
         /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
+        /// <param name="member"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
+        public static string GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
         {
-            var labels = value.ToMember().Labels;
-            if (labels.TryGetValue(index, out var label))
+            if (member == null)
+                throw new ArgumentNullException(nameof(member));
+
+            if (member.Labels.TryGetValue(index, out var label))
                 return label;
 
             return throwIfNotFound
                 ? throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.")
                 : default(string);
         }
+
+
+        /// <summary>
+        /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="throwIfNotFound"></param>
+        /// <returns></returns>
+        public static string GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
+            where T : struct, Enum
+            => value.ToMember().GetLabel(index, throwIfNotFound);
     }
 }

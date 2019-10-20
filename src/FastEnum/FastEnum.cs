@@ -431,11 +431,9 @@ namespace FastEnumUtility
         {
             if (ignoreCase)
             {
-                var left = name.AsSpan();
                 foreach (var member in Cache<T>.Members)
                 {
-                    var right = member.Name.AsSpan();
-                    if (left.Equals(right, StringComparison.OrdinalIgnoreCase))
+                    if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         result = member.Value;
                         return true;

@@ -26,7 +26,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
 
         [Benchmark]
-        public void FastEnum()
+        public string FastEnum()
             => Value.ToName();
     }
 }

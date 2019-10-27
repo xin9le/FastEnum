@@ -16,7 +16,7 @@ namespace FastEnumUtility.Benchmark.Configurations
             this.Add(DefaultConfig.Instance);
             this.Add(MemoryDiagnoser.Default);
             //this.Add(StatisticColumn.AllStatistics);
-            this.Add(Job.ShortRun);
+            this.Add(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
         }
     }
 }

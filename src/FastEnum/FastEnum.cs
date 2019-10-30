@@ -85,9 +85,6 @@ namespace FastEnumUtility
         public static Member<T> GetMember<T>(T value)
             where T : struct, Enum
             => Cache<T>.UnderlyingOperation.GetMember(value);
-            //=> Cache<T>.MemberByValue.TryGetValue(value, out var member)
-            //? member
-            //: throw new ArgumentException(nameof(value));
         #endregion
 
 

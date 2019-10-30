@@ -14,9 +14,9 @@ namespace FastEnumUtility.Internals
         where T : struct, Enum
     {
         bool IsContinuous { get; }
-        bool IsDefined(T value);
+        bool IsDefined(ref T value);
         bool TryParse(string text, out T result);
-        Member<T> GetMember(T value);
+        Member<T> GetMember(ref T value);
     }
 
 
@@ -32,9 +32,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(sbyte value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref sbyte value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -63,18 +63,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, sbyte>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(sbyte value)
+            public override bool IsDefined(ref sbyte value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, sbyte>(ref value);
                 var index = val - this.minValue;
@@ -94,18 +94,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, sbyte>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(sbyte value)
+            public override bool IsDefined(ref sbyte value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, sbyte>(ref value);
                 return this.memberByValue[val];
@@ -148,8 +148,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(sbyte value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref sbyte value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -166,9 +166,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(byte value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref byte value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -197,18 +197,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, byte>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(byte value)
+            public override bool IsDefined(ref byte value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, byte>(ref value);
                 var index = val - this.minValue;
@@ -228,18 +228,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, byte>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(byte value)
+            public override bool IsDefined(ref byte value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, byte>(ref value);
                 return this.memberByValue[val];
@@ -282,8 +282,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(byte value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref byte value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -300,9 +300,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(short value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref short value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -331,18 +331,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, short>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(short value)
+            public override bool IsDefined(ref short value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, short>(ref value);
                 var index = val - this.minValue;
@@ -362,18 +362,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, short>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(short value)
+            public override bool IsDefined(ref short value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, short>(ref value);
                 return this.memberByValue[val];
@@ -416,8 +416,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(short value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref short value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -434,9 +434,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(ushort value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref ushort value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -465,18 +465,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ushort>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ushort value)
+            public override bool IsDefined(ref ushort value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ushort>(ref value);
                 var index = val - this.minValue;
@@ -496,18 +496,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ushort>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ushort value)
+            public override bool IsDefined(ref ushort value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ushort>(ref value);
                 return this.memberByValue[val];
@@ -550,8 +550,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(ushort value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref ushort value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -568,9 +568,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(int value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref int value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -599,18 +599,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, int>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(int value)
+            public override bool IsDefined(ref int value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, int>(ref value);
                 var index = val - this.minValue;
@@ -630,18 +630,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, int>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(int value)
+            public override bool IsDefined(ref int value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, int>(ref value);
                 return this.memberByValue[val];
@@ -684,8 +684,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(int value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref int value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -702,9 +702,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(uint value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref uint value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -733,18 +733,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, uint>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(uint value)
+            public override bool IsDefined(ref uint value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, uint>(ref value);
                 var index = val - this.minValue;
@@ -764,18 +764,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, uint>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(uint value)
+            public override bool IsDefined(ref uint value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, uint>(ref value);
                 return this.memberByValue[val];
@@ -818,8 +818,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(uint value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref uint value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -836,9 +836,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(long value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref long value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -867,18 +867,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, long>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(long value)
+            public override bool IsDefined(ref long value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, long>(ref value);
                 var index = val - this.minValue;
@@ -898,18 +898,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, long>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(long value)
+            public override bool IsDefined(ref long value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, long>(ref value);
                 return this.memberByValue[val];
@@ -952,8 +952,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(long value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref long value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 
@@ -970,9 +970,9 @@ namespace FastEnumUtility.Internals
         private abstract class UnderlyingOperation : IUnderlyingOperation<T>
         {
             public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(T value);
-            public abstract bool IsDefined(ulong value);
-            public abstract Member<T> GetMember(T value);
+            public abstract bool IsDefined(ref T value);
+            public abstract bool IsDefined(ref ulong value);
+            public abstract Member<T> GetMember(ref T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -1001,18 +1001,18 @@ namespace FastEnumUtility.Internals
                 => true;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ulong>(ref value);
                 return (this.minValue <= val) && (val <= this.maxValue);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ulong value)
+            public override bool IsDefined(ref ulong value)
                 => (this.minValue <= value) && (value <= this.maxValue);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ulong>(ref value);
                 var index = val - this.minValue;
@@ -1032,18 +1032,18 @@ namespace FastEnumUtility.Internals
                 => false;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(T value)
+            public override bool IsDefined(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ulong>(ref value);
                 return this.memberByValue.ContainsKey(val);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ulong value)
+            public override bool IsDefined(ref ulong value)
                 => this.memberByValue.ContainsKey(value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(T value)
+            public override Member<T> GetMember(ref T value)
             {
                 ref var val = ref Unsafe.As<T, ulong>(ref value);
                 return this.memberByValue[val];
@@ -1086,8 +1086,8 @@ namespace FastEnumUtility.Internals
 
         #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(ulong value)
-            => operation.IsDefined(value);
+        public static bool IsDefined(ref ulong value)
+            => operation.IsDefined(ref value);
         #endregion
     }
 }

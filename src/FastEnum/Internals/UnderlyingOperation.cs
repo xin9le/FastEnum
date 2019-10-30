@@ -30,14 +30,19 @@ namespace FastEnumUtility.Internals
         private static sbyte _minValue;
         private static sbyte _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenSByteKeyDictionary<Member<T>> _memberByValue;
 
 
         public SByteOperation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, sbyte>(ref min);
             _maxValue = Unsafe.As<T, sbyte>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenSByteKeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, sbyte>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -72,7 +77,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(sbyte value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<sbyte, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -87,14 +92,19 @@ namespace FastEnumUtility.Internals
         private static byte _minValue;
         private static byte _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenByteKeyDictionary<Member<T>> _memberByValue;
 
 
         public ByteOperation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, byte>(ref min);
             _maxValue = Unsafe.As<T, byte>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenByteKeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, byte>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -129,7 +139,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(byte value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<byte, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -144,14 +154,19 @@ namespace FastEnumUtility.Internals
         private static short _minValue;
         private static short _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenInt16KeyDictionary<Member<T>> _memberByValue;
 
 
         public Int16Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, short>(ref min);
             _maxValue = Unsafe.As<T, short>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenInt16KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, short>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -186,7 +201,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(short value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<short, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -201,14 +216,19 @@ namespace FastEnumUtility.Internals
         private static ushort _minValue;
         private static ushort _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenUInt16KeyDictionary<Member<T>> _memberByValue;
 
 
         public UInt16Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, ushort>(ref min);
             _maxValue = Unsafe.As<T, ushort>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenUInt16KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, ushort>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -243,7 +263,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(ushort value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<ushort, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -258,14 +278,19 @@ namespace FastEnumUtility.Internals
         private static int _minValue;
         private static int _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenInt32KeyDictionary<Member<T>> _memberByValue;
 
 
         public Int32Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, int>(ref min);
             _maxValue = Unsafe.As<T, int>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenInt32KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, int>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -300,7 +325,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(int value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<int, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -315,14 +340,19 @@ namespace FastEnumUtility.Internals
         private static uint _minValue;
         private static uint _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenUInt32KeyDictionary<Member<T>> _memberByValue;
 
 
         public UInt32Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, uint>(ref min);
             _maxValue = Unsafe.As<T, uint>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenUInt32KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, byte>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -357,7 +387,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(uint value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<uint, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -372,14 +402,19 @@ namespace FastEnumUtility.Internals
         private static long _minValue;
         private static long _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenInt64KeyDictionary<Member<T>> _memberByValue;
 
 
         public Int64Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, long>(ref min);
             _maxValue = Unsafe.As<T, long>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenInt64KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, long>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -414,7 +449,7 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(long value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<long, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 
 
@@ -429,14 +464,19 @@ namespace FastEnumUtility.Internals
         private static ulong _minValue;
         private static ulong _maxValue;
         private static bool _isContinuous;
-        private static FrozenDictionary<T, Member<T>> _memberByValue;
+        private static FrozenUInt64KeyDictionary<Member<T>> _memberByValue;
 
 
         public UInt64Operation(T min, T max, IEnumerable<Member<T>> members)
         {
             _minValue = Unsafe.As<T, ulong>(ref min);
             _maxValue = Unsafe.As<T, ulong>(ref max);
-            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            _memberByValue
+                = members.ToFrozenUInt64KeyDictionary(x =>
+                {
+                    var value = x.Value;
+                    return Unsafe.As<T, ulong>(ref value);
+                });
             if (_memberByValue.Count > 0)
             {
                 var length = _maxValue - _minValue;
@@ -471,6 +511,6 @@ namespace FastEnumUtility.Internals
         public static bool IsDefined(ulong value)
             => _isContinuous
             ? (_minValue <= value) && (value <= _maxValue)
-            : _memberByValue.ContainsKey(Unsafe.As<ulong, T>(ref value));
+            : _memberByValue.ContainsKey(value);
     }
 }

@@ -134,7 +134,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static bool IsContinuous<T>()
             where T : struct, Enum
-            => Cache<T>.IsContinuous;
+            => Cache<T>.UnderlyingOperation.IsContinuous;
         #endregion
 
 
@@ -445,7 +445,6 @@ namespace FastEnumUtility
             public static readonly T MinValue;
             public static readonly T MaxValue;
             public static readonly bool IsEmpty;
-            public static readonly bool IsContinuous;
             public static readonly bool IsFlags;
             public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
             public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
@@ -481,7 +480,6 @@ namespace FastEnumUtility
                         TypeCode.UInt64 => UInt64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
                         _ => throw new InvalidOperationException(),
                     };
-                IsContinuous = UnderlyingOperation.IsContinuous;
             }
             #endregion
         }

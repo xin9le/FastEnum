@@ -160,9 +160,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.IsContinuous
-            ? Cache<T>.UnderlyingOperation.InBetween(value)
-            : Cache<T>.MemberByValue.ContainsKey(value);
+            => Cache<T>.UnderlyingOperation.IsDefined(value);
 
 
         /// <summary>
@@ -473,14 +471,14 @@ namespace FastEnumUtility
                 UnderlyingOperation
                     = Type.GetTypeCode(Type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>(MinValue, MaxValue, distinctedMember) as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int16 => new Int16Operation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt16 => new UInt16Operation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int32 => new Int32Operation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt32 => new UInt32Operation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int64 => new Int64Operation<T>(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt64 => new UInt64Operation<T>(MinValue, MaxValue, distinctedMember),
+                        TypeCode.SByte => SByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Byte => ByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int16 => Int16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt16 => UInt16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int32 => Int32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt32 => UInt32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int64 => Int64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt64 => UInt64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
                         _ => throw new InvalidOperationException(),
                     };
                 IsContinuous = UnderlyingOperation.IsContinuous;

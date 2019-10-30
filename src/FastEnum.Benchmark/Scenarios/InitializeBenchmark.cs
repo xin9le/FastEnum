@@ -33,14 +33,14 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 var underlyingOperation
                     = Type.GetTypeCode(type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>(minValue, maxValue, distinctedMembers) as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.Int16 => new Int16Operation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.UInt16 => new UInt16Operation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.Int32 => new Int32Operation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.UInt32 => new UInt32Operation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.Int64 => new Int64Operation<T>(minValue, maxValue, distinctedMembers),
-                        TypeCode.UInt64 => new UInt64Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.SByte => SByteOperation<T>.Create(minValue, maxValue, distinctedMembers) as IUnderlyingOperation<T>,
+                        TypeCode.Byte => ByteOperation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int16 => Int16Operation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt16 => UInt16Operation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int32 => Int32Operation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt32 => UInt32Operation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int64 => Int64Operation<T>.Create(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt64 => UInt64Operation<T>.Create(minValue, maxValue, distinctedMembers),
                         _ => throw new InvalidOperationException(),
                     };
                 var isContinuous = underlyingOperation.IsContinuous;

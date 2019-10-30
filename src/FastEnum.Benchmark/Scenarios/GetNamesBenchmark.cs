@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmark.Models;
@@ -20,17 +21,17 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
 
         [Benchmark(Baseline = true)]
-        public void NetCore()
-            => _ = Enum.GetNames(typeof(Fruits));
+        public IReadOnlyList<string> NetCore()
+            => (string[])Enum.GetNames(typeof(Fruits));
 
 
         [Benchmark]
-        public void EnumsNet()
-            => _ = Enums.GetNames<Fruits>();
+        public IReadOnlyList<string> EnumsNet()
+            => Enums.GetNames<Fruits>();
 
 
         [Benchmark]
-        public void FastEnum()
-            => _ = _FastEnum.GetNames<Fruits>();
+        public IReadOnlyList<string> FastEnum()
+            => _FastEnum.GetNames<Fruits>();
     }
 }

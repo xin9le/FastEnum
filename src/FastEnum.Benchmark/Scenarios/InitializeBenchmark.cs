@@ -27,13 +27,13 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 var maxValue = values.DefaultIfEmpty().Max();
                 var isEmpty = values.Count == 0;
                 var isFlags = Attribute.IsDefined(type, typeof(FlagsAttribute));
-                var distinctedMembers = members.Distinct(new Member<T>.ValueComparer());
+                var distinctedMembers = members.Distinct(new Member<T>.ValueComparer()).ToArray();
                 var memberByValue = distinctedMembers.ToFrozenDictionary(x => x.Value);
                 var memberByName = members.ToFrozenStringKeyDictionary(x => x.Name);
                 var underlyingOperation
                     = Type.GetTypeCode(type) switch
                     {
-                        TypeCode.SByte => SByteOperation<T>.Create(minValue, maxValue, distinctedMembers) as IUnderlyingOperation<T>,
+                        TypeCode.SByte => SByteOperation<T>.Create(minValue, maxValue, distinctedMembers),
                         TypeCode.Byte => ByteOperation<T>.Create(minValue, maxValue, distinctedMembers),
                         TypeCode.Int16 => Int16Operation<T>.Create(minValue, maxValue, distinctedMembers),
                         TypeCode.UInt16 => UInt16Operation<T>.Create(minValue, maxValue, distinctedMembers),

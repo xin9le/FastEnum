@@ -84,9 +84,10 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Member<T> GetMember<T>(T value)
             where T : struct, Enum
-            => Cache<T>.MemberByValue.TryGetValue(value, out var member)
-            ? member
-            : throw new ArgumentException(nameof(value));
+            => Cache<T>.UnderlyingOperation.GetMember(value);
+            //=> Cache<T>.MemberByValue.TryGetValue(value, out var member)
+            //? member
+            //: throw new ArgumentException(nameof(value));
         #endregion
 
 
@@ -434,7 +435,7 @@ namespace FastEnumUtility
             public static readonly T MaxValue;
             public static readonly bool IsEmpty;
             public static readonly bool IsFlags;
-            public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
+            //public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
             public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
             public static readonly IUnderlyingOperation<T> UnderlyingOperation;
             #endregion
@@ -452,8 +453,8 @@ namespace FastEnumUtility
                 MaxValue = Values.DefaultIfEmpty().Max();
                 IsEmpty = Values.Count == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
-                var distinctedMember = Members.Distinct(new Member<T>.ValueComparer());
-                MemberByValue = distinctedMember.ToFrozenDictionary(x => x.Value);
+                var distinctedMember = Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
+                //MemberByValue = distinctedMember.ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
                 UnderlyingOperation
                     = Type.GetTypeCode(Type) switch

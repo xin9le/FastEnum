@@ -16,6 +16,7 @@ namespace FastEnumUtility.Internals
         bool IsContinuous { get; }
         bool IsDefined(T value);
         bool TryParse(string text, out T result);
+        Member<T> GetMember(T value);
     }
 
 
@@ -33,6 +34,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(sbyte value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -48,11 +50,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly sbyte minValue;
             private readonly sbyte maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(sbyte min, sbyte max)
+            public Continuous(sbyte min, sbyte max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -68,6 +72,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(sbyte value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -91,6 +103,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(sbyte value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -101,7 +120,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, sbyte>(ref min);
             var maxValue = Unsafe.As<T, sbyte>(ref max);
@@ -117,7 +136,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -149,6 +168,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(byte value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -164,11 +184,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly byte minValue;
             private readonly byte maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(byte min, byte max)
+            public Continuous(byte min, byte max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -184,6 +206,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(byte value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, byte>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -207,6 +237,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(byte value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, byte>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -217,7 +254,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, byte>(ref min);
             var maxValue = Unsafe.As<T, byte>(ref max);
@@ -233,7 +270,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -265,6 +302,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(short value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -280,11 +318,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly short minValue;
             private readonly short maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(short min, short max)
+            public Continuous(short min, short max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -300,6 +340,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(short value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, short>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -323,6 +371,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(short value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, short>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -333,7 +388,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, short>(ref min);
             var maxValue = Unsafe.As<T, short>(ref max);
@@ -349,7 +404,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -381,6 +436,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(ushort value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -396,11 +452,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly ushort minValue;
             private readonly ushort maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(ushort min, ushort max)
+            public Continuous(ushort min, ushort max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -416,6 +474,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(ushort value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, ushort>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -439,6 +505,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(ushort value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, ushort>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -449,7 +522,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, ushort>(ref min);
             var maxValue = Unsafe.As<T, ushort>(ref max);
@@ -465,7 +538,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -497,6 +570,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(int value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -512,11 +586,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly int minValue;
             private readonly int maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(int min, int max)
+            public Continuous(int min, int max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -532,6 +608,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(int value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, int>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -555,6 +639,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(int value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, int>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -565,7 +656,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, int>(ref min);
             var maxValue = Unsafe.As<T, int>(ref max);
@@ -581,7 +672,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -613,6 +704,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(uint value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -628,11 +720,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly uint minValue;
             private readonly uint maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(uint min, uint max)
+            public Continuous(uint min, uint max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -648,6 +742,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(uint value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, uint>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -671,6 +773,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(uint value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, uint>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -681,7 +790,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, uint>(ref min);
             var maxValue = Unsafe.As<T, uint>(ref max);
@@ -697,7 +806,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -729,6 +838,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(long value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -744,11 +854,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly long minValue;
             private readonly long maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(long min, long max)
+            public Continuous(long min, long max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -764,6 +876,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(long value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, long>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -787,6 +907,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(long value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, long>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -797,7 +924,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, long>(ref min);
             var maxValue = Unsafe.As<T, long>(ref max);
@@ -813,7 +940,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }
@@ -845,6 +972,7 @@ namespace FastEnumUtility.Internals
             public abstract bool IsContinuous { get; }
             public abstract bool IsDefined(T value);
             public abstract bool IsDefined(ulong value);
+            public abstract Member<T> GetMember(T value);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool TryParse(string text, out T result)
@@ -860,11 +988,13 @@ namespace FastEnumUtility.Internals
         {
             private readonly ulong minValue;
             private readonly ulong maxValue;
+            private readonly Member<T>[] members;
 
-            public Continuous(ulong min, ulong max)
+            public Continuous(ulong min, ulong max, Member<T>[] members)
             {
                 this.minValue = min;
                 this.maxValue = max;
+                this.members = members;
             }
 
             public override bool IsContinuous
@@ -880,6 +1010,14 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(ulong value)
                 => (this.minValue <= value) && (value <= this.maxValue);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, ulong>(ref value);
+                var index = val - this.minValue;
+                return members[index];
+            }
         }
 
 
@@ -903,6 +1041,13 @@ namespace FastEnumUtility.Internals
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool IsDefined(ulong value)
                 => this.memberByValue.ContainsKey(value);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override Member<T> GetMember(T value)
+            {
+                ref var val = ref Unsafe.As<T, ulong>(ref value);
+                return this.memberByValue[val];
+            }
         }
         #endregion
 
@@ -913,7 +1058,7 @@ namespace FastEnumUtility.Internals
 
 
         #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, IEnumerable<Member<T>> members)
+        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
         {
             var minValue = Unsafe.As<T, ulong>(ref min);
             var maxValue = Unsafe.As<T, ulong>(ref max);
@@ -929,7 +1074,7 @@ namespace FastEnumUtility.Internals
                 var count = memberByValue.Count - 1;
                 if (length == (ulong)count)
                 {
-                    operation = new Continuous(minValue, maxValue);
+                    operation = new Continuous(minValue, maxValue, members);
                     return operation;
                 }
             }

@@ -39,13 +39,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, sbyte>(ref result);
-                if (sbyte.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return sbyte.TryParse(text, out x);
             }
         }
 
@@ -161,13 +155,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, byte>(ref result);
-                if (byte.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return byte.TryParse(text, out x);
             }
         }
 
@@ -283,13 +271,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, short>(ref result);
-                if (short.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return short.TryParse(text, out x);
             }
         }
 
@@ -405,13 +387,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, ushort>(ref result);
-                if (ushort.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return ushort.TryParse(text, out x);
             }
         }
 
@@ -527,13 +503,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, int>(ref result);
-                if (int.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return int.TryParse(text, out x);
             }
         }
 
@@ -649,13 +619,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, uint>(ref result);
-                if (uint.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return uint.TryParse(text, out x);
             }
         }
 
@@ -771,13 +735,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, long>(ref result);
-                if (long.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return long.TryParse(text, out x);
             }
         }
 
@@ -893,13 +851,7 @@ namespace FastEnumUtility.Internals
             {
                 result = default;
                 ref var x = ref Unsafe.As<T, ulong>(ref result);
-                if (ulong.TryParse(text, out x))
-                {
-                    if (this.IsDefined(x))
-                        return true;
-                    x = default;
-                }
-                return false;
+                return ulong.TryParse(text, out x);
             }
         }
 

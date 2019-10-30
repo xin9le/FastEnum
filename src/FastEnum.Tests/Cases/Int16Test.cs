@@ -256,5 +256,22 @@ namespace FastEnumUtility.Tests.Cases
             TEnum.Zero.ToName().Should().Be(nameof(TEnum.Zero));
             TEnum.MaxValue.ToName().Should().Be(nameof(TEnum.MaxValue));
         }
+
+
+        [Fact]
+        public void ToUnderlying()
+        {
+            var @enum = TEnum.MinValue;
+            var value = TUnderlying.MinValue;
+
+            FluentActions.Invoking(() => @enum.ToByte()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => @enum.ToSByte()).Should().Throw<ArgumentException>();
+            @enum.ToInt16().Should().Be(value);
+            FluentActions.Invoking(() => @enum.ToUInt16()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => @enum.ToInt32()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => @enum.ToUInt32()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
+        }
     }
 }

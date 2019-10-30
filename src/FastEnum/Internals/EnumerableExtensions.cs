@@ -63,28 +63,28 @@ namespace FastEnumUtility.Internals
         #endregion
 
 
-        #region Int Specialized FrozenDictionary
+        #region Int32 Specialized FrozenDictionary
         /// <summary>
-        /// Converts to <see cref="FrozenIntKeyDictionary{TValue}"/>.
+        /// Converts to <see cref="FrozenInt32KeyDictionary{TValue}"/>.
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        public static FrozenIntKeyDictionary<TValue> ToFrozenIntKeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, int> keySelector)
-            => FrozenIntKeyDictionary<TValue>.Create(source, keySelector);
+        public static FrozenInt32KeyDictionary<TValue> ToFrozenInt32KeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, int> keySelector)
+            => FrozenInt32KeyDictionary<TValue>.Create(source, keySelector);
 
 
         /// <summary>
-        /// Converts to <see cref="FrozenIntKeyDictionary{TValue}"/>.
+        /// Converts to <see cref="FrozenInt32KeyDictionary{TValue}"/>.
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
         /// <param name="valueSelector"></param>
         /// <returns></returns>
-        public static FrozenIntKeyDictionary<TValue> ToFrozenIntKeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
-            => FrozenIntKeyDictionary<TValue>.Create(source, keySelector, valueSelector);
+        public static FrozenInt32KeyDictionary<TValue> ToFrozenInt32KeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
+            => FrozenInt32KeyDictionary<TValue>.Create(source, keySelector, valueSelector);
         #endregion
 
 

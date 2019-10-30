@@ -14,7 +14,7 @@ namespace FastEnumUtility.Internals
     {
         T Subtract(T left, T right);
         bool Equals(T left, int right);
-        bool InBetween(T value, T min, T max);
+        bool IsDefined(T value);
         bool TryParse(string text, out T result);
     }
 
@@ -27,6 +27,17 @@ namespace FastEnumUtility.Internals
     internal sealed class SByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static sbyte MinValue;
+        private static sbyte MaxValue;
+
+
+        public SByteOperation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, sbyte>(ref min);
+            MaxValue = Unsafe.As<T, sbyte>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -46,12 +57,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            ref var lower = ref Unsafe.As<T, sbyte>(ref min);
-            ref var upper = ref Unsafe.As<T, sbyte>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -73,6 +82,17 @@ namespace FastEnumUtility.Internals
     internal sealed class ByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static byte MinValue;
+        private static byte MaxValue;
+
+
+        public ByteOperation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, byte>(ref min);
+            MaxValue = Unsafe.As<T, byte>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -92,12 +112,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            ref var lower = ref Unsafe.As<T, byte>(ref min);
-            ref var upper = ref Unsafe.As<T, byte>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -119,6 +137,17 @@ namespace FastEnumUtility.Internals
     internal sealed class Int16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static short MinValue;
+        private static short MaxValue;
+
+
+        public Int16Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, short>(ref min);
+            MaxValue = Unsafe.As<T, short>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -138,12 +167,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            ref var lower = ref Unsafe.As<T, short>(ref min);
-            ref var upper = ref Unsafe.As<T, short>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -165,6 +192,17 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static ushort MinValue;
+        private static ushort MaxValue;
+
+
+        public UInt16Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, ushort>(ref min);
+            MaxValue = Unsafe.As<T, ushort>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -184,12 +222,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            ref var lower = ref Unsafe.As<T, ushort>(ref min);
-            ref var upper = ref Unsafe.As<T, ushort>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -211,6 +247,17 @@ namespace FastEnumUtility.Internals
     internal sealed class Int32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static int MinValue;
+        private static int MaxValue;
+
+
+        public Int32Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, int>(ref min);
+            MaxValue = Unsafe.As<T, int>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -230,12 +277,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            ref var lower = ref Unsafe.As<T, int>(ref min);
-            ref var upper = ref Unsafe.As<T, int>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -257,6 +302,17 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static uint MinValue;
+        private static uint MaxValue;
+
+
+        public UInt32Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, uint>(ref min);
+            MaxValue = Unsafe.As<T, uint>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -276,12 +332,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            ref var lower = ref Unsafe.As<T, uint>(ref min);
-            ref var upper = ref Unsafe.As<T, uint>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -303,6 +357,17 @@ namespace FastEnumUtility.Internals
     internal sealed class Int64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static long MinValue;
+        private static long MaxValue;
+
+
+        public Int64Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, long>(ref min);
+            MaxValue = Unsafe.As<T, long>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -322,12 +387,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            ref var lower = ref Unsafe.As<T, long>(ref min);
-            ref var upper = ref Unsafe.As<T, long>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 
@@ -349,6 +412,17 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
+        private static ulong MinValue;
+        private static ulong MaxValue;
+
+
+        public UInt64Operation(T min, T max)
+        {
+            MinValue = Unsafe.As<T, ulong>(ref min);
+            MaxValue = Unsafe.As<T, ulong>(ref max);
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Subtract(T left, T right)
         {
@@ -371,12 +445,10 @@ namespace FastEnumUtility.Internals
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool InBetween(T value, T min, T max)
+        public bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            ref var lower = ref Unsafe.As<T, ulong>(ref min);
-            ref var upper = ref Unsafe.As<T, ulong>(ref max);
-            return (lower <= val) && (val <= upper);
+            return (MinValue <= val) && (val <= MaxValue);
         }
 
 

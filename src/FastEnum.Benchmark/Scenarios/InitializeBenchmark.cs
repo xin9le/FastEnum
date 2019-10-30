@@ -32,14 +32,14 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 var underlyingOperation
                     = Type.GetTypeCode(type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>() as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(),
-                        TypeCode.Int16 => new Int16Operation<T>(),
-                        TypeCode.UInt16 => new UInt16Operation<T>(),
-                        TypeCode.Int32 => new Int32Operation<T>(),
-                        TypeCode.UInt32 => new UInt32Operation<T>(),
-                        TypeCode.Int64 => new Int64Operation<T>(),
-                        TypeCode.UInt64 => new UInt64Operation<T>(),
+                        TypeCode.SByte => new SByteOperation<T>(minValue, maxValue) as IUnderlyingOperation<T>,
+                        TypeCode.Byte => new ByteOperation<T>(minValue, maxValue),
+                        TypeCode.Int16 => new Int16Operation<T>(minValue, maxValue),
+                        TypeCode.UInt16 => new UInt16Operation<T>(minValue, maxValue),
+                        TypeCode.Int32 => new Int32Operation<T>(minValue, maxValue),
+                        TypeCode.UInt32 => new UInt32Operation<T>(minValue, maxValue),
+                        TypeCode.Int64 => new Int64Operation<T>(minValue, maxValue),
+                        TypeCode.UInt64 => new UInt64Operation<T>(minValue, maxValue),
                         _ => throw new InvalidOperationException(),
                     };
                 var isContinuous = IsContinuousInternal();

@@ -161,7 +161,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
             => Cache<T>.IsContinuous
-            ? Cache<T>.UnderlyingOperation.InBetween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
+            ? Cache<T>.UnderlyingOperation.IsDefined(value)
             : Cache<T>.MemberByValue.ContainsKey(value);
 
 
@@ -496,14 +496,14 @@ namespace FastEnumUtility
                 UnderlyingOperation
                     = Type.GetTypeCode(Type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>() as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(),
-                        TypeCode.Int16 => new Int16Operation<T>(),
-                        TypeCode.UInt16 => new UInt16Operation<T>(),
-                        TypeCode.Int32 => new Int32Operation<T>(),
-                        TypeCode.UInt32 => new UInt32Operation<T>(),
-                        TypeCode.Int64 => new Int64Operation<T>(),
-                        TypeCode.UInt64 => new UInt64Operation<T>(),
+                        TypeCode.SByte => new SByteOperation<T>(MinValue, MaxValue) as IUnderlyingOperation<T>,
+                        TypeCode.Byte => new ByteOperation<T>(MinValue, MaxValue),
+                        TypeCode.Int16 => new Int16Operation<T>(MinValue, MaxValue),
+                        TypeCode.UInt16 => new UInt16Operation<T>(MinValue, MaxValue),
+                        TypeCode.Int32 => new Int32Operation<T>(MinValue, MaxValue),
+                        TypeCode.UInt32 => new UInt32Operation<T>(MinValue, MaxValue),
+                        TypeCode.Int64 => new Int64Operation<T>(MinValue, MaxValue),
+                        TypeCode.UInt64 => new UInt64Operation<T>(MinValue, MaxValue),
                         _ => throw new InvalidOperationException(),
                     };
                 IsContinuous = IsContinuousInternal();

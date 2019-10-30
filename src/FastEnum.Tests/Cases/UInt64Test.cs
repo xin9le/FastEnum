@@ -188,7 +188,8 @@ namespace FastEnumUtility.Tests.Cases
                 FastEnum.TryParse<TEnum>(x.name.ToLower(), out var _).Should().BeFalse();
                 FastEnum.TryParse<TEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
             }
-            FastEnum.TryParse<TEnum>("ABCDE", out var _).Should().BeFalse();
+            foreach (var x in new[] { "ABCDE", "", null })
+                FastEnum.TryParse<TEnum>(x, out var _).Should().BeFalse();
         }
 
 
@@ -220,8 +221,8 @@ namespace FastEnumUtility.Tests.Cases
                 FastEnum.TryParse<TEnum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
                 r6.Should().Be(x.value);
             }
-
-            FastEnum.TryParse<TEnum>("ABCDE", true, out var _).Should().BeFalse();
+            foreach (var x in new[] { "ABCDE", "", null })
+                FastEnum.TryParse<TEnum>(x, true, out var _).Should().BeFalse();
         }
 
 

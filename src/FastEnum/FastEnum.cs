@@ -361,9 +361,16 @@ namespace FastEnumUtility
         /// <returns></returns>
         private static bool TryParseInternal<T>(string value, bool ignoreCase, out T result)
             where T : struct, Enum
-            => IsNumeric(value[0])
-            ? Cache<T>.UnderlyingOperation.TryParse(value, out result)
-            : TryParseName(value, ignoreCase, out result);
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                result = default;
+                return false;
+            }
+            return IsNumeric(value[0])
+                ? Cache<T>.UnderlyingOperation.TryParse(value, out result)
+                : TryParseName(value, ignoreCase, out result);
+        }
 
 
         /// <summary>

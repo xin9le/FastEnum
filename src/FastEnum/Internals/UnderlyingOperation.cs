@@ -351,7 +351,7 @@ namespace FastEnumUtility.Internals
                 = members.ToFrozenUInt32KeyDictionary(x =>
                 {
                     var value = x.Value;
-                    return Unsafe.As<T, byte>(ref value);
+                    return Unsafe.As<T, uint>(ref value);
                 });
             if (_memberByValue.Count > 0)
             {

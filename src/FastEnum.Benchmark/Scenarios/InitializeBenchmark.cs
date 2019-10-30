@@ -27,32 +27,23 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 var maxValue = values.DefaultIfEmpty().Max();
                 var isEmpty = values.Count == 0;
                 var isFlags = Attribute.IsDefined(type, typeof(FlagsAttribute));
-                var memberByValue = members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
+                var distinctedMembers = members.Distinct(new Member<T>.ValueComparer());
+                var memberByValue = distinctedMembers.ToFrozenDictionary(x => x.Value);
                 var memberByName = members.ToFrozenStringKeyDictionary(x => x.Name);
                 var underlyingOperation
                     = Type.GetTypeCode(type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>(minValue, maxValue) as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(minValue, maxValue),
-                        TypeCode.Int16 => new Int16Operation<T>(minValue, maxValue),
-                        TypeCode.UInt16 => new UInt16Operation<T>(minValue, maxValue),
-                        TypeCode.Int32 => new Int32Operation<T>(minValue, maxValue),
-                        TypeCode.UInt32 => new UInt32Operation<T>(minValue, maxValue),
-                        TypeCode.Int64 => new Int64Operation<T>(minValue, maxValue),
-                        TypeCode.UInt64 => new UInt64Operation<T>(minValue, maxValue),
+                        TypeCode.SByte => new SByteOperation<T>(minValue, maxValue, distinctedMembers) as IUnderlyingOperation<T>,
+                        TypeCode.Byte => new ByteOperation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int16 => new Int16Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt16 => new UInt16Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int32 => new Int32Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt32 => new UInt32Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.Int64 => new Int64Operation<T>(minValue, maxValue, distinctedMembers),
+                        TypeCode.UInt64 => new UInt64Operation<T>(minValue, maxValue, distinctedMembers),
                         _ => throw new InvalidOperationException(),
                     };
-                var isContinuous = IsContinuousInternal();
-
-                bool IsContinuousInternal()
-                {
-                    if (isEmpty)
-                        return false;
-
-                    var subtract = underlyingOperation.Subtract(maxValue, minValue);
-                    var count = memberByValue.Count - 1;
-                    return underlyingOperation.Equals(subtract, count);
-                }
+                var isContinuous = underlyingOperation.IsContinuous;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 
@@ -12,9 +13,8 @@ namespace FastEnumUtility.Internals
     internal interface IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        T Subtract(T left, T right);
-        bool Equals(T left, int right);
-        bool IsDefined(T value);
+        bool IsContinuous { get; }
+        bool InBetween(T value);
         bool TryParse(string text, out T result);
     }
 
@@ -27,40 +27,35 @@ namespace FastEnumUtility.Internals
     internal sealed class SByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static sbyte MinValue;
-        private static sbyte MaxValue;
+        private static sbyte _minValue;
+        private static sbyte _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public SByteOperation(T min, T max)
+        public SByteOperation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, sbyte>(ref min);
-            MaxValue = Unsafe.As<T, sbyte>(ref max);
+            _minValue = Unsafe.As<T, sbyte>(ref min);
+            _maxValue = Unsafe.As<T, sbyte>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, sbyte>(ref left);
-            ref var r = ref Unsafe.As<T, sbyte>(ref right);
-            var result = (sbyte)(l - r);
-            return Unsafe.As<sbyte, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, sbyte>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -71,6 +66,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
             return sbyte.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(sbyte value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<sbyte, T>(ref value));
     }
 
 
@@ -82,40 +84,35 @@ namespace FastEnumUtility.Internals
     internal sealed class ByteOperation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static byte MinValue;
-        private static byte MaxValue;
+        private static byte _minValue;
+        private static byte _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public ByteOperation(T min, T max)
+        public ByteOperation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, byte>(ref min);
-            MaxValue = Unsafe.As<T, byte>(ref max);
+            _minValue = Unsafe.As<T, byte>(ref min);
+            _maxValue = Unsafe.As<T, byte>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, byte>(ref left);
-            ref var r = ref Unsafe.As<T, byte>(ref right);
-            var result = (byte)(l - r);
-            return Unsafe.As<byte, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, byte>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -125,7 +122,14 @@ namespace FastEnumUtility.Internals
             result = default;
             ref var x = ref Unsafe.As<T, byte>(ref result);
             return byte.TryParse(text, out x);
-        }   
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(byte value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<byte, T>(ref value));
     }
 
 
@@ -137,40 +141,35 @@ namespace FastEnumUtility.Internals
     internal sealed class Int16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static short MinValue;
-        private static short MaxValue;
+        private static short _minValue;
+        private static short _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public Int16Operation(T min, T max)
+        public Int16Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, short>(ref min);
-            MaxValue = Unsafe.As<T, short>(ref max);
+            _minValue = Unsafe.As<T, short>(ref min);
+            _maxValue = Unsafe.As<T, short>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, short>(ref left);
-            ref var r = ref Unsafe.As<T, short>(ref right);
-            var result = (short)(l - r);
-            return Unsafe.As<short, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, short>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -181,6 +180,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, short>(ref result);
             return short.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(short value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<short, T>(ref value));
     }
 
 
@@ -192,40 +198,35 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt16Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static ushort MinValue;
-        private static ushort MaxValue;
+        private static ushort _minValue;
+        private static ushort _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public UInt16Operation(T min, T max)
+        public UInt16Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, ushort>(ref min);
-            MaxValue = Unsafe.As<T, ushort>(ref max);
+            _minValue = Unsafe.As<T, ushort>(ref min);
+            _maxValue = Unsafe.As<T, ushort>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, ushort>(ref left);
-            ref var r = ref Unsafe.As<T, ushort>(ref right);
-            var result = (ushort)(l - r);
-            return Unsafe.As<ushort, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, ushort>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -236,6 +237,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, ushort>(ref result);
             return ushort.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(ushort value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<ushort, T>(ref value));
     }
 
 
@@ -247,40 +255,35 @@ namespace FastEnumUtility.Internals
     internal sealed class Int32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static int MinValue;
-        private static int MaxValue;
+        private static int _minValue;
+        private static int _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public Int32Operation(T min, T max)
+        public Int32Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, int>(ref min);
-            MaxValue = Unsafe.As<T, int>(ref max);
+            _minValue = Unsafe.As<T, int>(ref min);
+            _maxValue = Unsafe.As<T, int>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, int>(ref left);
-            ref var r = ref Unsafe.As<T, int>(ref right);
-            var result = l - r;
-            return Unsafe.As<int, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, int>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -291,6 +294,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, int>(ref result);
             return int.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(int value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<int, T>(ref value));
     }
 
 
@@ -302,40 +312,35 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt32Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static uint MinValue;
-        private static uint MaxValue;
+        private static uint _minValue;
+        private static uint _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public UInt32Operation(T min, T max)
+        public UInt32Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, uint>(ref min);
-            MaxValue = Unsafe.As<T, uint>(ref max);
+            _minValue = Unsafe.As<T, uint>(ref min);
+            _maxValue = Unsafe.As<T, uint>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, uint>(ref left);
-            ref var r = ref Unsafe.As<T, uint>(ref right);
-            var result = l - r;
-            return Unsafe.As<uint, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, uint>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -346,6 +351,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, uint>(ref result);
             return uint.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(uint value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<uint, T>(ref value));
     }
 
 
@@ -357,40 +369,35 @@ namespace FastEnumUtility.Internals
     internal sealed class Int64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static long MinValue;
-        private static long MaxValue;
+        private static long _minValue;
+        private static long _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public Int64Operation(T min, T max)
+        public Int64Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, long>(ref min);
-            MaxValue = Unsafe.As<T, long>(ref max);
+            _minValue = Unsafe.As<T, long>(ref min);
+            _maxValue = Unsafe.As<T, long>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, long>(ref left);
-            ref var r = ref Unsafe.As<T, long>(ref right);
-            var result = l - r;
-            return Unsafe.As<long, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            ref var l = ref Unsafe.As<T, long>(ref left);
-            return l == right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -401,6 +408,13 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, long>(ref result);
             return long.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(long value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<long, T>(ref value));
     }
 
 
@@ -412,43 +426,35 @@ namespace FastEnumUtility.Internals
     internal sealed class UInt64Operation<T> : IUnderlyingOperation<T>
         where T : struct, Enum
     {
-        private static ulong MinValue;
-        private static ulong MaxValue;
+        private static ulong _minValue;
+        private static ulong _maxValue;
+        private static bool _isContinuous;
+        private static FrozenDictionary<T, Member<T>> _memberByValue;
 
 
-        public UInt64Operation(T min, T max)
+        public UInt64Operation(T min, T max, IEnumerable<Member<T>> members)
         {
-            MinValue = Unsafe.As<T, ulong>(ref min);
-            MaxValue = Unsafe.As<T, ulong>(ref max);
+            _minValue = Unsafe.As<T, ulong>(ref min);
+            _maxValue = Unsafe.As<T, ulong>(ref max);
+            _memberByValue = members.ToFrozenDictionary(x => x.Value);
+            if (_memberByValue.Count > 0)
+            {
+                var length = _maxValue - _minValue;
+                var count = _memberByValue.Count - 1;
+                _isContinuous = length == (ulong)count;
+            }
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Subtract(T left, T right)
-        {
-            ref var l = ref Unsafe.As<T, ulong>(ref left);
-            ref var r = ref Unsafe.As<T, ulong>(ref right);
-            var result = l - r;
-            return Unsafe.As<ulong, T>(ref result);
-        }
+        public bool IsContinuous
+            => _isContinuous;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(T left, int right)
-        {
-            if (right < 0)
-                return false;
-
-            ref var l = ref Unsafe.As<T, ulong>(ref left);
-            return l == (ulong)right;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public bool InBetween(T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return (MinValue <= val) && (val <= MaxValue);
+            return (_minValue <= val) && (val <= _maxValue);
         }
 
 
@@ -459,5 +465,12 @@ namespace FastEnumUtility.Internals
             ref var x = ref Unsafe.As<T, ulong>(ref result);
             return ulong.TryParse(text, out x);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDefined(ulong value)
+            => _isContinuous
+            ? (_minValue <= value) && (value <= _maxValue)
+            : _memberByValue.ContainsKey(Unsafe.As<ulong, T>(ref value));
     }
 }

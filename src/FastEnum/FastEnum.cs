@@ -435,7 +435,6 @@ namespace FastEnumUtility
             public static readonly T MaxValue;
             public static readonly bool IsEmpty;
             public static readonly bool IsFlags;
-            //public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
             public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
             public static readonly IUnderlyingOperation<T> UnderlyingOperation;
             #endregion
@@ -454,7 +453,6 @@ namespace FastEnumUtility
                 IsEmpty = Values.Count == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
                 var distinctedMember = Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
-                //MemberByValue = distinctedMember.ToFrozenDictionary(x => x.Value);
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
                 UnderlyingOperation
                     = Type.GetTypeCode(Type) switch

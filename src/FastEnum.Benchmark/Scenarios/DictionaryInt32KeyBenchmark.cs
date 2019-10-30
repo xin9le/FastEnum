@@ -8,7 +8,7 @@ using FastEnumUtility.Internals;
 
 namespace FastEnumUtility.Benchmark.Scenarios
 {
-    public class DictionaryIntKeyBenchmark
+    public class DictionaryInt32KeyBenchmark
     {
         private const int LookupKey = (int)Fruits.Pear;
 

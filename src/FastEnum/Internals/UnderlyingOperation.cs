@@ -52,8 +52,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly sbyte minValue;
-            public readonly sbyte maxValue;
+            private readonly sbyte minValue;
+            private readonly sbyte maxValue;
 
             public Continuous(sbyte min, sbyte max)
             {
@@ -79,7 +79,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenSByteKeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenSByteKeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenSByteKeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -174,8 +174,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly byte minValue;
-            public readonly byte maxValue;
+            private readonly byte minValue;
+            private readonly byte maxValue;
 
             public Continuous(byte min, byte max)
             {
@@ -201,7 +201,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenByteKeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenByteKeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenByteKeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -296,8 +296,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly short minValue;
-            public readonly short maxValue;
+            private readonly short minValue;
+            private readonly short maxValue;
 
             public Continuous(short min, short max)
             {
@@ -323,7 +323,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenInt16KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenInt16KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenInt16KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -418,8 +418,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly ushort minValue;
-            public readonly ushort maxValue;
+            private readonly ushort minValue;
+            private readonly ushort maxValue;
 
             public Continuous(ushort min, ushort max)
             {
@@ -445,7 +445,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenUInt16KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenUInt16KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenUInt16KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -540,8 +540,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly int minValue;
-            public readonly int maxValue;
+            private readonly int minValue;
+            private readonly int maxValue;
 
             public Continuous(int min, int max)
             {
@@ -567,7 +567,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenInt32KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenInt32KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenInt32KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -662,8 +662,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly uint minValue;
-            public readonly uint maxValue;
+            private readonly uint minValue;
+            private readonly uint maxValue;
 
             public Continuous(uint min, uint max)
             {
@@ -689,7 +689,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenUInt32KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenUInt32KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenUInt32KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -784,8 +784,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly long minValue;
-            public readonly long maxValue;
+            private readonly long minValue;
+            private readonly long maxValue;
 
             public Continuous(long min, long max)
             {
@@ -811,7 +811,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenInt64KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenInt64KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenInt64KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;
@@ -906,8 +906,8 @@ namespace FastEnumUtility.Internals
 
         private sealed class Continuous : UnderlyingOperation
         {
-            public readonly ulong minValue;
-            public readonly ulong maxValue;
+            private readonly ulong minValue;
+            private readonly ulong maxValue;
 
             public Continuous(ulong min, ulong max)
             {
@@ -933,7 +933,7 @@ namespace FastEnumUtility.Internals
 
         private sealed class Discontinuous : UnderlyingOperation
         {
-            public readonly FrozenUInt64KeyDictionary<Member<T>> memberByValue;
+            private readonly FrozenUInt64KeyDictionary<Member<T>> memberByValue;
 
             public Discontinuous(FrozenUInt64KeyDictionary<Member<T>> memberByValue)
                 => this.memberByValue = memberByValue;

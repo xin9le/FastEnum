@@ -84,9 +84,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Member<T> GetMember<T>(T value)
             where T : struct, Enum
-            => Cache<T>.MemberByValue.TryGetValue(value, out var member)
-            ? member
-            : throw new ArgumentException(nameof(value));
+            => Cache<T>.UnderlyingOperation.GetMember(ref value);
         #endregion
 
 
@@ -134,7 +132,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static bool IsContinuous<T>()
             where T : struct, Enum
-            => Cache<T>.IsContinuous;
+            => Cache<T>.UnderlyingOperation.IsContinuous;
         #endregion
 
 
@@ -160,9 +158,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.IsContinuous
-            ? Cache<T>.UnderlyingOperation.InBetween(value, Cache<T>.MinValue, Cache<T>.MaxValue)
-            : Cache<T>.MemberByValue.ContainsKey(value);
+            => Cache<T>.UnderlyingOperation.IsDefined(ref value);
 
 
         /// <summary>
@@ -175,10 +171,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(sbyte))
-            {
-                ref var @enum = ref Unsafe.As<sbyte, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return SByteOperation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -193,10 +186,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(byte))
-            {
-                ref var @enum = ref Unsafe.As<byte, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return ByteOperation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -211,10 +201,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(short))
-            {
-                ref var @enum = ref Unsafe.As<short, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return Int16Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -229,10 +216,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(ushort))
-            {
-                ref var @enum = ref Unsafe.As<ushort, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return UInt16Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -247,10 +231,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(int))
-            {
-                ref var @enum = ref Unsafe.As<int, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return Int32Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -265,10 +246,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(uint))
-            {
-                ref var @enum = ref Unsafe.As<uint, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return UInt32Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -283,10 +261,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(long))
-            {
-                ref var @enum = ref Unsafe.As<long, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return Int64Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -301,10 +276,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             if (Cache<T>.UnderlyingType == typeof(ulong))
-            {
-                ref var @enum = ref Unsafe.As<ulong, T>(ref value);
-                return IsDefined(@enum);
-            }
+                return UInt64Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
 
@@ -389,21 +361,9 @@ namespace FastEnumUtility
         /// <returns></returns>
         private static bool TryParseInternal<T>(string value, bool ignoreCase, out T result)
             where T : struct, Enum
-        {
-            if (!IsNumeric(value[0]))
-                return TryParseName(value, ignoreCase, out result);
-
-            if (Cache<T>.UnderlyingOperation.TryParse(value, out var @enum))
-            {
-                if (IsDefined(@enum))
-                {
-                    result = @enum;
-                    return true;
-                }
-            }
-            result = default;
-            return false;
-        }
+            => IsNumeric(value[0])
+            ? Cache<T>.UnderlyingOperation.TryParse(value, out result)
+            : TryParseName(value, ignoreCase, out result);
 
 
         /// <summary>
@@ -471,9 +431,7 @@ namespace FastEnumUtility
             public static readonly T MinValue;
             public static readonly T MaxValue;
             public static readonly bool IsEmpty;
-            public static readonly bool IsContinuous;
             public static readonly bool IsFlags;
-            public static readonly FrozenDictionary<T, Member<T>> MemberByValue;
             public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
             public static readonly IUnderlyingOperation<T> UnderlyingOperation;
             #endregion
@@ -491,35 +449,21 @@ namespace FastEnumUtility
                 MaxValue = Values.DefaultIfEmpty().Max();
                 IsEmpty = Values.Count == 0;
                 IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
-                MemberByValue = Members.Distinct(new Member<T>.ValueComparer()).ToFrozenDictionary(x => x.Value);
+                var distinctedMember = Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
                 MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
                 UnderlyingOperation
                     = Type.GetTypeCode(Type) switch
                     {
-                        TypeCode.SByte => new SByteOperation<T>() as IUnderlyingOperation<T>,
-                        TypeCode.Byte => new ByteOperation<T>(),
-                        TypeCode.Int16 => new Int16Operation<T>(),
-                        TypeCode.UInt16 => new UInt16Operation<T>(),
-                        TypeCode.Int32 => new Int32Operation<T>(),
-                        TypeCode.UInt32 => new UInt32Operation<T>(),
-                        TypeCode.Int64 => new Int64Operation<T>(),
-                        TypeCode.UInt64 => new UInt64Operation<T>(),
+                        TypeCode.SByte => SByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Byte => ByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int16 => Int16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt16 => UInt16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int32 => Int32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt32 => UInt32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.Int64 => Int64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
+                        TypeCode.UInt64 => UInt64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
                         _ => throw new InvalidOperationException(),
                     };
-                IsContinuous = IsContinuousInternal();
-            }
-            #endregion
-
-
-            #region Utility
-            private static bool IsContinuousInternal()
-            {
-                if (IsEmpty)
-                    return false;
-
-                var subtract = UnderlyingOperation.Subtract(MaxValue, MinValue);
-                var count = MemberByValue.Count - 1;
-                return UnderlyingOperation.Equals(subtract, count);
             }
             #endregion
         }

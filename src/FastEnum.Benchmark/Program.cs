@@ -22,7 +22,7 @@ namespace FastEnumUtility.Benchmark
                 typeof(IsDefinedStringBenchmark),
                 typeof(ToStringBenchmark),
                 typeof(DictionaryEnumKeyBenchmark),
-                typeof(DictionaryIntKeyBenchmark),
+                typeof(DictionaryInt32KeyBenchmark),
                 typeof(DictionaryStringKeyBenchmark),
                 typeof(EnumMemberAttributeBenchmark),
                 typeof(ForEachBenchmark),

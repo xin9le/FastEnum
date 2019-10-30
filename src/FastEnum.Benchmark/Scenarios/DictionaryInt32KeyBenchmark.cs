@@ -8,14 +8,14 @@ using FastEnumUtility.Internals;
 
 namespace FastEnumUtility.Benchmark.Scenarios
 {
-    public class DictionaryIntKeyBenchmark
+    public class DictionaryInt32KeyBenchmark
     {
         private const int LookupKey = (int)Fruits.Pear;
 
 
         private Dictionary<int, Member<Fruits>> Standard { get; set; }
         private FrozenDictionary<int, Member<Fruits>> GenericsKeyFrozen { get; set; }
-        private FrozenIntKeyDictionary<Member<Fruits>> IntKeyFrozen { get; set; }
+        private FrozenInt32KeyDictionary<Member<Fruits>> IntKeyFrozen { get; set; }
 
 
 
@@ -25,7 +25,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
             var members = FastEnum.GetMembers<Fruits>();
             this.Standard = members.ToDictionary(x => (int)x.Value);
             this.GenericsKeyFrozen = members.ToFrozenDictionary(x => (int)x.Value);
-            this.IntKeyFrozen = members.ToFrozenIntKeyDictionary(x => (int)x.Value);
+            this.IntKeyFrozen = members.ToFrozenInt32KeyDictionary(x => (int)x.Value);
         }
 
 

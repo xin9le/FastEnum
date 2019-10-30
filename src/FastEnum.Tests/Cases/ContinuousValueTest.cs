@@ -21,5 +21,16 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void NotContinuous()
             => FastEnum.IsContinuous<NotContinuousValueEnum>().Should().Be(false);
+
+
+        [Fact]
+        public void GetName()
+        {
+            FastEnum.GetName(ContinuousValueEnum.A).Should().Be(nameof(ContinuousValueEnum.A));
+            FastEnum.GetName(ContinuousValueEnum.B).Should().Be(nameof(ContinuousValueEnum.B));
+            FastEnum.GetName(ContinuousValueEnum.C).Should().Be(nameof(ContinuousValueEnum.C));
+            FastEnum.GetName(ContinuousValueEnum.D).Should().Be(nameof(ContinuousValueEnum.D));
+            FastEnum.GetName(ContinuousValueEnum.E).Should().Be(nameof(ContinuousValueEnum.E));
+        }
     }
 }

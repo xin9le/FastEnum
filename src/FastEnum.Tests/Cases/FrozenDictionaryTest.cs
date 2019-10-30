@@ -33,7 +33,7 @@ namespace FastEnumUtility.Tests.Cases
         public void IntKey()
         {
             var values = Enumerable.Range(0, Count);
-            var dic = values.ToFrozenIntKeyDictionary(x => x);
+            var dic = values.ToFrozenInt32KeyDictionary(x => x);
 
             dic.Count.Should().Be(Count);
             dic.TryGetValue(-1, out _).Should().BeFalse();

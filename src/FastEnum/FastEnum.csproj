@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <RootNamespace>FastEnumUtility</RootNamespace>
         <LangVersion>8.0</LangVersion>
         <Nullable>disable</Nullable>
@@ -23,8 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Memory" Version="4.5.3" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Memory" Version="4.5.3" />
     </ItemGroup>
 
 </Project>

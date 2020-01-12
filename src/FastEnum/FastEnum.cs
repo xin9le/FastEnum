@@ -11,7 +11,7 @@ namespace FastEnumUtility
     /// <summary>
     /// Provides high performance utilitis for enum type.
     /// </summary>
-    public static class FastEnum
+    public static partial class FastEnum
     {
         #region Constants
         private const string IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
@@ -159,126 +159,6 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
             => Cache<T>.UnderlyingOperation.IsDefined(ref value);
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(sbyte value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(sbyte))
-                return SByteOperation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(byte value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(byte))
-                return ByteOperation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(short value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(short))
-                return Int16Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(ushort value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(ushort))
-                return UInt16Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(int value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(int))
-                return Int32Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(uint value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(uint))
-                return UInt32Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(long value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(long))
-                return Int64Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
-
-
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(ulong value)
-            where T : struct, Enum
-        {
-            if (Cache<T>.UnderlyingType == typeof(ulong))
-                return UInt64Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
 
 
         /// <summary>

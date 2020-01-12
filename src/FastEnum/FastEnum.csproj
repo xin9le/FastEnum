@@ -31,11 +31,20 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Update="FastEnum_IsDefined.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>FastEnum_IsDefined.tt</DependentUpon>
+        </Compile>
         <Compile Update="FastEnumExtensions_ToNumber.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>FastEnumExtensions_ToNumber.tt</DependentUpon>
         </Compile>
+        <None Update="FastEnum_IsDefined.tt">
+            <LastGenOutput>FastEnum_IsDefined.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
         <None Update="FastEnumExtensions_ToNumber.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>FastEnumExtensions_ToNumber.cs</LastGenOutput>

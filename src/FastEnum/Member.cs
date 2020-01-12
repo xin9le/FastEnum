@@ -66,6 +66,18 @@ namespace FastEnumUtility
                 .GetCustomAttributes<LabelAttribute>()
                 .ToFrozenInt32KeyDictionary(x => x.Index, x => x.Value);
         }
+
+
+        /// <summary>
+        /// Deconstruct into name and value.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void Deconstruct(out string name, out T value)
+        {
+            name = this.Name;
+            value = this.Value;
+        }
         #endregion
 
 

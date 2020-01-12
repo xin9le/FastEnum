@@ -62,6 +62,10 @@ namespace FastEnumUtility.Tests.Cases
                 a.Value.Should().Be(e.Value);
                 a.Name.Should().Be(e.Name);
                 a.FieldInfo.Should().Be(e.FieldInfo);
+
+                var (name, value) = a;
+                value.Should().Be(e.Value);
+                name.Should().Be(e.Name);
             }
         }
 

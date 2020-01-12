@@ -46,6 +46,11 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>EnumerableExtensions_ToFrozenDictionary.tt</DependentUpon>
         </Compile>
+        <Compile Update="Internals\FrozenDictionary.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>FrozenDictionary.tt</DependentUpon>
+        </Compile>
         <Compile Update="Internals\UnderlyingOperation.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
@@ -66,6 +71,10 @@
         <None Update="Internals\UnderlyingOperation.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>UnderlyingOperation.cs</LastGenOutput>
+        </None>
+        <None Update="Internals\FrozenDictionary.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>FrozenDictionary.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

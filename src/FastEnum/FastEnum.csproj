@@ -41,6 +41,11 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>FastEnumExtensions_ToNumber.tt</DependentUpon>
         </Compile>
+        <Compile Update="Internals\EnumerableExtensions_ToFrozenDictionary.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>EnumerableExtensions_ToFrozenDictionary.tt</DependentUpon>
+        </Compile>
         <Compile Update="Internals\UnderlyingOperation.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
@@ -53,6 +58,10 @@
         <None Update="FastEnumExtensions_ToNumber.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>FastEnumExtensions_ToNumber.cs</LastGenOutput>
+        </None>
+        <None Update="Internals\EnumerableExtensions_ToFrozenDictionary.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>EnumerableExtensions_ToFrozenDictionary.cs</LastGenOutput>
         </None>
         <None Update="Internals\UnderlyingOperation.tt">
             <Generator>TextTemplatingFileGenerator</Generator>

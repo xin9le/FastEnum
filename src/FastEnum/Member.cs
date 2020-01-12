@@ -64,11 +64,7 @@ namespace FastEnumUtility
             this.Labels
                 = this.FieldInfo
                 .GetCustomAttributes<LabelAttribute>()
-                .ToFrozenInt32KeyDictionary
-                (
-                    x => x.Index,
-                    x => (x.Value == null) ? x.Value : string.Intern(x.Value)
-                );
+                .ToFrozenInt32KeyDictionary(x => x.Index, x => x.Value);
         }
         #endregion
 

@@ -51,7 +51,7 @@ namespace FastEnumUtility
             static Cache_Names()
             {
                 var type = Cache_Type<T>.Type;
-                Names = Enum.GetNames(type).Select(string.Intern).ToReadOnlyArray();
+                Names = Enum.GetNames(type).ToReadOnlyArray();
             }
         }
 

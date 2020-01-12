@@ -22,7 +22,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 var type = typeof(T);
                 var underlyingType = Enum.GetUnderlyingType(type);
                 var values = (Enum.GetValues(type) as T[]).AsReadOnly();
-                var names = Enum.GetNames(type).Select(string.Intern).ToReadOnlyArray();
+                var names = Enum.GetNames(type).ToReadOnlyArray();
                 var members = names.Select(x => new Member<T>(x)).ToReadOnlyArray();
                 var minValue = values.DefaultIfEmpty().Min();
                 var maxValue = values.DefaultIfEmpty().Max();

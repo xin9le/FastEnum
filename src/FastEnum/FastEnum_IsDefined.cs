@@ -22,7 +22,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(sbyte value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(sbyte))
+            if (Cache_Type<T>.UnderlyingType == typeof(sbyte))
                 return SByteOperation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -37,7 +37,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(byte value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(byte))
+            if (Cache_Type<T>.UnderlyingType == typeof(byte))
                 return ByteOperation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -52,7 +52,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(short value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(short))
+            if (Cache_Type<T>.UnderlyingType == typeof(short))
                 return Int16Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -67,7 +67,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(ushort value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(ushort))
+            if (Cache_Type<T>.UnderlyingType == typeof(ushort))
                 return UInt16Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -82,7 +82,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(int value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(int))
+            if (Cache_Type<T>.UnderlyingType == typeof(int))
                 return Int32Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -97,7 +97,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(uint value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(uint))
+            if (Cache_Type<T>.UnderlyingType == typeof(uint))
                 return UInt32Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -112,7 +112,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(long value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(long))
+            if (Cache_Type<T>.UnderlyingType == typeof(long))
                 return Int64Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }
@@ -127,7 +127,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(ulong value)
             where T : struct, Enum
         {
-            if (Cache<T>.UnderlyingType == typeof(ulong))
+            if (Cache_Type<T>.UnderlyingType == typeof(ulong))
                 return UInt64Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }

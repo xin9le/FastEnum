@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using FastEnumUtility.Internals;
 
 
 
@@ -26,7 +24,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static Type GetUnderlyingType<T>()
             where T : struct, Enum
-            => Cache<T>.UnderlyingType;
+            => Cache_Type<T>.UnderlyingType;
         #endregion
 
 
@@ -38,7 +36,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static IReadOnlyList<T> GetValues<T>()
             where T : struct, Enum
-            => Cache<T>.Values;
+            => Cache_Values<T>.Values;
         #endregion
 
 
@@ -50,7 +48,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static IReadOnlyList<string> GetNames<T>()
             where T : struct, Enum
-            => Cache<T>.Names;
+            => Cache_Names<T>.Names;
 
 
         /// <summary>
@@ -73,7 +71,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static IReadOnlyList<Member<T>> GetMembers<T>()
             where T : struct, Enum
-            => Cache<T>.Members;
+            => Cache_Members<T>.Members;
 
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Member<T> GetMember<T>(T value)
             where T : struct, Enum
-            => Cache<T>.UnderlyingOperation.GetMember(ref value);
+            => Cache_UnderlyingOperation<T>.UnderlyingOperation.GetMember(ref value);
         #endregion
 
 
@@ -97,7 +95,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetMinValue<T>()
             where T : struct, Enum
-            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MinValue;
+            => Cache_Values<T>.IsEmpty ? (T?)null : Cache_MinMaxValues<T>.MinValue;
 
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetMaxValue<T>()
             where T : struct, Enum
-            => Cache<T>.IsEmpty ? (T?)null : Cache<T>.MaxValue;
+            => Cache_Values<T>.IsEmpty ? (T?)null : Cache_MinMaxValues<T>.MaxValue;
         #endregion
 
 
@@ -120,7 +118,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static bool IsEmpty<T>()
             where T : struct, Enum
-            => Cache<T>.IsEmpty;
+            => Cache_Values<T>.IsEmpty;
         #endregion
 
 
@@ -132,7 +130,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static bool IsContinuous<T>()
             where T : struct, Enum
-            => Cache<T>.UnderlyingOperation.IsContinuous;
+            => Cache_UnderlyingOperation<T>.UnderlyingOperation.IsContinuous;
         #endregion
 
 
@@ -144,7 +142,7 @@ namespace FastEnumUtility
         /// <returns></returns>
         public static bool IsFlags<T>()
             where T : struct, Enum
-            => Cache<T>.IsFlags;
+            => Cache_IsFlags<T>.IsFlags;
         #endregion
 
 
@@ -158,7 +156,7 @@ namespace FastEnumUtility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(T value)
             where T : struct, Enum
-            => Cache<T>.UnderlyingOperation.IsDefined(ref value);
+            => Cache_UnderlyingOperation<T>.UnderlyingOperation.IsDefined(ref value);
 
 
         /// <summary>
@@ -248,7 +246,7 @@ namespace FastEnumUtility
                 return false;
             }
             return IsNumeric(value[0])
-                ? Cache<T>.UnderlyingOperation.TryParse(value, out result)
+                ? Cache_UnderlyingOperation<T>.UnderlyingOperation.TryParse(value, out result)
                 : TryParseName(value, ignoreCase, out result);
         }
 
@@ -278,7 +276,7 @@ namespace FastEnumUtility
         {
             if (ignoreCase)
             {
-                foreach (var member in Cache<T>.Members)
+                foreach (var member in Cache_Members<T>.Members)
                 {
                     if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
                     {
@@ -289,7 +287,7 @@ namespace FastEnumUtility
             }
             else
             {
-                if (Cache<T>.MemberByName.TryGetValue(name, out var member))
+                if (Cache_MembersByName<T>.MemberByName.TryGetValue(name, out var member))
                 {
                     result = member.Value;
                     return true;
@@ -297,62 +295,6 @@ namespace FastEnumUtility
             }
             result = default;
             return false;
-        }
-        #endregion
-
-
-        #region Inner Classes
-        /// <summary>
-        /// Provides cache for enum type members.
-        /// </summary>
-        /// <typeparam name="T">Enum type</typeparam>
-        private static class Cache<T>
-            where T : struct, Enum
-        {
-            #region Fields
-            public static readonly Type Type;
-            public static readonly Type UnderlyingType;
-            public static readonly ReadOnlyArray<T> Values;
-            public static readonly ReadOnlyArray<string> Names;
-            public static readonly ReadOnlyArray<Member<T>> Members;
-            public static readonly T MinValue;
-            public static readonly T MaxValue;
-            public static readonly bool IsEmpty;
-            public static readonly bool IsFlags;
-            public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
-            public static readonly IUnderlyingOperation<T> UnderlyingOperation;
-            #endregion
-
-
-            #region Constructors
-            static Cache()
-            {
-                Type = typeof(T);
-                UnderlyingType = Enum.GetUnderlyingType(Type);
-                Values = (Enum.GetValues(Type) as T[]).AsReadOnly();
-                Names = Enum.GetNames(Type).Select(string.Intern).ToReadOnlyArray();
-                Members = Names.Select(x => new Member<T>(x)).ToReadOnlyArray();
-                MinValue = Values.DefaultIfEmpty().Min();
-                MaxValue = Values.DefaultIfEmpty().Max();
-                IsEmpty = Values.Count == 0;
-                IsFlags = Attribute.IsDefined(Type, typeof(FlagsAttribute));
-                var distinctedMember = Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
-                MemberByName = Members.ToFrozenStringKeyDictionary(x => x.Name);
-                UnderlyingOperation
-                    = Type.GetTypeCode(Type) switch
-                    {
-                        TypeCode.SByte => SByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Byte => ByteOperation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int16 => Int16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt16 => UInt16Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int32 => Int32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt32 => UInt32Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.Int64 => Int64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        TypeCode.UInt64 => UInt64Operation<T>.Create(MinValue, MaxValue, distinctedMember),
-                        _ => throw new InvalidOperationException(),
-                    };
-            }
-            #endregion
         }
         #endregion
     }

@@ -31,14 +31,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="FastEnumExtensions_ToInteger.cs">
+        <Compile Update="FastEnumExtensions_ToNumber.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
-            <DependentUpon>FastEnumExtensions_ToInteger.tt</DependentUpon>
+            <DependentUpon>FastEnumExtensions_ToNumber.tt</DependentUpon>
         </Compile>
-        <None Update="FastEnumExtensions_ToInteger.tt">
+        <None Update="FastEnumExtensions_ToNumber.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>FastEnumExtensions_ToInteger.cs</LastGenOutput>
+            <LastGenOutput>FastEnumExtensions_ToNumber.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

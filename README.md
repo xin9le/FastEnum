@@ -63,7 +63,7 @@ There are some functions that are often used for enum, and you can be used more 
 
 ## 1. Gets pairwised member information
 
-Sometimes you want value / name pair of enum. `Member<TEnum>` can be used under such cases. `FieldInfo` is also included, so please use it for reflection code.
+Sometimes you want name / value pair of enum. `Member<TEnum>` can be used under such cases. Of course supports [deconstruction](https://docs.microsoft.com/en-us/dotnet/csharp/deconstruct) feature. `FieldInfo` is also included, so please use it for reflection code.
 
 
 ```cs
@@ -76,6 +76,7 @@ class Member<TEnum>
 }
 
 var member = Fruits.Apple.ToMember();
+var (name, value) = member;  // Supports deconstruction
 ```
 
 

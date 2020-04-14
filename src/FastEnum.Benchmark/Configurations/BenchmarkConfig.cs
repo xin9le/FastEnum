@@ -12,12 +12,12 @@ namespace FastEnumUtility.Benchmark.Configurations
     {
         public BenchmarkConfig()
         {
-            this.Add(MarkdownExporter.GitHub);
+            this.AddExporter(MarkdownExporter.GitHub);
             this.Add(DefaultConfig.Instance);
-            this.Add(MemoryDiagnoser.Default);
-            this.Add(Job.ShortRun);
-            //this.Add(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
-            //this.Add(StatisticColumn.AllStatistics);
+            this.AddDiagnoser(MemoryDiagnoser.Default);
+            this.AddJob(Job.ShortRun);
+            //this.AddJob(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
+            //this.AddColumn(StatisticColumn.AllStatistics);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace FastEnumUtility
         public static bool IsDefined<T>(<#= x.CompatibleName #> value)
             where T : struct, Enum
         {
-            if (Cache_Type<T>.UnderlyingType == typeof(<#= x.CompatibleName #>))
+            if (Cache_UnderlyingOperation<T>.UnderlyingType == typeof(<#= x.CompatibleName #>))
                 return <#= x.TypeName #>Operation<T>.IsDefined(ref value);
             throw new ArgumentException(IsDefinedTypeMismatchMessage);
         }

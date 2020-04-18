@@ -117,6 +117,7 @@ namespace FastEnumUtility
         private static class Cache_UnderlyingOperation<T>
             where T : struct, Enum
         {
+            public static readonly Type UnderlyingType;
             public static readonly IUnderlyingOperation<T> UnderlyingOperation;
 
             static Cache_UnderlyingOperation()
@@ -125,6 +126,7 @@ namespace FastEnumUtility
                 var min = Cache_MinMaxValues<T>.MinValue;
                 var max = Cache_MinMaxValues<T>.MaxValue;
                 var distincted = Cache_Members<T>.Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
+                UnderlyingType = Cache_Type<T>.UnderlyingType;
                 UnderlyingOperation
                     = Type.GetTypeCode(type) switch
                     {

@@ -8,7 +8,7 @@
         <!-- NuGet -->
         <IsPackable>true</IsPackable>
         <PackageId>FastEnum</PackageId>
-        <Version>1.5.3.0</Version>
+        <Version>1.5.4.0</Version>
         <Description>The fastest enum utilities for C#/.NET. Provided methods are all achieved zero allocation and faster than System.Enum.</Description>
         <PackageProjectUrl>https://github.com/xin9le/FastEnum</PackageProjectUrl>
         <PackageTags>Enum, Utility</PackageTags>

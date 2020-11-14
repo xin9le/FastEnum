@@ -60,7 +60,7 @@ namespace FastEnumUtility
 
             return throwIfNotFound
                 ? throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.")
-                : default(string);
+                : default;
         }
 
 
@@ -82,7 +82,7 @@ namespace FastEnumUtility
 
             return throwIfNotFound
                 ? throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.")
-                : default(string);
+                : default;
         }
 
 

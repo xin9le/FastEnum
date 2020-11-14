@@ -55,7 +55,7 @@ namespace FastEnumUtility
             where T : struct, Enum
         {
             var attr = value.ToMember().EnumMemberAttribute;
-            if (attr != null)
+            if (attr is not null)
                 return attr.Value;
 
             return throwIfNotFound

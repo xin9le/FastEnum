@@ -109,7 +109,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -282,7 +282,7 @@ namespace FastEnumUtility.Internals
             var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (EqualityComparer<TKey>.Default.Equals(next.Key, key))
                 {
@@ -436,7 +436,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -609,7 +609,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -763,7 +763,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -936,7 +936,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1090,7 +1090,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1263,7 +1263,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1417,7 +1417,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1590,7 +1590,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1744,7 +1744,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1917,7 +1917,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2071,7 +2071,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2244,7 +2244,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2398,7 +2398,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2571,7 +2571,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2725,7 +2725,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2898,7 +2898,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -3052,7 +3052,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -3225,7 +3225,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {

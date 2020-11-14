@@ -35,7 +35,7 @@ namespace FastEnumUtility
             static Cache_Values()
             {
                 var type = Cache_Type<T>.Type;
-                var values = Enum.GetValues(type) as T[];
+                var values = (T[])Enum.GetValues(type);
                 Values = values.AsReadOnly();
                 IsEmpty = values.Length == 0;
             }

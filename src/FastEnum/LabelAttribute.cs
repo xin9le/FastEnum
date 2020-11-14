@@ -14,7 +14,7 @@ namespace FastEnumUtility
         /// <summary>
         /// Gets the value.
         /// </summary>
-        public string Value { get; }
+        public string? Value { get; }
 
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        public LabelAttribute(string value, int index = 0)
+        public LabelAttribute(string? value, int index = 0)
         {
             this.Value = value;
             this.Index = index;

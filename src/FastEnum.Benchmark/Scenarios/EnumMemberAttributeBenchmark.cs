@@ -25,26 +25,26 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
 
         [Benchmark(Baseline = true)]
-        public string NetCore()
+        public string? NetCore()
         {
             var type = typeof(Fruits);
-            var name = Enum.GetName(type, Value);
+            var name = Enum.GetName(type, Value)!;
             var info = type.GetField(name);
-            var attr = info.GetCustomAttribute<EnumMemberAttribute>();
+            var attr = info!.GetCustomAttribute<EnumMemberAttribute>();
             return attr?.Value;
         }
 
 
         [Benchmark]
-        public string EnumsNet()
+        public string? EnumsNet()
         {
-            var attr = Enums.GetAttributes(Value).Get<EnumMemberAttribute>();
+            var attr = Enums.GetAttributes(Value)!.Get<EnumMemberAttribute>();
             return attr?.Value;
         }
 
 
         [Benchmark]
-        public string FastEnum()
+        public string? FastEnum()
             => Value.GetEnumMemberValue();
     }
 }

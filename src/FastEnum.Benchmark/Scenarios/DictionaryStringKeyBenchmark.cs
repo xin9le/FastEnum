@@ -14,10 +14,12 @@ namespace FastEnumUtility.Benchmark.Scenarios
         private const string LookupKey = nameof(Fruits.Apple);
 
 
+#pragma warning disable CS8618
         private Dictionary<string, Member<Fruits>> Standard { get; set; }
         private FrozenDictionary<string, Member<Fruits>> GenericsKeyFrozen { get; set; }
         private FrozenStringKeyDictionary<Member<Fruits>> StringKeyFrozen { get; set; }
         private Hashtable Table { get; set; }
+#pragma warning restore CS8618
 
 
         [GlobalSetup]
@@ -50,6 +52,6 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
         [Benchmark]
         public Member<Fruits> HashTable()
-            => (Member<Fruits>)this.Table[LookupKey];
+            => (Member<Fruits>)this.Table[LookupKey]!;
     }
 }

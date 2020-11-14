@@ -37,13 +37,13 @@ namespace FastEnumUtility
         /// <summary>
         /// Gets the <see cref="System.Runtime.Serialization.EnumMemberAttribute"/> of specified enumration member.
         /// </summary>
-        public EnumMemberAttribute EnumMemberAttribute { get; }
+        public EnumMemberAttribute? EnumMemberAttribute { get; }
 
 
         /// <summary>
         /// Gets the labels of specified enumration member.
         /// </summary>
-        internal FrozenInt32KeyDictionary<string> Labels { get; }
+        internal FrozenInt32KeyDictionary<string?> Labels { get; }
         #endregion
 
 
@@ -57,9 +57,9 @@ namespace FastEnumUtility
             this.Value
                 = Enum.TryParse<T>(name, out var value)
                 ? value
-                : throw new ArgumentException(nameof(name));
+                : throw new ArgumentException("name is not found.", nameof(name));
             this.Name = name;
-            this.FieldInfo = typeof(T).GetField(name);
+            this.FieldInfo = typeof(T).GetField(name)!;
             this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
             this.Labels
                 = this.FieldInfo
@@ -88,8 +88,19 @@ namespace FastEnumUtility
         internal sealed class ValueComparer : IEqualityComparer<Member<T>>
         {
             #region IEqualityComparer implementations
-            public bool Equals(Member<T> x, Member<T> y)
-                => EqualityComparer<T>.Default.Equals(x.Value, y.Value);
+            public bool Equals(Member<T>? x, Member<T>? y)
+            {
+                if (x is null)
+                {
+                    return y is null;
+                }
+                else
+                {
+                    if (y is null)
+                        return false;
+                    return EqualityComparer<T>.Default.Equals(x.Value, y.Value);
+                }
+            }
 
 
             public int GetHashCode(Member<T> obj)

@@ -115,9 +115,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static <#= GetClass(x.TypeName) #> Create<TSource>(IEnumerable<TSource> source, Func<TSource, <#= x.CompatibleName #>> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -156,7 +156,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -190,9 +190,9 @@ namespace FastEnumUtility.Internals
                 var hash = newEntry?.Hash ?? EqualityComparer<TKey>.Default.GetHashCode(newKey);
 <# } #>
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -218,9 +218,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -341,7 +341,7 @@ namespace FastEnumUtility.Internals
 <# } #>
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
 <# if (x.IsSpecialized) { #>
                 if (next.Key == key)

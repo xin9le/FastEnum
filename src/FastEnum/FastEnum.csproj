@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net461</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net461;net5</TargetFrameworks>
         <RootNamespace>FastEnumUtility</RootNamespace>
-        <LangVersion>8.0</LangVersion>
-        <Nullable>disable</Nullable>
+        <LangVersion>9.0</LangVersion>
+        <Nullable>enable</Nullable>
         <!-- NuGet -->
         <IsPackable>true</IsPackable>
         <PackageId>FastEnum</PackageId>
@@ -22,16 +22,8 @@
         <PackageReleaseNotes></PackageReleaseNotes>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="System.Memory" Version="4.5.4" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-        <PackageReference Include="System.Memory" Version="4.5.4" />
+    <ItemGroup Condition="'$(TargetFramework)' != 'net5'">
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>

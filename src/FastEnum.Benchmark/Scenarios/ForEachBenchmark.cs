@@ -10,11 +10,13 @@ namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class ForEachBenchmark
     {
+#pragma warning disable CS8618
         private ReadOnlyArray<int> _ReadOnlyArray { get; set; }
         private ReadOnlyCollection<int> _ReadOnlyCollection { get; set; }
         private IReadOnlyList<int> _IReadOnlyList { get; set; }
         private List<int> _List { get; set; }
         private int[] _Array { get; set; }
+#pragma warning restore CS8618
 
 
         [GlobalSetup]

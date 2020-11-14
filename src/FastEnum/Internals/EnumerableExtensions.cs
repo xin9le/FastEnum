@@ -19,7 +19,7 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static int? CountIfMaterialized<T>(this IEnumerable<T> source)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException(nameof(source));
 
             if (source == Enumerable.Empty<T>()) return 0;
@@ -39,7 +39,7 @@ namespace FastEnumUtility.Internals
         /// <param name="nullToEmpty"></param>
         public static IEnumerable<T> Materialize<T>(this IEnumerable<T> source, bool nullToEmpty = true)
         {
-            if (source == null)
+            if (source is null)
             {
                 if (nullToEmpty)
                     return Enumerable.Empty<T>();

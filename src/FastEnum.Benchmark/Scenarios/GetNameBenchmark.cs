@@ -23,12 +23,12 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
 
         [Benchmark(Baseline = true)]
-        public string NetCore()
+        public string? NetCore()
             => Enum.GetName(typeof(Fruits), Value);
 
 
         [Benchmark]
-        public string EnumsNet()
+        public string? EnumsNet()
             => Enums.GetName(Value);
 
 

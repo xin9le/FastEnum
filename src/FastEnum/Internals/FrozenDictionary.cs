@@ -68,9 +68,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -109,7 +109,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -139,9 +139,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? EqualityComparer<TKey>.Default.GetHashCode(newKey);
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -163,9 +163,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -282,7 +282,7 @@ namespace FastEnumUtility.Internals
             var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (EqualityComparer<TKey>.Default.Equals(next.Key, key))
                 {
@@ -395,9 +395,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenStringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -436,7 +436,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -466,9 +466,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -490,9 +490,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -609,7 +609,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -722,9 +722,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenSByteKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, sbyte> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -763,7 +763,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -793,9 +793,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -817,9 +817,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -936,7 +936,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1049,9 +1049,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenByteKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, byte> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -1090,7 +1090,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1120,9 +1120,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -1144,9 +1144,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -1263,7 +1263,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1376,9 +1376,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt16KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, short> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -1417,7 +1417,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1447,9 +1447,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -1471,9 +1471,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -1590,7 +1590,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -1703,9 +1703,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt16KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, ushort> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -1744,7 +1744,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -1774,9 +1774,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -1798,9 +1798,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -1917,7 +1917,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2030,9 +2030,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt32KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -2071,7 +2071,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2101,9 +2101,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -2125,9 +2125,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -2244,7 +2244,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2357,9 +2357,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt32KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, uint> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -2398,7 +2398,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2428,9 +2428,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -2452,9 +2452,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -2571,7 +2571,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -2684,9 +2684,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt64KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, long> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -2725,7 +2725,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -2755,9 +2755,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -2779,9 +2779,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -2898,7 +2898,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {
@@ -3011,9 +3011,9 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt64KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, ulong> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
 
             const int initialSize = 4;
             const float loadFactor = 0.75f;
@@ -3052,7 +3052,7 @@ namespace FastEnumUtility.Internals
                 for (int i = 0; i < this.buckets.Length; i++)
                 {
                     var e = this.buckets[i];
-                    while (e != null)
+                    while (e is not null)
                     {
                         var newEntry = new Entry(e.Key, e.Value, e.Hash);
                         AddToBuckets(nextBucket, key, newEntry, default, out _);
@@ -3082,9 +3082,9 @@ namespace FastEnumUtility.Internals
             {
                 var hash = newEntry?.Hash ?? newKey.GetHashCode();
                 var index = hash & (buckets.Length - 1);
-                if (buckets[index] == null)
+                if (buckets[index] is null)
                 {
-                    if (newEntry == null)
+                    if (newEntry is null)
                     {
                         resultingValue = value;
                         buckets[index] = new Entry(newKey, resultingValue, hash);
@@ -3106,9 +3106,9 @@ namespace FastEnumUtility.Internals
                             return false;
                         }
 
-                        if (lastEntry.Next == null)
+                        if (lastEntry.Next is null)
                         {
-                            if (newEntry == null)
+                            if (newEntry is null)
                             {
                                 resultingValue = value;
                                 lastEntry.Next = new Entry(newKey, resultingValue, hash);
@@ -3225,7 +3225,7 @@ namespace FastEnumUtility.Internals
             var hash = key.GetHashCode();
             var index = hash & (this.buckets.Length - 1);
             var next = this.buckets[index];
-            while (next != null)
+            while (next is not null)
             {
                 if (next.Key == key)
                 {

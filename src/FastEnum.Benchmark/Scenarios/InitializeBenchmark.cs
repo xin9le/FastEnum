@@ -21,7 +21,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
             {
                 var type = typeof(T);
                 var underlyingType = Enum.GetUnderlyingType(type);
-                var values = (Enum.GetValues(type) as T[]).AsReadOnly();
+                var values = ((T[])Enum.GetValues(type)).AsReadOnly();
                 var names = Enum.GetNames(type).ToReadOnlyArray();
                 var members = names.Select(x => new Member<T>(x)).ToReadOnlyArray();
                 var minValue = values.DefaultIfEmpty().Min();
@@ -71,7 +71,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 where T : struct, Enum
             {
                 var type = typeof(T);
-                var values = Enum.GetValues(type) as T[];
+                var values = (T[])Enum.GetValues(type);
                 var values2 = values.AsReadOnly();
                 var isEmpty = values.Length == 0;
             }
@@ -119,7 +119,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 where T : struct, Enum
             {
                 var type = typeof(T);
-                var values = Enum.GetValues(type) as T[];
+                var values = (T[])Enum.GetValues(type);
                 var values2 = values.AsReadOnly();
                 var isEmpty = values.Length == 0;
 
@@ -172,7 +172,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
                 where T : struct, Enum
             {
                 var type = typeof(T);
-                var values = Enum.GetValues(type) as T[];
+                var values = (T[])Enum.GetValues(type);
                 var values2 = values.AsReadOnly();
                 var isEmpty = values.Length == 0;
                 var min = values2.DefaultIfEmpty().Min();

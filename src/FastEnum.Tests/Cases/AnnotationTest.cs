@@ -16,12 +16,12 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void EnumMemberAttribute()
         {
-            var zero = TEnum.Zero.ToMember().EnumMemberAttribute;
+            var zero = TEnum.Zero.ToMember().EnumMemberAttribute!;
             zero.Should().NotBeNull();
             zero.IsValueSetExplicitly.Should().BeTrue();
             zero.Value.Should().Be("_zero_");
 
-            var one = TEnum.One.ToMember().EnumMemberAttribute;
+            var one = TEnum.One.ToMember().EnumMemberAttribute!;
             one.Should().NotBeNull();
             one.IsValueSetExplicitly.Should().BeFalse();
             one.Value.Should().BeNull();

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net461</TargetFrameworks>
         <RootNamespace>FastEnumUtility</RootNamespace>
-        <LangVersion>8.0</LangVersion>
+        <LangVersion>9.0</LangVersion>
         <Nullable>disable</Nullable>
         <!-- NuGet -->
         <IsPackable>true</IsPackable>

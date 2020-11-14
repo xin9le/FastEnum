@@ -178,7 +178,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static T Parse<T>(string value)
+        public static T Parse<T>(string? value)
             where T : struct, Enum
             => TryParseInternal<T>(value, false, out var result)
             ? result
@@ -192,7 +192,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static T Parse<T>(string value, bool ignoreCase)
+        public static T Parse<T>(string? value, bool ignoreCase)
             where T : struct, Enum
             => TryParseInternal<T>(value, ignoreCase, out var result)
             ? result
@@ -207,7 +207,7 @@ namespace FastEnumUtility
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse<T>(string value, out T result)
+        public static bool TryParse<T>(string? value, out T result)
             where T : struct, Enum
             => TryParseInternal(value, false, out result);
 
@@ -222,7 +222,7 @@ namespace FastEnumUtility
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse<T>(string value, bool ignoreCase, out T result)
+        public static bool TryParse<T>(string? value, bool ignoreCase, out T result)
             where T : struct, Enum
             => TryParseInternal(value, ignoreCase, out result);
 
@@ -237,10 +237,10 @@ namespace FastEnumUtility
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        private static bool TryParseInternal<T>(string value, bool ignoreCase, out T result)
+        private static bool TryParseInternal<T>(string? value, bool ignoreCase, out T result)
             where T : struct, Enum
         {
-            if (string.IsNullOrEmpty(value))
+            if (value is null || string.IsNullOrEmpty(value))
             {
                 result = default;
                 return false;

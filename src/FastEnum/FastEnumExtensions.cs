@@ -51,7 +51,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
+        public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
             where T : struct, Enum
         {
             var attr = value.ToMember().EnumMemberAttribute;
@@ -71,7 +71,7 @@ namespace FastEnumUtility
         /// <param name="member"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
+        public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
         {
             if (member == null)
@@ -93,7 +93,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
-        public static string GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
+        public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
             => value.ToMember().GetLabel(index, throwIfNotFound);
     }

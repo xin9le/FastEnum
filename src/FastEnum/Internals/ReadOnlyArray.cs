@@ -98,7 +98,7 @@ namespace FastEnumUtility.Internals
                 => this.source[this.index];
 
 
-            object IEnumerator.Current
+            object? IEnumerator.Current
                 => this.Current;
 
 
@@ -144,7 +144,7 @@ namespace FastEnumUtility.Internals
                 => this.source[this.index];
 
 
-            object IEnumerator.Current
+            object? IEnumerator.Current
                 => this.Current;
 
 

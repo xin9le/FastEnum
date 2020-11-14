@@ -7,8 +7,10 @@ namespace FastEnumUtility.Benchmark.Scenarios
 {
     public class StringEqualsBenchmark
     {
+#pragma warning disable CS8618
         private string Lower { get; set; }
         private string Upper { get; set; }
+#pragma warning restore CS8618
 
 
         [GlobalSetup]

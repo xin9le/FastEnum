@@ -4,7 +4,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>FastEnumUtility.Tests</RootNamespace>
         <LangVersion>9.0</LangVersion>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

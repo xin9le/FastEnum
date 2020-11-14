@@ -13,10 +13,11 @@ namespace FastEnumUtility.Benchmark.Scenarios
         private const int LookupKey = (int)Fruits.Pear;
 
 
+#pragma warning disable CS8618
         private Dictionary<int, Member<Fruits>> Standard { get; set; }
         private FrozenDictionary<int, Member<Fruits>> GenericsKeyFrozen { get; set; }
         private FrozenInt32KeyDictionary<Member<Fruits>> IntKeyFrozen { get; set; }
-
+#pragma warning restore CS8618
 
 
         [GlobalSetup]

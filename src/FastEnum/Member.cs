@@ -43,7 +43,7 @@ namespace FastEnumUtility
         /// <summary>
         /// Gets the labels of specified enumration member.
         /// </summary>
-        internal FrozenInt32KeyDictionary<string> Labels { get; }
+        internal FrozenInt32KeyDictionary<string?> Labels { get; }
         #endregion
 
 

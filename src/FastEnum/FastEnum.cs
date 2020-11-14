@@ -182,7 +182,7 @@ namespace FastEnumUtility
             where T : struct, Enum
             => TryParseInternal<T>(value, false, out var result)
             ? result
-            : throw new ArgumentException(nameof(value));
+            : throw new ArgumentException(null, nameof(value));
 
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace FastEnumUtility
             where T : struct, Enum
             => TryParseInternal<T>(value, ignoreCase, out var result)
             ? result
-            : throw new ArgumentException(nameof(value));
+            : throw new ArgumentException(null, nameof(value));
 
 
         /// <summary>

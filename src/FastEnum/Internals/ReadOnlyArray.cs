@@ -185,8 +185,8 @@ namespace FastEnumUtility.Internals
                 throw new ArgumentNullException(nameof(source));
 
             return source is T[] array
-                ? new ReadOnlyArray<T>(array)
-                : new ReadOnlyArray<T>(source.ToArray());
+                ? new(array)
+                : new(source.ToArray());
         }
 
 
@@ -197,6 +197,6 @@ namespace FastEnumUtility.Internals
         /// <param name="source"></param>
         /// <returns></returns>
         public static ReadOnlyArray<T> AsReadOnly<T>(this T[] source)
-            => new ReadOnlyArray<T>(source);
+            => new(source);
     }
 }

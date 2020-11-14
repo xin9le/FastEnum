@@ -34,6 +34,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<T> GetValues<T>()
             where T : struct, Enum
             => Cache_Values<T>.Values;
@@ -46,6 +47,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<string> GetNames<T>()
             where T : struct, Enum
             => Cache_Names<T>.Names;
@@ -69,6 +71,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<Member<T>> GetMembers<T>()
             where T : struct, Enum
             => Cache_Members<T>.Members;
@@ -116,6 +119,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<T>()
             where T : struct, Enum
             => Cache_Values<T>.IsEmpty;
@@ -128,6 +132,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsContinuous<T>()
             where T : struct, Enum
             => Cache_UnderlyingOperation<T>.UnderlyingOperation.IsContinuous;
@@ -140,6 +145,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFlags<T>()
             where T : struct, Enum
             => Cache_IsFlags<T>.IsFlags;
@@ -165,6 +171,7 @@ namespace FastEnumUtility
         /// <param name="name"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(string name)
             where T : struct, Enum
             => TryParseName<T>(name, false, out _);
@@ -178,6 +185,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(string? value)
             where T : struct, Enum
             => TryParseInternal<T>(value, false, out var result)
@@ -192,6 +200,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(string? value, bool ignoreCase)
             where T : struct, Enum
             => TryParseInternal<T>(value, ignoreCase, out var result)
@@ -207,6 +216,7 @@ namespace FastEnumUtility
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string? value, out T result)
             where T : struct, Enum
             => TryParseInternal(value, false, out result);
@@ -222,6 +232,7 @@ namespace FastEnumUtility
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse<T>(string? value, bool ignoreCase, out T result)
             where T : struct, Enum
             => TryParseInternal(value, ignoreCase, out result);

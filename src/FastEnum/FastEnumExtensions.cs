@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 
@@ -17,6 +18,7 @@ namespace FastEnumUtility
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Member<T> ToMember<T>(this T value)
             where T : struct, Enum
             => FastEnum.GetMember(value);
@@ -28,6 +30,7 @@ namespace FastEnumUtility
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToName<T>(this T value)
             where T : struct, Enum
             => FastEnum.GetName(value);
@@ -39,6 +42,7 @@ namespace FastEnumUtility
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDefined<T>(this T value)
             where T : struct, Enum
             => FastEnum.IsDefined(value);
@@ -51,6 +55,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
             where T : struct, Enum
         {
@@ -71,6 +76,7 @@ namespace FastEnumUtility
         /// <param name="member"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
         {
@@ -93,6 +99,7 @@ namespace FastEnumUtility
         /// <param name="value"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
             => value.ToMember().GetLabel(index, throwIfNotFound);

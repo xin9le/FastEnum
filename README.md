@@ -7,15 +7,15 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .N
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/67865490-aed7e380-fb6a-11e9-8be9-25101c2a871a.png)
+![image](https://user-images.githubusercontent.com/4776688/99143737-31164580-26a3-11eb-80f8-fef47ce5f176.png)
 
 
 ``` ini
-BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
 Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=3.0.100
-  [Host]   : .NET Core 3.0.0 (CoreCLR 4.700.19.46205, CoreFX 4.700.19.46214), X64 RyuJIT
-  ShortRun : .NET Core 3.0.0 (CoreCLR 4.700.19.46205, CoreFX 4.700.19.46214), X64 RyuJIT
+.NET Core SDK=5.0.100
+  [Host]   : .NET Core 5.0.0 (CoreCLR 5.0.20.51904, CoreFX 5.0.20.51904), X64 RyuJIT
+  ShortRun : .NET Core 5.0.0 (CoreCLR 5.0.20.51904, CoreFX 5.0.20.51904), X64 RyuJIT
 ```
 
 
@@ -24,6 +24,7 @@ Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical 
 
 - .NET Framework 4.6.1+
 - .NET Standard 2.0+
+- .NET 5.0+
 
 
 
@@ -158,6 +159,9 @@ As you might expect, it’s because cached internally. It takes the approach of 
 
 Getting started from downloading [NuGet](https://www.nuget.org/packages/FastEnum) package.
 
+```
+dotnet add package FastEnum
+```
 ```
 PM> Install-Package FastEnum
 ```

@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' != 'net5'">
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>

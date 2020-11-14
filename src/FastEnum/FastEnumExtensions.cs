@@ -74,7 +74,7 @@ namespace FastEnumUtility
         public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
             where T : struct, Enum
         {
-            if (member == null)
+            if (member is null)
                 throw new ArgumentNullException(nameof(member));
 
             if (member.Labels.TryGetValue(index, out var label))

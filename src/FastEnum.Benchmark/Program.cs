@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using FastEnumUtility.Benchmark.Configurations;
 using FastEnumUtility.Benchmark.Scenarios;
 
 

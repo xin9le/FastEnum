@@ -6,7 +6,7 @@ using BenchmarkDotNet.Jobs;
 
 
 
-namespace FastEnumUtility.Benchmark.Configurations
+namespace FastEnumUtility.Benchmark
 {
     internal sealed class BenchmarkConfig : ManualConfig
     {
@@ -15,8 +15,8 @@ namespace FastEnumUtility.Benchmark.Configurations
             this.AddExporter(MarkdownExporter.GitHub);
             this.Add(DefaultConfig.Instance);
             this.AddDiagnoser(MemoryDiagnoser.Default);
-            this.AddJob(Job.ShortRun);
-            //this.AddJob(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
+            //this.AddJob(Job.ShortRun);
+            this.AddJob(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
             //this.AddColumn(StatisticColumn.AllStatistics);
         }
     }

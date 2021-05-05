@@ -9,7 +9,6 @@ namespace FastEnumUtility
     /// <summary>
     /// Provides <see cref="Enum"/> extension methods.
     /// </summary>
-    /// <typeparam name="T">Enum type</typeparam>
     public static partial class FastEnumExtensions
     {
         /// <summary>
@@ -74,6 +73,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="member"></param>
+        /// <param name="index"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -97,6 +97,7 @@ namespace FastEnumUtility
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
+        /// <param name="index"></param>
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

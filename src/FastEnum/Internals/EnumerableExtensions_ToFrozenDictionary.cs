@@ -29,6 +29,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenDictionary{TKey, TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
@@ -55,6 +56,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenStringKeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -80,6 +82,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenSByteKeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -105,6 +108,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenByteKeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -130,6 +134,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenInt16KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -155,6 +160,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenUInt16KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -180,6 +186,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenInt32KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -205,6 +212,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenUInt32KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -230,6 +238,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenInt64KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>
@@ -255,6 +264,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenUInt64KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>

@@ -198,6 +198,7 @@ namespace FastEnumUtility
         /// A parameter specifies whether the operation is case-insensitive.
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="ignoreCase"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

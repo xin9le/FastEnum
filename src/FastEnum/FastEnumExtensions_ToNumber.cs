@@ -11,7 +11,6 @@ namespace FastEnumUtility
     /// <summary>
     /// Provides <see cref="Enum"/> extension methods.
     /// </summary>
-    /// <typeparam name="T">Enum type</typeparam>
     public static partial class FastEnumExtensions
     {
         /// <summary>

@@ -48,6 +48,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="FrozenDictionary{TKey, TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
@@ -75,6 +76,7 @@ namespace FastEnumUtility.Internals
         /// <summary>
         /// Converts to <see cref="Frozen<#= x.TypeName #>KeyDictionary{TValue}"/>.
         /// </summary>
+        /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="source"></param>
         /// <param name="keySelector"></param>

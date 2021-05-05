@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
-        <PackageReference Include="Enums.NET" Version="3.0.3" />
+        <PackageReference Include="Enums.NET" Version="4.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -19,9 +19,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static int? CountIfMaterialized<T>(this IEnumerable<T> source)
         {
-            if (source is null)
-                throw new ArgumentNullException(nameof(source));
-
             if (source == Enumerable.Empty<T>()) return 0;
             if (source == Array.Empty<T>()) return 0;
             if (source is ICollection<T> a) return a.Count;

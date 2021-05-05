@@ -34,7 +34,7 @@ namespace FastEnumUtility.Internals
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         public Enumerator GetEnumerator()
-            => new Enumerator(this.source);
+            => new(this.source);
         #endregion
 
 
@@ -180,14 +180,9 @@ namespace FastEnumUtility.Internals
         /// <param name="source"></param>
         /// <returns></returns>
         public static ReadOnlyArray<T> ToReadOnlyArray<T>(this IEnumerable<T> source)
-        {
-            if (source is null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source is T[] array
-                ? new(array)
-                : new(source.ToArray());
-        }
+            => source is T[] array
+            ? new(array)
+            : new(source.ToArray());
 
 
         /// <summary>

@@ -68,10 +68,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -395,10 +391,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenStringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -722,10 +714,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenSByteKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, sbyte> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -1049,10 +1037,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenByteKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, byte> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -1376,10 +1360,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt16KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, short> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -1703,10 +1683,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt16KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, ushort> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -2030,10 +2006,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt32KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, int> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -2357,10 +2329,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt32KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, uint> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -2684,10 +2652,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenInt64KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, long> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;
@@ -3011,10 +2975,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static FrozenUInt64KeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, ulong> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;

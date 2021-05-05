@@ -115,10 +115,6 @@ namespace FastEnumUtility.Internals
         /// <returns></returns>
         public static <#= GetClass(x.TypeName) #> Create<TSource>(IEnumerable<TSource> source, Func<TSource, <#= x.CompatibleName #>> keySelector, Func<TSource, TValue> valueSelector)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (keySelector is null) throw new ArgumentNullException(nameof(keySelector));
-            if (valueSelector is null) throw new ArgumentNullException(nameof(valueSelector));
-
             const int initialSize = 4;
             const float loadFactor = 0.75f;
             var size = source.CountIfMaterialized() ?? initialSize;

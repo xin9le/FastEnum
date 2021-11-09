@@ -10,12 +10,16 @@ root = true
 [*]
 indent_style = space
 end_of_line = crlf
-# (Please don't specify an indent_size here; that has too many unintended consequences.)
 
 # Code files
 [*.{cs,csx,vb,vbx,ts,js,css,less}]
 indent_size = 4
 insert_final_newline = true
+charset = utf-8-bom
+
+# Razor files
+[*.{cshtml,razor}]
+indent_size = 4
 charset = utf-8-bom
 
 # Xml project files
@@ -32,11 +36,16 @@ indent_size = 4
 
 # CSharp
 [*.cs]
+dotnet_code_quality_unused_parameters = all:silent
+dotnet_code_quality.ca1822.api_surface = private
+
 dotnet_sort_system_directives_first = true
 dotnet_style_qualification_for_field = true
 dotnet_style_qualification_for_property = true
 dotnet_style_qualification_for_method = true
 dotnet_style_qualification_for_event = true
 
+csharp_prefer_simple_using_statement = false:none
 csharp_style_deconstructed_variable_declaration = false:none
 csharp_style_pattern_matching_over_as_with_null_check = false:none
+csharp_style_namespace_declarations =file_scoped:suggestion

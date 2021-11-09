@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5</TargetFramework>
+        <TargetFramework>net6</TargetFramework>
         <RootNamespace>FastEnumUtility.Tests</RootNamespace>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

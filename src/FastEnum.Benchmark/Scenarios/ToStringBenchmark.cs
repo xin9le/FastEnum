@@ -15,7 +15,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            _ = Enum.GetNames(typeof(Fruits));
+            _ = Enum.GetNames<Fruits>();
             _ = _FastEnum.GetValues<Fruits>();
         }
 

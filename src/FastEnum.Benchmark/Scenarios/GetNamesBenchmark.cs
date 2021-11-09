@@ -14,7 +14,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            _ = Enum.GetNames(typeof(Fruits));
+            _ = Enum.GetNames<Fruits>();
             _ = Enums.GetNames<Fruits>();
             _ = _FastEnum.GetNames<Fruits>();
         }
@@ -22,7 +22,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
         [Benchmark(Baseline = true)]
         public IReadOnlyList<string> NetCore()
-            => (string[])Enum.GetNames(typeof(Fruits));
+            => Enum.GetNames<Fruits>();
 
 
         [Benchmark]

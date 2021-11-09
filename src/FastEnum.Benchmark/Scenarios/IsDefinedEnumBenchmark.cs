@@ -16,7 +16,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
         [GlobalSetup]
         public void Setup()
         {
-            _ = Enum.GetNames(typeof(Fruits));
+            _ = Enum.GetNames<Fruits>();
             _ = Enums.GetValues<Fruits>();
             _ = _FastEnum.GetValues<Fruits>();
         }
@@ -24,7 +24,7 @@ namespace FastEnumUtility.Benchmark.Scenarios
 
         [Benchmark(Baseline = true)]
         public bool NetCore()
-            => Enum.IsDefined(typeof(Fruits), Value);
+            => Enum.IsDefined(Value);
 
 
         [Benchmark]

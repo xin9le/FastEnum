@@ -204,27 +204,27 @@ namespace FastEnumUtility.Benchmark.Scenarios
         #region Enum
         [Benchmark]
         public void Enum_GetValues()
-            => _ = Enum.GetValues(typeof(Fruits)) as Fruits[];
+            => _ = Enum.GetValues<Fruits>();
 
 
         [Benchmark]
         public void Enum_GetNames()
-            => _ = Enum.GetNames(typeof(Fruits));
+            => _ = Enum.GetNames<Fruits>();
 
 
         [Benchmark]
         public void Enum_GetName()
-            => _ = Enum.GetName(typeof(Fruits), Fruits.Lemon);
+            => _ = Enum.GetName(Fruits.Lemon);
 
 
         [Benchmark]
         public void Enum_IsDefined()
-            => _ = Enum.IsDefined(typeof(Fruits), Fruits.Melon);
+            => _ = Enum.IsDefined(Fruits.Melon);
 
 
         [Benchmark]
         public void Enum_Parse()
-            => _ = Enum.Parse(typeof(Fruits), "Apple");
+            => _ = Enum.Parse<Fruits>("Apple");
 
 
         [Benchmark]

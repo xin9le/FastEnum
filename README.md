@@ -7,15 +7,15 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .N
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/99143737-31164580-26a3-11eb-80f8-fef47ce5f176.png)
+![image](https://user-images.githubusercontent.com/4776688/140969257-469de06b-97cc-443c-90b1-7e9d5656992d.png)
 
 
 ``` ini
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
-Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=5.0.100
-  [Host]   : .NET Core 5.0.0 (CoreCLR 5.0.20.51904, CoreFX 5.0.20.51904), X64 RyuJIT
-  ShortRun : .NET Core 5.0.0 (CoreCLR 5.0.20.51904, CoreFX 5.0.20.51904), X64 RyuJIT
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+11th Gen Intel Core i7-1165G7 2.80GHz, 1 CPU, 8 logical and 4 physical cores
+.NET SDK=6.0.100
+  [Host]     : .NET 6.0.0 (6.0.21.52210), X64 RyuJIT
+  DefaultJob : .NET 6.0.0 (6.0.21.52210), X64 RyuJIT
 ```
 
 

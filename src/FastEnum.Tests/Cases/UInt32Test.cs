@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 using TEnum = FastEnumUtility.Tests.Models.UInt32Enum;
@@ -18,11 +19,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetValues()
         {
-            var expect = new[]
-            {
-                TUnderlying.MinValue,
-                TUnderlying.MaxValue,
-            };
+            var expect = Enum.GetValues<TEnum>();
             var actual = FastEnum.GetValues<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
@@ -31,11 +28,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetNames()
         {
-            var expect = new[]
-            {
-                nameof(TEnum.MinValue),
-                nameof(TEnum.MaxValue),
-            };
+            var expect = Enum.GetNames<TEnum>();
             var actual = FastEnum.GetNames<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
@@ -44,11 +37,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetMembers()
         {
-            var expect = new[]
-            {
-                new Member<TEnum>(nameof(TEnum.MinValue)),
-                new Member<TEnum>(nameof(TEnum.MaxValue)),
-            };
+            var expect = Enum.GetNames<TEnum>().Select(x => new Member<TEnum>(x)).ToArray();
             var actual = FastEnum.GetMembers<TEnum>();
 
             actual.Count.Should().Be(expect.Length);
@@ -81,7 +70,7 @@ namespace FastEnumUtility.Tests.Cases
         {
             var min = FastEnum.GetMaxValue<TEnum>();
             min.Should().NotBeNull();
-            min.Should().Be(TUnderlying.MaxValue);
+            min.Should().Be((TEnum)TUnderlying.MaxValue);
         }
 
 

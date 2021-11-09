@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 using TEnum = FastEnumUtility.Tests.Models.SameValueEnum;
@@ -13,7 +14,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetValues()
         {
-            var expect = Enum.GetValues(typeof(TEnum));
+            var expect = Enum.GetValues<TEnum>();
             var actual = FastEnum.GetValues<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
@@ -31,12 +32,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetMembers()
         {
-            var expect = new[]
-            {
-                new Member<TEnum>(nameof(TEnum.MinValue)),
-                new Member<TEnum>(nameof(TEnum.Zero)),
-                new Member<TEnum>(nameof(TEnum.MaxValue)),
-            };
+            var expect = Enum.GetNames<TEnum>().Select(x => new Member<TEnum>(x)).ToArray();
             var actual = FastEnum.GetMembers<TEnum>();
 
             actual.Count.Should().Be(expect.Length);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 using TEnum = FastEnumUtility.Tests.Models.SByteEnum;
@@ -18,12 +19,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetValues()
         {
-            var expect = new[]
-            {
-                TUnderlying.MinValue,
-                default,
-                TUnderlying.MaxValue,
-            };
+            var expect = Enum.GetValues<TEnum>();
             var actual = FastEnum.GetValues<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
@@ -32,12 +28,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetNames()
         {
-            var expect = new[]
-            {
-                nameof(TEnum.MinValue),
-                nameof(TEnum.Zero),
-                nameof(TEnum.MaxValue),
-            };
+            var expect = Enum.GetNames<TEnum>();
             var actual = FastEnum.GetNames<TEnum>();
             actual.Should().BeEquivalentTo(expect);
         }
@@ -46,12 +37,7 @@ namespace FastEnumUtility.Tests.Cases
         [Fact]
         public void GetMembers()
         {
-            var expect = new[]
-            {
-                new Member<TEnum>(nameof(TEnum.Zero)),
-                new Member<TEnum>(nameof(TEnum.MaxValue)),
-                new Member<TEnum>(nameof(TEnum.MinValue)),
-            };
+            var expect = Enum.GetNames<TEnum>().Select(x => new Member<TEnum>(x)).ToArray();
             var actual = FastEnum.GetMembers<TEnum>();
 
             actual.Count.Should().Be(expect.Length);
@@ -75,7 +61,7 @@ namespace FastEnumUtility.Tests.Cases
         {
             var min = FastEnum.GetMinValue<TEnum>();
             min.Should().NotBeNull();
-            min.Should().Be(TUnderlying.MinValue);
+            min.Should().Be((TEnum)TUnderlying.MinValue);
         }
 
 
@@ -84,7 +70,7 @@ namespace FastEnumUtility.Tests.Cases
         {
             var min = FastEnum.GetMaxValue<TEnum>();
             min.Should().NotBeNull();
-            min.Should().Be(TUnderlying.MaxValue);
+            min.Should().Be((TEnum)TUnderlying.MaxValue);
         }
 
 

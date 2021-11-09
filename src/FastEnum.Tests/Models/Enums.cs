@@ -87,8 +87,10 @@ namespace FastEnumUtility.Tests.Models
 
     public enum SameValueEnum : byte
     {
-        MinValue = byte.MinValue,  // Name is different, but value is same as other member.
-        Zero = 0,
+        MinValue = byte.MinValue,
+#pragma warning disable CA1069
+        Zero = 0,  // Name is different, but value is same as other member.
+#pragma warning restore CA1069
         MaxValue = byte.MaxValue,
     }
 
@@ -108,7 +110,9 @@ namespace FastEnumUtility.Tests.Models
         A = -1,
         B = 0,
         C = 1,
+#pragma warning disable CA1069
         D = 1,  // Name is different, but value is same as other member.
+#pragma warning restore CA1069
         E = 2,
     }
 

@@ -22,31 +22,30 @@
 using System;
 using FastEnumUtility.Internals;
 
+namespace FastEnumUtility;
 
 
-namespace FastEnumUtility
+
+/// <summary>
+/// Provides high performance utilitis for enum type.
+/// </summary>
+public static partial class FastEnum
 {
-    /// <summary>
-    /// Provides high performance utilitis for enum type.
-    /// </summary>
-    public static partial class FastEnum
-    {
 <# foreach (var x in parameters) { #>
-        /// <summary>
-        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        public static bool IsDefined<T>(<#= x.CompatibleName #> value)
-            where T : struct, Enum
-        {
-            if (Cache_UnderlyingOperation<T>.UnderlyingType == typeof(<#= x.CompatibleName #>))
-                return <#= x.TypeName #>Operation<T>.IsDefined(ref value);
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
-        }
+    /// <summary>
+    /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T">Enum type</typeparam>
+    /// <returns></returns>
+    public static bool IsDefined<T>(<#= x.CompatibleName #> value)
+        where T : struct, Enum
+    {
+        if (Cache_UnderlyingOperation<T>.UnderlyingType == typeof(<#= x.CompatibleName #>))
+            return <#= x.TypeName #>Operation<T>.IsDefined(ref value);
+        throw new ArgumentException(IsDefinedTypeMismatchMessage);
+    }
 
 
 <# } #>
-    }
 }

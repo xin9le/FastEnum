@@ -22,159 +22,158 @@
 using System;
 using System.Runtime.CompilerServices;
 
+namespace FastEnumUtility.Internals;
 
 
-namespace FastEnumUtility.Internals
+
+/// <summary>
+/// Provides underlying type specified operation interface.
+/// </summary>
+/// <typeparam name="T">Enum type</typeparam>
+internal interface IUnderlyingOperation<T>
+    where T : struct, Enum
 {
-    /// <summary>
-    /// Provides underlying type specified operation interface.
-    /// </summary>
-    /// <typeparam name="T">Enum type</typeparam>
-    internal interface IUnderlyingOperation<T>
-        where T : struct, Enum
-    {
-        bool IsContinuous { get; }
-        bool IsDefined(ref T value);
-        bool TryParse(string text, out T result);
-        Member<T> GetMember(ref T value);
-    }
+    bool IsContinuous { get; }
+    bool IsDefined(ref T value);
+    bool TryParse(string text, out T result);
+    Member<T> GetMember(ref T value);
+}
 
 
 
 <# foreach (var x in parameters) { #>
-    /// <summary>
-    /// Provides <#= x.CompatibleName #> specified operation.
-    /// </summary>
-    /// <typeparam name="T">Enum type</typeparam>
-    internal static class <#= x.TypeName #>Operation<T>
-        where T : struct, Enum
+/// <summary>
+/// Provides <#= x.CompatibleName #> specified operation.
+/// </summary>
+/// <typeparam name="T">Enum type</typeparam>
+internal static class <#= x.TypeName #>Operation<T>
+    where T : struct, Enum
+{
+    #region Inner Classes
+    private abstract class UnderlyingOperation : IUnderlyingOperation<T>
     {
-        #region Inner Classes
-        private abstract class UnderlyingOperation : IUnderlyingOperation<T>
-        {
-            public abstract bool IsContinuous { get; }
-            public abstract bool IsDefined(ref T value);
-            public abstract bool IsDefined(ref <#= x.CompatibleName #> value);
-            public abstract Member<T> GetMember(ref T value);
+        public abstract bool IsContinuous { get; }
+        public abstract bool IsDefined(ref T value);
+        public abstract bool IsDefined(ref <#= x.CompatibleName #> value);
+        public abstract Member<T> GetMember(ref T value);
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool TryParse(string text, out T result)
-            {
-                result = default;
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-                return <#= x.CompatibleName #>.TryParse(text, out x);
-            }
-        }
-
-
-        private sealed class Continuous : UnderlyingOperation
-        {
-            private readonly <#= x.CompatibleName #> minValue;
-            private readonly <#= x.CompatibleName #> maxValue;
-            private readonly Member<T>[] members;
-
-            public Continuous(<#= x.CompatibleName #> min, <#= x.CompatibleName #> max, Member<T>[] members)
-            {
-                this.minValue = min;
-                this.maxValue = max;
-                this.members = members;
-            }
-
-            public override bool IsContinuous
-                => true;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ref T value)
-            {
-                ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return (this.minValue <= val) && (val <= this.maxValue);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ref <#= x.CompatibleName #> value)
-                => (this.minValue <= value) && (value <= this.maxValue);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(ref T value)
-            {
-                ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                var index = val - this.minValue;
-                return members[index];
-            }
-        }
-
-
-        private sealed class Discontinuous : UnderlyingOperation
-        {
-            private readonly Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue;
-
-            public Discontinuous(Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue)
-                => this.memberByValue = memberByValue;
-
-            public override bool IsContinuous
-                => false;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ref T value)
-            {
-                ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return this.memberByValue.ContainsKey(val);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool IsDefined(ref <#= x.CompatibleName #> value)
-                => this.memberByValue.ContainsKey(value);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override Member<T> GetMember(ref T value)
-            {
-                ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return this.memberByValue[val];
-            }
-        }
-        #endregion
-
-
-        #region Fields
-        private static UnderlyingOperation operation;
-        #endregion
-
-
-        #region Create
-        public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
-        {
-            var minValue = Unsafe.As<T, <#= x.CompatibleName #>>(ref min);
-            var maxValue = Unsafe.As<T, <#= x.CompatibleName #>>(ref max);
-            var memberByValue
-                = members.ToFrozen<#= x.TypeName #>KeyDictionary(x =>
-                {
-                    var value = x.Value;
-                    return Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                });
-            if (memberByValue.Count > 0)
-            {
-                var length = maxValue - minValue;
-                var count = memberByValue.Count - 1;
-                if (length == <#= (x.CompatibleName == "ulong") ? "(ulong)" : "" #>count)
-                {
-                    operation = new Continuous(minValue, maxValue, members);
-                    return operation;
-                }
-            }
-            operation = new Discontinuous(memberByValue);
-            return operation;
-        }
-        #endregion
-
-
-        #region IsDefined
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(ref <#= x.CompatibleName #> value)
-            => operation.IsDefined(ref value);
-        #endregion
+        public bool TryParse(string text, out T result)
+        {
+            result = default;
+            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
+            return <#= x.CompatibleName #>.TryParse(text, out x);
+        }
     }
+
+
+    private sealed class Continuous : UnderlyingOperation
+    {
+        private readonly <#= x.CompatibleName #> minValue;
+        private readonly <#= x.CompatibleName #> maxValue;
+        private readonly Member<T>[] members;
+
+        public Continuous(<#= x.CompatibleName #> min, <#= x.CompatibleName #> max, Member<T>[] members)
+        {
+            this.minValue = min;
+            this.maxValue = max;
+            this.members = members;
+        }
+
+        public override bool IsContinuous
+            => true;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return (this.minValue <= val) && (val <= this.maxValue);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(ref <#= x.CompatibleName #> value)
+            => (this.minValue <= value) && (value <= this.maxValue);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Member<T> GetMember(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            var index = val - this.minValue;
+            return members[index];
+        }
+    }
+
+
+    private sealed class Discontinuous : UnderlyingOperation
+    {
+        private readonly Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue;
+
+        public Discontinuous(Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue)
+            => this.memberByValue = memberByValue;
+
+        public override bool IsContinuous
+            => false;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return this.memberByValue.ContainsKey(val);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(ref <#= x.CompatibleName #> value)
+            => this.memberByValue.ContainsKey(value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Member<T> GetMember(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return this.memberByValue[val];
+        }
+    }
+    #endregion
+
+
+    #region Fields
+    private static UnderlyingOperation operation;
+    #endregion
+
+
+    #region Create
+    public static IUnderlyingOperation<T> Create(T min, T max, Member<T>[] members)
+    {
+        var minValue = Unsafe.As<T, <#= x.CompatibleName #>>(ref min);
+        var maxValue = Unsafe.As<T, <#= x.CompatibleName #>>(ref max);
+        var memberByValue
+            = members.ToFrozen<#= x.TypeName #>KeyDictionary(x =>
+            {
+                var value = x.Value;
+                return Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            });
+        if (memberByValue.Count > 0)
+        {
+            var length = maxValue - minValue;
+            var count = memberByValue.Count - 1;
+            if (length == <#= (x.CompatibleName == "ulong") ? "(ulong)" : "" #>count)
+            {
+                operation = new Continuous(minValue, maxValue, members);
+                return operation;
+            }
+        }
+        operation = new Discontinuous(memberByValue);
+        return operation;
+    }
+    #endregion
+
+
+    #region IsDefined
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined(ref <#= x.CompatibleName #> value)
+        => operation.IsDefined(ref value);
+    #endregion
+}
 
 
 
 <# } #>
-}

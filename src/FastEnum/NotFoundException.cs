@@ -1,20 +1,19 @@
 ﻿using System;
 
+namespace FastEnumUtility;
 
 
-namespace FastEnumUtility
+
+/// <summary>
+/// Represents an exception that is thrown when not found something.
+/// </summary>
+public sealed class NotFoundException : Exception
 {
     /// <summary>
-    /// Represents an exception that is thrown when not found something.
+    /// Creates instance.
     /// </summary>
-    public sealed class NotFoundException : Exception
-    {
-        /// <summary>
-        /// Creates instance.
-        /// </summary>
-        /// <param name="message"></param>
-        internal NotFoundException(string message)
-            : base(message)
-        { }
-    }
+    /// <param name="message"></param>
+    internal NotFoundException(string message)
+        : base(message)
+    { }
 }

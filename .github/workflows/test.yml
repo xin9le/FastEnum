@@ -1,0 +1,31 @@
+name: Build and Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+        - dotnet-version: '6.0.x'
+          tfm: 'net6.0'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Display dotnet version
+        run: dotnet --version
+      - name: Build
+        run: dotnet build --configuration Release --framework ${{ matrix.tfm }} ./src/FastEnum/FastEnum.csproj
+      - name: Test
+        run: dotnet test --verbosity normal --configuration Release --framework ${{ matrix.tfm }} ./src/UnitTests/UnitTests.csproj

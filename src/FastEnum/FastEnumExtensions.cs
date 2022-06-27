@@ -30,7 +30,7 @@ public static partial class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToName<T>(this T value)
+    public static string? ToName<T>(this T value)
         where T : struct, Enum
         => FastEnum.GetName(value);
 

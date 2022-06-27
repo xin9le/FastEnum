@@ -33,6 +33,6 @@ public class GetNameBenchmark
 
 
     [Benchmark]
-    public string FastEnum()
+    public string? FastEnum()
         => _FastEnum.GetName(Value);
 }

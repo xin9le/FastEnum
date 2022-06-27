@@ -26,6 +26,6 @@ public class ToStringBenchmark
 
 
     [Benchmark]
-    public string FastEnum()
+    public string? FastEnum()
         => Value.ToName();
 }

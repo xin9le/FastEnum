@@ -54,14 +54,17 @@ public static partial class FastEnum
 
 
     /// <summary>
-    /// Retrieves the name of the constants in a specified enumeration.
+    /// Retrieves the name of the constant in the specified enumeration type that has the specified value.
     /// </summary>
     /// <typeparam name="T">Enum type</typeparam>
-    /// <returns></returns>
+    /// <param name="value"></param>
+    /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetName<T>(T value)
+    public static string? GetName<T>(T value)
         where T : struct, Enum
-        => GetMember(value).Name;
+        => Cache_UnderlyingOperation<T>.UnderlyingOperation.TryGetMember(ref value, out var member)
+        ? member.Name
+        : null;
     #endregion
 
 
@@ -81,11 +84,15 @@ public static partial class FastEnum
     /// Retrieves the member information of the constants in a specified enumeration.
     /// </summary>
     /// <typeparam name="T">Enum type</typeparam>
+    /// <param name="value"></param>
     /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Member<T> GetMember<T>(T value)
         where T : struct, Enum
-        => Cache_UnderlyingOperation<T>.UnderlyingOperation.GetMember(ref value);
+        => Cache_UnderlyingOperation<T>.UnderlyingOperation.TryGetMember(ref value, out var member)
+        ? member
+        : throw new NotFoundException($"Specified value {value} is undefined.");
     #endregion
 
 

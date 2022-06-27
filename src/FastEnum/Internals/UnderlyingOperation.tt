@@ -36,7 +36,7 @@ internal interface IUnderlyingOperation<T>
     bool IsContinuous { get; }
     bool IsDefined(ref T value);
     bool TryParse(string text, out T result);
-    Member<T> GetMember(ref T value);
+    bool TryGetMember(ref T value, out Member<T> result);
 }
 
 
@@ -55,7 +55,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref <#= x.CompatibleName #> value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -95,11 +95,20 @@ internal static class <#= x.TypeName #>Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
             var index = val - this._minValue;
-            return _members[index];
+            if (0 <= index && index < <#= (x.CompatibleName == "ulong") ? "(ulong)" : "" #>this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -126,10 +135,10 @@ internal static class <#= x.TypeName #>Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this._memberByValue[val];
+            return this._memberByValue.TryGetValue(val, out result);
         }
     }
     #endregion

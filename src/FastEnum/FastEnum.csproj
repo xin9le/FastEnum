@@ -6,7 +6,9 @@
         <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <!-- NuGet -->
+    </PropertyGroup>
+
+    <PropertyGroup>
         <IsPackable>true</IsPackable>
         <PackageId>FastEnum</PackageId>
         <Version>1.7.0.0</Version>

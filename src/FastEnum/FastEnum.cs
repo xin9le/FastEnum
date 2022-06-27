@@ -98,7 +98,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? GetMinValue<T>()
         where T : struct, Enum
-        => Cache_Values<T>.IsEmpty ? (T?)null : Cache_MinMaxValues<T>.MinValue;
+        => Cache_Values<T>.IsEmpty ? null : Cache_MinMaxValues<T>.MinValue;
 
 
     /// <summary>
@@ -109,7 +109,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? GetMaxValue<T>()
         where T : struct, Enum
-        => Cache_Values<T>.IsEmpty ? (T?)null : Cache_MinMaxValues<T>.MaxValue;
+        => Cache_Values<T>.IsEmpty ? null : Cache_MinMaxValues<T>.MaxValue;
     #endregion
 
 

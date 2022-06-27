@@ -24,9 +24,9 @@ public class DictionaryInt32KeyBenchmark
     public void Setup()
     {
         var members = FastEnum.GetMembers<Fruits>();
-        this.Standard = members.ToDictionary(x => (int)x.Value);
-        this.GenericsKeyFrozen = members.ToFrozenDictionary(x => (int)x.Value);
-        this.IntKeyFrozen = members.ToFrozenInt32KeyDictionary(x => (int)x.Value);
+        this.Standard = members.ToDictionary(static x => (int)x.Value);
+        this.GenericsKeyFrozen = members.ToFrozenDictionary(static x => (int)x.Value);
+        this.IntKeyFrozen = members.ToFrozenInt32KeyDictionary(static x => (int)x.Value);
     }
 
 

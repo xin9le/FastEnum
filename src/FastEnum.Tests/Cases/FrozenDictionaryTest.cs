@@ -17,7 +17,7 @@ public class FrozenDictionaryTest
     public void GenericsKey()
     {
         var values = Enumerable.Range(0, Count);
-        var dic = values.ToFrozenDictionary(x => x);
+        var dic = values.ToFrozenDictionary(static x => x);
 
         dic.Count.Should().Be(Count);
         dic.TryGetValue(-1, out _).Should().BeFalse();
@@ -33,7 +33,7 @@ public class FrozenDictionaryTest
     public void IntKey()
     {
         var values = Enumerable.Range(0, Count);
-        var dic = values.ToFrozenInt32KeyDictionary(x => x);
+        var dic = values.ToFrozenInt32KeyDictionary(static x => x);
 
         dic.Count.Should().Be(Count);
         dic.TryGetValue(-1, out _).Should().BeFalse();
@@ -50,9 +50,9 @@ public class FrozenDictionaryTest
     {
         var values
             = Enumerable.Range(0, Count)
-            .Select(_ => Guid.NewGuid().ToString())
+            .Select(static _ => Guid.NewGuid().ToString())
             .ToArray();
-        var dic = values.ToFrozenStringKeyDictionary(x => x);
+        var dic = values.ToFrozenStringKeyDictionary(static x => x);
 
         dic.Count.Should().Be(Count);
         dic.TryGetValue(string.Empty, out _).Should().BeFalse();

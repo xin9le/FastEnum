@@ -64,7 +64,7 @@ public sealed class Member<T>
         this.Labels
             = this.FieldInfo
             .GetCustomAttributes<LabelAttribute>()
-            .ToFrozenInt32KeyDictionary(x => x.Index, x => x.Value);
+            .ToFrozenInt32KeyDictionary(static x => x.Index, static x => x.Value);
     }
 
 

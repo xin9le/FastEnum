@@ -37,7 +37,7 @@ public class SByteTest
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<TEnum>().Select(x => new Member<TEnum>(x)).ToArray();
+        var expect = Enum.GetNames<TEnum>().Select(static x => new Member<TEnum>(x)).ToArray();
         var actual = FastEnum.GetMembers<TEnum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -111,7 +111,7 @@ public class SByteTest
         FastEnum.IsDefined<TEnum>(TUnderlying.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<TEnum>((TUnderlying)123).Should().BeFalse();
         FluentActions
-            .Invoking(() => FastEnum.IsDefined<TEnum>((byte)123))
+            .Invoking(static () => FastEnum.IsDefined<TEnum>((byte)123))
             .Should()
             .Throw<ArgumentException>();
     }
@@ -135,7 +135,7 @@ public class SByteTest
             FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
         }
-        FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
 
@@ -157,7 +157,7 @@ public class SByteTest
             FastEnum.Parse<TEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<TEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
 

@@ -54,6 +54,7 @@ public static partial class FastEnumExtensions
     /// <param name="value"></param>
     /// <param name="throwIfNotFound"></param>
     /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
         where T : struct, Enum
@@ -76,6 +77,8 @@ public static partial class FastEnumExtensions
     /// <param name="index"></param>
     /// <param name="throwIfNotFound"></param>
     /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
         where T : struct, Enum

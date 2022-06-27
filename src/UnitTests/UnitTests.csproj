@@ -21,4 +21,20 @@
         <ProjectReference Include="..\FastEnum\FastEnum.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Update="Cases\BasicTest.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>BasicTest.tt</DependentUpon>
+        </Compile>
+        <None Update="Cases\BasicTest.tt">
+            <LastGenOutput>BasicTest.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+
 </Project>

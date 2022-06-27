@@ -80,7 +80,7 @@ internal static class SByteOperation<T>
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -223,7 +223,7 @@ internal static class ByteOperation<T>
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -366,7 +366,7 @@ internal static class Int16Operation<T>
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -509,7 +509,7 @@ internal static class UInt16Operation<T>
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -652,7 +652,7 @@ internal static class Int32Operation<T>
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -795,7 +795,7 @@ internal static class UInt32Operation<T>
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -938,7 +938,7 @@ internal static class Int64Operation<T>
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;
@@ -1081,7 +1081,7 @@ internal static class UInt64Operation<T>
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < (ulong)this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;

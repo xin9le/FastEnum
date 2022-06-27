@@ -99,7 +99,7 @@ internal static class <#= x.TypeName #>Operation<T>
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
             var index = val - this._minValue;
-            if (0 <= index && index < <#= (x.CompatibleName == "ulong") ? "(ulong)" : "" #>this._members.Length)
+            if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
                 return true;

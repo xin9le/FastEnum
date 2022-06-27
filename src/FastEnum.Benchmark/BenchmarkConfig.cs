@@ -4,20 +4,19 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 
+namespace FastEnumUtility.Benchmark;
 
 
-namespace FastEnumUtility.Benchmark
+
+internal sealed class BenchmarkConfig : ManualConfig
 {
-    internal sealed class BenchmarkConfig : ManualConfig
+    public BenchmarkConfig()
     {
-        public BenchmarkConfig()
-        {
-            this.AddExporter(MarkdownExporter.GitHub);
-            this.Add(DefaultConfig.Instance);
-            this.AddDiagnoser(MemoryDiagnoser.Default);
-            //this.AddJob(Job.ShortRun);
-            this.AddJob(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
-            //this.AddColumn(StatisticColumn.AllStatistics);
-        }
+        this.AddExporter(MarkdownExporter.GitHub);
+        this.Add(DefaultConfig.Instance);
+        this.AddDiagnoser(MemoryDiagnoser.Default);
+        //this.AddJob(Job.ShortRun);
+        this.AddJob(Job.ShortRun.WithWarmupCount(1).WithIterationCount(1));
+        //this.AddColumn(StatisticColumn.AllStatistics);
     }
 }

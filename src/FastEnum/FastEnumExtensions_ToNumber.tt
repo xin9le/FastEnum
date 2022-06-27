@@ -22,29 +22,28 @@
 using System;
 using System.Runtime.CompilerServices;
 
+namespace FastEnumUtility;
 
 
-namespace FastEnumUtility
+
+/// <summary>
+/// Provides <see cref="Enum"/> extension methods.
+/// </summary>
+public static partial class FastEnumExtensions
 {
-    /// <summary>
-    /// Provides <see cref="Enum"/> extension methods.
-    /// </summary>
-    public static partial class FastEnumExtensions
-    {
 <# foreach (var x in parameters) { #>
-        /// <summary>
-        /// Converts to the <#= x.BitCount #>-bit <#= x.IsSigned ? "" : "un" #>signed integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static <#= x.CompatibleName #> To<#= x.TypeName #><T>(this T value)
-            where T : struct, Enum
-            => FastEnum.GetUnderlyingType<T>() == typeof(<#= x.CompatibleName #>)
-            ? Unsafe.As<T, <#= x.CompatibleName #>>(ref value)
-            : throw new ArgumentException(nameof(value));
+    /// <summary>
+    /// Converts to the <#= x.BitCount #>-bit <#= x.IsSigned ? "" : "un" #>signed integer.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static <#= x.CompatibleName #> To<#= x.TypeName #><T>(this T value)
+        where T : struct, Enum
+        => FastEnum.GetUnderlyingType<T>() == typeof(<#= x.CompatibleName #>)
+        ? Unsafe.As<T, <#= x.CompatibleName #>>(ref value)
+        : throw new ArgumentException(nameof(value));
 
 
 <# } #>
-    }
 }

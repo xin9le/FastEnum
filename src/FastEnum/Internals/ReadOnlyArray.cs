@@ -14,7 +14,7 @@ namespace FastEnumUtility.Internals;
 internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
 {
     #region Fields
-    private readonly T[] source;
+    private readonly T[] _source;
     #endregion
 
 
@@ -24,7 +24,7 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     /// </summary>
     /// <param name="source"></param>
     public ReadOnlyArray(T[] source)
-        => this.source = source ?? throw new ArgumentNullException(nameof(source));
+        => this._source = source ?? throw new ArgumentNullException(nameof(source));
     #endregion
 
 
@@ -34,7 +34,7 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     /// </summary>
     /// <returns>An enumerator that can be used to iterate through the collection.</returns>
     public Enumerator GetEnumerator()
-        => new(this.source);
+        => new(this._source);
     #endregion
 
 
@@ -45,14 +45,14 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     /// <param name="index">The zero-based index of the element to get.</param>
     /// <returns>The element at the specified index in the read-only list.</returns>
     public T this[int index]
-        => this.source[index];
+        => this._source[index];
 
 
     /// <summary>
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.source.Length;
+        => this._source.Length;
 
 
     /// <summary>
@@ -60,7 +60,7 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     /// </summary>
     /// <returns>An enumerator that can be used to iterate through the collection.</returns>
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        => new RefEnumerator(this.source);
+        => new RefEnumerator(this._source);
 
 
     /// <summary>
@@ -68,7 +68,7 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     /// </summary>
     /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
     IEnumerator IEnumerable.GetEnumerator()
-        => this.source.GetEnumerator();
+        => this._source.GetEnumerator();
     #endregion
 
 
@@ -79,23 +79,23 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     public struct Enumerator : IEnumerator<T>
     {
         #region Fields
-        private readonly T[] source;
-        private int index;
+        private readonly T[] _source;
+        private int _index;
         #endregion
 
 
         #region Constructors
         internal Enumerator(T[] source)
         {
-            this.source = source;
-            this.index = -1;
+            this._source = source;
+            this._index = -1;
         }
         #endregion
 
 
         #region IEnumerator<T> implementations
         public T Current
-            => this.source[this.index];
+            => this._source[this._index];
 
 
         object? IEnumerator.Current
@@ -108,13 +108,13 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
 
         public bool MoveNext()
         {
-            this.index++;
-            return (uint)this.index < (uint)this.source.Length;
+            this._index++;
+            return (uint)this._index < (uint)this._source.Length;
         }
 
 
         public void Reset()
-            => this.index = -1;
+            => this._index = -1;
         #endregion
     }
 
@@ -125,23 +125,23 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
     internal class RefEnumerator : IEnumerator<T>
     {
         #region Fields
-        private readonly T[] source;
-        private int index;
+        private readonly T[] _source;
+        private int _index;
         #endregion
 
 
         #region Constructors
         internal RefEnumerator(T[] source)
         {
-            this.source = source;
-            this.index = -1;
+            this._source = source;
+            this._index = -1;
         }
         #endregion
 
 
         #region IEnumerator<T> implementations
         public T Current
-            => this.source[this.index];
+            => this._source[this._index];
 
 
         object? IEnumerator.Current
@@ -154,13 +154,13 @@ internal sealed class ReadOnlyArray<T> : IReadOnlyList<T>
 
         public bool MoveNext()
         {
-            this.index++;
-            return (uint)this.index < (uint)this.source.Length;
+            this._index++;
+            return (uint)this._index < (uint)this._source.Length;
         }
 
 
         public void Reset()
-            => this.index = -1;
+            => this._index = -1;
         #endregion
     }
     #endregion

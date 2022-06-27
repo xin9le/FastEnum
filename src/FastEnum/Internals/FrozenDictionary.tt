@@ -74,9 +74,9 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -88,8 +88,8 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
     /// <param name="loadFactor"></param>
     private <#= GetCtor(x.TypeName) #>(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -144,14 +144,14 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
     /// <returns></returns>
     private bool TryAddInternal(<#= x.CompatibleName #> key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -161,17 +161,17 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -303,7 +303,7 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -335,8 +335,8 @@ internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.Co
 <# } else { #>
         var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
 <# } #>
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
 <# if (x.IsSpecialized) { #>

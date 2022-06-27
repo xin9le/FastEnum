@@ -27,9 +27,9 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -41,8 +41,8 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
     /// <param name="loadFactor"></param>
     private FrozenDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -97,14 +97,14 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
     /// <returns></returns>
     private bool TryAddInternal(TKey key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -114,17 +114,17 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -248,7 +248,7 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -276,8 +276,8 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
     public bool TryGetValue(TKey key, out TValue value)
     {
         var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (EqualityComparer<TKey>.Default.Equals(next.Key, key))
@@ -350,9 +350,9 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -364,8 +364,8 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
     /// <param name="loadFactor"></param>
     private FrozenStringKeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -420,14 +420,14 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
     /// <returns></returns>
     private bool TryAddInternal(string key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -437,17 +437,17 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -571,7 +571,7 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -599,8 +599,8 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
     public bool TryGetValue(string key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -673,9 +673,9 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -687,8 +687,8 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
     /// <param name="loadFactor"></param>
     private FrozenSByteKeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -743,14 +743,14 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
     /// <returns></returns>
     private bool TryAddInternal(sbyte key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -760,17 +760,17 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -894,7 +894,7 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -922,8 +922,8 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
     public bool TryGetValue(sbyte key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -996,9 +996,9 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -1010,8 +1010,8 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
     /// <param name="loadFactor"></param>
     private FrozenByteKeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -1066,14 +1066,14 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
     /// <returns></returns>
     private bool TryAddInternal(byte key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -1083,17 +1083,17 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -1217,7 +1217,7 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -1245,8 +1245,8 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
     public bool TryGetValue(byte key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -1319,9 +1319,9 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -1333,8 +1333,8 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
     /// <param name="loadFactor"></param>
     private FrozenInt16KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -1389,14 +1389,14 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
     /// <returns></returns>
     private bool TryAddInternal(short key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -1406,17 +1406,17 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -1540,7 +1540,7 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -1568,8 +1568,8 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
     public bool TryGetValue(short key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -1642,9 +1642,9 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -1656,8 +1656,8 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
     /// <param name="loadFactor"></param>
     private FrozenUInt16KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -1712,14 +1712,14 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
     /// <returns></returns>
     private bool TryAddInternal(ushort key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -1729,17 +1729,17 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -1863,7 +1863,7 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -1891,8 +1891,8 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
     public bool TryGetValue(ushort key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -1965,9 +1965,9 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -1979,8 +1979,8 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
     /// <param name="loadFactor"></param>
     private FrozenInt32KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -2035,14 +2035,14 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
     /// <returns></returns>
     private bool TryAddInternal(int key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -2052,17 +2052,17 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -2186,7 +2186,7 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -2214,8 +2214,8 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
     public bool TryGetValue(int key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -2288,9 +2288,9 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -2302,8 +2302,8 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
     /// <param name="loadFactor"></param>
     private FrozenUInt32KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -2358,14 +2358,14 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
     /// <returns></returns>
     private bool TryAddInternal(uint key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -2375,17 +2375,17 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -2509,7 +2509,7 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -2537,8 +2537,8 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
     public bool TryGetValue(uint key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -2611,9 +2611,9 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -2625,8 +2625,8 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
     /// <param name="loadFactor"></param>
     private FrozenInt64KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -2681,14 +2681,14 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
     /// <returns></returns>
     private bool TryAddInternal(long key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -2698,17 +2698,17 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -2832,7 +2832,7 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -2860,8 +2860,8 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
     public bool TryGetValue(long key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)
@@ -2934,9 +2934,9 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
 
 
     #region Fields
-    private Entry[] buckets;
-    private int size;
-    private readonly float loadFactor;
+    private Entry[] _buckets;
+    private int _size;
+    private readonly float _loadFactor;
     #endregion
 
 
@@ -2948,8 +2948,8 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
     /// <param name="loadFactor"></param>
     private FrozenUInt64KeyDictionary(int bucketSize, float loadFactor)
     {
-        this.buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
-        this.loadFactor = loadFactor;
+        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._loadFactor = loadFactor;
     }
     #endregion
 
@@ -3004,14 +3004,14 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
     /// <returns></returns>
     private bool TryAddInternal(ulong key, TValue value, out TValue resultingValue)
     {
-        var nextCapacity = CalculateCapacity(this.size + 1, this.loadFactor);
-        if (this.buckets.Length < nextCapacity)
+        var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
+        if (this._buckets.Length < nextCapacity)
         {
             //--- rehash
             var nextBucket = new Entry[nextCapacity];
-            for (int i = 0; i < this.buckets.Length; i++)
+            for (int i = 0; i < this._buckets.Length; i++)
             {
-                var e = this.buckets[i];
+                var e = this._buckets[i];
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
@@ -3021,17 +3021,17 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
             }
 
             var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
-            this.buckets = nextBucket;
+            this._buckets = nextBucket;
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
         else
         {
-            var success = AddToBuckets(this.buckets, key, null, value, out resultingValue);
+            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
-                this.size++;
+                this._size++;
 
             return success;
         }
@@ -3155,7 +3155,7 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
     /// Gets the number of elements in the collection.
     /// </summary>
     public int Count
-        => this.size;
+        => this._size;
 
 
     /// <summary>
@@ -3183,8 +3183,8 @@ internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ul
     public bool TryGetValue(ulong key, out TValue value)
     {
         var hash = key.GetHashCode();
-        var index = hash & (this.buckets.Length - 1);
-        var next = this.buckets[index];
+        var index = hash & (this._buckets.Length - 1);
+        var next = this._buckets[index];
         while (next is not null)
         {
             if (next.Key == key)

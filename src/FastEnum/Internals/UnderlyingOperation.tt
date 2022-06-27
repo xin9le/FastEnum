@@ -69,15 +69,15 @@ internal static class <#= x.TypeName #>Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly <#= x.CompatibleName #> minValue;
-        private readonly <#= x.CompatibleName #> maxValue;
-        private readonly Member<T>[] members;
+        private readonly <#= x.CompatibleName #> _minValue;
+        private readonly <#= x.CompatibleName #> _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(<#= x.CompatibleName #> min, <#= x.CompatibleName #> max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -87,29 +87,29 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref <#= x.CompatibleName #> value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue;
+        private readonly Frozen<#= x.TypeName #>KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(Frozen<#= x.TypeName #>KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -118,25 +118,25 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref <#= x.CompatibleName #> value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -157,12 +157,12 @@ internal static class <#= x.TypeName #>Operation<T>
             var count = memberByValue.Count - 1;
             if (length == <#= (x.CompatibleName == "ulong") ? "(ulong)" : "" #>count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -170,7 +170,7 @@ internal static class <#= x.TypeName #>Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref <#= x.CompatibleName #> value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 

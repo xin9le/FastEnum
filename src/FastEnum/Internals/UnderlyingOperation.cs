@@ -50,15 +50,15 @@ internal static class SByteOperation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly sbyte minValue;
-        private readonly sbyte maxValue;
-        private readonly Member<T>[] members;
+        private readonly sbyte _minValue;
+        private readonly sbyte _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(sbyte min, sbyte max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -68,29 +68,29 @@ internal static class SByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref sbyte value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenSByteKeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenSByteKeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenSByteKeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -99,25 +99,25 @@ internal static class SByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref sbyte value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -138,12 +138,12 @@ internal static class SByteOperation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -151,7 +151,7 @@ internal static class SByteOperation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref sbyte value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -184,15 +184,15 @@ internal static class ByteOperation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly byte minValue;
-        private readonly byte maxValue;
-        private readonly Member<T>[] members;
+        private readonly byte _minValue;
+        private readonly byte _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(byte min, byte max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -202,29 +202,29 @@ internal static class ByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref byte value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenByteKeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenByteKeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenByteKeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -233,25 +233,25 @@ internal static class ByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref byte value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -272,12 +272,12 @@ internal static class ByteOperation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -285,7 +285,7 @@ internal static class ByteOperation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref byte value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -318,15 +318,15 @@ internal static class Int16Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly short minValue;
-        private readonly short maxValue;
-        private readonly Member<T>[] members;
+        private readonly short _minValue;
+        private readonly short _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(short min, short max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -336,29 +336,29 @@ internal static class Int16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref short value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenInt16KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenInt16KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenInt16KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -367,25 +367,25 @@ internal static class Int16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref short value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -406,12 +406,12 @@ internal static class Int16Operation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -419,7 +419,7 @@ internal static class Int16Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref short value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -452,15 +452,15 @@ internal static class UInt16Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly ushort minValue;
-        private readonly ushort maxValue;
-        private readonly Member<T>[] members;
+        private readonly ushort _minValue;
+        private readonly ushort _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(ushort min, ushort max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -470,29 +470,29 @@ internal static class UInt16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref ushort value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenUInt16KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenUInt16KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenUInt16KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -501,25 +501,25 @@ internal static class UInt16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref ushort value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -540,12 +540,12 @@ internal static class UInt16Operation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -553,7 +553,7 @@ internal static class UInt16Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref ushort value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -586,15 +586,15 @@ internal static class Int32Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly int minValue;
-        private readonly int maxValue;
-        private readonly Member<T>[] members;
+        private readonly int _minValue;
+        private readonly int _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(int min, int max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -604,29 +604,29 @@ internal static class Int32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref int value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenInt32KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenInt32KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenInt32KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -635,25 +635,25 @@ internal static class Int32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref int value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -674,12 +674,12 @@ internal static class Int32Operation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -687,7 +687,7 @@ internal static class Int32Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref int value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -720,15 +720,15 @@ internal static class UInt32Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly uint minValue;
-        private readonly uint maxValue;
-        private readonly Member<T>[] members;
+        private readonly uint _minValue;
+        private readonly uint _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(uint min, uint max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -738,29 +738,29 @@ internal static class UInt32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref uint value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenUInt32KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenUInt32KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenUInt32KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -769,25 +769,25 @@ internal static class UInt32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref uint value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -808,12 +808,12 @@ internal static class UInt32Operation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -821,7 +821,7 @@ internal static class UInt32Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref uint value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -854,15 +854,15 @@ internal static class Int64Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly long minValue;
-        private readonly long maxValue;
-        private readonly Member<T>[] members;
+        private readonly long _minValue;
+        private readonly long _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(long min, long max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -872,29 +872,29 @@ internal static class Int64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref long value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenInt64KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenInt64KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenInt64KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -903,25 +903,25 @@ internal static class Int64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref long value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -942,12 +942,12 @@ internal static class Int64Operation<T>
             var count = memberByValue.Count - 1;
             if (length == count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -955,7 +955,7 @@ internal static class Int64Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref long value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 
@@ -988,15 +988,15 @@ internal static class UInt64Operation<T>
 
     private sealed class Continuous : UnderlyingOperation
     {
-        private readonly ulong minValue;
-        private readonly ulong maxValue;
-        private readonly Member<T>[] members;
+        private readonly ulong _minValue;
+        private readonly ulong _maxValue;
+        private readonly Member<T>[] _members;
 
         public Continuous(ulong min, ulong max, Member<T>[] members)
         {
-            this.minValue = min;
-            this.maxValue = max;
-            this.members = members;
+            this._minValue = min;
+            this._maxValue = max;
+            this._members = members;
         }
 
         public override bool IsContinuous
@@ -1006,29 +1006,29 @@ internal static class UInt64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return (this.minValue <= val) && (val <= this.maxValue);
+            return (this._minValue <= val) && (val <= this._maxValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref ulong value)
-            => (this.minValue <= value) && (value <= this.maxValue);
+            => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            var index = val - this.minValue;
-            return members[index];
+            var index = val - this._minValue;
+            return _members[index];
         }
     }
 
 
     private sealed class Discontinuous : UnderlyingOperation
     {
-        private readonly FrozenUInt64KeyDictionary<Member<T>> memberByValue;
+        private readonly FrozenUInt64KeyDictionary<Member<T>> _memberByValue;
 
         public Discontinuous(FrozenUInt64KeyDictionary<Member<T>> memberByValue)
-            => this.memberByValue = memberByValue;
+            => this._memberByValue = memberByValue;
 
         public override bool IsContinuous
             => false;
@@ -1037,25 +1037,25 @@ internal static class UInt64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return this.memberByValue.ContainsKey(val);
+            return this._memberByValue.ContainsKey(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(ref ulong value)
-            => this.memberByValue.ContainsKey(value);
+            => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Member<T> GetMember(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return this.memberByValue[val];
+            return this._memberByValue[val];
         }
     }
     #endregion
 
 
     #region Fields
-    private static UnderlyingOperation operation;
+    private static UnderlyingOperation _operation;
     #endregion
 
 
@@ -1076,12 +1076,12 @@ internal static class UInt64Operation<T>
             var count = memberByValue.Count - 1;
             if (length == (ulong)count)
             {
-                operation = new Continuous(minValue, maxValue, members);
-                return operation;
+                _operation = new Continuous(minValue, maxValue, members);
+                return _operation;
             }
         }
-        operation = new Discontinuous(memberByValue);
-        return operation;
+        _operation = new Discontinuous(memberByValue);
+        return _operation;
     }
     #endregion
 
@@ -1089,7 +1089,7 @@ internal static class UInt64Operation<T>
     #region IsDefined
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(ref ulong value)
-        => operation.IsDefined(ref value);
+        => _operation.IsDefined(ref value);
     #endregion
 }
 

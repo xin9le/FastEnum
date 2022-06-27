@@ -69,7 +69,7 @@ namespace FastEnumUtility.Internals;
 internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.CompatibleName #>, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 

@@ -50,7 +50,7 @@ public class EmptyTest
         FastEnum.IsDefined((TEnum)123).Should().BeFalse();
         FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
         FluentActions
-            .Invoking(() => FastEnum.IsDefined<TEnum>((sbyte)123))
+            .Invoking(static () => FastEnum.IsDefined<TEnum>((sbyte)123))
             .Should()
             .Throw<ArgumentException>();
     }
@@ -58,12 +58,12 @@ public class EmptyTest
 
     [Fact]
     public void Parse()
-        => FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+        => FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
 
 
     [Fact]
     public void ParseIgnoreCase()
-        => FluentActions.Invoking(() => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        => FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
 
 
     [Fact]

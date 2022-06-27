@@ -26,9 +26,9 @@ public class DictionaryStringKeyBenchmark
     public void Setup()
     {
         var members = FastEnum.GetMembers<Fruits>();
-        this.Standard = members.ToDictionary(x => x.Name);
-        this.GenericsKeyFrozen = members.ToFrozenDictionary(x => x.Name);
-        this.StringKeyFrozen = members.ToFrozenStringKeyDictionary(x => x.Name);
+        this.Standard = members.ToDictionary(static x => x.Name);
+        this.GenericsKeyFrozen = members.ToFrozenDictionary(static x => x.Name);
+        this.StringKeyFrozen = members.ToFrozenStringKeyDictionary(static x => x.Name);
         this.Table = new Hashtable(members.Count);
         foreach (var x in members)
             this.Table[x.Name] = x;

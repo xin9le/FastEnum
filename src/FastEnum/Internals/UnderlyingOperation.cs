@@ -127,7 +127,7 @@ internal static class SByteOperation<T>
         var minValue = Unsafe.As<T, sbyte>(ref min);
         var maxValue = Unsafe.As<T, sbyte>(ref max);
         var memberByValue
-            = members.ToFrozenSByteKeyDictionary(x =>
+            = members.ToFrozenSByteKeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, sbyte>(ref value);
@@ -261,7 +261,7 @@ internal static class ByteOperation<T>
         var minValue = Unsafe.As<T, byte>(ref min);
         var maxValue = Unsafe.As<T, byte>(ref max);
         var memberByValue
-            = members.ToFrozenByteKeyDictionary(x =>
+            = members.ToFrozenByteKeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, byte>(ref value);
@@ -395,7 +395,7 @@ internal static class Int16Operation<T>
         var minValue = Unsafe.As<T, short>(ref min);
         var maxValue = Unsafe.As<T, short>(ref max);
         var memberByValue
-            = members.ToFrozenInt16KeyDictionary(x =>
+            = members.ToFrozenInt16KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, short>(ref value);
@@ -529,7 +529,7 @@ internal static class UInt16Operation<T>
         var minValue = Unsafe.As<T, ushort>(ref min);
         var maxValue = Unsafe.As<T, ushort>(ref max);
         var memberByValue
-            = members.ToFrozenUInt16KeyDictionary(x =>
+            = members.ToFrozenUInt16KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, ushort>(ref value);
@@ -663,7 +663,7 @@ internal static class Int32Operation<T>
         var minValue = Unsafe.As<T, int>(ref min);
         var maxValue = Unsafe.As<T, int>(ref max);
         var memberByValue
-            = members.ToFrozenInt32KeyDictionary(x =>
+            = members.ToFrozenInt32KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, int>(ref value);
@@ -797,7 +797,7 @@ internal static class UInt32Operation<T>
         var minValue = Unsafe.As<T, uint>(ref min);
         var maxValue = Unsafe.As<T, uint>(ref max);
         var memberByValue
-            = members.ToFrozenUInt32KeyDictionary(x =>
+            = members.ToFrozenUInt32KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, uint>(ref value);
@@ -931,7 +931,7 @@ internal static class Int64Operation<T>
         var minValue = Unsafe.As<T, long>(ref min);
         var maxValue = Unsafe.As<T, long>(ref max);
         var memberByValue
-            = members.ToFrozenInt64KeyDictionary(x =>
+            = members.ToFrozenInt64KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, long>(ref value);
@@ -1065,7 +1065,7 @@ internal static class UInt64Operation<T>
         var minValue = Unsafe.As<T, ulong>(ref min);
         var maxValue = Unsafe.As<T, ulong>(ref max);
         var memberByValue
-            = members.ToFrozenUInt64KeyDictionary(x =>
+            = members.ToFrozenUInt64KeyDictionary(static x =>
             {
                 var value = x.Value;
                 return Unsafe.As<T, ulong>(ref value);

@@ -23,8 +23,8 @@ public class DictionaryEnumKeyBenchmark
     public void Setup()
     {
         var members = FastEnum.GetMembers<Fruits>();
-        this.Standard = members.ToDictionary(x => x.Value);
-        this.Frozen = members.ToFrozenDictionary(x => x.Value);
+        this.Standard = members.ToDictionary(static x => x.Value);
+        this.Frozen = members.ToFrozenDictionary(static x => x.Value);
     }
 
 

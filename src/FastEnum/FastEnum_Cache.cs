@@ -66,7 +66,7 @@ public static partial class FastEnum
         {
             Members
                 = Cache_Names<T>.Names
-                .Select(x => new Member<T>(x))
+                .Select(static x => new Member<T>(x))
                 .ToReadOnlyArray();
         }
     }
@@ -109,7 +109,7 @@ public static partial class FastEnum
         public static readonly FrozenStringKeyDictionary<Member<T>> MemberByName;
 
         static Cache_MembersByName()
-            => MemberByName = Cache_Members<T>.Members.ToFrozenStringKeyDictionary(x => x.Name);
+            => MemberByName = Cache_Members<T>.Members.ToFrozenStringKeyDictionary(static x => x.Name);
     }
 
 
@@ -125,7 +125,7 @@ public static partial class FastEnum
             var type = Cache_Type<T>.Type;
             var min = Cache_MinMaxValues<T>.MinValue;
             var max = Cache_MinMaxValues<T>.MaxValue;
-            var distincted = Cache_Members<T>.Members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
+            var distincted = Cache_Members<T>.Members.OrderBy(static x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
             UnderlyingType = Cache_Type<T>.UnderlyingType;
             UnderlyingOperation
                 = Type.GetTypeCode(type) switch

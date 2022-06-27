@@ -38,7 +38,7 @@ public class AnnotationTest
         TEnum.One.GetEnumMemberValue().Should().BeNull();
         TEnum.Two.GetEnumMemberValue(throwIfNotFound: false).Should().BeNull();
         FluentActions
-            .Invoking(() => TEnum.Two.GetEnumMemberValue(throwIfNotFound: true))
+            .Invoking(static () => TEnum.Two.GetEnumMemberValue(throwIfNotFound: true))
             .Should()
             .Throw<NotFoundException>();
     }
@@ -55,7 +55,7 @@ public class AnnotationTest
 
         TEnum.Two.GetLabel(0, throwIfNotFound: false).Should().BeNull();
         FluentActions
-            .Invoking(() => TEnum.Two.GetLabel(0, throwIfNotFound: true))
+            .Invoking(static () => TEnum.Two.GetLabel(0, throwIfNotFound: true))
             .Should()
             .Throw<NotFoundException>();
 

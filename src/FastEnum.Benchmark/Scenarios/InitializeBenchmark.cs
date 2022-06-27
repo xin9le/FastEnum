@@ -23,14 +23,14 @@ public class InitializeBenchmark
             var underlyingType = Enum.GetUnderlyingType(type);
             var values = ((T[])Enum.GetValues(type)).AsReadOnly();
             var names = Enum.GetNames(type).ToReadOnlyArray();
-            var members = names.Select(x => new Member<T>(x)).ToReadOnlyArray();
+            var members = names.Select(static x => new Member<T>(x)).ToReadOnlyArray();
             var minValue = values.DefaultIfEmpty().Min();
             var maxValue = values.DefaultIfEmpty().Max();
             var isEmpty = values.Count == 0;
             var isFlags = Attribute.IsDefined(type, typeof(FlagsAttribute));
             var distinctedMembers = members.Distinct(new Member<T>.ValueComparer()).ToArray();
-            var memberByValue = distinctedMembers.ToFrozenDictionary(x => x.Value);
-            var memberByName = members.ToFrozenStringKeyDictionary(x => x.Name);
+            var memberByValue = distinctedMembers.ToFrozenDictionary(static x => x.Value);
+            var memberByName = members.ToFrozenStringKeyDictionary(static x => x.Name);
             var underlyingOperation
                 = Type.GetTypeCode(type) switch
                 {
@@ -104,7 +104,7 @@ public class InitializeBenchmark
             var names = Enum.GetNames(type).ToReadOnlyArray();
             var members
                 = names
-                .Select(x => new Member<T>(x))
+                .Select(static x => new Member<T>(x))
                 .ToReadOnlyArray();
         }
     }
@@ -155,10 +155,10 @@ public class InitializeBenchmark
             var names = Enum.GetNames(type).ToReadOnlyArray();
             var members
                 = names
-                .Select(x => new Member<T>(x))
+                .Select(static x => new Member<T>(x))
                 .ToReadOnlyArray();
 
-            var memberByName = members.ToFrozenStringKeyDictionary(x => x.Name);
+            var memberByName = members.ToFrozenStringKeyDictionary(static x => x.Name);
         }
     }
 
@@ -180,9 +180,9 @@ public class InitializeBenchmark
             var names = Enum.GetNames(type).ToReadOnlyArray();
             var members
                 = names
-                .Select(x => new Member<T>(x))
+                .Select(static x => new Member<T>(x))
                 .ToReadOnlyArray();
-            var distincted = members.OrderBy(x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
+            var distincted = members.OrderBy(static x => x.Value).Distinct(new Member<T>.ValueComparer()).ToArray();
             var underlyingOperation
                 = Type.GetTypeCode(type) switch
                 {

@@ -22,7 +22,7 @@ namespace FastEnumUtility.Internals;
 internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -345,7 +345,7 @@ internal sealed class FrozenDictionary<TKey, TValue> : IReadOnlyDictionary<TKey,
 internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<string, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -668,7 +668,7 @@ internal sealed class FrozenStringKeyDictionary<TValue> : IReadOnlyDictionary<st
 internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sbyte, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -991,7 +991,7 @@ internal sealed class FrozenSByteKeyDictionary<TValue> : IReadOnlyDictionary<sby
 internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -1314,7 +1314,7 @@ internal sealed class FrozenByteKeyDictionary<TValue> : IReadOnlyDictionary<byte
 internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<short, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -1637,7 +1637,7 @@ internal sealed class FrozenInt16KeyDictionary<TValue> : IReadOnlyDictionary<sho
 internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<ushort, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -1960,7 +1960,7 @@ internal sealed class FrozenUInt16KeyDictionary<TValue> : IReadOnlyDictionary<us
 internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -2283,7 +2283,7 @@ internal sealed class FrozenInt32KeyDictionary<TValue> : IReadOnlyDictionary<int
 internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<uint, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -2606,7 +2606,7 @@ internal sealed class FrozenUInt32KeyDictionary<TValue> : IReadOnlyDictionary<ui
 internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<long, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 
@@ -2929,7 +2929,7 @@ internal sealed class FrozenInt64KeyDictionary<TValue> : IReadOnlyDictionary<lon
 internal sealed class FrozenUInt64KeyDictionary<TValue> : IReadOnlyDictionary<ulong, TValue>
 {
     #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = x => x;
+    private static readonly Func<TValue, TValue> PassThrough = static x => x;
     #endregion
 
 

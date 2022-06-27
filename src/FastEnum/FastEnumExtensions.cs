@@ -28,7 +28,7 @@ public static partial class FastEnumExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>
-    /// <returns></returns>
+    /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? ToName<T>(this T value)
         where T : struct, Enum

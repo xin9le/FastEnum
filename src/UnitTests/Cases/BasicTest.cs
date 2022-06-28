@@ -40,6 +40,28 @@ public sealed class SByteTest
 
 
     [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const SByteEnum defined = SByteEnum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const SByteEnum undefined = (SByteEnum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+    }
+
+
+    [Fact]
     public void GetMembers()
     {
         var expect = Enum.GetNames<SByteEnum>().Select(static x => new Member<SByteEnum>(x)).ToArray();
@@ -302,6 +324,28 @@ public sealed class ByteTest
 
 
     [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const ByteEnum defined = ByteEnum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const ByteEnum undefined = (ByteEnum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+    }
+
+
+    [Fact]
     public void GetMembers()
     {
         var expect = Enum.GetNames<ByteEnum>().Select(static x => new Member<ByteEnum>(x)).ToArray();
@@ -552,6 +596,28 @@ public sealed class Int16Test
         var expect = Enum.GetNames<Int16Enum>();
         var actual = FastEnum.GetNames<Int16Enum>();
         actual.Should().BeEquivalentTo(expect);
+    }
+
+
+    [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const Int16Enum defined = Int16Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const Int16Enum undefined = (Int16Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
     }
 
 
@@ -818,6 +884,28 @@ public sealed class UInt16Test
 
 
     [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const UInt16Enum defined = UInt16Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const UInt16Enum undefined = (UInt16Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+    }
+
+
+    [Fact]
     public void GetMembers()
     {
         var expect = Enum.GetNames<UInt16Enum>().Select(static x => new Member<UInt16Enum>(x)).ToArray();
@@ -1068,6 +1156,28 @@ public sealed class Int32Test
         var expect = Enum.GetNames<Int32Enum>();
         var actual = FastEnum.GetNames<Int32Enum>();
         actual.Should().BeEquivalentTo(expect);
+    }
+
+
+    [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const Int32Enum defined = Int32Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const Int32Enum undefined = (Int32Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
     }
 
 
@@ -1334,6 +1444,28 @@ public sealed class UInt32Test
 
 
     [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const UInt32Enum defined = UInt32Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const UInt32Enum undefined = (UInt32Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+    }
+
+
+    [Fact]
     public void GetMembers()
     {
         var expect = Enum.GetNames<UInt32Enum>().Select(static x => new Member<UInt32Enum>(x)).ToArray();
@@ -1584,6 +1716,28 @@ public sealed class Int64Test
         var expect = Enum.GetNames<Int64Enum>();
         var actual = FastEnum.GetNames<Int64Enum>();
         actual.Should().BeEquivalentTo(expect);
+    }
+
+
+    [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const Int64Enum defined = Int64Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const Int64Enum undefined = (Int64Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
     }
 
 
@@ -1846,6 +2000,28 @@ public sealed class UInt64Test
         var expect = Enum.GetNames<UInt64Enum>();
         var actual = FastEnum.GetNames<UInt64Enum>();
         actual.Should().BeEquivalentTo(expect);
+    }
+
+
+    [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const UInt64Enum defined = UInt64Enum.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const UInt64Enum undefined = (UInt64Enum)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
     }
 
 

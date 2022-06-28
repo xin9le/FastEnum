@@ -59,6 +59,28 @@ public sealed class <#= x.AliasType #>Test
 
 
     [Fact]
+    public void GetName()
+    {
+        //--- defined value
+        {
+            const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
+            var expect = Enum.GetName(defined);
+            var actual = FastEnum.GetName(defined);
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+        //--- undefined value
+        {
+            const <#= x.EnumType #> undefined = (<#= x.EnumType #>)123;
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.Should().BeNull();
+            actual.Should().BeEquivalentTo(expect);
+        }
+    }
+
+
+    [Fact]
     public void GetMembers()
     {
         var expect = Enum.GetNames<<#= x.EnumType #>>().Select(static x => new Member<<#= x.EnumType #>>(x)).ToArray();

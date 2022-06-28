@@ -18,7 +18,7 @@ public static partial class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Member<T> ToMember<T>(this T value)
+    public static Member<T>? ToMember<T>(this T value)
         where T : struct, Enum
         => FastEnum.GetMember(value);
 

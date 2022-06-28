@@ -62,7 +62,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetName<T>(T value)
         where T : struct, Enum
-        => TryGetMember(value, out var member) ? member.Name : null;
+        => GetMember(value)?.Name;
     #endregion
 
 
@@ -86,25 +86,11 @@ public static partial class FastEnum
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Member<T> GetMember<T>(T value)
+    public static Member<T>? GetMember<T>(T value)
         where T : struct, Enum
-        => TryGetMember(value, out var member)
+        => Cache_UnderlyingOperation<T>.UnderlyingOperation.TryGetMember(ref value, out var member)
         ? member
-        : throw new NotFoundException($"Specified value {value} is undefined.");
-
-
-    /// <summary>
-    /// Retrieves the member information of the constants in a specified enumeration.
-    /// The return value indicates whether the retrieving succeeded.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="value"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryGetMember<T>(T value, out Member<T> result)
-        where T : struct, Enum
-        => Cache_UnderlyingOperation<T>.UnderlyingOperation.TryGetMember(ref value, out result);
+        : null;
     #endregion
 
 

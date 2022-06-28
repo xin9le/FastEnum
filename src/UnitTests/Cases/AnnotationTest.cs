@@ -16,18 +16,25 @@ public class AnnotationTest
     [Fact]
     public void EnumMemberAttribute()
     {
-        var zero = TEnum.Zero.ToMember().EnumMemberAttribute!;
-        zero.Should().NotBeNull();
-        zero.IsValueSetExplicitly.Should().BeTrue();
-        zero.Value.Should().Be("_zero_");
-
-        var one = TEnum.One.ToMember().EnumMemberAttribute!;
-        one.Should().NotBeNull();
-        one.IsValueSetExplicitly.Should().BeFalse();
-        one.Value.Should().BeNull();
-
-        var two = TEnum.Two.ToMember().EnumMemberAttribute;
-        two.Should().BeNull();
+        {
+            var member = TEnum.Zero.ToMember()!;
+            var attr = member.EnumMemberAttribute!;
+            attr.Should().NotBeNull();
+            attr.IsValueSetExplicitly.Should().BeTrue();
+            attr.Value.Should().Be("_zero_");
+        }
+        {
+            var member = TEnum.One.ToMember()!;
+            var attr = member.EnumMemberAttribute!;
+            attr.Should().NotBeNull();
+            attr.IsValueSetExplicitly.Should().BeFalse();
+            attr.Value.Should().BeNull();
+        }
+        {
+            var member = TEnum.Two.ToMember()!;
+            var attr = member.EnumMemberAttribute!;
+            attr.Should().BeNull();
+        }
     }
 
 
@@ -39,6 +46,14 @@ public class AnnotationTest
         TEnum.Two.GetEnumMemberValue(throwIfNotFound: false).Should().BeNull();
         FluentActions
             .Invoking(static () => TEnum.Two.GetEnumMemberValue(throwIfNotFound: true))
+            .Should()
+            .Throw<NotFoundException>();
+        FluentActions
+            .Invoking(static () =>
+            {
+                const TEnum undefined = (TEnum)123;
+                undefined.GetEnumMemberValue(throwIfNotFound: true);
+            })
             .Should()
             .Throw<NotFoundException>();
     }
@@ -60,5 +75,12 @@ public class AnnotationTest
             .Throw<NotFoundException>();
 
         TEnum.Four.GetLabel(2).Should().BeNull();
+
+        const TEnum undefined = (TEnum)123;
+        undefined.GetLabel(0, throwIfNotFound: false).Should().BeNull();
+        FluentActions
+            .Invoking(static () => undefined.GetLabel(0, throwIfNotFound: true))
+            .Should()
+            .Throw<NotFoundException>();
     }
 }

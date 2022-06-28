@@ -193,9 +193,10 @@ public class CornerCase
         {
             var value = TEnum.MinValue;
             var name = nameof(TEnum.MinValue);
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
@@ -203,9 +204,10 @@ public class CornerCase
         {
             var value = TEnum.Zero;
             var name = nameof(TEnum.MinValue);  // If the same value exists, we can't control what is correct.
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
@@ -213,9 +215,10 @@ public class CornerCase
         {
             var value = TEnum.MaxValue;
             var name = nameof(TEnum.MaxValue);
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);

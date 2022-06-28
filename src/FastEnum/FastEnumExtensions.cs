@@ -59,13 +59,22 @@ public static partial class FastEnumExtensions
     public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
         where T : struct, Enum
     {
-        var attr = value.ToMember().EnumMemberAttribute;
-        if (attr is not null)
-            return attr.Value;
+        var member = value.ToMember();
+        if (throwIfNotFound)
+        {
+            if (member is null)
+                throw new NotFoundException($"Specified value {value} is not defined.");
 
-        return throwIfNotFound
-            ? throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.")
-            : default;
+            var attr = member.EnumMemberAttribute;
+            if (attr is null)
+                throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.");
+
+            return attr.Value;
+        }
+        else
+        {
+            return member?.EnumMemberAttribute?.Value;
+        }
     }
 
 
@@ -89,9 +98,10 @@ public static partial class FastEnumExtensions
         if (member.Labels.TryGetValue(index, out var label))
             return label;
 
-        return throwIfNotFound
-            ? throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.")
-            : default;
+        if (throwIfNotFound)
+            throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.");
+
+        return null;
     }
 
 
@@ -106,5 +116,10 @@ public static partial class FastEnumExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
         where T : struct, Enum
-        => value.ToMember().GetLabel(index, throwIfNotFound);
+    {
+        var member = value.ToMember();
+        if (throwIfNotFound && member is null)
+            throw new NotFoundException($"Specified value {value} is not defined.");
+        return member?.GetLabel(index, throwIfNotFound);
+    }
 }

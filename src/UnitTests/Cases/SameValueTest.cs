@@ -9,7 +9,7 @@ namespace FastEnumUtility.UnitTests.Cases;
 
 
 
-public class CornerCase
+public class SameValueTest
 {
     [Fact]
     public void GetValues()

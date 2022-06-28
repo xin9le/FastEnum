@@ -37,7 +37,7 @@ This library super easy to use like `System.Enum` that is standard of .NET. Look
 var values = FastEnum.GetValues<Fruits>();
 var names = FastEnum.GetNames<Fruits>();
 var name = FastEnum.GetName<Fruits>(Fruits.Apple);
-var name = Fruits.Apple.ToName();
+var name = Fruits.Apple.FastToString();
 var defined = FastEnum.IsDefined<Fruits>(123);
 var parse = FastEnum.Parse<Fruits>("Apple");
 var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
@@ -77,7 +77,7 @@ class Member<TEnum>
     // etc...
 }
 
-var member = Fruits.Apple.ToMember();
+var member = Fruits.Apple.ToMember()!;
 var (name, value) = member;  // Supports deconstruction
 ```
 

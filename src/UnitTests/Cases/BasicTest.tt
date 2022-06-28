@@ -83,7 +83,15 @@ public sealed class <#= x.AliasType #>Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<<#= x.EnumType #>>().Select(static x => new Member<<#= x.EnumType #>>(x)).ToArray();
+        var expect
+            = Enum.GetNames<<#= x.EnumType #>>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<<#= x.EnumType #>>(name);
+                var fieldInfo = typeof(<#= x.EnumType #>).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<<#= x.EnumType #>>();
 
         actual.Count.Should().Be(expect.Length);

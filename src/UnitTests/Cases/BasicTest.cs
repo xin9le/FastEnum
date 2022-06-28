@@ -64,7 +64,15 @@ public sealed class SByteTest
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<SByteEnum>().Select(static x => new Member<SByteEnum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<SByteEnum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<SByteEnum>(name);
+                var fieldInfo = typeof(SByteEnum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<SByteEnum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -348,7 +356,15 @@ public sealed class ByteTest
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<ByteEnum>().Select(static x => new Member<ByteEnum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<ByteEnum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<ByteEnum>(name);
+                var fieldInfo = typeof(ByteEnum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<ByteEnum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -624,7 +640,15 @@ public sealed class Int16Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<Int16Enum>().Select(static x => new Member<Int16Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<Int16Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<Int16Enum>(name);
+                var fieldInfo = typeof(Int16Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<Int16Enum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -908,7 +932,15 @@ public sealed class UInt16Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<UInt16Enum>().Select(static x => new Member<UInt16Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<UInt16Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<UInt16Enum>(name);
+                var fieldInfo = typeof(UInt16Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<UInt16Enum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -1184,7 +1216,15 @@ public sealed class Int32Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<Int32Enum>().Select(static x => new Member<Int32Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<Int32Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<Int32Enum>(name);
+                var fieldInfo = typeof(Int32Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<Int32Enum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -1468,7 +1508,15 @@ public sealed class UInt32Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<UInt32Enum>().Select(static x => new Member<UInt32Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<UInt32Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<UInt32Enum>(name);
+                var fieldInfo = typeof(UInt32Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<UInt32Enum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -1744,7 +1792,15 @@ public sealed class Int64Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<Int64Enum>().Select(static x => new Member<Int64Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<Int64Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<Int64Enum>(name);
+                var fieldInfo = typeof(Int64Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<Int64Enum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -2028,7 +2084,15 @@ public sealed class UInt64Test
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<UInt64Enum>().Select(static x => new Member<UInt64Enum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<UInt64Enum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<UInt64Enum>(name);
+                var fieldInfo = typeof(UInt64Enum).GetField(name);
+                return (Value: value, Name: name, FieldInfo: fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<UInt64Enum>();
 
         actual.Count.Should().Be(expect.Length);

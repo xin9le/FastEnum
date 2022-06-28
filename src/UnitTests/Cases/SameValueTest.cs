@@ -32,7 +32,15 @@ public class SameValueTest
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<TEnum>().Select(static x => new Member<TEnum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<TEnum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<TEnum>(name);
+                var fieldInfo = typeof(TEnum).GetField(name);
+                return (value, name, fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<TEnum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -40,13 +48,13 @@ public class SameValueTest
         {
             var a = actual[i];
             var e = expect[i];
-            a.Value.Should().Be(e.Value);
-            a.Name.Should().Be(e.Name);
-            a.FieldInfo.Should().Be(e.FieldInfo);
+            a.Value.Should().Be(e.value);
+            a.Name.Should().Be(e.name);
+            a.FieldInfo.Should().Be(e.fieldInfo);
 
             var (name, value) = a;
-            value.Should().Be(e.Value);
-            name.Should().Be(e.Name);
+            value.Should().Be(e.value);
+            name.Should().Be(e.name);
         }
     }
 

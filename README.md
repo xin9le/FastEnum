@@ -7,15 +7,15 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .N
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/140969257-469de06b-97cc-443c-90b1-7e9d5656992d.png)
+![image](https://user-images.githubusercontent.com/4776688/176245015-c5d3476f-0c1f-4eb3-869d-281ea35b1ed0.png)
 
 
 ``` ini
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 11th Gen Intel Core i7-1165G7 2.80GHz, 1 CPU, 8 logical and 4 physical cores
-.NET SDK=6.0.100
-  [Host]     : .NET 6.0.0 (6.0.21.52210), X64 RyuJIT
-  DefaultJob : .NET 6.0.0 (6.0.21.52210), X64 RyuJIT
+.NET SDK=6.0.301
+  [Host]   : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+  ShortRun : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
 ```
 
 
@@ -37,7 +37,7 @@ This library super easy to use like `System.Enum` that is standard of .NET. Look
 var values = FastEnum.GetValues<Fruits>();
 var names = FastEnum.GetNames<Fruits>();
 var name = FastEnum.GetName<Fruits>(Fruits.Apple);
-var name = Fruits.Apple.FastToString();
+var toString = Fruits.Apple.FastToString();
 var defined = FastEnum.IsDefined<Fruits>(123);
 var parse = FastEnum.Parse<Fruits>("Apple");
 var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
@@ -48,7 +48,7 @@ var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
 var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
 var names = Enum.GetNames(typeof(Fruits));
 var name = Enum.GetName(typeof(Fruits), Fruits.Apple);
-var name = Fruits.Apple.ToString();
+var toString = Fruits.Apple.ToString();
 var defined = Enum.IsDefined(typeof(Fruits), 123);
 var parse = Enum.Parse<Fruits>("Apple");
 var tryParse = Enum.TryParse<Fruits>("Apple", out var value);

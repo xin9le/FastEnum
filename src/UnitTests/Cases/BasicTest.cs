@@ -88,16 +88,16 @@ public sealed class SByteTest
     {
         var min = FastEnum.GetMinValue<SByteEnum>();
         min.Should().NotBeNull();
-        min.Should().Be((SByteEnum)sbyte.MinValue);
+        min.Should().Be(SByteEnum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<SByteEnum>();
-        min.Should().NotBeNull();
-        min.Should().Be((SByteEnum)sbyte.MaxValue);
+        var max = FastEnum.GetMaxValue<SByteEnum>();
+        max.Should().NotBeNull();
+        max.Should().Be(SByteEnum.MaxValue);
     }
 
 
@@ -372,16 +372,16 @@ public sealed class ByteTest
     {
         var min = FastEnum.GetMinValue<ByteEnum>();
         min.Should().NotBeNull();
-        min.Should().Be((ByteEnum)byte.MinValue);
+        min.Should().Be(ByteEnum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<ByteEnum>();
-        min.Should().NotBeNull();
-        min.Should().Be((ByteEnum)byte.MaxValue);
+        var max = FastEnum.GetMaxValue<ByteEnum>();
+        max.Should().NotBeNull();
+        max.Should().Be(ByteEnum.MaxValue);
     }
 
 
@@ -648,16 +648,16 @@ public sealed class Int16Test
     {
         var min = FastEnum.GetMinValue<Int16Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((Int16Enum)short.MinValue);
+        min.Should().Be(Int16Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<Int16Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((Int16Enum)short.MaxValue);
+        var max = FastEnum.GetMaxValue<Int16Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(Int16Enum.MaxValue);
     }
 
 
@@ -932,16 +932,16 @@ public sealed class UInt16Test
     {
         var min = FastEnum.GetMinValue<UInt16Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((UInt16Enum)ushort.MinValue);
+        min.Should().Be(UInt16Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<UInt16Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((UInt16Enum)ushort.MaxValue);
+        var max = FastEnum.GetMaxValue<UInt16Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(UInt16Enum.MaxValue);
     }
 
 
@@ -1208,16 +1208,16 @@ public sealed class Int32Test
     {
         var min = FastEnum.GetMinValue<Int32Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((Int32Enum)int.MinValue);
+        min.Should().Be(Int32Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<Int32Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((Int32Enum)int.MaxValue);
+        var max = FastEnum.GetMaxValue<Int32Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(Int32Enum.MaxValue);
     }
 
 
@@ -1492,16 +1492,16 @@ public sealed class UInt32Test
     {
         var min = FastEnum.GetMinValue<UInt32Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((UInt32Enum)uint.MinValue);
+        min.Should().Be(UInt32Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<UInt32Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((UInt32Enum)uint.MaxValue);
+        var max = FastEnum.GetMaxValue<UInt32Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(UInt32Enum.MaxValue);
     }
 
 
@@ -1768,16 +1768,16 @@ public sealed class Int64Test
     {
         var min = FastEnum.GetMinValue<Int64Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((Int64Enum)long.MinValue);
+        min.Should().Be(Int64Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<Int64Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((Int64Enum)long.MaxValue);
+        var max = FastEnum.GetMaxValue<Int64Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(Int64Enum.MaxValue);
     }
 
 
@@ -2052,16 +2052,16 @@ public sealed class UInt64Test
     {
         var min = FastEnum.GetMinValue<UInt64Enum>();
         min.Should().NotBeNull();
-        min.Should().Be((UInt64Enum)ulong.MinValue);
+        min.Should().Be(UInt64Enum.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<UInt64Enum>();
-        min.Should().NotBeNull();
-        min.Should().Be((UInt64Enum)ulong.MaxValue);
+        var max = FastEnum.GetMaxValue<UInt64Enum>();
+        max.Should().NotBeNull();
+        max.Should().Be(UInt64Enum.MaxValue);
     }
 
 

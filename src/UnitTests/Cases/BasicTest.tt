@@ -107,16 +107,16 @@ public sealed class <#= x.AliasType #>Test
     {
         var min = FastEnum.GetMinValue<<#= x.EnumType #>>();
         min.Should().NotBeNull();
-        min.Should().Be((<#= x.EnumType #>)<#= x.UnderlyingType #>.MinValue);
+        min.Should().Be(<#= x.EnumType #>.MinValue);
     }
 
 
     [Fact]
     public void GetMaxValue()
     {
-        var min = FastEnum.GetMaxValue<<#= x.EnumType #>>();
-        min.Should().NotBeNull();
-        min.Should().Be((<#= x.EnumType #>)<#= x.UnderlyingType #>.MaxValue);
+        var max = FastEnum.GetMaxValue<<#= x.EnumType #>>();
+        max.Should().NotBeNull();
+        max.Should().Be(<#= x.EnumType #>.MaxValue);
     }
 
 

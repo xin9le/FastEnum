@@ -18,7 +18,8 @@ internal interface IUnderlyingOperation<T>
     bool IsContinuous { get; }
     bool IsDefined(ref T value);
     bool TryParse(string text, out T result);
-    Member<T> GetMember(ref T value);
+    bool TryGetMember(ref T value, out Member<T> result);
+    string ToString(ref T value);
 }
 
 
@@ -36,7 +37,8 @@ internal static class SByteOperation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref sbyte value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref sbyte value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -44,6 +46,15 @@ internal static class SByteOperation<T>
             result = default;
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
             return sbyte.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, sbyte>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -68,7 +79,7 @@ internal static class SByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -76,11 +87,26 @@ internal static class SByteOperation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref sbyte value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -99,7 +125,7 @@ internal static class SByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,11 +133,15 @@ internal static class SByteOperation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, sbyte>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref sbyte value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -170,7 +200,8 @@ internal static class ByteOperation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref byte value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref byte value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -178,6 +209,15 @@ internal static class ByteOperation<T>
             result = default;
             ref var x = ref Unsafe.As<T, byte>(ref result);
             return byte.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, byte>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -202,7 +242,7 @@ internal static class ByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -210,11 +250,26 @@ internal static class ByteOperation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref byte value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -233,7 +288,7 @@ internal static class ByteOperation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -241,11 +296,15 @@ internal static class ByteOperation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, byte>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref byte value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -304,7 +363,8 @@ internal static class Int16Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref short value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref short value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -312,6 +372,15 @@ internal static class Int16Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, short>(ref result);
             return short.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, short>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -336,7 +405,7 @@ internal static class Int16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -344,11 +413,26 @@ internal static class Int16Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref short value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -367,7 +451,7 @@ internal static class Int16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -375,11 +459,15 @@ internal static class Int16Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, short>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref short value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -438,7 +526,8 @@ internal static class UInt16Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref ushort value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref ushort value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -446,6 +535,15 @@ internal static class UInt16Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, ushort>(ref result);
             return ushort.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, ushort>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -470,7 +568,7 @@ internal static class UInt16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -478,11 +576,26 @@ internal static class UInt16Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref ushort value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -501,7 +614,7 @@ internal static class UInt16Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -509,11 +622,15 @@ internal static class UInt16Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, ushort>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref ushort value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -572,7 +689,8 @@ internal static class Int32Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref int value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref int value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -580,6 +698,15 @@ internal static class Int32Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, int>(ref result);
             return int.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, int>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -604,7 +731,7 @@ internal static class Int32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -612,11 +739,26 @@ internal static class Int32Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref int value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -635,7 +777,7 @@ internal static class Int32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -643,11 +785,15 @@ internal static class Int32Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, int>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref int value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -706,7 +852,8 @@ internal static class UInt32Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref uint value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref uint value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -714,6 +861,15 @@ internal static class UInt32Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, uint>(ref result);
             return uint.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, uint>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -738,7 +894,7 @@ internal static class UInt32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -746,11 +902,26 @@ internal static class UInt32Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref uint value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -769,7 +940,7 @@ internal static class UInt32Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -777,11 +948,15 @@ internal static class UInt32Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, uint>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref uint value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -840,7 +1015,8 @@ internal static class Int64Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref long value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref long value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -848,6 +1024,15 @@ internal static class Int64Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, long>(ref result);
             return long.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, long>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -872,7 +1057,7 @@ internal static class Int64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -880,11 +1065,26 @@ internal static class Int64Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref long value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -903,7 +1103,7 @@ internal static class Int64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -911,11 +1111,15 @@ internal static class Int64Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, long>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref long value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 
@@ -974,7 +1178,8 @@ internal static class UInt64Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref ulong value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref ulong value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -982,6 +1187,15 @@ internal static class UInt64Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, ulong>(ref result);
             return ulong.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, ulong>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -1006,7 +1220,7 @@ internal static class UInt64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1014,11 +1228,26 @@ internal static class UInt64Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref ulong value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -1037,7 +1266,7 @@ internal static class UInt64Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1045,11 +1274,15 @@ internal static class UInt64Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, ulong>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref ulong value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 

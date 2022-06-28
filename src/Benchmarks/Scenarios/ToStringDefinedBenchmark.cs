@@ -1,5 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
 using _FastEnum = FastEnumUtility.FastEnum;
 
@@ -7,7 +8,7 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class ToStringBenchmark
+public class ToStringDefinedBenchmark
 {
     private const Fruits Value = Fruits.Pineapple;
 
@@ -16,7 +17,8 @@ public class ToStringBenchmark
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
-        _ = _FastEnum.GetValues<Fruits>();
+        _ = Enums.GetNames<Fruits>();
+        _ = _FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -26,6 +28,11 @@ public class ToStringBenchmark
 
 
     [Benchmark]
+    public string EnumsNet()
+        => Value.AsString();
+
+
+    [Benchmark]
     public string FastEnum()
-        => Value.ToName();
+        => Value.FastToString();
 }

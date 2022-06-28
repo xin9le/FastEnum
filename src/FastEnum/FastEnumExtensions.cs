@@ -18,7 +18,7 @@ public static partial class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Member<T> ToMember<T>(this T value)
+    public static Member<T>? ToMember<T>(this T value)
         where T : struct, Enum
         => FastEnum.GetMember(value);
 
@@ -28,11 +28,23 @@ public static partial class FastEnumExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>
-    /// <returns></returns>
+    /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToName<T>(this T value)
+    public static string? ToName<T>(this T value)
         where T : struct, Enum
         => FastEnum.GetName(value);
+
+
+    /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T">Enum type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string FastToString<T>(this T value)
+        where T : struct, Enum
+        => FastEnum.ToString(value);
 
 
     /// <summary>
@@ -54,17 +66,27 @@ public static partial class FastEnumExtensions
     /// <param name="value"></param>
     /// <param name="throwIfNotFound"></param>
     /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
         where T : struct, Enum
     {
-        var attr = value.ToMember().EnumMemberAttribute;
-        if (attr is not null)
-            return attr.Value;
+        var member = value.ToMember();
+        if (throwIfNotFound)
+        {
+            if (member is null)
+                throw new NotFoundException($"Specified value {value} is not defined.");
 
-        return throwIfNotFound
-            ? throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.")
-            : default;
+            var attr = member.EnumMemberAttribute;
+            if (attr is null)
+                throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.");
+
+            return attr.Value;
+        }
+        else
+        {
+            return member?.EnumMemberAttribute?.Value;
+        }
     }
 
 
@@ -76,6 +98,8 @@ public static partial class FastEnumExtensions
     /// <param name="index"></param>
     /// <param name="throwIfNotFound"></param>
     /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotFoundException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
         where T : struct, Enum
@@ -86,9 +110,10 @@ public static partial class FastEnumExtensions
         if (member.Labels.TryGetValue(index, out var label))
             return label;
 
-        return throwIfNotFound
-            ? throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.")
-            : default;
+        if (throwIfNotFound)
+            throw new NotFoundException($"{nameof(LabelAttribute)} that is specified index {index} is not found.");
+
+        return null;
     }
 
 
@@ -103,5 +128,10 @@ public static partial class FastEnumExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
         where T : struct, Enum
-        => value.ToMember().GetLabel(index, throwIfNotFound);
+    {
+        var member = value.ToMember();
+        if (throwIfNotFound && member is null)
+            throw new NotFoundException($"Specified value {value} is not defined.");
+        return member?.GetLabel(index, throwIfNotFound);
+    }
 }

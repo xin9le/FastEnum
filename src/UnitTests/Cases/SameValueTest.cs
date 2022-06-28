@@ -9,7 +9,7 @@ namespace FastEnumUtility.UnitTests.Cases;
 
 
 
-public class CornerCase
+public class SameValueTest
 {
     [Fact]
     public void GetValues()
@@ -32,7 +32,15 @@ public class CornerCase
     [Fact]
     public void GetMembers()
     {
-        var expect = Enum.GetNames<TEnum>().Select(static x => new Member<TEnum>(x)).ToArray();
+        var expect
+            = Enum.GetNames<TEnum>()
+            .Select(static name =>
+            {
+                var value = Enum.Parse<TEnum>(name);
+                var fieldInfo = typeof(TEnum).GetField(name);
+                return (value, name, fieldInfo);
+            })
+            .ToArray();
         var actual = FastEnum.GetMembers<TEnum>();
 
         actual.Count.Should().Be(expect.Length);
@@ -40,13 +48,13 @@ public class CornerCase
         {
             var a = actual[i];
             var e = expect[i];
-            a.Value.Should().Be(e.Value);
-            a.Name.Should().Be(e.Name);
-            a.FieldInfo.Should().Be(e.FieldInfo);
+            a.Value.Should().Be(e.value);
+            a.Name.Should().Be(e.name);
+            a.FieldInfo.Should().Be(e.fieldInfo);
 
             var (name, value) = a;
-            value.Should().Be(e.Value);
-            name.Should().Be(e.Name);
+            value.Should().Be(e.value);
+            name.Should().Be(e.name);
         }
     }
 
@@ -54,10 +62,10 @@ public class CornerCase
     [Fact]
     public void IsDefined()
     {
-        FastEnum.IsDefined<TEnum>(TEnum.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TEnum.Zero).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TEnum.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>((TEnum)123).Should().BeFalse();
+        FastEnum.IsDefined(TEnum.MinValue).Should().BeTrue();
+        FastEnum.IsDefined(TEnum.Zero).Should().BeTrue();
+        FastEnum.IsDefined(TEnum.MaxValue).Should().BeTrue();
+        FastEnum.IsDefined((TEnum)123).Should().BeFalse();
 
         TEnum.MinValue.IsDefined().Should().BeTrue();
         TEnum.Zero.IsDefined().Should().BeTrue();
@@ -193,9 +201,10 @@ public class CornerCase
         {
             var value = TEnum.MinValue;
             var name = nameof(TEnum.MinValue);
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
@@ -203,9 +212,10 @@ public class CornerCase
         {
             var value = TEnum.Zero;
             var name = nameof(TEnum.MinValue);  // If the same value exists, we can't control what is correct.
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
@@ -213,9 +223,10 @@ public class CornerCase
         {
             var value = TEnum.MaxValue;
             var name = nameof(TEnum.MaxValue);
-            var member = value.ToMember();
+            var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
+            member.Should().NotBeNull();
             member.Name.Should().Be(name);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);

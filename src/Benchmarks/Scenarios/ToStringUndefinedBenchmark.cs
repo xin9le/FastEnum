@@ -8,9 +8,9 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class GetNameBenchmark
+public class ToStringUndefinedBenchmark
 {
-    private const Fruits Value = Fruits.Pineapple;
+    private const Fruits Value = (Fruits)byte.MaxValue;  // undefined value
 
 
     [GlobalSetup]
@@ -18,21 +18,21 @@ public class GetNameBenchmark
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetNames<Fruits>();
-        _ = _FastEnum.GetNames<Fruits>();
+        _ = _FastEnum.GetMembers<Fruits>();
     }
 
 
     [Benchmark(Baseline = true)]
-    public string? NetCore()
-        => Enum.GetName(Value);
+    public string NetCore()
+        => Value.ToString();
 
 
     [Benchmark]
-    public string? EnumsNet()
-        => Enums.GetName(Value);
+    public string EnumsNet()
+        => Value.AsString();
 
 
     [Benchmark]
-    public string? FastEnum()
-        => _FastEnum.GetName(Value);
+    public string FastEnum()
+        => Value.FastToString();
 }

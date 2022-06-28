@@ -36,7 +36,8 @@ internal interface IUnderlyingOperation<T>
     bool IsContinuous { get; }
     bool IsDefined(ref T value);
     bool TryParse(string text, out T result);
-    Member<T> GetMember(ref T value);
+    bool TryGetMember(ref T value, out Member<T> result);
+    string ToString(ref T value);
 }
 
 
@@ -55,7 +56,8 @@ internal static class <#= x.TypeName #>Operation<T>
         public abstract bool IsContinuous { get; }
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref <#= x.CompatibleName #> value);
-        public abstract Member<T> GetMember(ref T value);
+        public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -63,6 +65,15 @@ internal static class <#= x.TypeName #>Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
             return <#= x.CompatibleName #>.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -87,7 +98,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -95,11 +106,26 @@ internal static class <#= x.TypeName #>Operation<T>
             => (this._minValue <= value) && (value <= this._maxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            var index = val - this._minValue;
-            return _members[index];
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result)
+        {
+            var index = value - this._minValue;
+            if ((uint)index < (uint)this._members.Length)
+            {
+                result = this._members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 
@@ -118,7 +144,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,11 +152,15 @@ internal static class <#= x.TypeName #>Operation<T>
             => this._memberByValue.ContainsKey(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Member<T> GetMember(ref T value)
+        public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this._memberByValue[val];
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 

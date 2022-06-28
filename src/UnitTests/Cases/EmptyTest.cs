@@ -20,8 +20,18 @@ public class EmptyTest
 
 
     [Fact]
+    public void GetName()
+        => FastEnum.GetName<TEnum>(default).Should().BeNull();
+
+
+    [Fact]
     public void GetMembers()
         => FastEnum.GetMembers<TEnum>().Should().BeEmpty();
+
+
+    [Fact]
+    public void GetMember()
+        => FastEnum.GetMember<TEnum>(default).Should().BeNull();
 
 
     [Fact]

@@ -54,10 +54,10 @@ public class SameValueTest
     [Fact]
     public void IsDefined()
     {
-        FastEnum.IsDefined<TEnum>(TEnum.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TEnum.Zero).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TEnum.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>((TEnum)123).Should().BeFalse();
+        FastEnum.IsDefined(TEnum.MinValue).Should().BeTrue();
+        FastEnum.IsDefined(TEnum.Zero).Should().BeTrue();
+        FastEnum.IsDefined(TEnum.MaxValue).Should().BeTrue();
+        FastEnum.IsDefined((TEnum)123).Should().BeFalse();
 
         TEnum.MinValue.IsDefined().Should().BeTrue();
         TEnum.Zero.IsDefined().Should().BeTrue();

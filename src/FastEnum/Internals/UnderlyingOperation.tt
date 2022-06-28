@@ -57,6 +57,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public abstract bool IsDefined(ref T value);
         public abstract bool IsDefined(ref <#= x.CompatibleName #> value);
         public abstract bool TryGetMember(ref T value, out Member<T> result);
+        public abstract bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryParse(string text, out T result)
@@ -69,15 +70,10 @@ internal static class <#= x.TypeName #>Operation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string ToString(ref T value)
         {
-            if (this.TryGetMember(ref value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                ref var val = ref Unsafe.As<T, sbyte>(ref value);
-                return val.ToString();
-            }
+            ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return this.TryGetMember(ref val, out var member)
+                ? member.Name
+                : val.ToString();
         }
     }
 
@@ -102,7 +98,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return (this._minValue <= val) && (val <= this._maxValue);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -113,7 +109,13 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            var index = val - this._minValue;
+            return this.TryGetMember(ref val, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result)
+        {
+            var index = value - this._minValue;
             if ((uint)index < (uint)this._members.Length)
             {
                 result = this._members[index];
@@ -142,7 +144,7 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool IsDefined(ref T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this._memberByValue.ContainsKey(val);
+            return this.IsDefined(ref val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -153,8 +155,12 @@ internal static class <#= x.TypeName #>Operation<T>
         public override bool TryGetMember(ref T value, out Member<T> result)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-            return this._memberByValue.TryGetValue(val, out result);
+            return this.TryGetMember(ref val, out result);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool TryGetMember(ref <#= x.CompatibleName #> value, out Member<T> result)
+            => this._memberByValue.TryGetValue(value, out result);
     }
     #endregion
 

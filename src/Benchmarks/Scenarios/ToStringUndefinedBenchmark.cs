@@ -8,9 +8,9 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class ToStringBenchmark
+public class ToStringUndefinedBenchmark
 {
-    private const Fruits Value = Fruits.Pineapple;
+    private const Fruits Value = (Fruits)byte.MaxValue;  // undefined value
 
 
     [GlobalSetup]

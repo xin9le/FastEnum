@@ -29,7 +29,7 @@ public class ToStringDefinedBenchmark
 
     [Benchmark]
     public string EnumsNet()
-        => Enums.AsString(Value);
+        => Value.AsString();
 
 
     [Benchmark]

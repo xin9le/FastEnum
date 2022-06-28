@@ -314,4 +314,18 @@ public static partial class FastEnum
         return false;
     }
     #endregion
+
+
+    #region ToString
+    /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T">Enum type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string ToString<T>(T value)
+        where T : struct, Enum
+        => Cache_UnderlyingOperation<T>.UnderlyingOperation.ToString(ref value);
+    #endregion
 }

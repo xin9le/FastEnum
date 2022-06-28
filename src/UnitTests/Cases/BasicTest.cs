@@ -338,6 +338,20 @@ public sealed class SByteTest
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
     }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const SByteEnum undefined = (SByteEnum)123;
+        var values = Enum.GetValues<SByteEnum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
+    }
 }
 
 
@@ -658,6 +672,20 @@ public sealed class ByteTest
         FluentActions.Invoking(() => @enum.ToUInt32()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
+    }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const ByteEnum undefined = (ByteEnum)123;
+        var values = Enum.GetValues<ByteEnum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
     }
 }
 
@@ -988,6 +1016,20 @@ public sealed class Int16Test
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
     }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const Int16Enum undefined = (Int16Enum)123;
+        var values = Enum.GetValues<Int16Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
+    }
 }
 
 
@@ -1308,6 +1350,20 @@ public sealed class UInt16Test
         FluentActions.Invoking(() => @enum.ToUInt32()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
+    }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const UInt16Enum undefined = (UInt16Enum)123;
+        var values = Enum.GetValues<UInt16Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
     }
 }
 
@@ -1638,6 +1694,20 @@ public sealed class Int32Test
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
     }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const Int32Enum undefined = (Int32Enum)123;
+        var values = Enum.GetValues<Int32Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
+    }
 }
 
 
@@ -1958,6 +2028,20 @@ public sealed class UInt32Test
         @enum.ToUInt32().Should().Be(value);
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
+    }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const UInt32Enum undefined = (UInt32Enum)123;
+        var values = Enum.GetValues<UInt32Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
     }
 }
 
@@ -2288,6 +2372,20 @@ public sealed class Int64Test
         @enum.ToInt64().Should().Be(value);
         FluentActions.Invoking(() => @enum.ToUInt64()).Should().Throw<ArgumentException>();
     }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const Int64Enum undefined = (Int64Enum)123;
+        var values = Enum.GetValues<Int64Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
+    }
 }
 
 
@@ -2608,6 +2706,20 @@ public sealed class UInt64Test
         FluentActions.Invoking(() => @enum.ToUInt32()).Should().Throw<ArgumentException>();
         FluentActions.Invoking(() => @enum.ToInt64()).Should().Throw<ArgumentException>();
         @enum.ToUInt64().Should().Be(value);
+    }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const UInt64Enum undefined = (UInt64Enum)123;
+        var values = Enum.GetValues<UInt64Enum>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
     }
 }
 

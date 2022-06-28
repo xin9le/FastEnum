@@ -19,6 +19,7 @@ internal interface IUnderlyingOperation<T>
     bool IsDefined(ref T value);
     bool TryParse(string text, out T result);
     bool TryGetMember(ref T value, out Member<T> result);
+    string ToString(ref T value);
 }
 
 
@@ -44,6 +45,20 @@ internal static class SByteOperation<T>
             result = default;
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
             return sbyte.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
         }
     }
 
@@ -188,6 +203,20 @@ internal static class ByteOperation<T>
             ref var x = ref Unsafe.As<T, byte>(ref result);
             return byte.TryParse(text, out x);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
+        }
     }
 
 
@@ -330,6 +359,20 @@ internal static class Int16Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, short>(ref result);
             return short.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
         }
     }
 
@@ -474,6 +517,20 @@ internal static class UInt16Operation<T>
             ref var x = ref Unsafe.As<T, ushort>(ref result);
             return ushort.TryParse(text, out x);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
+        }
     }
 
 
@@ -616,6 +673,20 @@ internal static class Int32Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, int>(ref result);
             return int.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
         }
     }
 
@@ -760,6 +831,20 @@ internal static class UInt32Operation<T>
             ref var x = ref Unsafe.As<T, uint>(ref result);
             return uint.TryParse(text, out x);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
+        }
     }
 
 
@@ -903,6 +988,20 @@ internal static class Int64Operation<T>
             ref var x = ref Unsafe.As<T, long>(ref result);
             return long.TryParse(text, out x);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
+        }
     }
 
 
@@ -1045,6 +1144,20 @@ internal static class UInt64Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, ulong>(ref result);
             return ulong.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
         }
     }
 

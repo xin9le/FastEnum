@@ -37,6 +37,7 @@ internal interface IUnderlyingOperation<T>
     bool IsDefined(ref T value);
     bool TryParse(string text, out T result);
     bool TryGetMember(ref T value, out Member<T> result);
+    string ToString(ref T value);
 }
 
 
@@ -63,6 +64,20 @@ internal static class <#= x.TypeName #>Operation<T>
             result = default;
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
             return <#= x.CompatibleName #>.TryParse(text, out x);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string ToString(ref T value)
+        {
+            if (this.TryGetMember(ref value, out var member))
+            {
+                return member.Name;
+            }
+            else
+            {
+                ref var val = ref Unsafe.As<T, sbyte>(ref value);
+                return val.ToString();
+            }
         }
     }
 

@@ -372,6 +372,20 @@ public sealed class <#= x.AliasType #>Test
 <# } #>
 <# } #>
     }
+
+
+    [Fact]
+    public void FastToString()
+    {
+        const <#= x.EnumType #> undefined = (<#= x.EnumType #>)123;
+        var values = Enum.GetValues<<#= x.EnumType #>>().Append(undefined);
+        foreach (var x in values)
+        {
+            var expect = x.ToString();
+            var actual = x.FastToString();
+            actual.Should().Be(expect);
+        }
+    }
 }
 
 

@@ -36,6 +36,18 @@ public static partial class FastEnumExtensions
 
 
     /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T">Enum type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string FastToString<T>(this T value)
+        where T : struct, Enum
+        => FastEnum.ToString(value);
+
+
+    /// <summary>
     /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
     /// </summary>
     /// <typeparam name="T"></typeparam>

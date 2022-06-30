@@ -9,7 +9,7 @@ root = true
 # Don't use tabs for indentation.
 [*]
 indent_style = space
-end_of_line = crlf
+trim_trailing_whitespace = true
 
 # Code files
 [*.{cs,csx,vb,vbx,ts,js,css,less}]
@@ -39,6 +39,10 @@ indent_size = 4
 dotnet_code_quality_unused_parameters = all:silent
 dotnet_code_quality.ca1822.api_surface = private
 
+dotnet_diagnostic.CA1848.severity = silent
+dotnet_diagnostic.CA2254.severity = error
+dotnet_diagnostic.IDE0052.severity = warning
+
 dotnet_sort_system_directives_first = true
 dotnet_style_qualification_for_field = true
 dotnet_style_qualification_for_property = true
@@ -48,4 +52,4 @@ dotnet_style_qualification_for_event = true
 csharp_prefer_simple_using_statement = false:none
 csharp_style_deconstructed_variable_declaration = false:none
 csharp_style_pattern_matching_over_as_with_null_check = false:none
-csharp_style_namespace_declarations =file_scoped:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion

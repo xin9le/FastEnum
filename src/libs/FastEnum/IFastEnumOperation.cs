@@ -11,5 +11,5 @@ namespace FastEnumUtility;
 public interface IFastEnumOperation<T>
     where T : struct, Enum
 {
-    bool TryParse(string? value, out T result);
+    bool TryParse(ReadOnlySpan<char> value, out T result);
 }

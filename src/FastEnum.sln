@@ -7,9 +7,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{78D54D2E-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "insights", "insights", "{429472C8-6367-4D7E-BAA9-9777B5E947B5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum", "libs\FastEnum\FastEnum.csproj", "{FC06470B-CBD5-43BE-A693-5067B9824ED7}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC06470B-CBD5-43BE-A693-5067B9824ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC06470B-CBD5-43BE-A693-5067B9824ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC06470B-CBD5-43BE-A693-5067B9824ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC06470B-CBD5-43BE-A693-5067B9824ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FC06470B-CBD5-43BE-A693-5067B9824ED7} = {78D54D2E-CAD6-4D50-AF7A-8B726DE45BB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {62660904-8CA1-42C2-B709-FDCD0530AF5C}

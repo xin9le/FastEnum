@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FastEnum\FastEnum.csproj" />
+        <ProjectReference Include="..\..\libs\FastEnum\FastEnum.csproj" />
     </ItemGroup>
 
     <ItemGroup>

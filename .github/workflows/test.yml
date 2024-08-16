@@ -26,6 +26,6 @@ jobs:
       - name: Display dotnet version
         run: dotnet --version
       - name: Build
-        run: dotnet build --configuration Release --framework ${{ matrix.tfm }} ./src/FastEnum/FastEnum.csproj
+        run: dotnet build --configuration Release --framework ${{ matrix.tfm }} ./src/libs/FastEnum/FastEnum.csproj
       - name: Test
-        run: dotnet test --verbosity normal --configuration Release --framework ${{ matrix.tfm }} ./src/UnitTests/UnitTests.csproj
+        run: dotnet test --verbosity normal --configuration Release --framework ${{ matrix.tfm }} ./src/insights/UnitTests/UnitTests.csproj

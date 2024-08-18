@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{78D54D2E-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "insights", "insights", "{429472C8-6367-4D7E-BAA9-9777B5E947B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum", "libs\FastEnum\FastEnum.csproj", "{FC06470B-CBD5-43BE-A693-5067B9824ED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Core", "libs\FastEnum.Core\FastEnum.Core.csproj", "{FC06470B-CBD5-43BE-A693-5067B9824ED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

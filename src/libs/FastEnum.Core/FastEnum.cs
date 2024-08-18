@@ -222,15 +222,18 @@ public static class FastEnum
     public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
-        if (value.IsWhiteSpace())
+        value = value.Trim();
+        if (value.IsEmpty)
         {
             result = default;
             return false;
         }
 
-        var operation = FastEnumOperationProvider.Get<T>();
         if (isNumeric(value[0]))
+        {
+            var operation = FastEnumOperationProvider.Get<T>();
             return operation.TryParseValue(value, out result);
+        }
 
         throw new NotImplementedException();
 

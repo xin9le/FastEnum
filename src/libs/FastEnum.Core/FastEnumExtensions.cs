@@ -10,7 +10,7 @@ namespace FastEnumUtility;
 /// <summary>
 /// Provides <see cref="Enum"/> extension methods.
 /// </summary>
-public static partial class FastEnumExtensions
+public static class FastEnumExtensions
 {
     #region ToMember
     /// <summary>

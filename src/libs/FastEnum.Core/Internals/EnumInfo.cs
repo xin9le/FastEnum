@@ -19,6 +19,7 @@ internal static class EnumInfo<T>
     public static readonly string[] s_names;
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
+    public static readonly Member<T>[] s_orderedMembers;
     public static readonly FrozenDictionary<string, Member<T>> s_memberByName;
     public static readonly FrozenDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
@@ -36,9 +37,10 @@ internal static class EnumInfo<T>
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
+        s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
         s_memberByName = s_members.ToFrozenDictionary(static x => x.Name);
         s_memberByValue
-            = s_members
+            = s_orderedMembers
             .DistinctBy(static x => x.Value)
             .ToFrozenDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();

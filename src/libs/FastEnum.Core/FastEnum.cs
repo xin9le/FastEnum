@@ -110,17 +110,6 @@ public static class FastEnum
 
     #region Condition
     /// <summary>
-    /// Returns whether no fields in a specified enumeration.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsEmpty<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isEmpty;
-
-
-    /// <summary>
     /// Returns whether the values of the constants in a specified enumeration are continuous.
     /// </summary>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
@@ -129,17 +118,6 @@ public static class FastEnum
     public static bool IsContinuous<T>()
         where T : struct, Enum
         => EnumInfo<T>.s_isContinuous;
-
-
-    /// <summary>
-    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsFlags<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isFlags;
 
 
     /// <summary>
@@ -164,6 +142,28 @@ public static class FastEnum
     public static bool IsDefined<T>(ReadOnlySpan<char> name)
         where T : struct, Enum
         => throw new NotImplementedException();
+
+
+    /// <summary>
+    /// Returns whether no fields in a specified enumeration.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEmpty<T>()
+        where T : struct, Enum
+        => EnumInfo<T>.s_isEmpty;
+
+
+    /// <summary>
+    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFlags<T>()
+        where T : struct, Enum
+        => EnumInfo<T>.s_isFlags;
     #endregion
 
 

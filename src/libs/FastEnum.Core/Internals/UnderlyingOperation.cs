@@ -41,6 +41,9 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseName(string text, out TEnum result)
     {
+        // note:
+        //  - Implement case-sensitive only
+
         if (EnumInfo<TEnum>.s_memberByName.TryGetValue(text, out var member))
         {
             result = member.Value;

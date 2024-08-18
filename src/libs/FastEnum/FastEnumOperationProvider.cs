@@ -18,9 +18,7 @@ public static class FastEnumOperationProvider
     /// <param name="operation"></param>
     public static void Register<T>(IFastEnumOperation<T> operation)
         where T : struct, Enum
-    {
-        Interlocked.Exchange(ref Cache<T>.s_operation, operation);
-    }
+        => Interlocked.Exchange(ref Cache<T>.s_operation, operation);
 
 
     /// <summary>

@@ -17,6 +17,7 @@ internal static class EnumInfo<T>
     public static readonly Type s_underlyingType;
     public static readonly string[] s_names;
     public static readonly T[] s_values;
+    public static readonly Member<T>[] s_members;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
     public static readonly bool s_isEmpty;
@@ -31,6 +32,7 @@ internal static class EnumInfo<T>
         s_underlyingType = Enum.GetUnderlyingType(s_type);
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
+        s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
         s_isEmpty = s_values.Length is 0;

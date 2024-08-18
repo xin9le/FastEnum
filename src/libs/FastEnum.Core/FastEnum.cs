@@ -67,7 +67,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IReadOnlyList<Member<T>> GetMembers<T>()
         where T : struct, Enum
-        => throw new NotImplementedException();
+        => EnumInfo<T>.s_members;
 
 
     /// <summary>

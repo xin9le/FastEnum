@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
 
@@ -47,6 +48,128 @@ public static partial class FastEnumExtensions
     public static string FastToString<T>(this T value)
         where T : struct, Enum
         => FastEnum.ToString(value);
+    #endregion
+
+
+    #region ToNumber
+    /// <summary>
+    /// Converts to the 8-bit signed integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static sbyte ToSByte<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, sbyte>(nameof(value));
+        return Unsafe.As<T, sbyte>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 8-bit unsigned integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static byte ToByte<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, byte>(nameof(value));
+        return Unsafe.As<T, byte>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 16-bit signed integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static short ToInt16<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, short>(nameof(value));
+        return Unsafe.As<T, short>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 16-bit unsigned integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static ushort ToUInt16<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ushort>(nameof(value));
+        return Unsafe.As<T, ushort>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 32-bit signed integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static int ToInt32<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, int>(nameof(value));
+        return Unsafe.As<T, int>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 32-bit unsigned integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static uint ToUInt32<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, uint>(nameof(value));
+        return Unsafe.As<T, uint>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 64-bit signed integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static long ToInt64<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, long>(nameof(value));
+        return Unsafe.As<T, long>(ref value);
+    }
+
+
+    /// <summary>
+    /// Converts to the 64-bit unsigned integer.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static ulong ToUInt64<T>(this T value)
+        where T : struct, Enum
+    {
+        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ulong>(nameof(value));
+        return Unsafe.As<T, ulong>(ref value);
+    }
     #endregion
 
 

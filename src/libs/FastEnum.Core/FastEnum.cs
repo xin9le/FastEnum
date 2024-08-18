@@ -234,12 +234,37 @@ public static class FastEnum
             return operation.TryParseValue(value, out result);
         }
 
-        throw new NotImplementedException();
+        if (ignoreCase)
+        {
+            return tryParseNameIgnoreCase(value, out result);
+        }
+        else
+        {
+            var operation = FastEnumOperationProvider.Get<T>();
+            return operation.TryParseName(value, out result);
+        }
+
 
         #region Local Functions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool isNumeric(char c)
             => char.IsDigit(c) || (c is '-' or '+');
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool tryParseNameIgnoreCase(ReadOnlySpan<char> name, out T result)
+        {
+            foreach (var member in EnumInfo<T>.s_members.AsSpan())
+            {
+                if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = member.Value;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
         #endregion
     }
     #endregion

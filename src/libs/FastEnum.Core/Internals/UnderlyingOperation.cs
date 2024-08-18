@@ -39,6 +39,19 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryParseName(string text, out TEnum result)
+    {
+        if (EnumInfo<TEnum>.s_memberByName.TryGetValue(text, out var member))
+        {
+            result = member.Value;
+            return true;
+        }
+        result = default;
+        return false;
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseValue(string text, out TEnum result)
     {
         Unsafe.SkipInit(out result);

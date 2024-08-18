@@ -128,7 +128,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsContinuous<T>()
         where T : struct, Enum
-        => throw new NotImplementedException();
+        => EnumInfo<T>.s_isContinuous;
 
 
     /// <summary>

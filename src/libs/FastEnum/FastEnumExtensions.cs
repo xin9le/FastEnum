@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -184,5 +185,64 @@ public static partial class FastEnumExtensions
     public static bool IsDefined<T>(this T value)
         where T : struct, Enum
         => FastEnum.IsDefined(value);
+    #endregion
+
+
+    #region Attribute
+    /// <summary>
+    /// Gets the <see cref="EnumMemberAttribute.Value"/> of specified enumration member.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <param name="throwIfNotFound"></param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
+        where T : struct, Enum
+    {
+        var member = value.ToMember();
+        if (throwIfNotFound)
+        {
+            if (member is null)
+                ThrowHelper.ThrowValueNotDefined(value);
+
+            var attr = member.EnumMemberAttribute;
+            if (attr is null)
+                ThrowHelper.ThrowAttributeNotDefined<T, EnumMemberAttribute>(value);
+
+            return attr.Value;
+        }
+        else
+        {
+            return member?.EnumMemberAttribute?.Value;
+        }
+    }
+
+
+    /// <summary>
+    /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="member"></param>
+    /// <param name="index"></param>
+    /// <param name="throwIfNotFound"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotFoundException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
+        where T : struct, Enum
+    {
+        ArgumentNullException.ThrowIfNull(member);
+
+        if (member.Labels.TryGetValue(index, out var label))
+            return label;
+
+        if (throwIfNotFound)
+            ThrowHelper.ThrowLabelNotFound(index);
+
+        return null;
+    }
     #endregion
 }

@@ -12,5 +12,5 @@ public interface IFastEnumOperation<T>
     where T : struct, Enum
 {
     string ToString(ref T value);
-    bool TryParse(ReadOnlySpan<char> value, out T result);
+    bool TryParseValue(ReadOnlySpan<char> text, out T result);
 }

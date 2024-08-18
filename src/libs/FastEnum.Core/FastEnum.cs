@@ -222,8 +222,23 @@ public static class FastEnum
     public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
+        if (value.IsWhiteSpace())
+        {
+            result = default;
+            return false;
+        }
+
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.TryParse(value, out result);
+        if (isNumeric(value[0]))
+            return operation.TryParseValue(value, out result);
+
+        throw new NotImplementedException();
+
+        #region Local Functions
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool isNumeric(char c)
+            => char.IsDigit(c) || c == '-' || c == '+';
+        #endregion
     }
     #endregion
 

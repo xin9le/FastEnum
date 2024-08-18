@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace FastEnumUtility.Internals;
 
@@ -36,6 +38,11 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
         => throw new NotImplementedException();
 
 
-    public bool TryParse(ReadOnlySpan<char> value, out TEnum result)
-        => throw new NotImplementedException();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryParseValue(ReadOnlySpan<char> text, out TEnum result)
+    {
+        result = default;
+        ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
+        return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
+    }
 }

@@ -191,7 +191,11 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Parse<T>(string value, bool ignoreCase)
         where T : struct, Enum
-        => throw new NotImplementedException();
+    {
+        if (!TryParse<T>(value, ignoreCase, out var result))
+            ThrowHelper.ThrowValueNotDefined(value, nameof(value));
+        return result;
+    }
 
 
     /// <summary>

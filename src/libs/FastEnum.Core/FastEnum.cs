@@ -238,6 +238,9 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToString<T>(T value)
         where T : struct, Enum
-        => throw new NotImplementedException();
+    {
+        var operation = FastEnumOperationProvider.Get<T>();
+        return operation.ToString(ref value);
+    }
     #endregion
 }

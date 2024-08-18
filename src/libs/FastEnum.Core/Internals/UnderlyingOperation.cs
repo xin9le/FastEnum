@@ -32,6 +32,10 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     where TNumber : INumberBase<TNumber>
     where TEnum : struct, Enum
 {
+    public string ToString(ref TEnum value)
+        => throw new NotImplementedException();
+
+
     public bool TryParse(ReadOnlySpan<char> value, out TEnum result)
         => throw new NotImplementedException();
 }

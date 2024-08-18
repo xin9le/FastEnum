@@ -32,7 +32,7 @@ internal static class ThrowHelper
     public static void ThrowValueNotDefined<TEnum>(TEnum value)
         where TEnum : struct, Enum
     {
-        var message = $"Specified value {value} is not defined.";
+        var message = $"Specified value '{value}' is not defined.";
         throw new NotFoundException(message);
     }
 
@@ -42,7 +42,7 @@ internal static class ThrowHelper
         where TEnum : struct, Enum
         where TAttribute : Attribute
     {
-        var message = $"The {typeof(TAttribute).FullName} is not defined for the specified value {value}.";
+        var message = $"The {typeof(TAttribute).FullName} is not defined for the specified value '{value}'.";
         throw new NotFoundException(message);
     }
 }

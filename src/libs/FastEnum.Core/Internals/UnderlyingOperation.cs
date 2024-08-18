@@ -41,7 +41,7 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseValue(ReadOnlySpan<char> text, out TEnum result)
     {
-        result = default;
+        Unsafe.SkipInit(out result);
         ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
         return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
     }

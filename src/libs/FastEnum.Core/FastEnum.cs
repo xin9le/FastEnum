@@ -139,7 +139,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(ReadOnlySpan<char> name)
+    public static bool IsDefined<T>(string name)
         where T : struct, Enum
         => throw new NotImplementedException();
 
@@ -175,7 +175,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(ReadOnlySpan<char> value)
+    public static T Parse<T>(string value)
         where T : struct, Enum
         => Parse<T>(value, false);
 
@@ -189,7 +189,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(ReadOnlySpan<char> value, bool ignoreCase)
+    public static T Parse<T>(string value, bool ignoreCase)
         where T : struct, Enum
         => throw new NotImplementedException();
 
@@ -203,7 +203,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(ReadOnlySpan<char> value, out T result)
+    public static bool TryParse<T>(string value, out T result)
         where T : struct, Enum
         => TryParse(value, false, out result);
 
@@ -219,11 +219,10 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
+    public static bool TryParse<T>(string value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
-        value = value.Trim();
-        if (value.IsEmpty)
+        if (string.IsNullOrEmpty(value))
         {
             result = default;
             return false;

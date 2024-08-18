@@ -80,7 +80,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Member<T>? GetMember<T>(T value)
         where T : struct, Enum
-        => throw new NotImplementedException();
+        => EnumInfo<T>.s_memberByValue.TryGetValue(value, out var member) ? member : null;
     #endregion
 
 

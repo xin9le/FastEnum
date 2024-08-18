@@ -206,11 +206,11 @@ public sealed class SByteTests
         foreach (var x in parameters)
         {
             FastEnum.Parse<SByteEnum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<SByteEnum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -252,17 +252,17 @@ public sealed class SByteTests
             FastEnum.TryParse<SByteEnum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<SByteEnum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<SByteEnum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<SByteEnum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<SByteEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<SByteEnum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<SByteEnum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<SByteEnum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<SByteEnum>(x, out var _).Should().BeFalse();
@@ -548,11 +548,11 @@ public sealed class ByteTests
         foreach (var x in parameters)
         {
             FastEnum.Parse<ByteEnum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<ByteEnum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -592,17 +592,17 @@ public sealed class ByteTests
             FastEnum.TryParse<ByteEnum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<ByteEnum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<ByteEnum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<ByteEnum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<ByteEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<ByteEnum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<ByteEnum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<ByteEnum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<ByteEnum>(x, out var _).Should().BeFalse();
@@ -890,11 +890,11 @@ public sealed class Int16Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int16Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int16Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -936,17 +936,17 @@ public sealed class Int16Tests
             FastEnum.TryParse<Int16Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<Int16Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<Int16Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<Int16Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<Int16Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<Int16Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<Int16Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<Int16Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<Int16Enum>(x, out var _).Should().BeFalse();
@@ -1232,11 +1232,11 @@ public sealed class UInt16Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt16Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt16Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -1276,17 +1276,17 @@ public sealed class UInt16Tests
             FastEnum.TryParse<UInt16Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt16Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<UInt16Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<UInt16Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt16Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt16Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<UInt16Enum>(x, out var _).Should().BeFalse();
@@ -1574,11 +1574,11 @@ public sealed class Int32Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int32Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int32Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -1620,17 +1620,17 @@ public sealed class Int32Tests
             FastEnum.TryParse<Int32Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<Int32Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<Int32Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<Int32Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<Int32Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<Int32Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<Int32Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<Int32Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<Int32Enum>(x, out var _).Should().BeFalse();
@@ -1916,11 +1916,11 @@ public sealed class UInt32Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt32Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt32Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -1960,17 +1960,17 @@ public sealed class UInt32Tests
             FastEnum.TryParse<UInt32Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt32Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<UInt32Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<UInt32Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt32Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt32Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<UInt32Enum>(x, out var _).Should().BeFalse();
@@ -2258,11 +2258,11 @@ public sealed class Int64Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int64Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int64Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -2304,17 +2304,17 @@ public sealed class Int64Tests
             FastEnum.TryParse<Int64Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<Int64Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<Int64Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<Int64Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<Int64Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<Int64Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<Int64Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<Int64Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<Int64Enum>(x, out var _).Should().BeFalse();
@@ -2600,11 +2600,11 @@ public sealed class UInt64Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt64Enum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt64Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -2644,17 +2644,17 @@ public sealed class UInt64Tests
             FastEnum.TryParse<UInt64Enum>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<UInt64Enum>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<UInt64Enum>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<UInt64Enum>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt64Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<UInt64Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<UInt64Enum>(x, out var _).Should().BeFalse();

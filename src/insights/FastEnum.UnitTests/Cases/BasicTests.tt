@@ -233,11 +233,11 @@ public sealed class <#= x.AliasType #>Tests
         foreach (var x in parameters)
         {
             FastEnum.Parse<<#= x.EnumType #>>(x.name).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>>(x.name.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>>(x.name.ToUpper()).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>>(x.valueString).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<<#= x.EnumType #>>(x.name.ToLower())).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<<#= x.EnumType #>>(x.name.ToUpper())).Should().Throw<ArgumentException>();
+            FastEnum.Parse<<#= x.EnumType #>>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower()).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper()).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE")).Should().Throw<ArgumentException>();
     }
@@ -283,17 +283,17 @@ public sealed class <#= x.AliasType #>Tests
             FastEnum.TryParse<<#= x.EnumType #>>(x.name, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>>(x.name.ToLower(), out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
-
-            FastEnum.TryParse<<#= x.EnumType #>>(x.name.ToUpper(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
-
-            FastEnum.TryParse<<#= x.EnumType #>>(x.valueString, out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
-
             FastEnum.TryParse<<#= x.EnumType #>>(x.name.ToLower(), out var _).Should().BeFalse();
             FastEnum.TryParse<<#= x.EnumType #>>(x.name.ToUpper(), out var _).Should().BeFalse();
+
+            FastEnum.TryParse<<#= x.EnumType #>>(x.valueString, out var r2).Should().BeTrue();
+            r2.Should().Be(x.value);
+
+            FastEnum.TryParse<<#= x.EnumType #>>(x.valueString.ToLower(), out var r3).Should().BeTrue();
+            r3.Should().Be(x.value);
+
+            FastEnum.TryParse<<#= x.EnumType #>>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
+            r4.Should().Be(x.value);
         }
         foreach (var x in new[] { "ABCDE", "", null })
             FastEnum.TryParse<<#= x.EnumType #>>(x, out var _).Should().BeFalse();

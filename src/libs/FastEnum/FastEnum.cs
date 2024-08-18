@@ -226,4 +226,18 @@ public static class FastEnum
         return operation.TryParse(value, out result);
     }
     #endregion
+
+
+    #region ToString
+    /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string ToString<T>(T value)
+        where T : struct, Enum
+        => throw new NotImplementedException();
+    #endregion
 }

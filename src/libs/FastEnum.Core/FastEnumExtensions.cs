@@ -244,5 +244,26 @@ public static class FastEnumExtensions
 
         return null;
     }
+
+
+    /// <summary>
+    /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <param name="value"></param>
+    /// <param name="index"></param>
+    /// <param name="throwIfNotFound"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotFoundException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
+        where T : struct, Enum
+    {
+        var member = value.ToMember();
+        if (throwIfNotFound && member is null)
+            ThrowHelper.ThrowValueNotDefined(value);
+        return member?.GetLabel(index, throwIfNotFound);
+    }
     #endregion
 }

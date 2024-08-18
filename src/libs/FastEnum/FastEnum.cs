@@ -23,12 +23,6 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        if (operation is null)
-        {
-            // todo: will remove
-            result = default;
-            return false;
-        }
         return operation.TryParse(value, out result);
     }
 }

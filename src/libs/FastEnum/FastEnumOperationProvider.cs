@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
 
@@ -27,7 +28,7 @@ public static class FastEnumOperationProvider
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    internal static IFastEnumOperation<T>? Get<T>()
+    internal static IFastEnumOperation<T> Get<T>()
         where T : struct, Enum
         => Volatile.Read(ref Cache<T>.s_operation);
 
@@ -36,7 +37,14 @@ public static class FastEnumOperationProvider
     private static class Cache<T>
         where T : struct, Enum
     {
-        public static IFastEnumOperation<T>? s_operation;
+        public static IFastEnumOperation<T> s_operation;
+
+
+        static Cache()
+        {
+            // Set the default operation for the underlying type of specified enum.
+            s_operation = UnderlyingOperation.Create<T>();
+        }
     }
     #endregion
 }

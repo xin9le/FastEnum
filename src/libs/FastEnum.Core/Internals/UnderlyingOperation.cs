@@ -48,10 +48,6 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
 
 
     /// <inheritdoc/>
-    public abstract string ToString(TEnum value);
-
-
-    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseName(string text, out TEnum result)
     {
@@ -76,6 +72,10 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
         ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
         return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
     }
+
+
+    /// <inheritdoc/>
+    public abstract string ToString(TEnum value);
     #endregion
 
 

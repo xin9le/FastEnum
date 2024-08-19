@@ -20,14 +20,6 @@ public interface IFastEnumOperation<T>
 
 
     /// <summary>
-    /// Converts the specified value to its equivalent string representation.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    string ToString(T value);
-
-
-    /// <summary>
     /// Converts the string representation of the name of one or more enumerated constants to an equivalent enumerated object.
     /// The return value indicates whether the conversion succeeded.
     /// </summary>
@@ -46,4 +38,12 @@ public interface IFastEnumOperation<T>
     /// <param name="result"></param>
     /// <returns></returns>
     bool TryParseValue(string text, out T result);
+
+
+    /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    string ToString(T value);
 }

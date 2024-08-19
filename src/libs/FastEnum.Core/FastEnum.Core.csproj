@@ -11,8 +11,17 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>FastDictionary.tt</DependentUpon>
         </Compile>
+        <Compile Update="Internals\UnderlyingOperation.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>UnderlyingOperation.tt</DependentUpon>
+        </Compile>
         <None Update="Internals\FastDictionary.tt">
             <LastGenOutput>FastDictionary.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Internals\UnderlyingOperation.tt">
+            <LastGenOutput>UnderlyingOperation.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

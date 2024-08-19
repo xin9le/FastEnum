@@ -15,14 +15,14 @@ internal static class UnderlyingOperation
     {
         return Type.GetTypeCode(typeof(T)) switch
         {
-            TypeCode.SByte => UnderlyingOperation<sbyte, T>.Create(),
-            TypeCode.Byte => UnderlyingOperation<byte, T>.Create(),
-            TypeCode.Int16 => UnderlyingOperation<short, T>.Create(),
-            TypeCode.UInt16 => UnderlyingOperation<ushort, T>.Create(),
-            TypeCode.Int32 => UnderlyingOperation<int, T>.Create(),
-            TypeCode.UInt32 => UnderlyingOperation<uint, T>.Create(),
-            TypeCode.Int64 => UnderlyingOperation<long, T>.Create(),
-            TypeCode.UInt64 => UnderlyingOperation<ulong, T>.Create(),
+            TypeCode.SByte => UnderlyingOperation<T, sbyte>.Create(),
+            TypeCode.Byte => UnderlyingOperation<T, byte>.Create(),
+            TypeCode.Int16 => UnderlyingOperation<T, short>.Create(),
+            TypeCode.UInt16 => UnderlyingOperation<T, ushort>.Create(),
+            TypeCode.Int32 => UnderlyingOperation<T, int>.Create(),
+            TypeCode.UInt32 => UnderlyingOperation<T, uint>.Create(),
+            TypeCode.Int64 => UnderlyingOperation<T, long>.Create(),
+            TypeCode.UInt64 => UnderlyingOperation<T, ulong>.Create(),
             _ => throw new InvalidOperationException(),
         };
     }
@@ -30,9 +30,9 @@ internal static class UnderlyingOperation
 
 
 
-file abstract class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<TEnum>
-    where TNumber : INumberBase<TNumber>
+file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEnum>
     where TEnum : struct, Enum
+    where TNumber : INumberBase<TNumber>
 {
     #region Factories
     public static IFastEnumOperation<TEnum> Create()
@@ -80,7 +80,7 @@ file abstract class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<TEn
 
 
     #region Nested Types
-    private sealed class Continuous : UnderlyingOperation<TNumber, TEnum>
+    private sealed class Continuous : UnderlyingOperation<TEnum, TNumber>
     {
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -96,7 +96,7 @@ file abstract class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<TEn
 
 
 
-    private sealed class Discontinuous : UnderlyingOperation<TNumber, TEnum>
+    private sealed class Discontinuous : UnderlyingOperation<TEnum, TNumber>
     {
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Frozen;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -21,8 +20,8 @@ internal static class EnumInfo<T>
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
     public static readonly Member<T>[] s_orderedMembers;
-    public static readonly FrozenDictionary<string, Member<T>> s_memberByName;
-    public static readonly FrozenDictionary<T, Member<T>> s_memberByValue;
+    public static readonly SpecializedDictionary<string, Member<T>> s_memberByName;
+    public static readonly SpecializedDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
     public static readonly bool s_isContinuous;
@@ -41,11 +40,11 @@ internal static class EnumInfo<T>
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
         s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
-        s_memberByName = s_members.ToFrozenDictionary(static x => x.Name);
+        s_memberByName = s_members.ToSpecializedDictionary(static x => x.Name);
         s_memberByValue
             = s_orderedMembers
             .DistinctBy(static x => x.Value)
-            .ToFrozenDictionary(static x => x.Value);
+            .ToSpecializedDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
         s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);

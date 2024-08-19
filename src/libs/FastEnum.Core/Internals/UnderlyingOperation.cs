@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -7,10 +8,23 @@ namespace FastEnumUtility.Internals;
 
 
 
+internal interface IUnderlyingOperation<T> : IFastEnumOperation<T>
+    where T : struct, Enum
+{
+    /// <summary>
+    /// Retrieves the member information of the constants in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
+}
+
+
 
 internal static class UnderlyingOperation
 {
-    public static IFastEnumOperation<T> Create<T>()
+    public static IUnderlyingOperation<T> Create<T>()
         where T : struct, Enum
     {
         return Type.GetTypeCode(typeof(T)) switch
@@ -30,12 +44,12 @@ internal static class UnderlyingOperation
 
 
 
-file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEnum>
+file abstract class UnderlyingOperation<TEnum, TNumber> : IUnderlyingOperation<TEnum>
     where TEnum : struct, Enum
     where TNumber : INumber<TNumber>
 {
     #region Factories
-    public static IFastEnumOperation<TEnum> Create()
+    public static IUnderlyingOperation<TEnum> Create()
         => EnumInfo<TEnum>.s_isContinuous
         ? new Continuous()
         : new Discontinuous();
@@ -45,6 +59,22 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     public abstract bool IsDefined(TEnum value);
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string ToString(TEnum value)
+    {
+        if (this.TryGetMember(value, out var member))
+        {
+            return member.Name;
+        }
+        else
+        {
+            ref var x = ref Unsafe.As<TEnum, TNumber>(ref value);
+            return x.ToString(null, CultureInfo.InvariantCulture);
+        }
+    }
 
 
     /// <inheritdoc/>
@@ -72,10 +102,12 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
         ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
         return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
     }
+    #endregion
 
 
+    #region IUnderlyingOperation<T>
     /// <inheritdoc/>
-    public abstract string ToString(TEnum value);
+    public abstract bool TryGetMember(TEnum value, [NotNullWhen(true)] out Member<TEnum>? result);
     #endregion
 
 
@@ -111,8 +143,42 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString(TEnum value)
-            => throw new NotImplementedException();
+        public override bool TryGetMember(TEnum value, [NotNullWhen(true)] out Member<TEnum>? result)
+        {
+            var members = EnumInfo<TEnum>.s_orderedMembers;
+            ref var val = ref Unsafe.As<TEnum, TNumber>(ref value);
+            var index = toUInt32(val - this._minValue);
+            if (index < (uint)members.Length)
+            {
+                result = members[index];
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
+
+
+            #region Local Functions
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static ulong toUInt32(TNumber value)
+            {
+                return Type.GetTypeCode(typeof(TNumber)) switch
+                {
+                    TypeCode.SByte => (uint)Unsafe.As<TNumber, sbyte>(ref value),
+                    TypeCode.Byte => Unsafe.As<TNumber, byte>(ref value),
+                    TypeCode.Int16 => (uint)Unsafe.As<TNumber, short>(ref value),
+                    TypeCode.UInt16 => Unsafe.As<TNumber, ushort>(ref value),
+                    TypeCode.Int32 => (uint)Unsafe.As<TNumber, int>(ref value),
+                    TypeCode.UInt32 => Unsafe.As<TNumber, uint>(ref value),
+                    TypeCode.Int64 => (uint)Unsafe.As<TNumber, long>(ref value),
+                    TypeCode.UInt64 => (uint)Unsafe.As<TNumber, ulong>(ref value),
+                    _ => throw new InvalidOperationException(),
+                };
+        }
+            #endregion
+        }
         #endregion
     }
 
@@ -129,8 +195,8 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString(TEnum value)
-            => throw new NotImplementedException();
+        public override bool TryGetMember(TEnum value, [NotNullWhen(true)] out Member<TEnum>? result)
+            => EnumInfo<TEnum>.s_memberByValue.TryGetValue(value, out result);
         #endregion
     }
     #endregion

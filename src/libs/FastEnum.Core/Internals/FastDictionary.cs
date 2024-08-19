@@ -20,7 +20,7 @@ namespace FastEnumUtility.Internals;
 /// Reference:
 /// https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack.UnityClient/Assets/Scripts/MessagePack/Internal/ThreadsafeTypeKeyHashTable.cs
 /// </remarks>
-internal sealed class SpecializedDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
 {
     #region Constants
     private static readonly Func<TValue, TValue> PassThrough = static x => x;
@@ -40,7 +40,7 @@ internal sealed class SpecializedDictionary<TKey, TValue> : IReadOnlyDictionary<
     /// </summary>
     /// <param name="bucketSize"></param>
     /// <param name="loadFactor"></param>
-    private SpecializedDictionary(int bucketSize, float loadFactor)
+    private FastDictionary(int bucketSize, float loadFactor)
     {
         this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
         this._loadFactor = loadFactor;
@@ -50,30 +50,30 @@ internal sealed class SpecializedDictionary<TKey, TValue> : IReadOnlyDictionary<
 
     #region Create
     /// <summary>
-    /// Creates a <see cref="SpecializedDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
+    /// Creates a <see cref="FastDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="keySelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> Create(IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+    public static FastDictionary<TKey, TValue> Create(IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
         => Create(source, keySelector, PassThrough);
 
 
     /// <summary>
-    ///  Creates a <see cref="SpecializedDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
+    ///  Creates a <see cref="FastDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <param name="source"></param>
     /// <param name="keySelector"></param>
     /// <param name="valueSelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+    public static FastDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
         var size = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var bucketSize = CalculateCapacity(size, loadFactor);
-        var result = new SpecializedDictionary<TKey, TValue>(bucketSize, loadFactor);
+        var result = new FastDictionary<TKey, TValue>(bucketSize, loadFactor);
 
         foreach (var x in source)
         {
@@ -312,7 +312,7 @@ internal sealed class SpecializedDictionary<TKey, TValue> : IReadOnlyDictionary<
 
     #region Inner Classes
     /// <summary>
-    /// Represents <see cref="SpecializedDictionary{TKey, TValue}"/> entry.
+    /// Represents <see cref="FastDictionary{TKey, TValue}"/> entry.
     /// </summary>
     private class Entry
     {
@@ -340,19 +340,19 @@ internal static class EnumerableExtensions
 {
     #region Generics key
     /// <summary>
-    /// Converts to <see cref="SpecializedDictionary{TKey, TValue}"/>.
+    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="source"></param>
     /// <param name="keySelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> ToSpecializedDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        => SpecializedDictionary<TKey, TValue>.Create(source, keySelector);
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        => FastDictionary<TKey, TValue>.Create(source, keySelector);
 
 
     /// <summary>
-    /// Converts to <see cref="SpecializedDictionary{TKey, TValue}"/>.
+    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TKey"></typeparam>
@@ -361,7 +361,7 @@ internal static class EnumerableExtensions
     /// <param name="keySelector"></param>
     /// <param name="valueSelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> ToSpecializedDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-        => SpecializedDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        => FastDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
     #endregion
 }

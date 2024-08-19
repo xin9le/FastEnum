@@ -20,8 +20,8 @@
     Func<string, string> GetCtor = (string typeName) =>
     {
         return typeName == "TKey"
-            ? "SpecializedDictionary"
-            : $"Specialized{typeName}KeyDictionary";
+            ? "FastDictionary"
+            : $"Fast{typeName}KeyDictionary";
     };
     Func<string, string> GetClass = (string typeName) =>
     {
@@ -64,7 +64,7 @@ namespace FastEnumUtility.Internals;
 /// https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack.UnityClient/Assets/Scripts/MessagePack/Internal/ThreadsafeTypeKeyHashTable.cs
 <# if (x.IsSpecialized) { #>
 /// 
-/// This class is <#= x.CompatibleName #> specialized <see cref="SpecializedDictionary{TKey, TValue}"/>.
+/// This class is <#= x.CompatibleName #> specialized <see cref="FastDictionary{TKey, TValue}"/>.
 <# } #>
 /// </remarks>
 internal sealed class <#= GetClass(x.TypeName) #> : IReadOnlyDictionary<<#= x.CompatibleName #>, TValue>
@@ -404,19 +404,19 @@ internal static class EnumerableExtensions
 {
     #region Generics key
     /// <summary>
-    /// Converts to <see cref="SpecializedDictionary{TKey, TValue}"/>.
+    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="source"></param>
     /// <param name="keySelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> ToSpecializedDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        => SpecializedDictionary<TKey, TValue>.Create(source, keySelector);
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        => FastDictionary<TKey, TValue>.Create(source, keySelector);
 
 
     /// <summary>
-    /// Converts to <see cref="SpecializedDictionary{TKey, TValue}"/>.
+    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TKey"></typeparam>
@@ -425,26 +425,26 @@ internal static class EnumerableExtensions
     /// <param name="keySelector"></param>
     /// <param name="valueSelector"></param>
     /// <returns></returns>
-    public static SpecializedDictionary<TKey, TValue> ToSpecializedDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-        => SpecializedDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        => FastDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
     #endregion
 <# foreach (var x in parameters.Where(static x => x.IsSpecialized)) { #>
 
 
     #region <#= x.TypeName #> key
     /// <summary>
-    /// Converts to <see cref="Specialized<#= x.TypeName #>KeyDictionary{TValue}"/>.
+    /// Converts to <see cref="Fast<#= x.TypeName #>KeyDictionary{TValue}"/>.
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="source"></param>
     /// <param name="keySelector"></param>
     /// <returns></returns>
-    public static Specialized<#= x.TypeName #>KeyDictionary<TValue> ToSpecialized<#= x.TypeName #>KeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, <#= x.CompatibleName #>> keySelector)
-        => Specialized<#= x.TypeName #>KeyDictionary<TValue>.Create(source, keySelector);
+    public static Fast<#= x.TypeName #>KeyDictionary<TValue> ToFast<#= x.TypeName #>KeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, <#= x.CompatibleName #>> keySelector)
+        => Fast<#= x.TypeName #>KeyDictionary<TValue>.Create(source, keySelector);
 
 
     /// <summary>
-    /// Converts to <see cref="Specialized<#= x.TypeName #>KeyDictionary{TValue}"/>.
+    /// Converts to <see cref="Fast<#= x.TypeName #>KeyDictionary{TValue}"/>.
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TValue"></typeparam>
@@ -452,8 +452,8 @@ internal static class EnumerableExtensions
     /// <param name="keySelector"></param>
     /// <param name="valueSelector"></param>
     /// <returns></returns>
-    public static Specialized<#= x.TypeName #>KeyDictionary<TValue> ToSpecialized<#= x.TypeName #>KeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, <#= x.CompatibleName #>> keySelector, Func<TSource, TValue> valueSelector)
-        => Specialized<#= x.TypeName #>KeyDictionary<TValue>.Create(source, keySelector, valueSelector);
+    public static Fast<#= x.TypeName #>KeyDictionary<TValue> ToFast<#= x.TypeName #>KeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, <#= x.CompatibleName #>> keySelector, Func<TSource, TValue> valueSelector)
+        => Fast<#= x.TypeName #>KeyDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
 <# } #>
 }

@@ -6,13 +6,13 @@
 
     <!-- T4 Template -->
     <ItemGroup>
-        <Compile Update="Internals\SpecializedDictionary.cs">
+        <Compile Update="Internals\FastDictionary.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
-            <DependentUpon>SpecializedDictionary.tt</DependentUpon>
+            <DependentUpon>FastDictionary.tt</DependentUpon>
         </Compile>
-        <None Update="Internals\SpecializedDictionary.tt">
-            <LastGenOutput>SpecializedDictionary.cs</LastGenOutput>
+        <None Update="Internals\FastDictionary.tt">
+            <LastGenOutput>FastDictionary.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

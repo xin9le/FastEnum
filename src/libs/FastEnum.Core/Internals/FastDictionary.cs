@@ -9,6 +9,10 @@ namespace FastEnumUtility.Internals;
 
 
 
+// note:
+//  - I really don't want to make my own custom dictionary.
+//  - However, this is faster than FrozonDictionary<TKey, TValue>, so I have no choice but to prepare it.
+
 /// <summary>
 /// Provides a read-only dictionary that contents are fixed at the time of instance creation.
 /// </summary>

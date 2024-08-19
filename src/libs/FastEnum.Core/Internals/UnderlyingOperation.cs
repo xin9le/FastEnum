@@ -32,7 +32,7 @@ internal static class UnderlyingOperation
 
 file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEnum>
     where TEnum : struct, Enum
-    where TNumber : INumberBase<TNumber>
+    where TNumber : INumber<TNumber>
 {
     #region Factories
     public static IFastEnumOperation<TEnum> Create()
@@ -82,32 +82,56 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IFastEnumOperation<TEn
     #region Nested Types
     private sealed class Continuous : UnderlyingOperation<TEnum, TNumber>
     {
+        #region Fields
+        private readonly TNumber _minValue;
+        private readonly TNumber _maxValue;
+        #endregion
+
+
+        #region Constructors
+        public Continuous()
+        {
+            var min = EnumInfo<TEnum>.s_minValue;
+            var max = EnumInfo<TEnum>.s_maxValue;
+            this._minValue = Unsafe.As<TEnum, TNumber>(ref min);
+            this._maxValue = Unsafe.As<TEnum, TNumber>(ref max);
+        }
+        #endregion
+
+
+        #region Overrides
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(TEnum value)
-            => throw new NotImplementedException();
+        {
+            ref var val = ref Unsafe.As<TEnum, TNumber>(ref value);
+            return (this._minValue <= val) && (val <= this._maxValue);
+        }
 
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString(TEnum value)
             => throw new NotImplementedException();
+        #endregion
     }
 
 
 
     private sealed class Discontinuous : UnderlyingOperation<TEnum, TNumber>
     {
+        #region Overrides
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsDefined(TEnum value)
-            => throw new NotImplementedException();
+            => EnumInfo<TEnum>.s_memberByValue.ContainsKey(value);
 
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString(TEnum value)
             => throw new NotImplementedException();
+        #endregion
     }
     #endregion
 }

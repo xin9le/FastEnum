@@ -129,7 +129,10 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(T value)
         where T : struct, Enum
-        => throw new NotImplementedException();
+    {
+        var operation = FastEnumOperationProvider.Get<T>();
+        return operation.IsDefined(value);
+    }
 
 
     /// <summary>

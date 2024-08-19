@@ -7,7 +7,7 @@
     var parameters = new[]
     {
         new { TypeName = "TKey",   CompatibleName = "TKey",   IsSpecialized = false },
-        new { TypeName = "String", CompatibleName = "string", IsSpecialized = true  },
+        //new { TypeName = "String", CompatibleName = "string", IsSpecialized = true  },
         //new { TypeName = "SByte",  CompatibleName = "sbyte",  IsSpecialized = true  },
         //new { TypeName = "Byte",   CompatibleName = "byte",   IsSpecialized = true  },
         //new { TypeName = "Int16",  CompatibleName = "short",  IsSpecialized = true  },
@@ -428,7 +428,7 @@ internal static class EnumerableExtensions
     public static SpecializedDictionary<TKey, TValue> ToSpecializedDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
         => SpecializedDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
     #endregion
-<# foreach (var x in parameters.Where(static x => x.TypeName is not "TKey")) { #>
+<# foreach (var x in parameters.Where(static x => x.IsSpecialized)) { #>
 
 
     #region <#= x.TypeName #> key

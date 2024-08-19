@@ -16,7 +16,7 @@ public interface IFastEnumOperation<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    bool IsDefined(ref T value);
+    bool IsDefined(T value);
 
 
     /// <summary>
@@ -24,7 +24,7 @@ public interface IFastEnumOperation<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    string ToString(ref T value);
+    string ToString(T value);
 
 
     /// <summary>

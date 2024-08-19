@@ -289,7 +289,7 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.ToString(ref value);
+        return operation.ToString(value);
     }
     #endregion
 }

@@ -7,10 +7,15 @@
 
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" />
+        <PackageReference Include="FastEnum">
+            <Aliases>FastEnumV1</Aliases>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
+        <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj">
+            <Aliases>FastEnumV2</Aliases>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

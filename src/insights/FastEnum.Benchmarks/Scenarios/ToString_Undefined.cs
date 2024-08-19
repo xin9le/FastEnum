@@ -9,7 +9,7 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class Scenario_ToString_Undefined
+public class ToString_Undefined
 {
     private const Fruits Value = (Fruits)byte.MaxValue;  // undefined value
 

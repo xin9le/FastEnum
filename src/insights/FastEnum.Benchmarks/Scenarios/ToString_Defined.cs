@@ -9,7 +9,7 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class Scenario_ToString_Defined
+public class ToString_Defined
 {
     private const Fruits Value = Fruits.Pineapple;
 

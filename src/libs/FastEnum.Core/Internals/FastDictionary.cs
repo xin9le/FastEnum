@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -14,16 +15,12 @@ namespace FastEnumUtility.Internals;
 /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
 /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
 /// <remarks>
-/// Reference:
-/// https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack.UnityClient/Assets/Scripts/MessagePack/Internal/ThreadsafeTypeKeyHashTable.cs
+/// Reference:<br/>
+/// <a href="https://github.com/neuecc/MessagePack-CSharp/blob/master/src/MessagePack.UnityClient/Assets/Scripts/MessagePack/Internal/ThreadsafeTypeKeyHashTable.cs"></a>
 /// </remarks>
 internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+     where TKey : notnull
 {
-    #region Constants
-    private static readonly Func<TValue, TValue> PassThrough = static x => x;
-    #endregion
-
-
     #region Fields
     private Entry[] _buckets;
     private int _size;
@@ -32,38 +29,19 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
 
 
     #region Constructors
-    /// <summary>
-    /// Creates instance.
-    /// </summary>
-    /// <param name="bucketSize"></param>
-    /// <param name="loadFactor"></param>
     private FastDictionary(int bucketSize, float loadFactor)
     {
-        this._buckets = (bucketSize == 0) ? Array.Empty<Entry>() : new Entry[bucketSize];
+        this._buckets = (bucketSize is 0) ? [] : new Entry[bucketSize];
         this._loadFactor = loadFactor;
     }
     #endregion
 
 
-    #region Create
-    /// <summary>
-    /// Creates a <see cref="FastDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified key selector function.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="keySelector"></param>
-    /// <returns></returns>
+    #region Factories
     public static FastDictionary<TKey, TValue> Create(IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        => Create(source, keySelector, PassThrough);
+        => Create(source, keySelector, valueSelector: static x => x);
 
 
-    /// <summary>
-    ///  Creates a <see cref="FastDictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/> according to specified key selector and value selector functions.
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="keySelector"></param>
-    /// <param name="valueSelector"></param>
-    /// <returns></returns>
     public static FastDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
@@ -86,14 +64,7 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
 
 
     #region Add
-    /// <summary>
-    /// Add element.
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <param name="resultingValue"></param>
-    /// <returns></returns>
-    private bool TryAddInternal(TKey key, TValue value, out TValue resultingValue)
+    private bool TryAddInternal(TKey key, TValue? value, out TValue? resultingValue)
     {
         var nextCapacity = CalculateCapacity(this._size + 1, this._loadFactor);
         if (this._buckets.Length < nextCapacity)
@@ -106,12 +77,12 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
                 while (e is not null)
                 {
                     var newEntry = new Entry(e.Key, e.Value, e.Hash);
-                    AddToBuckets(nextBucket, key, newEntry, default, out _);
+                    addToBuckets(nextBucket, key, newEntry, default, out _);
                     e = e.Next;
                 }
             }
 
-            var success = AddToBuckets(nextBucket, key, null, value, out resultingValue);
+            var success = addToBuckets(nextBucket, key, null, value, out resultingValue);
             this._buckets = nextBucket;
             if (success)
                 this._size++;
@@ -120,16 +91,17 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
         }
         else
         {
-            var success = AddToBuckets(this._buckets, key, null, value, out resultingValue);
+            var success = addToBuckets(this._buckets, key, null, value, out resultingValue);
             if (success)
                 this._size++;
 
             return success;
         }
 
+
         #region Local Functions
         //--- please pass 'key + newEntry' or 'key + value'.
-        static bool AddToBuckets(Entry[] buckets, TKey newKey, Entry newEntry, TValue value, out TValue resultingValue)
+        static bool addToBuckets(Entry[] buckets, TKey newKey, Entry? newEntry, TValue? value, out TValue? resultingValue)
         {
             var hash = newEntry?.Hash ?? EqualityComparer<TKey>.Default.GetHashCode(newKey);
             var index = hash & (buckets.Length - 1);
@@ -181,12 +153,6 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
     }
 
 
-    /// <summary>
-    /// Calculates bucket capacity.
-    /// </summary>
-    /// <param name="collectionSize"></param>
-    /// <param name="loadFactor"></param>
-    /// <returns></returns>
     private static int CalculateCapacity(int collectionSize, float loadFactor)
     {
         var initialCapacity = (int)(collectionSize / loadFactor);
@@ -202,76 +168,38 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
     #endregion
 
 
-    #region Get
-    /// <summary>
-    /// Gets the element that has the specified key in the read-only dictionary or the default value of the element type.
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
-    public TValue GetValueOrDefault(TKey key, TValue defaultValue = default)
-        => this.TryGetValue(key, out var value)
-        ? value
-        : defaultValue;
-    #endregion
-
-
-    #region IReadOnlyDictionary<TKey, TValue> implementations
-    /// <summary>
-    /// Gets the element that has the specified key in the read-only dictionary.
-    /// </summary>
-    /// <param name="key">The key to locate.</param>
-    /// <returns>The element that has the specified key in the read-only dictionary.</returns>
+    #region IReadOnlyDictionary<TKey, TValue>
+    /// <inheritdoc/>
     public TValue this[TKey key]
         => this.TryGetValue(key, out var value)
         ? value
         : throw new KeyNotFoundException();
 
 
-    /// <summary>
-    /// Gets an enumerable collection that contains the keys in the read-only dictionary.
-    /// </summary>
+    /// <inheritdoc/>
     public IEnumerable<TKey> Keys
         => throw new NotImplementedException();
 
 
-    /// <summary>
-    /// Gets an enumerable collection that contains the values in the read-only dictionary.
-    /// </summary>
+    /// <inheritdoc/>
     public IEnumerable<TValue> Values
         => throw new NotImplementedException();
 
 
-    /// <summary>
-    /// Gets the number of elements in the collection.
-    /// </summary>
+    /// <inheritdoc/>
     public int Count
         => this._size;
 
 
-    /// <summary>
-    /// Determines whether the read-only dictionary contains an element that has the specified key.
-    /// </summary>
-    /// <param name="key">The key to locate.</param>
-    /// <returns>
-    /// true if the read-only dictionary contains an element that has the specified key; otherwise, false.
-    /// </returns>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ContainsKey(TKey key)
         => this.TryGetValue(key, out _);
 
 
-    /// <summary>
-    /// Gets the value that is associated with the specified key.
-    /// </summary>
-    /// <param name="key">The key to locate.</param>
-    /// <param name="value">
-    /// When this method returns, the value associated with the specified key, if the key is found;
-    /// otherwise, the default value for the type of the value parameter.
-    /// This parameter is passed uninitialized.
-    /// </param>
-    /// <returns>true if the object that implements the <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an element that has the specified key; otherwise, false.</returns>
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = EqualityComparer<TKey>.Default.GetHashCode(key);
         var index = hash & (this._buckets.Length - 1);
@@ -280,7 +208,7 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
         {
             if (EqualityComparer<TKey>.Default.Equals(next.Key, key))
             {
-                value = next.Value;
+                value = next.Value!;
                 return true;
             }
             next = next.Next;
@@ -290,40 +218,24 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
     }
 
 
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+    /// <inheritdoc/>
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         => throw new NotImplementedException();
 
 
-    /// <summary>
-    /// Returns an enumerator that iterates through a collection.
-    /// </summary>
-    /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
         => throw new NotImplementedException();
     #endregion
 
 
     #region Inner Classes
-    /// <summary>
-    /// Represents <see cref="FastDictionary{TKey, TValue}"/> entry.
-    /// </summary>
-    private class Entry
+    private sealed class Entry(TKey key, TValue? value, int hash)
     {
-        public readonly TKey Key;
-        public readonly TValue Value;
-        public readonly int Hash;
-        public Entry Next;
-
-        public Entry(TKey key, TValue value, int hash)
-        {
-            this.Key = key;
-            this.Value = value;
-            this.Hash = hash;
-        }
+        public readonly TKey Key = key;
+        public readonly TValue? Value = value;
+        public readonly int Hash = hash;
+        public Entry? Next;
     }
     #endregion
 }
@@ -335,30 +247,12 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
 /// </summary>
 internal static class EnumerableExtensions
 {
-    #region Generics key
-    /// <summary>
-    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="keySelector"></param>
-    /// <returns></returns>
     public static FastDictionary<TKey, TValue> ToFastDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        where TKey : notnull
         => FastDictionary<TKey, TValue>.Create(source, keySelector);
 
 
-    /// <summary>
-    /// Converts to <see cref="FastDictionary{TKey, TValue}"/>.
-    /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="keySelector"></param>
-    /// <param name="valueSelector"></param>
-    /// <returns></returns>
     public static FastDictionary<TKey, TValue> ToFastDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        where TKey : notnull
         => FastDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
-    #endregion
 }

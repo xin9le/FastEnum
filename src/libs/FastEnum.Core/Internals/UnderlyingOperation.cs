@@ -61,6 +61,7 @@ file abstract class SByteOperation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -110,6 +111,7 @@ file abstract class SByteOperation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -200,6 +202,7 @@ file abstract class ByteOperation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -249,6 +252,7 @@ file abstract class ByteOperation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -339,6 +343,7 @@ file abstract class Int16Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -388,6 +393,7 @@ file abstract class Int16Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -478,6 +484,7 @@ file abstract class UInt16Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -527,6 +534,7 @@ file abstract class UInt16Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -617,6 +625,7 @@ file abstract class Int32Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -666,6 +675,7 @@ file abstract class Int32Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -756,6 +766,7 @@ file abstract class UInt32Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -805,6 +816,7 @@ file abstract class UInt32Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -895,6 +907,7 @@ file abstract class Int64Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -944,6 +957,7 @@ file abstract class Int64Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 
@@ -1034,6 +1048,7 @@ file abstract class UInt64Operation<T> : IUnderlyingOperation<T>
 
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -1083,6 +1098,7 @@ file abstract class UInt64Operation<T> : IUnderlyingOperation<T>
 
     #region IUnderlyingOperation<T>
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
     #endregion
 

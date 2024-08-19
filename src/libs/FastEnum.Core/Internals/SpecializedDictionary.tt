@@ -8,14 +8,14 @@
     {
         new { TypeName = "TKey",   CompatibleName = "TKey",   IsSpecialized = false },
         new { TypeName = "String", CompatibleName = "string", IsSpecialized = true  },
-        new { TypeName = "SByte",  CompatibleName = "sbyte",  IsSpecialized = true  },
-        new { TypeName = "Byte",   CompatibleName = "byte",   IsSpecialized = true  },
-        new { TypeName = "Int16",  CompatibleName = "short",  IsSpecialized = true  },
-        new { TypeName = "UInt16", CompatibleName = "ushort", IsSpecialized = true  },
-        new { TypeName = "Int32",  CompatibleName = "int",    IsSpecialized = true  },
-        new { TypeName = "UInt32", CompatibleName = "uint",   IsSpecialized = true  },
-        new { TypeName = "Int64",  CompatibleName = "long",   IsSpecialized = true  },
-        new { TypeName = "UInt64", CompatibleName = "ulong",  IsSpecialized = true  },
+        //new { TypeName = "SByte",  CompatibleName = "sbyte",  IsSpecialized = true  },
+        //new { TypeName = "Byte",   CompatibleName = "byte",   IsSpecialized = true  },
+        //new { TypeName = "Int16",  CompatibleName = "short",  IsSpecialized = true  },
+        //new { TypeName = "UInt16", CompatibleName = "ushort", IsSpecialized = true  },
+        //new { TypeName = "Int32",  CompatibleName = "int",    IsSpecialized = true  },
+        //new { TypeName = "UInt32", CompatibleName = "uint",   IsSpecialized = true  },
+        //new { TypeName = "Int64",  CompatibleName = "long",   IsSpecialized = true  },
+        //new { TypeName = "UInt64", CompatibleName = "ulong",  IsSpecialized = true  },
     };
     Func<string, string> GetCtor = (string typeName) =>
     {

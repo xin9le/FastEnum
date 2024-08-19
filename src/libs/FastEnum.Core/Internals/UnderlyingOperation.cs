@@ -34,6 +34,7 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     where TNumber : INumberBase<TNumber>
     where TEnum : struct, Enum
 {
+    #region IFastEnumOperation<T>
     public string ToString(ref TEnum value)
         => throw new NotImplementedException();
 
@@ -61,4 +62,5 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
         ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
         return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
     }
+    #endregion
 }

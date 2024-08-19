@@ -11,6 +11,7 @@ namespace FastEnumUtility;
 public interface IFastEnumOperation<T>
     where T : struct, Enum
 {
+    bool IsDefined(ref T value);
     string ToString(ref T value);
     bool TryParseName(string text, out T result);
     bool TryParseValue(string text, out T result);

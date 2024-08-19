@@ -36,6 +36,11 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
 {
     #region IFastEnumOperation<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsDefined(ref TEnum value)
+        => throw new NotImplementedException();
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ToString(ref TEnum value)
         => throw new NotImplementedException();
 

@@ -162,7 +162,7 @@ file abstract class UnderlyingOperation<TEnum, TNumber> : IUnderlyingOperation<T
 
             #region Local Functions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ulong toUInt32(TNumber value)
+            static uint toUInt32(TNumber value)
             {
                 return Type.GetTypeCode(typeof(TNumber)) switch
                 {

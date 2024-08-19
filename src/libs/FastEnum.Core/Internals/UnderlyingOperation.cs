@@ -15,14 +15,14 @@ internal static class UnderlyingOperation
     {
         return Type.GetTypeCode(typeof(T)) switch
         {
-            TypeCode.SByte => new UnderlyingOperation<sbyte, T>(),
-            TypeCode.Byte => new UnderlyingOperation<byte, T>(),
-            TypeCode.Int16 => new UnderlyingOperation<short, T>(),
-            TypeCode.UInt16 => new UnderlyingOperation<ushort, T>(),
-            TypeCode.Int32 => new UnderlyingOperation<int, T>(),
-            TypeCode.UInt32 => new UnderlyingOperation<uint, T>(),
-            TypeCode.Int64 => new UnderlyingOperation<long, T>(),
-            TypeCode.UInt64 => new UnderlyingOperation<ulong, T>(),
+            TypeCode.SByte => UnderlyingOperation<sbyte, T>.Create(),
+            TypeCode.Byte => UnderlyingOperation<byte, T>.Create(),
+            TypeCode.Int16 => UnderlyingOperation<short, T>.Create(),
+            TypeCode.UInt16 => UnderlyingOperation<ushort, T>.Create(),
+            TypeCode.Int32 => UnderlyingOperation<int, T>.Create(),
+            TypeCode.UInt32 => UnderlyingOperation<uint, T>.Create(),
+            TypeCode.Int64 => UnderlyingOperation<long, T>.Create(),
+            TypeCode.UInt64 => UnderlyingOperation<ulong, T>.Create(),
             _ => throw new InvalidOperationException(),
         };
     }
@@ -30,21 +30,25 @@ internal static class UnderlyingOperation
 
 
 
-internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<TEnum>
+file abstract class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<TEnum>
     where TNumber : INumberBase<TNumber>
     where TEnum : struct, Enum
 {
+    #region Factories
+    public static IFastEnumOperation<TEnum> Create()
+        => EnumInfo<TEnum>.s_isContinuous
+        ? new Continuous()
+        : new Discontinuous();
+    #endregion
+
+
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsDefined(TEnum value)
-        => throw new NotImplementedException();
+    public abstract bool IsDefined(TEnum value);
 
 
     /// <inheritdoc/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public string ToString(TEnum value)
-        => throw new NotImplementedException();
+    public abstract string ToString(TEnum value);
 
 
     /// <inheritdoc/>
@@ -71,6 +75,39 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
         Unsafe.SkipInit(out result);
         ref var x = ref Unsafe.As<TEnum, TNumber>(ref result);
         return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
+    }
+    #endregion
+
+
+    #region Nested Types
+    private sealed class Continuous : UnderlyingOperation<TNumber, TEnum>
+    {
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(TEnum value)
+            => throw new NotImplementedException();
+
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString(TEnum value)
+            => throw new NotImplementedException();
+    }
+
+
+
+    private sealed class Discontinuous : UnderlyingOperation<TNumber, TEnum>
+    {
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsDefined(TEnum value)
+            => throw new NotImplementedException();
+
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString(TEnum value)
+            => throw new NotImplementedException();
     }
     #endregion
 }

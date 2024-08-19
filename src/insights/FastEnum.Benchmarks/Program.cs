@@ -8,6 +8,9 @@ var config = BenchmarkConfig.ForDefault();
 //var config = BenchmarkConfig.ForShortRun();
 var switcher = new BenchmarkSwitcher(
 [
+    typeof(GetName),
+    typeof(GetNames),
+    typeof(GetValues),
     typeof(IsDefined_Enum),
     typeof(IsDefined_String),
     typeof(ToString_Defined),

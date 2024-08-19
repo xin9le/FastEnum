@@ -15,6 +15,7 @@
         <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
     </ItemGroup>
 
+    <!-- T4 Template -->
     <ItemGroup>
         <Compile Update="Cases\BasicTests.cs">
             <DesignTime>True</DesignTime>
@@ -25,9 +26,6 @@
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
     </ItemGroup>
 

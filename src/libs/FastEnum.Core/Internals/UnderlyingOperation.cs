@@ -35,6 +35,7 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     where TEnum : struct, Enum
 {
     #region IFastEnumOperation<T>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ToString(ref TEnum value)
         => throw new NotImplementedException();
 

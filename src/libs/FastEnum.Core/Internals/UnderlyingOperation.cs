@@ -35,16 +35,19 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     where TEnum : struct, Enum
 {
     #region IFastEnumOperation<T>
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsDefined(ref TEnum value)
         => throw new NotImplementedException();
 
 
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ToString(ref TEnum value)
         => throw new NotImplementedException();
 
 
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseName(string text, out TEnum result)
     {
@@ -61,6 +64,7 @@ internal sealed class UnderlyingOperation<TNumber, TEnum> : IFastEnumOperation<T
     }
 
 
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseValue(string text, out TEnum result)
     {

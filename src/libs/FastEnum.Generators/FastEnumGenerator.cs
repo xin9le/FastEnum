@@ -59,6 +59,14 @@ file sealed class FastEnumOperation : IFastEnumOperation<Fruits>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(Fruits value)
+    {
+        return Enum.GetName(value);
+    }
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsDefined(Fruits value)
     {
         return Enum.IsDefined(value);

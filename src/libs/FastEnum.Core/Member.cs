@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Frozen;
 using System.Reflection;
 using System.Runtime.Serialization;
+using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
 
@@ -43,7 +43,7 @@ public sealed class Member<T>
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FrozenDictionary<int, string?> Labels { get; }
+    internal FastDictionary<int, string?> Labels { get; }
     #endregion
 
 
@@ -61,7 +61,7 @@ public sealed class Member<T>
         this.Labels
             = this.FieldInfo
             .GetCustomAttributes<LabelAttribute>()
-            .ToFrozenDictionary(static x => x.Index, static x => x.Value);
+            .ToFastDictionary(static x => x.Index, static x => x.Value);
     }
 
 

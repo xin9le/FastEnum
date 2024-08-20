@@ -62,6 +62,12 @@ file abstract class SByteOperation<T> : IUnderlyingOperation<T>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -201,6 +207,12 @@ file abstract class ByteOperation<T> : IUnderlyingOperation<T>
 
 
     #region IFastEnumOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
@@ -344,6 +356,12 @@ file abstract class Int16Operation<T> : IUnderlyingOperation<T>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -483,6 +501,12 @@ file abstract class UInt16Operation<T> : IUnderlyingOperation<T>
 
 
     #region IFastEnumOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
@@ -626,6 +650,12 @@ file abstract class Int32Operation<T> : IUnderlyingOperation<T>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -765,6 +795,12 @@ file abstract class UInt32Operation<T> : IUnderlyingOperation<T>
 
 
     #region IFastEnumOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
@@ -908,6 +944,12 @@ file abstract class Int64Operation<T> : IUnderlyingOperation<T>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 
@@ -1047,6 +1089,12 @@ file abstract class UInt64Operation<T> : IUnderlyingOperation<T>
 
 
     #region IFastEnumOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);

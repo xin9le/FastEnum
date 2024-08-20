@@ -76,6 +76,12 @@ file abstract class <#= x.TypeName #>Operation<T> : IUnderlyingOperation<T>
     #region IFastEnumOperation<T>
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract bool IsDefined(T value);
 
 

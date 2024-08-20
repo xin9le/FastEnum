@@ -12,6 +12,14 @@ public interface IFastEnumOperation<T>
     where T : struct, Enum
 {
     /// <summary>
+    /// Retrieves the name of the constant in the specified enumeration type that has the specified value.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
+    string? GetName(T value);
+
+
+    /// <summary>
     /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
     /// </summary>
     /// <param name="value"></param>

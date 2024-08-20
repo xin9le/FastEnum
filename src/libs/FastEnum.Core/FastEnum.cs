@@ -56,7 +56,10 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetName<T>(T value)
         where T : struct, Enum
-        => GetMember(value)?.Name;
+    {
+        var operation = FastEnumOperationProvider.Get<T>();
+        return operation.GetName(value);
+    }
 
 
     /// <summary>

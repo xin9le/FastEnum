@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace FastEnumUtility.Generators;
 
@@ -10,5 +9,5 @@ public sealed class FastEnumGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
-        => throw new NotImplementedException();
+    { }
 }

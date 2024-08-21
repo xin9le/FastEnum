@@ -12,7 +12,7 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 public class IsDefined_Enum
 {
-    private const Fruits Value = Fruits.A21;
+    private const Fruits Value = Fruits.Pineapple;
 
 
     [GlobalSetup]

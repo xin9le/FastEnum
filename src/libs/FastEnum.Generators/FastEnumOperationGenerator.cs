@@ -6,7 +6,7 @@ namespace FastEnumUtility.Generators;
 
 
 [Generator(LanguageNames.CSharp)]
-public sealed class FastEnumGenerator : IIncrementalGenerator
+public sealed class FastEnumOperationGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)

@@ -148,6 +148,9 @@ public static class FastEnum
     public static bool IsDefined<T>(string name)
         where T : struct, Enum
     {
+        if (string.IsNullOrEmpty(name))
+            return false;
+
         var operation = FastEnumOperationProvider.Get<T>();
         return operation.TryParseName(name, out var _);
     }

@@ -1,9 +1,10 @@
 ﻿extern alias FastEnumV1;
-extern alias FastEnumV2;
 
 using System;
 using BenchmarkDotNet.Attributes;
 using FastEnumUtility.Benchmarks.Models;
+using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
+using FastEnum2 = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -11,15 +12,15 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 public class IsDefined_Enum
 {
-    private const Fruits Value = Fruits.Pineapple;
+    private const Fruits Value = Fruits.A21;
 
 
     [GlobalSetup]
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
-        _ = FastEnumV1::FastEnumUtility.FastEnum.GetMembers<Fruits>();
-        _ = FastEnumV2::FastEnumUtility.FastEnum.GetMembers<Fruits>();
+        _ = FastEnum1.GetMembers<Fruits>();
+        _ = FastEnum2.GetMembers<Fruits>();
     }
 
 
@@ -30,10 +31,10 @@ public class IsDefined_Enum
 
     [Benchmark]
     public bool FastEnum_v1()
-        => FastEnumV1::FastEnumUtility.FastEnum.IsDefined(Value);
+        => FastEnum1.IsDefined(Value);
 
 
     [Benchmark]
     public bool FastEnum_v2()
-        => FastEnumV2::FastEnumUtility.FastEnum.IsDefined(Value);
+        => FastEnum2.IsDefined(Value);
 }

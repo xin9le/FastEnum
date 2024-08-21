@@ -1,10 +1,11 @@
 ﻿extern alias FastEnumV1;
-extern alias FastEnumV2;
 
 using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using FastEnumUtility.Benchmarks.Models;
+using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
+using FastEnum2 = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -16,8 +17,8 @@ public class GetNames
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
-        _ = FastEnumV1::FastEnumUtility.FastEnum.GetNames<Fruits>();
-        _ = FastEnumV2::FastEnumUtility.FastEnum.GetNames<Fruits>();
+        _ = FastEnum1.GetNames<Fruits>();
+        _ = FastEnum2.GetNames<Fruits>();
     }
 
 
@@ -28,10 +29,10 @@ public class GetNames
 
     [Benchmark]
     public IReadOnlyList<string> FastEnum_v1()
-        => FastEnumV1::FastEnumUtility.FastEnum.GetNames<Fruits>();
+        => FastEnum1.GetNames<Fruits>();
 
 
     [Benchmark]
     public IReadOnlyList<string> FastEnum_v2()
-        => FastEnumV2::FastEnumUtility.FastEnum.GetNames<Fruits>();
+        => FastEnum2.GetNames<Fruits>();
 }

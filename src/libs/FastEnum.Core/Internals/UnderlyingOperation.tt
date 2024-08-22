@@ -49,7 +49,7 @@ internal static class UnderlyingOperation
     public static IUnderlyingOperation<T> Create<T>()
         where T : struct, Enum
     {
-        return Type.GetTypeCode(typeof(T)) switch
+        return EnumInfo<T>.s_typeCode switch
         {
 <# foreach (var x in parameters) { #>
             TypeCode.<#= x.TypeName #> => <#= x.TypeName #>Operation<T>.Create(),

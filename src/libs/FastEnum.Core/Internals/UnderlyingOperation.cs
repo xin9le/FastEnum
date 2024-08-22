@@ -31,7 +31,7 @@ internal static class UnderlyingOperation
     public static IUnderlyingOperation<T> Create<T>()
         where T : struct, Enum
     {
-        return Type.GetTypeCode(typeof(T)) switch
+        return EnumInfo<T>.s_typeCode switch
         {
             TypeCode.SByte => SByteOperation<T>.Create(),
             TypeCode.Byte => ByteOperation<T>.Create(),

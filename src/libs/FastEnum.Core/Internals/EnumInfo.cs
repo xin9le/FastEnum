@@ -16,6 +16,7 @@ internal static class EnumInfo<T>
     #region Fields
     public static readonly Type s_type;
     public static readonly Type s_underlyingType;
+    public static readonly TypeCode s_typeCode;
     public static readonly string[] s_names;
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
@@ -36,6 +37,7 @@ internal static class EnumInfo<T>
     {
         s_type = typeof(T);
         s_underlyingType = Enum.GetUnderlyingType(s_type);
+        s_typeCode = Type.GetTypeCode(s_type);
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
@@ -67,7 +69,7 @@ internal static class EnumInfo<T>
 
         static ulong toUInt64(T value)
         {
-            return Type.GetTypeCode(typeof(T)) switch
+            return s_typeCode switch
             {
                 TypeCode.SByte => (ulong)Unsafe.As<T, sbyte>(ref value),
                 TypeCode.Byte => Unsafe.As<T, byte>(ref value),

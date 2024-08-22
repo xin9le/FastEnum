@@ -14,6 +14,7 @@ namespace FastEnumUtility;
 public interface IFastEnumOperation<T>
     where T : struct, Enum
 {
+    #region Public methods
     /// <summary>
     /// Retrieves the name of the constant in the specified enumeration type that has the specified value.
     /// </summary>
@@ -41,17 +42,6 @@ public interface IFastEnumOperation<T>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ToString(T value);
-
-
-    /// <summary>
-    /// Retrieves the member information of the constants in a specified enumeration.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
-        => EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
 
 
     /// <summary>
@@ -84,4 +74,18 @@ public interface IFastEnumOperation<T>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryParseValue(string text, out T result);
+    #endregion
+
+
+    #region Internal methods
+    /// <summary>
+    /// Retrieves the member information of the constants in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
+        => EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+    #endregion
 }

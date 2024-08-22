@@ -12,5 +12,6 @@ public sealed class FastEnumOperationGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         EnumDeclarationEmitter.Register(context);
+        ClassDeclarationEmitter.Register(context);
     }
 }

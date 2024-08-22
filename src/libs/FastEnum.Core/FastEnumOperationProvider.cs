@@ -44,7 +44,7 @@ public static class FastEnumOperationProvider
         static Cache()
         {
             // Set the default operation for the underlying type of specified enum.
-            s_operation = EnumInfo<T>.s_underlyingOperation;
+            s_operation = UnderlyingOperation.Create<T>();
         }
     }
     #endregion

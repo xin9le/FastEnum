@@ -83,7 +83,10 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Member<T>? GetMember<T>(T value)
         where T : struct, Enum
-        => EnumInfo<T>.s_underlyingOperation.TryGetMember(value, out var member) ? member : null;
+    {
+        var operation = FastEnumOperationProvider.Get<T>();
+        return operation.TryGetMember(value, out var member) ? member : null;
+    }
     #endregion
 
 

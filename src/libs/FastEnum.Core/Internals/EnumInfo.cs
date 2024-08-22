@@ -28,7 +28,6 @@ internal static class EnumInfo<T>
     public static readonly bool s_isContinuous;
     public static readonly bool s_isEmpty;
     public static readonly bool s_isFlags;
-    public static readonly IUnderlyingOperation<T> s_underlyingOperation;
     #endregion
 
 
@@ -52,7 +51,6 @@ internal static class EnumInfo<T>
         s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);
         s_isEmpty = s_values.Length is 0;
         s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
-        s_underlyingOperation = UnderlyingOperation.Create<T>();
 
 
         #region Local Functions

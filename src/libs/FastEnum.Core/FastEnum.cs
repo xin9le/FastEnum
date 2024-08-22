@@ -58,7 +58,9 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.GetName(value);
+        return operation is null
+            ? EnumInfo<T>.s_underlyingOperation.GetName(value)
+            : operation.GetName(value);
     }
 
 
@@ -134,7 +136,9 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.IsDefined(value);
+        return operation is null
+            ? EnumInfo<T>.s_underlyingOperation.IsDefined(value)
+            : operation.IsDefined(value);
     }
 
 
@@ -149,7 +153,9 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.TryParseName(name, out var _);
+        return operation is null
+            ? EnumInfo<T>.s_underlyingOperation.TryParseName(name, out var _)
+            : operation.TryParseName(name, out var _);
     }
 
 
@@ -244,7 +250,9 @@ public static class FastEnum
         if (isNumeric(value[0]))
         {
             var operation = FastEnumOperationProvider.Get<T>();
-            return operation.TryParseValue(value, out result);
+            return operation is null
+                ? EnumInfo<T>.s_underlyingOperation.TryParseValue(value, out result)
+                : operation.TryParseValue(value, out result);
         }
 
         if (ignoreCase)
@@ -254,7 +262,9 @@ public static class FastEnum
         else
         {
             var operation = FastEnumOperationProvider.Get<T>();
-            return operation.TryParseName(value, out result);
+            return operation is null
+                ? EnumInfo<T>.s_underlyingOperation.TryParseName(value, out result)
+                : operation.TryParseName(value, out result);
         }
 
 
@@ -295,7 +305,9 @@ public static class FastEnum
         where T : struct, Enum
     {
         var operation = FastEnumOperationProvider.Get<T>();
-        return operation.ToString(value);
+        return operation is null
+            ? EnumInfo<T>.s_underlyingOperation.ToString(value)
+            : operation.ToString(value);
     }
     #endregion
 }

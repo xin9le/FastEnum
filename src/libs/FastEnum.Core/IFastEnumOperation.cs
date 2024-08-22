@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
 
@@ -19,9 +16,7 @@ public interface IFastEnumOperation<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public string? GetName(T value)
-        => this.TryGetMember(value, out var member) ? member.Name : null;
+    string? GetName(T value);
 
 
     /// <summary>
@@ -29,9 +24,7 @@ public interface IFastEnumOperation<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsDefined(T value)
-        => EnumInfo<T>.s_memberByValue.ContainsKey(value);
+    bool IsDefined(T value);
 
 
     /// <summary>
@@ -39,19 +32,7 @@ public interface IFastEnumOperation<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public string ToString(T value);
-
-
-    /// <summary>
-    /// Retrieves the member information of the constants in a specified enumeration.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
-        => EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+    string ToString(T value);
 
 
     /// <summary>
@@ -62,17 +43,7 @@ public interface IFastEnumOperation<T>
     /// <param name="result"></param>
     /// <returns></returns>
     /// <remarks>Case-sensitive processing should be written.</remarks>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryParseName(string text, out T result)
-    {
-        if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
-        {
-            result = member.Value;
-            return true;
-        }
-        result = default;
-        return false;
-    }
+    bool TryParseName(string text, out T result);
 
 
     /// <summary>
@@ -82,6 +53,5 @@ public interface IFastEnumOperation<T>
     /// <param name="text"></param>
     /// <param name="result"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryParseValue(string text, out T result);
+    bool TryParseValue(string text, out T result);
 }

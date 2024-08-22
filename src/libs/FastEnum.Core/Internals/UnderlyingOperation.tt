@@ -30,9 +30,23 @@ namespace FastEnumUtility.Internals;
 
 
 
+internal interface IUnderlyingOperation<T> : IFastEnumOperation<T>
+    where T : struct, Enum
+{
+    /// <summary>
+    /// Retrieves the member information of the constants in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
+}
+
+
+
 internal static class UnderlyingOperation
 {
-    public static IFastEnumOperation<T> Create<T>()
+    public static IUnderlyingOperation<T> Create<T>()
         where T : struct, Enum
     {
         return EnumInfo<T>.s_typeCode switch
@@ -48,19 +62,82 @@ internal static class UnderlyingOperation
 
 
 <# foreach (var x in parameters) { #>
-file static class <#= x.TypeName #>Operation<T>
+file abstract class <#= x.TypeName #>Operation<T> : IUnderlyingOperation<T>
     where T : struct, Enum
 {
     #region Factories
-    public static IFastEnumOperation<T> Create()
+    public static IUnderlyingOperation<T> Create()
         => EnumInfo<T>.s_isContinuous
         ? new Continuous()
         : new Discontinuous();
     #endregion
 
 
+    #region IFastEnumOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? GetName(T value)
+        => this.TryGetMember(value, out var member) ? member.Name : null;
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract bool IsDefined(T value);
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string ToString(T value)
+    {
+        if (this.TryGetMember(value, out var member))
+        {
+            return member.Name;
+        }
+        else
+        {
+            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return x.ToString(null, CultureInfo.InvariantCulture);
+        }
+    }
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryParseName(string text, out T result)
+    {
+        // note:
+        //  - Implement case-sensitive only
+
+        if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+        {
+            result = member.Value;
+            return true;
+        }
+        result = default;
+        return false;
+    }
+
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryParseValue(string text, out T result)
+    {
+        Unsafe.SkipInit(out result);
+        ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
+        return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
+    }
+    #endregion
+
+
+    #region IUnderlyingOperation<T>
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result);
+    #endregion
+
+
     #region Nested Types
-    private sealed class Continuous : IFastEnumOperation<T>
+    private sealed class Continuous : <#= x.TypeName #>Operation<T>
     {
         #region Fields
         private readonly <#= x.CompatibleName #> _minValue;
@@ -79,10 +156,10 @@ file static class <#= x.TypeName #>Operation<T>
         #endregion
 
 
-        #region IFastEnumOperation<T>
+        #region Overrides
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDefined(T value)
+        public override bool IsDefined(T value)
         {
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
             return (this._minValue <= val) && (val <= this._maxValue);
@@ -91,24 +168,7 @@ file static class <#= x.TypeName #>Operation<T>
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string ToString(T value)
-        {
-            var self = (IFastEnumOperation<T>)this;
-            if (self.TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return x.ToString(null, CultureInfo.InvariantCulture);
-            }
-        }
-
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
+        public override bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
         {
             var members = EnumInfo<T>.s_orderedMembers;
             ref var val = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
@@ -124,49 +184,24 @@ file static class <#= x.TypeName #>Operation<T>
                 return false;
             }
         }
-
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryParseValue(string text, out T result)
-        {
-            Unsafe.SkipInit(out result);
-            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-            return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
-        }
         #endregion
     }
 
 
 
-    private sealed class Discontinuous : IFastEnumOperation<T>
+    private sealed class Discontinuous : <#= x.TypeName #>Operation<T>
     {
-        #region IFastEnumOperation<T>
+        #region Overrides
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string ToString(T value)
-        {
-            var self = (IFastEnumOperation<T>)this;
-            if (self.TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return x.ToString(null, CultureInfo.InvariantCulture);
-            }
-        }
+        public override bool IsDefined(T value)
+            => EnumInfo<T>.s_memberByValue.ContainsKey(value);
 
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryParseValue(string text, out T result)
-        {
-            Unsafe.SkipInit(out result);
-            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-            return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
-        }
+        public override bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
+            => EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
         #endregion
     }
     #endregion

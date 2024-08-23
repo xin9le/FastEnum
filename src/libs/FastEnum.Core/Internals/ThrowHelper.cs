@@ -53,4 +53,12 @@ internal static class ThrowHelper
         var message = $"The {typeof(TAttribute).FullName} is not defined for the specified value '{value}'.";
         throw new NotFoundException(message);
     }
+
+
+    [DoesNotReturn]
+    public static void ThrowUnexpectedCodeReached()
+    {
+        const string message = "Unexpected code execution detected.";
+        throw new InvalidOperationException(message);
+    }
 }

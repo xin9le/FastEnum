@@ -59,7 +59,7 @@ public static class FastEnum
     {
         var operation = FastEnumOperationProvider.Get<T>();
         return operation is null
-            ? EnumInfo<T>.s_underlyingOperation.GetName(value)
+            ? UnderlyingOperation<T>.GetName(value)
             : operation.GetName(value);
     }
 
@@ -85,7 +85,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Member<T>? GetMember<T>(T value)
         where T : struct, Enum
-        => EnumInfo<T>.s_underlyingOperation.TryGetMember(value, out var member) ? member : null;
+        => UnderlyingOperation<T>.TryGetMember(value, out var member) ? member : null;
     #endregion
 
 
@@ -137,7 +137,7 @@ public static class FastEnum
     {
         var operation = FastEnumOperationProvider.Get<T>();
         return operation is null
-            ? EnumInfo<T>.s_underlyingOperation.IsDefined(value)
+            ? UnderlyingOperation<T>.IsDefined(value)
             : operation.IsDefined(value);
     }
 
@@ -154,7 +154,7 @@ public static class FastEnum
     {
         var operation = FastEnumOperationProvider.Get<T>();
         return operation is null
-            ? EnumInfo<T>.s_underlyingOperation.TryParseName(name, out var _)
+            ? UnderlyingOperation<T>.TryParseName(name, out var _)
             : operation.TryParseName(name, out var _);
     }
 
@@ -251,7 +251,7 @@ public static class FastEnum
         {
             var operation = FastEnumOperationProvider.Get<T>();
             return operation is null
-                ? EnumInfo<T>.s_underlyingOperation.TryParseValue(value, out result)
+                ? UnderlyingOperation<T>.TryParseValue(value, out result)
                 : operation.TryParseValue(value, out result);
         }
 
@@ -263,7 +263,7 @@ public static class FastEnum
         {
             var operation = FastEnumOperationProvider.Get<T>();
             return operation is null
-                ? EnumInfo<T>.s_underlyingOperation.TryParseName(value, out result)
+                ? UnderlyingOperation<T>.TryParseName(value, out result)
                 : operation.TryParseName(value, out result);
         }
 
@@ -306,7 +306,7 @@ public static class FastEnum
     {
         var operation = FastEnumOperationProvider.Get<T>();
         return operation is null
-            ? EnumInfo<T>.s_underlyingOperation.ToString(value)
+            ? UnderlyingOperation<T>.ToString(value)
             : operation.ToString(value);
     }
     #endregion

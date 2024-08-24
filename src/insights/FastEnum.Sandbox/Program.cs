@@ -16,7 +16,7 @@ public enum Fruits
 
 
 [FastEnum<Fruits>]
-public partial class Foo
+public partial class FruitsOperation
 {
 
 }

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>FastEnumUtility.UnitTests</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="MSTest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
+    </ItemGroup>
+
+    <!-- T4 Template -->
+    <ItemGroup>
+        <Compile Update="Cases\BasicTests.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>BasicTests.tt</DependentUpon>
+        </Compile>
+        <None Update="Cases\BasicTests.tt">
+            <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+
+</Project>

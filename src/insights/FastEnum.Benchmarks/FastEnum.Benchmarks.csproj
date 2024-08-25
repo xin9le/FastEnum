@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>FastEnumUtility.Benchmarks</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" />
+        <PackageReference Include="Enums.NET" />
+        <PackageReference Include="FastEnum">
+            <Aliases>FastEnumV1</Aliases>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
+    </ItemGroup>
+
+</Project>

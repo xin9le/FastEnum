@@ -1,1 +1,1 @@
-dotnet pack ../src/FastEnum.Core/FastEnum.Core.csproj -c Release -o ./packages
+dotnet pack ../src/FastEnum/FastEnum.csproj -c Release -o ./packages

@@ -4,6 +4,26 @@
         <RootNamespace>FastEnumUtility</RootNamespace>
     </PropertyGroup>
 
+    <!-- NuGet -->
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <PackageId>FastEnum</PackageId>
+        <Version>2.0.0.0-preview1</Version>
+        <Description>The extremely fast enum utilities for C#/.NET. Provided methods are all achieved zero allocation and faster than System.Enum.</Description>
+        <PackageProjectUrl>https://github.com/xin9le/FastEnum</PackageProjectUrl>
+        <PackageTags>Enum, Utility</PackageTags>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <Company />
+        <Authors>xin9le</Authors>
+        <Copyright>Copyright© xin9le, All rights reserved.</Copyright>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    
     <!-- T4 Template -->
     <ItemGroup>
         <Compile Update="Internals\UnderlyingOperation.cs">

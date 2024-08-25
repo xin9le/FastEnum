@@ -1,5 +1,5 @@
 # FastEnum
-FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .NET Core, and also faster than [Enums.NET](https://github.com/TylerBrinkley/Enums.NET) that is similar library. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature.
+FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than .NET. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature.
 
 [![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
 
@@ -7,24 +7,30 @@ FastEnum is **the fastest** enum utilities for C#/.NET. It's much faster than .N
 
 # Performance
 
-![image](https://user-images.githubusercontent.com/4776688/176245015-c5d3476f-0c1f-4eb3-869d-281ea35b1ed0.png)
+![Benchmark](https://github.com/user-attachments/assets/134afde8-93d0-4c10-8a80-a999ff31b7da)
 
 
 ``` ini
-BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
-11th Gen Intel Core i7-1165G7 2.80GHz, 1 CPU, 8 logical and 4 physical cores
-.NET SDK=6.0.301
-  [Host]   : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
-  ShortRun : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.22621.4037/22H2/2022Update/SunValley2)
+13th Gen Intel Core i7-1360P, 1 CPU, 16 logical and 12 physical cores
+.NET SDK 8.0.400
+  [Host]     : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+  Job-CYQAVK : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
 ```
+
+> [!NOTE]
+> At present, FastEnum doesn't generate source code at compile time. We understand that leveraging Roslyn's Source Generator functionality could further accelerate performance, and thus our current implementation is not theoretically the "fastest" possible. We are positively considering the introduction of Source Generator in the future. However, as we aim to maintain a library that is both user-friendly and easily comprehensible, we may need to wait for future enhancements in C#'s expressiveness. We appreciate your understanding in this matter.
 
 
 
 # Support Platform
+- .NET 6.0+
 
-- .NET Framework 4.6.1+
-- .NET Standard 2.0+
-- .NET 5.0+
+> [!Important]
+> For those who wish to use this on older platforms, please use v1.8.0. It supports follows.
+> - .NET Framework 4.6.1+
+> - .NET Standard 2.0+
+> - .NET 5+
 
 
 
@@ -161,9 +167,6 @@ Getting started from downloading [NuGet](https://www.nuget.org/packages/FastEnum
 
 ```
 dotnet add package FastEnum
-```
-```
-PM> Install-Package FastEnum
 ```
 
 

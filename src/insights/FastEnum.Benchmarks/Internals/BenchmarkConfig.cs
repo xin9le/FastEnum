@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 
@@ -14,7 +15,7 @@ internal static class BenchmarkConfig
         return ManualConfig.CreateMinimumViable()
             .AddExporter(MarkdownExporter.GitHub)
             .AddDiagnoser(MemoryDiagnoser.Default)
-            .AddJob(Job.Default);
+            .AddJob(Job.Default.WithRuntime(CoreRuntime.Core80));
     }
 
 
@@ -23,6 +24,6 @@ internal static class BenchmarkConfig
         return ManualConfig.CreateMinimumViable()
             .AddExporter(MarkdownExporter.GitHub)
             .AddDiagnoser(MemoryDiagnoser.Default)
-            .AddJob(Job.ShortRun);
+            .AddJob(Job.ShortRun.WithRuntime(CoreRuntime.Core80));
     }
 }

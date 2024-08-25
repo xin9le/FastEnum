@@ -8,6 +8,7 @@ using FastEnumUtility.Benchmarks.Scenarios;
 var config = BenchmarkConfig.ForShortRun();
 var switcher = new BenchmarkSwitcher(
 [
+    typeof(EnumMemberAttribute),
     typeof(GetName),
     typeof(GetNames),
     typeof(GetValues),

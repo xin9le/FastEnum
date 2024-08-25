@@ -2,6 +2,7 @@
 
 using System;
 using BenchmarkDotNet.Attributes;
+using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
 using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
 using FastEnum2 = FastEnumUtility.FastEnum;
@@ -19,6 +20,7 @@ public class ToString_Undefined
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
+        _ = Enums.GetMembers<Fruits>();
         _ = FastEnum1.GetMembers<Fruits>();
         _ = FastEnum2.GetMembers<Fruits>();
     }
@@ -27,6 +29,11 @@ public class ToString_Undefined
     [Benchmark(Baseline = true)]
     public string NetCore()
         => Value.ToString();
+
+
+    [Benchmark]
+    public string EnumsNet()
+        => Enums.AsString(Value);
 
 
     [Benchmark]

@@ -2,6 +2,7 @@
 
 using System;
 using BenchmarkDotNet.Attributes;
+using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
 using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
 using FastEnum2 = FastEnumUtility.FastEnum;
@@ -19,6 +20,7 @@ public class TryParse_CaseSensitive
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
+        _ = Enums.GetMembers<Fruits>();
         _ = FastEnum1.GetMembers<Fruits>();
         _ = FastEnum2.GetMembers<Fruits>();
     }
@@ -27,6 +29,11 @@ public class TryParse_CaseSensitive
     [Benchmark(Baseline = true)]
     public bool NetCore()
         => Enum.TryParse<Fruits>(Value, out _);
+
+
+    [Benchmark]
+    public bool EnumsNet()
+        => Enums.TryParse<Fruits>(Value, out _);
 
 
     [Benchmark]

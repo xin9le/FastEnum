@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-#if NET7_0_OR_GREATER
 using System.Numerics;
-#endif
 
 namespace FastEnumUtility.Internals;
 
@@ -12,9 +10,7 @@ internal static class ThrowHelper
 {
     public static void ThrowIfUnderlyingTypeMismatch<TEnum, TUnderlying>(string? paramName)
         where TEnum : struct, Enum
-#if NET7_0_OR_GREATER
         where TUnderlying : INumberBase<TUnderlying>
-#endif
     {
         if (FastEnum.GetUnderlyingType<TEnum>() == typeof(TUnderlying))
             return;

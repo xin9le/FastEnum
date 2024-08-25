@@ -24,7 +24,7 @@ BenchmarkDotNet v0.14.0, Windows 11 (10.0.22621.4037/22H2/2022Update/SunValley2)
 
 
 # Support Platform
-- .NET 6.0+
+- .NET 8.0+
 
 > [!Important]
 > For those who wish to use this on older platforms, please use v1.8.0. It supports follows.

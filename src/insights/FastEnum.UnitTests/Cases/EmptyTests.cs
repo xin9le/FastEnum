@@ -60,23 +60,27 @@ public class EmptyTests
     {
         FastEnum.IsDefined((TEnum)123).Should().BeFalse();
         FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
-        /*
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<TEnum>((sbyte)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
     [TestMethod]
     public void Parse()
-        => FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+    {
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+    }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
-        => FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+    {
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+    }
 
 
     [TestMethod]

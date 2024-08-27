@@ -19,6 +19,7 @@ public static class FastEnum
     /// </summary>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Type GetUnderlyingType<T>()
         where T : struct, Enum
         => EnumInfo<T>.s_underlyingType;

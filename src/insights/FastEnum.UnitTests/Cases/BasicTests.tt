@@ -212,16 +212,6 @@ public sealed class <#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>("123").Should().BeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.UnderlyingType #>.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.UnderlyingType #>.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.UnderlyingType #>)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.ConjugateType #>)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 

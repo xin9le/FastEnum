@@ -187,16 +187,6 @@ public sealed class SByteTests
         FastEnum.IsDefined<SByteEnum>(nameof(SByteEnum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<SByteEnum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<SByteEnum>(sbyte.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<SByteEnum>(sbyte.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<SByteEnum>((sbyte)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<SByteEnum>((byte)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -537,16 +527,6 @@ public sealed class ByteTests
         FastEnum.IsDefined<ByteEnum>(nameof(ByteEnum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<ByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<ByteEnum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<ByteEnum>(byte.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<ByteEnum>(byte.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<ByteEnum>((byte)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<ByteEnum>((sbyte)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -885,16 +865,6 @@ public sealed class Int16Tests
         FastEnum.IsDefined<Int16Enum>(nameof(Int16Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int16Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<Int16Enum>(short.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<Int16Enum>(short.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<Int16Enum>((short)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<Int16Enum>((ushort)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -1235,16 +1205,6 @@ public sealed class UInt16Tests
         FastEnum.IsDefined<UInt16Enum>(nameof(UInt16Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt16Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<UInt16Enum>(ushort.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt16Enum>(ushort.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt16Enum>((ushort)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<UInt16Enum>((short)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -1583,16 +1543,6 @@ public sealed class Int32Tests
         FastEnum.IsDefined<Int32Enum>(nameof(Int32Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int32Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<Int32Enum>(int.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<Int32Enum>(int.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<Int32Enum>((int)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<Int32Enum>((uint)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -1933,16 +1883,6 @@ public sealed class UInt32Tests
         FastEnum.IsDefined<UInt32Enum>(nameof(UInt32Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt32Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<UInt32Enum>(uint.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt32Enum>(uint.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt32Enum>((uint)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<UInt32Enum>((int)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -2281,16 +2221,6 @@ public sealed class Int64Tests
         FastEnum.IsDefined<Int64Enum>(nameof(Int64Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int64Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<Int64Enum>(long.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<Int64Enum>(long.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<Int64Enum>((long)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<Int64Enum>((ulong)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 
@@ -2631,16 +2561,6 @@ public sealed class UInt64Tests
         FastEnum.IsDefined<UInt64Enum>(nameof(UInt64Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt64Enum>("minvalue").Should().BeFalse();
-
-        /*
-        FastEnum.IsDefined<UInt64Enum>(ulong.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt64Enum>(ulong.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<UInt64Enum>((ulong)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<UInt64Enum>((long)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
     }
 
 

@@ -31,7 +31,7 @@
     <ItemGroup>
         <None Include="../../../README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
-    
+
     <!-- T4 Template -->
     <ItemGroup>
         <Compile Update="Internals\UnderlyingOperation.cs">

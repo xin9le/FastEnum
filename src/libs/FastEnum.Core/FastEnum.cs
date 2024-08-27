@@ -208,7 +208,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string value, out T result)
+    public static bool TryParse<T>(string? value, out T result)
         where T : struct, Enum
         => TryParse(value, false, out result);
 
@@ -224,7 +224,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string value, bool ignoreCase, out T result)
+    public static bool TryParse<T>(string? value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
         if (string.IsNullOrEmpty(value))

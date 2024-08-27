@@ -208,6 +208,9 @@ public sealed class SByteTests
             FastEnum.Parse<SByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<SByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -230,6 +233,9 @@ public sealed class SByteTests
             FastEnum.Parse<SByteEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<SByteEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -547,6 +553,9 @@ public sealed class ByteTests
             FastEnum.Parse<ByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<ByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -568,6 +577,9 @@ public sealed class ByteTests
             FastEnum.Parse<ByteEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<ByteEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -886,6 +898,9 @@ public sealed class Int16Tests
             FastEnum.Parse<Int16Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<Int16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -908,6 +923,9 @@ public sealed class Int16Tests
             FastEnum.Parse<Int16Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<Int16Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -1225,6 +1243,9 @@ public sealed class UInt16Tests
             FastEnum.Parse<UInt16Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -1246,6 +1267,9 @@ public sealed class UInt16Tests
             FastEnum.Parse<UInt16Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -1564,6 +1588,9 @@ public sealed class Int32Tests
             FastEnum.Parse<Int32Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<Int32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -1586,6 +1613,9 @@ public sealed class Int32Tests
             FastEnum.Parse<Int32Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<Int32Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -1903,6 +1933,9 @@ public sealed class UInt32Tests
             FastEnum.Parse<UInt32Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -1924,6 +1957,9 @@ public sealed class UInt32Tests
             FastEnum.Parse<UInt32Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -2242,6 +2278,9 @@ public sealed class Int64Tests
             FastEnum.Parse<Int64Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<Int64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -2264,6 +2303,9 @@ public sealed class Int64Tests
             FastEnum.Parse<Int64Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<Int64Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -2581,6 +2623,9 @@ public sealed class UInt64Tests
             FastEnum.Parse<UInt64Enum>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(null!)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -2602,6 +2647,9 @@ public sealed class UInt64Tests
             FastEnum.Parse<UInt64Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(null!, true)).Should().Throw<ArgumentNullException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 

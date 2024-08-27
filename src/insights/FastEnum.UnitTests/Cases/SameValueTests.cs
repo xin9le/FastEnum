@@ -45,7 +45,7 @@ public class SameValueTests
             .ToArray();
         var actual = FastEnum.GetMembers<TEnum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];

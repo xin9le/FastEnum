@@ -97,7 +97,7 @@ public sealed class <#= x.AliasType #>Tests
             .ToArray();
         var actual = FastEnum.GetMembers<<#= x.EnumType #>>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];

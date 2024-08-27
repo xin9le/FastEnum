@@ -176,6 +176,7 @@ public static class FastEnum
     /// <param name="value"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Parse<T>(string value)
         where T : struct, Enum
@@ -190,6 +191,7 @@ public static class FastEnum
     /// <param name="ignoreCase"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Parse<T>(string value, bool ignoreCase)
         where T : struct, Enum

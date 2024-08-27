@@ -78,7 +78,7 @@ public sealed class SByteTests
             .ToArray();
         var actual = FastEnum.GetMembers<SByteEnum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -424,7 +424,7 @@ public sealed class ByteTests
             .ToArray();
         var actual = FastEnum.GetMembers<ByteEnum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -762,7 +762,7 @@ public sealed class Int16Tests
             .ToArray();
         var actual = FastEnum.GetMembers<Int16Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -1108,7 +1108,7 @@ public sealed class UInt16Tests
             .ToArray();
         var actual = FastEnum.GetMembers<UInt16Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -1446,7 +1446,7 @@ public sealed class Int32Tests
             .ToArray();
         var actual = FastEnum.GetMembers<Int32Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -1792,7 +1792,7 @@ public sealed class UInt32Tests
             .ToArray();
         var actual = FastEnum.GetMembers<UInt32Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -2130,7 +2130,7 @@ public sealed class Int64Tests
             .ToArray();
         var actual = FastEnum.GetMembers<Int64Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];
@@ -2476,7 +2476,7 @@ public sealed class UInt64Tests
             .ToArray();
         var actual = FastEnum.GetMembers<UInt64Enum>();
 
-        actual.Count.Should().Be(expect.Length);
+        actual.Length.Should().Be(expect.Length);
         for (var i = 0; i < expect.Length; i++)
         {
             var a = actual[i];

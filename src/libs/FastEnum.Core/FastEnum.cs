@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -31,9 +32,9 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<T> GetValues<T>()
+    public static ImmutableArray<T> GetValues<T>()
         where T : struct, Enum
-        => EnumInfo<T>.s_values;
+        => ImmutableCollectionsMarshal.AsImmutableArray(EnumInfo<T>.s_values);
 
 
     /// <summary>
@@ -42,9 +43,9 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<string> GetNames<T>()
+    public static ImmutableArray<string> GetNames<T>()
         where T : struct, Enum
-        => EnumInfo<T>.s_names;
+        => ImmutableCollectionsMarshal.AsImmutableArray(EnumInfo<T>.s_names);
 
 
     /// <summary>
@@ -65,9 +66,9 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<Member<T>> GetMembers<T>()
+    public static ImmutableArray<Member<T>> GetMembers<T>()
         where T : struct, Enum
-        => EnumInfo<T>.s_members;
+        => ImmutableCollectionsMarshal.AsImmutableArray(EnumInfo<T>.s_members);
 
 
     /// <summary>

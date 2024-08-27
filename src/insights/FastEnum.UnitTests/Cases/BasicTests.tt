@@ -124,7 +124,7 @@ public sealed class <#= x.AliasType #>Tests
         {
             const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -147,9 +147,9 @@ public sealed class <#= x.AliasType #>Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -348,9 +348,10 @@ public sealed class <#= x.AliasType #>Tests
         var value = <#= x.EnumType #>.MaxValue;
         var name = nameof(<#= x.EnumType #>.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(<#= x.EnumType #>).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);

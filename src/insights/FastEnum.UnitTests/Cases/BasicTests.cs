@@ -105,7 +105,7 @@ public sealed class SByteTests
         {
             const SByteEnum defined = SByteEnum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -128,9 +128,9 @@ public sealed class SByteTests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -315,9 +315,10 @@ public sealed class SByteTests
         var value = SByteEnum.MaxValue;
         var name = nameof(SByteEnum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(SByteEnum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -457,7 +458,7 @@ public sealed class ByteTests
         {
             const ByteEnum defined = ByteEnum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -480,9 +481,9 @@ public sealed class ByteTests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -660,9 +661,10 @@ public sealed class ByteTests
         var value = ByteEnum.MaxValue;
         var name = nameof(ByteEnum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(ByteEnum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -801,7 +803,7 @@ public sealed class Int16Tests
         {
             const Int16Enum defined = Int16Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -824,9 +826,9 @@ public sealed class Int16Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -1011,9 +1013,10 @@ public sealed class Int16Tests
         var value = Int16Enum.MaxValue;
         var name = nameof(Int16Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(Int16Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -1153,7 +1156,7 @@ public sealed class UInt16Tests
         {
             const UInt16Enum defined = UInt16Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -1176,9 +1179,9 @@ public sealed class UInt16Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -1356,9 +1359,10 @@ public sealed class UInt16Tests
         var value = UInt16Enum.MaxValue;
         var name = nameof(UInt16Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(UInt16Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -1497,7 +1501,7 @@ public sealed class Int32Tests
         {
             const Int32Enum defined = Int32Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -1520,9 +1524,9 @@ public sealed class Int32Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -1707,9 +1711,10 @@ public sealed class Int32Tests
         var value = Int32Enum.MaxValue;
         var name = nameof(Int32Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(Int32Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -1849,7 +1854,7 @@ public sealed class UInt32Tests
         {
             const UInt32Enum defined = UInt32Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -1872,9 +1877,9 @@ public sealed class UInt32Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -2052,9 +2057,10 @@ public sealed class UInt32Tests
         var value = UInt32Enum.MaxValue;
         var name = nameof(UInt32Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(UInt32Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -2193,7 +2199,7 @@ public sealed class Int64Tests
         {
             const Int64Enum defined = Int64Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -2216,9 +2222,9 @@ public sealed class Int64Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -2403,9 +2409,10 @@ public sealed class Int64Tests
         var value = Int64Enum.MaxValue;
         var name = nameof(Int64Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(Int64Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);
@@ -2545,7 +2552,7 @@ public sealed class UInt64Tests
         {
             const UInt64Enum defined = UInt64Enum.MinValue;
             var expect = getMember(defined);
-            var actual = FastEnum.GetMember(defined);
+            var actual = FastEnum.GetMember(defined)!;
 
             actual.Should().NotBeNull();
             actual.Value.Should().Be(expect.value);
@@ -2568,9 +2575,9 @@ public sealed class UInt64Tests
         static (T value, string name, byte[] nameUtf8, FieldInfo fieldInfo) getMember<T>(T value)
             where T : struct, Enum
         {
-            var name = Enum.GetName<T>(value);
+            var name = Enum.GetName<T>(value)!;
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
-            var fieldInfo = typeof(T).GetField(name);
+            var fieldInfo = typeof(T).GetField(name)!;
             return (value, name, nameUtf8, fieldInfo);
         }
         #endregion
@@ -2748,9 +2755,10 @@ public sealed class UInt64Tests
         var value = UInt64Enum.MaxValue;
         var name = nameof(UInt64Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
-        var member = value.ToMember();
+        var member = value.ToMember()!;
         var info = typeof(UInt64Enum).GetField(name);
 
+        member.Should().NotBeNull();
         member.Name.Should().Be(name);
         member.NameUtf8.Should().Equal(nameUtf8);
         member.Value.Should().Be(value);

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Text;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -26,6 +29,12 @@ public sealed class Member<T>
     /// Gets the name of specified enumration member.
     /// </summary>
     public string Name { get; }
+
+
+    /// <summary>
+    /// Gets the name of the specified enumeration member as a UTF-8 byte array.
+    /// </summary>
+    public ImmutableArray<byte> NameUtf8 { get; }
 
 
     /// <summary>
@@ -56,6 +65,7 @@ public sealed class Member<T>
     {
         this.Value = Enum.Parse<T>(name);
         this.Name = name;
+        this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
         this.FieldInfo = typeof(T).GetField(name)!;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
         this.Labels

@@ -21,7 +21,7 @@ internal static class EnumInfo<T>
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
     public static readonly Member<T>[] s_orderedMembers;
-    public static readonly FastDictionary<string, Member<T>> s_memberByName;
+    public static readonly StringKeyDictionary<Member<T>> s_memberByName;
     public static readonly FastDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
@@ -41,7 +41,7 @@ internal static class EnumInfo<T>
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
         s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
-        s_memberByName = s_members.ToFastDictionary(static x => x.Name);
+        s_memberByName = s_members.ToStringKeyDictionary(static x => x.Name, StringComparison.Ordinal);
         s_memberByValue
             = s_orderedMembers
             .DistinctBy(static x => x.Value)

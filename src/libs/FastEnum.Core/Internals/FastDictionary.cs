@@ -284,7 +284,7 @@ internal sealed class StringKeyDictionary<TValue>
             var value = valueSelector(x);
             var hash = string.GetHashCode(key, comparison);
             var entry = new Entry(key, value, hash);
-            if (tryAdd(buckets, entry, indexFor))
+            if (!tryAdd(buckets, entry, indexFor))
                 ThrowHelper.ThrowDuplicatedKeyExists(key);
         }
 

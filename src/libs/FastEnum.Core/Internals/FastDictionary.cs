@@ -376,6 +376,6 @@ internal sealed class StringKeyDictionary<TValue>
 
 
     #region Nested Types
-    private readonly record struct Entry(string Key, TValue? Value, int Hash);
+    private readonly record struct Entry(string Key, TValue Value, int Hash);
     #endregion
 }

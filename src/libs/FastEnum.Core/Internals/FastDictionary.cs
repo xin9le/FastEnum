@@ -379,3 +379,17 @@ internal sealed class StringKeyDictionary<TValue>
     private readonly record struct Entry(string Key, TValue Value, int Hash);
     #endregion
 }
+
+
+
+internal static class SpecializedDictionaryExtensions
+{
+    #region ToStringKeyDictionary
+    public static StringKeyDictionary<TValue> ToStringKeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector, StringComparison comparison)
+        => StringKeyDictionary<TValue>.Create(source, keySelector, static x => x, comparison);
+
+
+    public static StringKeyDictionary<TValue> ToStringKeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector, StringComparison comparison)
+        => StringKeyDictionary<TValue>.Create(source, keySelector, valueSelector, comparison);
+    #endregion
+}

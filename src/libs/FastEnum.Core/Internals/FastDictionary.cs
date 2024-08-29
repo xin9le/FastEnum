@@ -268,7 +268,7 @@ internal sealed class StringKeyDictionary<TValue>
 
 
     #region Factories
-    public static StringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue?> valueSelector, StringComparison comparison)
+    public static StringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector, StringComparison comparison)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
@@ -349,7 +349,7 @@ internal sealed class StringKeyDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue? value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = string.GetHashCode(key, this._comparison);
         ref var entries = ref this._buckets.AsSpan()[hash & this._indexFor];

@@ -243,3 +243,139 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
     }
     #endregion
 }
+
+
+
+internal sealed class StringKeyDictionary<TValue>
+{
+    #region Fields
+    private readonly Entry[][] _buckets;
+    private readonly int _size;
+    private readonly int _indexFor;
+    private readonly StringComparison _comparison;
+    #endregion
+
+
+    #region Constructors
+    private StringKeyDictionary(Entry[][] buckets, int indexFor, StringComparison comparison)
+    {
+        this._buckets = buckets;
+        this._size = buckets.Sum(static xs => xs.Length);
+        this._indexFor = indexFor;
+        this._comparison = comparison;
+    }
+    #endregion
+
+
+    #region Factories
+    public static StringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue?> valueSelector, StringComparison comparison)
+    {
+        const int initialSize = 4;
+        const float loadFactor = 0.75f;
+
+        var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
+        var capacity = calculateCapacity(collectionSize, loadFactor);
+        var buckets = new Entry[capacity][];
+        var indexFor = buckets.Length - 1;
+
+        foreach (var x in source)
+        {
+            var key = keySelector(x);
+            var value = valueSelector(x);
+            var hash = string.GetHashCode(key, comparison);
+            var entry = new Entry(key, value, hash);
+            if (tryAdd(buckets, entry, indexFor))
+                ThrowHelper.ThrowDuplicatedKeyExists(key);
+        }
+
+        return new(buckets, indexFor, comparison);
+
+
+        #region Local Functions
+        static int calculateCapacity(int collectionSize, float loadFactor)
+        {
+            //--- Calculate estimate size
+            var size = (int)(collectionSize / loadFactor);
+
+            //--- Adjust to the power of 2
+            size--;
+            size |= size >> 1;
+            size |= size >> 2;
+            size |= size >> 4;
+            size |= size >> 8;
+            size |= size >> 16;
+            size += 1;
+
+            //--- Set minimum size
+            size = Math.Max(size, 8);
+            return size;
+        }
+
+
+        static bool tryAdd(Entry[][] buckets, Entry entry, int indexFor)
+        {
+            var index = entry.Hash & indexFor;
+            var array = buckets[index];
+            if (array is null)
+            {
+                //--- Add new entry
+                buckets[index] = [entry];
+            }
+            else
+            {
+                //--- Check duplicate
+                foreach (var x in array.AsSpan())
+                {
+                    if (x.Key.AsSpan().SequenceEqual(entry.Key))
+                        return false;
+                }
+
+                //--- Append entry
+                var newArray = new Entry[array.Length + 1];
+                Array.Copy(array, newArray, array.Length);
+                newArray[^1] = entry;
+                buckets[index] = newArray;
+            }
+            return true;
+        }
+        #endregion
+    }
+    #endregion
+
+
+    #region like IReadOnlyDictionary<TKey, TValue>
+    public int Count
+        => this._size;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue? value)
+    {
+        var hash = string.GetHashCode(key, this._comparison);
+        ref var entries = ref this._buckets.AsSpan()[hash & this._indexFor];
+
+        //--- Check if entry exists
+        if (Unsafe.IsNullRef(ref entries))
+            goto NotFound;
+
+        //--- Check exact match
+        foreach (ref var entry in entries.AsSpan())
+        {
+            if (entry.Key.AsSpan().Equals(key, this._comparison))
+            {
+                value = entry.Value;
+                return true;
+            }
+        }
+
+    NotFound:
+        value = default;
+        return false;
+    }
+    #endregion
+
+
+    #region Nested Types
+    private readonly record struct Entry(string Key, TValue? Value, int Hash);
+    #endregion
+}

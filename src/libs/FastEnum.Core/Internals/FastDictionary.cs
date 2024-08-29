@@ -260,7 +260,7 @@ internal sealed class StringKeyDictionary<TValue>
     private StringKeyDictionary(Entry[][] buckets, int indexFor, StringComparison comparison)
     {
         this._buckets = buckets;
-        this._size = buckets.Sum(static xs => xs.Length);
+        this._size = buckets.Sum(static xs => xs?.Length ?? 0);
         this._indexFor = indexFor;
         this._comparison = comparison;
     }

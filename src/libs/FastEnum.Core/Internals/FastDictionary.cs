@@ -384,7 +384,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 internal static class SpecializedDictionaryExtensions
 {
-    #region ToStringOrdinalCaseSensitiveDictionary
+    #region StringOrdinalCaseSensitiveDictionary
     public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
         => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, static x => x);
 

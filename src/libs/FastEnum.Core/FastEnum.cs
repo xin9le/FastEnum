@@ -143,7 +143,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(string name)
         where T : struct, Enum
-        => UnderlyingOperation<T>.TryParseName(name, out var _);
+        => EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var _);
 
 
     /// <summary>
@@ -245,13 +245,26 @@ public static class FastEnum
         if (ignoreCase)
             return tryParseNameCaseInsensitive(value, out result);
 
-        return UnderlyingOperation<T>.TryParseName(value, out result);
+        return tryParseNameCaseSensitive(value, out result);
 
 
         #region Local Functions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool isNumeric(char c)
             => char.IsDigit(c) || (c is '-' or '+');
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool tryParseNameCaseSensitive(string name, out T result)
+        {
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
+            {
+                result = member.Value;
+                return true;
+            }
+            result = default;
+            return false;
+        }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

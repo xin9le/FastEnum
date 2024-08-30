@@ -79,22 +79,6 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseName(string text, out T result)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-<# foreach (var x in parameters) { #>
-            case TypeCode.<#= x.TypeName #>:
-                return <#= x.TypeName #>Operation.TryParseName(text, out result);
-<# } #>
-            default:
-                result = default;
-                return false;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseValue(string text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -174,19 +158,6 @@ internal static class UnderlyingOperation<T>
                 ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
                 return x.ToString(null, CultureInfo.InvariantCulture);
             }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
         }
 
 

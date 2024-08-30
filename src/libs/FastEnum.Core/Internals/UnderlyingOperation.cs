@@ -90,34 +90,6 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseName(string text, out T result)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-            case TypeCode.SByte:
-                return SByteOperation.TryParseName(text, out result);
-            case TypeCode.Byte:
-                return ByteOperation.TryParseName(text, out result);
-            case TypeCode.Int16:
-                return Int16Operation.TryParseName(text, out result);
-            case TypeCode.UInt16:
-                return UInt16Operation.TryParseName(text, out result);
-            case TypeCode.Int32:
-                return Int32Operation.TryParseName(text, out result);
-            case TypeCode.UInt32:
-                return UInt32Operation.TryParseName(text, out result);
-            case TypeCode.Int64:
-                return Int64Operation.TryParseName(text, out result);
-            case TypeCode.UInt64:
-                return UInt64Operation.TryParseName(text, out result);
-            default:
-                result = default;
-                return false;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseValue(string text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -224,19 +196,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(string text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -334,19 +293,6 @@ internal static class UnderlyingOperation<T>
                 ref var x = ref Unsafe.As<T, byte>(ref value);
                 return x.ToString(null, CultureInfo.InvariantCulture);
             }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
         }
 
 
@@ -452,19 +398,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(string text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -562,19 +495,6 @@ internal static class UnderlyingOperation<T>
                 ref var x = ref Unsafe.As<T, ushort>(ref value);
                 return x.ToString(null, CultureInfo.InvariantCulture);
             }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
         }
 
 
@@ -680,19 +600,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(string text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -790,19 +697,6 @@ internal static class UnderlyingOperation<T>
                 ref var x = ref Unsafe.As<T, uint>(ref value);
                 return x.ToString(null, CultureInfo.InvariantCulture);
             }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
         }
 
 
@@ -908,19 +802,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(string text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -1018,19 +899,6 @@ internal static class UnderlyingOperation<T>
                 ref var x = ref Unsafe.As<T, ulong>(ref value);
                 return x.ToString(null, CultureInfo.InvariantCulture);
             }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
         }
 
 

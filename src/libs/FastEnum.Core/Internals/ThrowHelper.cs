@@ -68,7 +68,7 @@ internal static class ThrowHelper
 
 
     [DoesNotReturn]
-    public static void ThrowDuplicatedKeyExists(string key)
+    public static void ThrowDuplicatedKeyExists<T>(T key)
     {
         var message = $"Key '{key}' was already exists.";
         throw new ArgumentException(message);

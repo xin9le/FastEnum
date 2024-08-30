@@ -226,10 +226,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -343,10 +340,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -460,10 +454,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -577,10 +568,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -694,10 +682,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -811,10 +796,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -928,10 +910,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;
@@ -1045,10 +1024,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseName(string text, out T result)
         {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(text, out var member))
             {
                 result = member.Value;
                 return true;

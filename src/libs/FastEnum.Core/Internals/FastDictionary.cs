@@ -260,6 +260,11 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsKey(string key)
+        => this.TryGetValue(key, out _);
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = s_comparer.GetHashCode(key);
@@ -393,6 +398,11 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     #region like IReadOnlyDictionary<TKey, TValue>
     public int Count
         => this._size;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsKey(string key)
+        => this.TryGetValue(key, out _);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

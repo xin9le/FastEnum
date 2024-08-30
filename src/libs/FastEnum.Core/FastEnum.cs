@@ -143,7 +143,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(string name)
         where T : struct, Enum
-        => EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var _);
+        => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
 
 
     /// <summary>

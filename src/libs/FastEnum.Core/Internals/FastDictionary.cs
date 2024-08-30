@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -22,7 +21,7 @@ internal sealed class FastDictionary<TKey, TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly EqualityComparer<TKey> s_comparer = EqualityComparer<TKey>.Default;
+    private static readonly EqualityComparer<TKey> s_comparer = EqualityComparer<TKey>.Default;  // JIT optimization
     #endregion
 
 
@@ -163,7 +162,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.Ordinal;
+    private static readonly StringComparer s_comparer = StringComparer.Ordinal;  // JIT optimization
     #endregion
 
 
@@ -299,7 +298,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;
+    private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;  // JIT optimization
     #endregion
 
 

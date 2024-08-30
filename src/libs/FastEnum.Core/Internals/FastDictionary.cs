@@ -246,49 +246,48 @@ internal sealed class FastDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, T
 
 
 
-internal sealed class StringKeyDictionary<TValue>
+internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 {
     #region Fields
-    private readonly Entry[][] _buckets;
+    private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private readonly StringComparison _comparison;
+    private static readonly StringComparer s_comparer = StringComparer.Ordinal;
     #endregion
 
 
     #region Constructors
-    private StringKeyDictionary(Entry[][] buckets, int indexFor, StringComparison comparison)
+    private StringOrdinalCaseSensitiveDictionary(Entry[] buckets, int size, int indexFor)
     {
         this._buckets = buckets;
-        this._size = buckets.Sum(static xs => xs?.Length ?? 0);
+        this._size = size;
         this._indexFor = indexFor;
-        this._comparison = comparison;
     }
     #endregion
 
 
     #region Factories
-    public static StringKeyDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector, StringComparison comparison)
+    public static StringOrdinalCaseSensitiveDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
 
         var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var capacity = calculateCapacity(collectionSize, loadFactor);
-        var buckets = new Entry[capacity][];
+        var buckets = new Entry[capacity];
         var indexFor = buckets.Length - 1;
-
+        var size = 0;
         foreach (var x in source)
         {
             var key = keySelector(x);
             var value = valueSelector(x);
-            var hash = string.GetHashCode(key, comparison);
-            var entry = new Entry(key, value, hash);
+            var entry = new Entry(key, value, next: null);
             if (!tryAdd(buckets, entry, indexFor))
                 ThrowHelper.ThrowDuplicatedKeyExists(key);
+            size++;
         }
 
-        return new(buckets, indexFor, comparison);
+        return new(buckets, size, indexFor);
 
 
         #region Local Functions
@@ -312,31 +311,33 @@ internal sealed class StringKeyDictionary<TValue>
         }
 
 
-        static bool tryAdd(Entry[][] buckets, Entry entry, int indexFor)
+        static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var index = entry.Hash & indexFor;
-            var array = buckets[index];
-            if (array is null)
+            var hash = s_comparer.GetHashCode(entry.Key);
+            var index = hash & indexFor;
+            var target = buckets[index];
+            if (target is null)
             {
                 //--- Add new entry
-                buckets[index] = [entry];
+                buckets[index] = entry;
+                return true;
             }
-            else
+
+            while (true)
             {
                 //--- Check duplicate
-                foreach (var x in array.AsSpan())
-                {
-                    if (x.Key.AsSpan().SequenceEqual(entry.Key))
-                        return false;
-                }
+                if (s_comparer.Equals(target.Key, entry.Key))
+                    return false;
 
                 //--- Append entry
-                var newArray = new Entry[array.Length + 1];
-                Array.Copy(array, newArray, array.Length);
-                newArray[^1] = entry;
-                buckets[index] = newArray;
+                if (target.Next is null)
+                {
+                    target.Next = entry;
+                    return true;
+                }
+
+                target = target.Next;
             }
-            return true;
         }
         #endregion
     }
@@ -349,26 +350,20 @@ internal sealed class StringKeyDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = string.GetHashCode(key, this._comparison);
-        ref var entries = ref this._buckets.AsSpan()[hash & this._indexFor];
-
-        //--- Check if entry exists
-        if (Unsafe.IsNullRef(ref entries))
-            goto NotFound;
-
-        //--- Check exact match
-        foreach (ref var entry in entries.AsSpan())
+        var hash = s_comparer.GetHashCode(key);
+        var index = hash & this._indexFor;
+        var entry = this._buckets[index];
+        while (entry is not null)
         {
-            if (entry.Key.AsSpan().Equals(key, this._comparison))
+            if (s_comparer.Equals(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
             }
+            entry = entry.Next;
         }
-
-    NotFound:
         value = default;
         return false;
     }
@@ -376,7 +371,12 @@ internal sealed class StringKeyDictionary<TValue>
 
 
     #region Nested Types
-    private readonly record struct Entry(string Key, TValue Value, int Hash);
+    private sealed class Entry(string key, TValue value, Entry? next)
+    {
+        public readonly string Key = key;
+        public readonly TValue Value = value;
+        public Entry? Next = next;
+    }
     #endregion
 }
 
@@ -384,12 +384,12 @@ internal sealed class StringKeyDictionary<TValue>
 
 internal static class SpecializedDictionaryExtensions
 {
-    #region ToStringKeyDictionary
-    public static StringKeyDictionary<TValue> ToStringKeyDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector, StringComparison comparison)
-        => StringKeyDictionary<TValue>.Create(source, keySelector, static x => x, comparison);
+    #region ToStringOrdinalCaseSensitiveDictionary
+    public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
+        => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, static x => x);
 
 
-    public static StringKeyDictionary<TValue> ToStringKeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector, StringComparison comparison)
-        => StringKeyDictionary<TValue>.Create(source, keySelector, valueSelector, comparison);
+    public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+        => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
 }

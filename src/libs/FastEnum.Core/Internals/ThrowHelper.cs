@@ -65,4 +65,12 @@ internal static class ThrowHelper
         const string message = "Unexpected code execution detected.";
         throw new InvalidOperationException(message);
     }
+
+
+    [DoesNotReturn]
+    public static void ThrowDuplicatedKeyExists<T>(T key)
+    {
+        var message = $"Key '{key}' was already exists.";
+        throw new ArgumentException(message);
+    }
 }

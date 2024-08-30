@@ -143,7 +143,7 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(string name)
         where T : struct, Enum
-        => UnderlyingOperation<T>.TryParseName(name, out var _);
+        => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
 
 
     /// <summary>
@@ -243,9 +243,9 @@ public static class FastEnum
             return UnderlyingOperation<T>.TryParseValue(value, out result);
 
         if (ignoreCase)
-            return tryParseNameIgnoreCase(value, out result);
+            return tryParseNameCaseInsensitive(value, out result);
 
-        return UnderlyingOperation<T>.TryParseName(value, out result);
+        return tryParseNameCaseSensitive(value, out result);
 
 
         #region Local Functions
@@ -255,15 +255,25 @@ public static class FastEnum
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameIgnoreCase(ReadOnlySpan<char> name, out T result)
+        static bool tryParseNameCaseSensitive(string name, out T result)
         {
-            foreach (var member in EnumInfo<T>.s_members.AsSpan())
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
             {
-                if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = member.Value;
-                    return true;
-                }
+                result = member.Value;
+                return true;
+            }
+            result = default;
+            return false;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool tryParseNameCaseInsensitive(string name, out T result)
+        {
+            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
+            {
+                result = member.Value;
+                return true;
             }
             result = default;
             return false;

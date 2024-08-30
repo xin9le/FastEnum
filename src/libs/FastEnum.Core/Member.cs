@@ -52,7 +52,7 @@ public sealed class Member<T>
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FastDictionary<int, string?> Labels { get; }
+    internal FastReadOnlyDictionary<int, string?> Labels { get; }
     #endregion
 
 
@@ -71,7 +71,7 @@ public sealed class Member<T>
         this.Labels
             = this.FieldInfo
             .GetCustomAttributes<LabelAttribute>()
-            .ToFastDictionary(static x => x.Index, static x => x.Value);
+            .ToFastReadOnlyDictionary(static x => x.Index, static x => x.Value);
     }
 
 

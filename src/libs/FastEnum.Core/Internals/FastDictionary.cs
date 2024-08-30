@@ -75,7 +75,7 @@ internal sealed class FastDictionary<TKey, TValue>
             size += 1;
 
             //--- Set minimum size
-            size = Math.Max(size, 8);
+            size = Math.Max(size, initialSize);
             return size;
         }
 
@@ -216,7 +216,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
             size += 1;
 
             //--- Set minimum size
-            size = Math.Max(size, 8);
+            size = Math.Max(size, initialSize);
             return size;
         }
 
@@ -357,7 +357,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
             size += 1;
 
             //--- Set minimum size
-            size = Math.Max(size, 8);
+            size = Math.Max(size, initialSize);
             return size;
         }
 

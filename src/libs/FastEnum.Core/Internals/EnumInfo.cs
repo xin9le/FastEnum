@@ -23,7 +23,7 @@ internal static class EnumInfo<T>
     public static readonly Member<T>[] s_orderedMembers;
     public static readonly StringOrdinalCaseSensitiveDictionary<Member<T>> s_memberByNameCaseSensitive;
     public static readonly StringOrdinalCaseInsensitiveDictionary<Member<T>> s_memberByNameCaseInsensitive;
-    public static readonly FastDictionary<T, Member<T>> s_memberByValue;
+    public static readonly FastReadOnlyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
     public static readonly bool s_isContinuous;
@@ -47,7 +47,7 @@ internal static class EnumInfo<T>
         s_memberByValue
             = s_orderedMembers
             .DistinctBy(static x => x.Value)
-            .ToFastDictionary(static x => x.Value);
+            .ToFastReadOnlyDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
         s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);

@@ -14,7 +14,7 @@ namespace FastEnumUtility.Internals;
 
 
 
-internal sealed class FastDictionary<TKey, TValue>
+internal sealed class FastReadOnlyDictionary<TKey, TValue>
     where TKey : notnull
 {
     #region Fields
@@ -26,7 +26,7 @@ internal sealed class FastDictionary<TKey, TValue>
 
 
     #region Constructors
-    private FastDictionary(Entry[] buckets, int size, int indexFor)
+    private FastReadOnlyDictionary(Entry[] buckets, int size, int indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -36,7 +36,7 @@ internal sealed class FastDictionary<TKey, TValue>
 
 
     #region Factories
-    public static FastDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+    public static FastReadOnlyDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
@@ -440,15 +440,15 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 internal static class SpecializedDictionaryExtensions
 {
-    #region FastDictionary
-    public static FastDictionary<TKey, TValue> ToFastDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+    #region FastReadOnlyDictionary
+    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
         where TKey : notnull
-        => FastDictionary<TKey, TValue>.Create(source, keySelector, static x => x);
+        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, static x => x);
 
 
-    public static FastDictionary<TKey, TValue> ToFastDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
         where TKey : notnull
-        => FastDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
     #endregion
 
 

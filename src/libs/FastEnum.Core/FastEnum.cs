@@ -243,7 +243,7 @@ public static class FastEnum
             return UnderlyingOperation<T>.TryParseValue(value, out result);
 
         if (ignoreCase)
-            return tryParseNameIgnoreCase(value, out result);
+            return tryParseNameCaseInsensitive(value, out result);
 
         return UnderlyingOperation<T>.TryParseName(value, out result);
 
@@ -255,15 +255,12 @@ public static class FastEnum
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameIgnoreCase(ReadOnlySpan<char> name, out T result)
+        static bool tryParseNameCaseInsensitive(string name, out T result)
         {
-            foreach (var member in EnumInfo<T>.s_members.AsSpan())
+            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
             {
-                if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = member.Value;
-                    return true;
-                }
+                result = member.Value;
+                return true;
             }
             result = default;
             return false;

@@ -382,7 +382,6 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
 
-
 internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 {
     #region Fields
@@ -519,9 +518,20 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
 
-
 internal static class SpecializedDictionaryExtensions
 {
+    #region FastDictionary
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        where TKey : notnull
+        => FastDictionary<TKey, TValue>.Create(source, keySelector);
+
+
+    public static FastDictionary<TKey, TValue> ToFastDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        where TKey : notnull
+        => FastDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
+    #endregion
+
+
     #region StringOrdinalCaseSensitiveDictionary
     public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
         => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, static x => x);

@@ -374,7 +374,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = StringAccessor.GetHashCodeOrdinalIgnoreCase(entry.Key);
+            var hash = StringHelpers.GetHashCodeOrdinalIgnoreCase(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -387,7 +387,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (StringAccessor.EqualsOrdinalIgnoreCase(target.Key, entry.Key))
+                if (StringHelpers.EqualsOrdinalIgnoreCase(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -418,12 +418,12 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = StringAccessor.GetHashCodeOrdinalIgnoreCase(key);
+        var hash = StringHelpers.GetHashCodeOrdinalIgnoreCase(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (StringAccessor.EqualsOrdinalIgnoreCase(entry.Key, key))
+            if (StringHelpers.EqualsOrdinalIgnoreCase(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
@@ -484,7 +484,7 @@ internal static class SpecializedDictionaryExtensions
 
 
 
-file static class StringAccessor
+file static class StringHelpers
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCodeOrdinalIgnoreCase(ReadOnlySpan<char> value)

@@ -141,7 +141,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(string name)
+    public static bool IsDefined<T>(ReadOnlySpan<char> name)
         where T : struct, Enum
         => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
 
@@ -179,7 +179,7 @@ public static class FastEnum
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(string value)
+    public static T Parse<T>(ReadOnlySpan<char> value)
         where T : struct, Enum
         => Parse<T>(value, false);
 
@@ -195,10 +195,9 @@ public static class FastEnum
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(string value, bool ignoreCase)
+    public static T Parse<T>(ReadOnlySpan<char> value, bool ignoreCase)
         where T : struct, Enum
     {
-        ArgumentNullException.ThrowIfNull(value);
         if (!TryParse<T>(value, ignoreCase, out var result))
             ThrowHelper.ThrowValueNotDefined(value, nameof(value));
         return result;
@@ -214,7 +213,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string? value, out T result)
+    public static bool TryParse<T>(ReadOnlySpan<char> value, out T result)
         where T : struct, Enum
         => TryParse(value, false, out result);
 
@@ -230,10 +229,10 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string? value, bool ignoreCase, out T result)
+    public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
-        if (string.IsNullOrEmpty(value))
+        if (value.IsEmpty)
         {
             result = default;
             return false;
@@ -255,7 +254,7 @@ public static class FastEnum
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameCaseSensitive(string name, out T result)
+        static bool tryParseNameCaseSensitive(ReadOnlySpan<char> name, out T result)
         {
             if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
             {
@@ -268,7 +267,7 @@ public static class FastEnum
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameCaseInsensitive(string name, out T result)
+        static bool tryParseNameCaseInsensitive(ReadOnlySpan<char> name, out T result)
         {
             if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
             {

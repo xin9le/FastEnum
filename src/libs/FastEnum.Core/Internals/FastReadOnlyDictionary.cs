@@ -314,7 +314,6 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;  // JIT optimization
     #endregion
 
 
@@ -375,7 +374,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = s_comparer.GetHashCode(entry.Key);
+            var hash = StringAccessor.GetHashCodeOrdinalIgnoreCase(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -388,7 +387,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (s_comparer.Equals(target.Key, entry.Key))
+                if (StringAccessor.EqualsOrdinalIgnoreCase(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -412,19 +411,19 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ContainsKey(string key)
+    public bool ContainsKey(ReadOnlySpan<char> key)
         => this.TryGetValue(key, out _);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = s_comparer.GetHashCode(key);
+        var hash = StringAccessor.GetHashCodeOrdinalIgnoreCase(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (s_comparer.Equals(entry.Key, key))
+            if (StringAccessor.EqualsOrdinalIgnoreCase(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
@@ -446,6 +445,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     }
     #endregion
 }
+
 
 
 
@@ -481,4 +481,33 @@ internal static class SpecializedDictionaryExtensions
     public static StringOrdinalCaseInsensitiveDictionary<TValue> ToStringOrdinalCaseInsensitiveDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         => StringOrdinalCaseInsensitiveDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
+}
+
+
+
+file static class StringAccessor
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetHashCodeOrdinalIgnoreCase(ReadOnlySpan<char> value)
+    {
+#if NET8_0_OR_GREATER
+        return GetHashCodeOrdinalIgnoreCase(self: null, value);
+#else
+        return string.GetHashCode(value, StringComparison.OrdinalIgnoreCase);
+#endif
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool EqualsOrdinalIgnoreCase(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
+        => MemoryExtensions.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+
+
+#if NET8_0_OR_GREATER
+    // note:
+    //  - UnsafeAccessor can't be defined within a Generic type.
+
+    [UnsafeAccessor(UnsafeAccessorKind.StaticMethod)]
+    private static extern int GetHashCodeOrdinalIgnoreCase(string? self, ReadOnlySpan<char> value);
+#endif
 }

@@ -448,7 +448,6 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
 
-
 internal static class SpecializedDictionaryExtensions
 {
     #region FastReadOnlyDictionary

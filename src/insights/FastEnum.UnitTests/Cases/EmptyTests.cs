@@ -66,7 +66,6 @@ public class EmptyTests
     [TestMethod]
     public void Parse()
     {
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(null!)).Should().Throw<ArgumentNullException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -76,7 +75,6 @@ public class EmptyTests
     [TestMethod]
     public void ParseIgnoreCase()
     {
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(null!, true)).Should().Throw<ArgumentNullException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();

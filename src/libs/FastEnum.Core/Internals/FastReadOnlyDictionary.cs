@@ -162,7 +162,6 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.Ordinal;  // JIT optimization
     #endregion
 
 
@@ -223,7 +222,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = s_comparer.GetHashCode(entry.Key);
+            var hash = CaseSensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -236,7 +235,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (s_comparer.Equals(target.Key, entry.Key))
+                if (CaseSensitiveStringHelpers.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -260,19 +259,19 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ContainsKey(string key)
+    public bool ContainsKey(ReadOnlySpan<char> key)
         => this.TryGetValue(key, out _);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = s_comparer.GetHashCode(key);
+        var hash = CaseSensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (s_comparer.Equals(entry.Key, key))
+            if (CaseSensitiveStringHelpers.Equals(key, entry.Key))
             {
                 value = entry.Value;
                 return true;
@@ -303,7 +302,6 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;  // JIT optimization
     #endregion
 
 
@@ -364,7 +362,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = s_comparer.GetHashCode(entry.Key);
+            var hash = CaseInsensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -377,7 +375,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (s_comparer.Equals(target.Key, entry.Key))
+                if (CaseInsensitiveStringHelpers.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -401,19 +399,19 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ContainsKey(string key)
+    public bool ContainsKey(ReadOnlySpan<char> key)
         => this.TryGetValue(key, out _);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = s_comparer.GetHashCode(key);
+        var hash = CaseInsensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (s_comparer.Equals(entry.Key, key))
+            if (CaseInsensitiveStringHelpers.Equals(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
@@ -470,4 +468,55 @@ internal static class SpecializedDictionaryExtensions
     public static StringOrdinalCaseInsensitiveDictionary<TValue> ToStringOrdinalCaseInsensitiveDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         => StringOrdinalCaseInsensitiveDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
+}
+
+
+
+file static class CaseSensitiveStringHelpers
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetHashCode(ReadOnlySpan<char> value)
+    {
+        // note:
+        //  - Suppress CA1307 : Specify StringComparison for clarity
+        //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
+
+#pragma warning disable CA1307
+        return string.GetHashCode(value);
+#pragma warning restore CA1307
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
+        => MemoryExtensions.SequenceEqual(x, y);
+}
+
+
+
+file static class CaseInsensitiveStringHelpers
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetHashCode(ReadOnlySpan<char> value)
+    {
+#if NET8_0_OR_GREATER
+        return GetHashCodeOrdinalIgnoreCase(self: null, value);
+#else
+        return string.GetHashCode(value, StringComparison.OrdinalIgnoreCase);
+#endif
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
+        => MemoryExtensions.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+
+
+#if NET8_0_OR_GREATER
+    // note:
+    //  - UnsafeAccessor can't be defined within a Generic type.
+
+    [UnsafeAccessor(UnsafeAccessorKind.StaticMethod)]
+    private static extern int GetHashCodeOrdinalIgnoreCase(string? self, ReadOnlySpan<char> value);
+#endif
 }

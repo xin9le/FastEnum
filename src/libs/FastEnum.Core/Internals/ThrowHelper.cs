@@ -25,7 +25,7 @@ internal static class ThrowHelper
 
 
     [DoesNotReturn]
-    public static void ThrowValueNotDefined(string value, string? paramName)
+    public static void ThrowValueNotDefined(ReadOnlySpan<char> value, string? paramName)
     {
         var message = $"Specified value '{value}' is not defined.";
         throw new ArgumentException(message, paramName);

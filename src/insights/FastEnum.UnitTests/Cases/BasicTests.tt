@@ -235,7 +235,6 @@ public sealed class <#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower()).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper()).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(null!)).Should().Throw<ArgumentNullException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(string.Empty)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE")).Should().Throw<ArgumentException>();
@@ -262,7 +261,6 @@ public sealed class <#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower(), true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper(), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(null!, true)).Should().Throw<ArgumentNullException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(string.Empty, true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE", true)).Should().Throw<ArgumentException>();

@@ -222,13 +222,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            // note:
-            //  - Suppress CA1307 : Specify StringComparison for clarity
-            //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
-
-#pragma warning disable CA1307
-            var hash = string.GetHashCode(entry.Key);
-#pragma warning restore CA1307
+            var hash = StringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -241,7 +235,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (target.Key.AsSpan().SequenceEqual(entry.Key))
+                if (StringHelpers.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -272,18 +266,12 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        // note:
-        //  - Suppress CA1307 : Specify StringComparison for clarity
-        //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
-
-#pragma warning disable CA1307
-        var hash = string.GetHashCode(key);
-#pragma warning restore CA1307
+        var hash = StringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (key.SequenceEqual(entry.Key))
+            if (StringHelpers.Equals(key, entry.Key))
             {
                 value = entry.Value;
                 return true;
@@ -486,6 +474,24 @@ internal static class SpecializedDictionaryExtensions
 
 file static class StringHelpers
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetHashCode(ReadOnlySpan<char> value)
+    {
+        // note:
+        //  - Suppress CA1307 : Specify StringComparison for clarity
+        //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
+
+#pragma warning disable CA1307
+        return string.GetHashCode(value);
+#pragma warning restore CA1307
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
+        => MemoryExtensions.SequenceEqual(x, y);
+
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCodeOrdinalIgnoreCase(ReadOnlySpan<char> value)
     {

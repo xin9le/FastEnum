@@ -222,7 +222,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = StringHelpers.GetHashCode(entry.Key);
+            var hash = CaseSensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -235,7 +235,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (StringHelpers.Equals(target.Key, entry.Key))
+                if (CaseSensitiveStringHelpers.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -266,12 +266,12 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = StringHelpers.GetHashCode(key);
+        var hash = CaseSensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (StringHelpers.Equals(key, entry.Key))
+            if (CaseSensitiveStringHelpers.Equals(key, entry.Key))
             {
                 value = entry.Value;
                 return true;
@@ -362,7 +362,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = StringHelpers.GetHashCodeOrdinalIgnoreCase(entry.Key);
+            var hash = CaseInsensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -375,7 +375,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (StringHelpers.EqualsOrdinalIgnoreCase(target.Key, entry.Key))
+                if (CaseInsensitiveStringHelpers.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -406,12 +406,12 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = StringHelpers.GetHashCodeOrdinalIgnoreCase(key);
+        var hash = CaseInsensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (StringHelpers.EqualsOrdinalIgnoreCase(entry.Key, key))
+            if (CaseInsensitiveStringHelpers.Equals(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
@@ -472,7 +472,7 @@ internal static class SpecializedDictionaryExtensions
 
 
 
-file static class StringHelpers
+file static class CaseSensitiveStringHelpers
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCode(ReadOnlySpan<char> value)
@@ -490,10 +490,14 @@ file static class StringHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
         => MemoryExtensions.SequenceEqual(x, y);
+}
 
 
+
+file static class CaseInsensitiveStringHelpers
+{
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int GetHashCodeOrdinalIgnoreCase(ReadOnlySpan<char> value)
+    public static int GetHashCode(ReadOnlySpan<char> value)
     {
 #if NET8_0_OR_GREATER
         return GetHashCodeOrdinalIgnoreCase(self: null, value);
@@ -504,7 +508,7 @@ file static class StringHelpers
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool EqualsOrdinalIgnoreCase(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
+    public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
         => MemoryExtensions.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
 

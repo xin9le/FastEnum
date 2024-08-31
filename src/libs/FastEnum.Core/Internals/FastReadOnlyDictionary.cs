@@ -162,7 +162,6 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
     private readonly Entry[] _buckets;
     private readonly int _size;
     private readonly int _indexFor;
-    private static readonly StringComparer s_comparer = StringComparer.Ordinal;  // JIT optimization
     #endregion
 
 
@@ -223,7 +222,13 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = s_comparer.GetHashCode(entry.Key);
+            // note:
+            //  - Suppress CA1307 : Specify StringComparison for clarity
+            //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
+
+#pragma warning disable CA1307
+            var hash = string.GetHashCode(entry.Key);
+#pragma warning restore CA1307
             var index = hash & indexFor;
             var target = buckets[index];
             if (target is null)
@@ -236,7 +241,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (s_comparer.Equals(target.Key, entry.Key))
+                if (target.Key.AsSpan().SequenceEqual(entry.Key))
                     return false;
 
                 //--- Append entry
@@ -260,19 +265,25 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ContainsKey(string key)
+    public bool ContainsKey(ReadOnlySpan<char> key)
         => this.TryGetValue(key, out _);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = s_comparer.GetHashCode(key);
+        // note:
+        //  - Suppress CA1307 : Specify StringComparison for clarity
+        //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
+
+#pragma warning disable CA1307
+        var hash = string.GetHashCode(key);
+#pragma warning restore CA1307
         var index = hash & this._indexFor;
         var entry = this._buckets[index];
         while (entry is not null)
         {
-            if (s_comparer.Equals(entry.Key, key))
+            if (key.SequenceEqual(entry.Key))
             {
                 value = entry.Value;
                 return true;

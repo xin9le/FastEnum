@@ -21,8 +21,8 @@ internal static class EnumInfo<T>
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
     public static readonly Member<T>[] s_orderedMembers;
-    public static readonly StringOrdinalCaseSensitiveDictionary<Member<T>> s_memberByNameCaseSensitive;
-    public static readonly StringOrdinalCaseInsensitiveDictionary<Member<T>> s_memberByNameCaseInsensitive;
+    public static readonly CaseSensitiveStringDictionary<Member<T>> s_memberByNameCaseSensitive;
+    public static readonly CaseInsensitiveStringDictionary<Member<T>> s_memberByNameCaseInsensitive;
     public static readonly FastReadOnlyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
@@ -42,8 +42,8 @@ internal static class EnumInfo<T>
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
         s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
-        s_memberByNameCaseSensitive = s_members.ToStringOrdinalCaseSensitiveDictionary(static x => x.Name);
-        s_memberByNameCaseInsensitive = s_members.ToStringOrdinalCaseInsensitiveDictionary(static x => x.Name);
+        s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
+        s_memberByNameCaseInsensitive = s_members.ToCaseInsensitiveStringDictionary(static x => x.Name);
         s_memberByValue
             = s_orderedMembers
             .DistinctBy(static x => x.Value)

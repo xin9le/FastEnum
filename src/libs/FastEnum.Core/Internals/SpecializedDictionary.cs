@@ -156,7 +156,7 @@ internal sealed class FastReadOnlyDictionary<TKey, TValue>
 
 
 
-internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
+internal sealed class CaseSensitiveStringDictionary<TValue>
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -166,7 +166,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
     #region Constructors
-    private StringOrdinalCaseSensitiveDictionary(Entry[] buckets, int size, int indexFor)
+    private CaseSensitiveStringDictionary(Entry[] buckets, int size, int indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -176,7 +176,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
     #region Factories
-    public static StringOrdinalCaseSensitiveDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+    public static CaseSensitiveStringDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
@@ -296,7 +296,7 @@ internal sealed class StringOrdinalCaseSensitiveDictionary<TValue>
 
 
 
-internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
+internal sealed class CaseInsensitiveStringDictionary<TValue>
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -306,7 +306,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
     #region Constructors
-    private StringOrdinalCaseInsensitiveDictionary(Entry[] buckets, int size, int indexFor)
+    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, int indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -316,7 +316,7 @@ internal sealed class StringOrdinalCaseInsensitiveDictionary<TValue>
 
 
     #region Factories
-    public static StringOrdinalCaseInsensitiveDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+    public static CaseInsensitiveStringDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
     {
         const int initialSize = 4;
         const float loadFactor = 0.75f;
@@ -450,23 +450,23 @@ internal static class SpecializedDictionaryExtensions
     #endregion
 
 
-    #region StringOrdinalCaseSensitiveDictionary
-    public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, static x => x);
+    #region CaseSensitiveStringDictionary
+    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
+        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
 
 
-    public static StringOrdinalCaseSensitiveDictionary<TValue> ToStringOrdinalCaseSensitiveDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => StringOrdinalCaseSensitiveDictionary<TValue>.Create(source, keySelector, valueSelector);
+    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
 
 
-    #region StringOrdinalCaseInsensitiveDictionary
-    public static StringOrdinalCaseInsensitiveDictionary<TValue> ToStringOrdinalCaseInsensitiveDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => StringOrdinalCaseInsensitiveDictionary<TValue>.Create(source, keySelector, static x => x);
+    #region CaseInsensitiveStringDictionary
+    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
+        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
 
 
-    public static StringOrdinalCaseInsensitiveDictionary<TValue> ToStringOrdinalCaseInsensitiveDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => StringOrdinalCaseInsensitiveDictionary<TValue>.Create(source, keySelector, valueSelector);
+    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
 }
 

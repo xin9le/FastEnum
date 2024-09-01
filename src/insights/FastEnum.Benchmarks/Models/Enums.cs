@@ -4,7 +4,6 @@ namespace FastEnumUtility.Benchmarks.Models;
 
 
 
-[FastEnum]
 public enum Fruits : byte
 {
     Unknown = 0,

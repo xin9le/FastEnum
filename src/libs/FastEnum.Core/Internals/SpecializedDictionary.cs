@@ -222,7 +222,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = CaseSensitiveStringHelpers.GetHashCode(entry.Key);
+            var hash = CaseSensitiveStringHelper.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets.At(index);
             if (target is null)
@@ -235,7 +235,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (CaseSensitiveStringHelpers.Equals(target.Key, entry.Key))
+                if (CaseSensitiveStringHelper.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -266,12 +266,12 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = CaseSensitiveStringHelpers.GetHashCode(key);
+        var hash = CaseSensitiveStringHelper.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
-            if (CaseSensitiveStringHelpers.Equals(key, entry.Key))
+            if (CaseSensitiveStringHelper.Equals(key, entry.Key))
             {
                 value = entry.Value;
                 return true;
@@ -362,7 +362,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = CaseInsensitiveStringHelpers.GetHashCode(entry.Key);
+            var hash = CaseInsensitiveStringHelper.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets.At(index);
             if (target is null)
@@ -375,7 +375,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (CaseInsensitiveStringHelpers.Equals(target.Key, entry.Key))
+                if (CaseInsensitiveStringHelper.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -406,12 +406,12 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = CaseInsensitiveStringHelpers.GetHashCode(key);
+        var hash = CaseInsensitiveStringHelper.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
-            if (CaseInsensitiveStringHelpers.Equals(entry.Key, key))
+            if (CaseInsensitiveStringHelper.Equals(entry.Key, key))
             {
                 value = entry.Value;
                 return true;
@@ -431,41 +431,5 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         public readonly TValue Value = value;
         public Entry? Next = next;
     }
-    #endregion
-}
-
-
-
-internal static class SpecializedDictionaryExtensions
-{
-    #region FastReadOnlyDictionary
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, static x => x);
-
-
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-        where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
-    #endregion
-
-
-    #region CaseSensitiveStringDictionary
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
-
-
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
-
-
-    #region CaseInsensitiveStringDictionary
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
-
-
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
 }

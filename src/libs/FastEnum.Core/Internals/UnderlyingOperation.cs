@@ -215,11 +215,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -316,11 +316,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -417,11 +417,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -518,11 +518,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -619,11 +619,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -720,11 +720,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -821,11 +821,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else
@@ -922,11 +922,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else

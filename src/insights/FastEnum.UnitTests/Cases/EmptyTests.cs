@@ -60,6 +60,7 @@ public class EmptyTests
     {
         FastEnum.IsDefined((TEnum)123).Should().BeFalse();
         FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
+        FastEnum.IsDefined<TEnum>("123"u8).Should().BeFalse();
     }
 
 

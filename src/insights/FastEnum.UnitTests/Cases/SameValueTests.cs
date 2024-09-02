@@ -82,15 +82,11 @@ public class SameValueTests
         FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<TEnum>("minvalue").Should().BeFalse();
 
-        /*
-        FastEnum.IsDefined<TEnum>(TUnderlying.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TUnderlying.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>((TUnderlying)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<TEnum>((sbyte)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
+        FastEnum.IsDefined<TEnum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<TEnum>("minvalue"u8).Should().BeFalse();
     }
 
 

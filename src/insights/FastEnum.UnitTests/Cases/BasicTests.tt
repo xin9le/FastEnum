@@ -192,6 +192,7 @@ public sealed class <#= x.AliasType #>Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.MinValue).Should().BeTrue();
 <# if (x.IsSignedType) { #>
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.Zero).Should().BeTrue();
@@ -199,12 +200,14 @@ public sealed class <#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)123).Should().BeFalse();
 
+        //--- Extension methods
         <#= x.EnumType #>.MinValue.IsDefined().Should().BeTrue();
 <# if (x.IsSignedType) { #>
         <#= x.EnumType #>.Zero.IsDefined().Should().BeTrue();
 <# } #>
         <#= x.EnumType #>.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.MinValue)).Should().BeTrue();
 <# if (x.IsSignedType) { #>
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.Zero)).Should().BeTrue();
@@ -212,6 +215,15 @@ public sealed class <#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>("123").Should().BeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<<#= x.EnumType #>>("MinValue"u8).Should().BeTrue();
+<# if (x.IsSignedType) { #>
+        FastEnum.IsDefined<<#= x.EnumType #>>("Zero"u8).Should().BeTrue();
+<# } #>
+        FastEnum.IsDefined<<#= x.EnumType #>>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<<#= x.EnumType #>>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<<#= x.EnumType #>>("minvalue"u8).Should().BeFalse();
     }
 
 

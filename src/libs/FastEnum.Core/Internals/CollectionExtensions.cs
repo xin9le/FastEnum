@@ -6,7 +6,7 @@ namespace FastEnumUtility.Internals;
 
 
 
-internal static class ArrayExtensions
+internal static class CollectionExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref T At<T>(this ReadOnlySpan<T> span, int index)

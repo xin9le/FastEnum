@@ -5,7 +5,7 @@ namespace FastEnumUtility.Internals;
 
 
 
-internal static class CaseSensitiveStringHelpers
+internal static class CaseSensitiveStringHelper
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCode(ReadOnlySpan<char> value)
@@ -27,7 +27,7 @@ internal static class CaseSensitiveStringHelpers
 
 
 
-internal static class CaseInsensitiveStringHelpers
+internal static class CaseInsensitiveStringHelper
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCode(ReadOnlySpan<char> value)

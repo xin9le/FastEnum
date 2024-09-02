@@ -238,7 +238,7 @@ public static class FastEnum
             return false;
         }
 
-        if (isNumeric(value[0]))
+        if (isNumeric(value.At(0)))
             return UnderlyingOperation<T>.TryParseValue(value, out result);
 
         if (ignoreCase)

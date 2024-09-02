@@ -84,11 +84,11 @@ internal sealed class FastReadOnlyDictionary<TKey, TValue>
         {
             var hash = s_comparer.GetHashCode(entry.Key);
             var index = hash & indexFor;
-            var target = buckets[index];
+            var target = buckets.At(index);
             if (target is null)
             {
                 //--- Add new entry
-                buckets[index] = entry;
+                buckets.At(index) = entry;
                 return true;
             }
 
@@ -128,7 +128,7 @@ internal sealed class FastReadOnlyDictionary<TKey, TValue>
     {
         var hash = s_comparer.GetHashCode(key);
         var index = hash & this._indexFor;
-        var entry = this._buckets[index];
+        var entry = this._buckets.At(index);
         while (entry is not null)
         {
             if (s_comparer.Equals(entry.Key, key))
@@ -224,11 +224,11 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         {
             var hash = CaseSensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
-            var target = buckets[index];
+            var target = buckets.At(index);
             if (target is null)
             {
                 //--- Add new entry
-                buckets[index] = entry;
+                buckets.At(index) = entry;
                 return true;
             }
 
@@ -268,7 +268,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     {
         var hash = CaseSensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
-        var entry = this._buckets[index];
+        var entry = this._buckets.At(index);
         while (entry is not null)
         {
             if (CaseSensitiveStringHelpers.Equals(key, entry.Key))
@@ -364,11 +364,11 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         {
             var hash = CaseInsensitiveStringHelpers.GetHashCode(entry.Key);
             var index = hash & indexFor;
-            var target = buckets[index];
+            var target = buckets.At(index);
             if (target is null)
             {
                 //--- Add new entry
-                buckets[index] = entry;
+                buckets.At(index) = entry;
                 return true;
             }
 
@@ -408,7 +408,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     {
         var hash = CaseInsensitiveStringHelpers.GetHashCode(key);
         var index = hash & this._indexFor;
-        var entry = this._buckets[index];
+        var entry = this._buckets.At(index);
         while (entry is not null)
         {
             if (CaseInsensitiveStringHelpers.Equals(entry.Key, key))

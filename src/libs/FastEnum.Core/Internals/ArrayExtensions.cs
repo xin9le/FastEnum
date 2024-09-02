@@ -8,6 +8,7 @@ namespace FastEnumUtility.Internals;
 
 internal static class ArrayExtensions
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref T At<T>(this ReadOnlySpan<T> span, int index)
     {
         // note:
@@ -19,6 +20,7 @@ internal static class ArrayExtensions
     }
 
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ref T At<T>(this T[] array, int index)
     {
         // note:

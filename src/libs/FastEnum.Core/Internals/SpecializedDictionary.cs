@@ -433,39 +433,3 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     }
     #endregion
 }
-
-
-
-internal static class SpecializedDictionaryExtensions
-{
-    #region FastReadOnlyDictionary
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, static x => x);
-
-
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-        where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
-    #endregion
-
-
-    #region CaseSensitiveStringDictionary
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
-
-
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
-
-
-    #region CaseInsensitiveStringDictionary
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
-
-
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
-}

@@ -433,3 +433,143 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     }
     #endregion
 }
+
+
+
+internal sealed class CaseSensitiveUtf8StringDictionary<TValue>
+{
+    #region Fields
+    private readonly Entry[] _buckets;
+    private readonly int _size;
+    private readonly int _indexFor;
+    #endregion
+
+
+    #region Constructors
+    private CaseSensitiveUtf8StringDictionary(Entry[] buckets, int size, int indexFor)
+    {
+        this._buckets = buckets;
+        this._size = size;
+        this._indexFor = indexFor;
+    }
+    #endregion
+
+
+    #region Factories
+    public static CaseSensitiveUtf8StringDictionary<TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, byte[]> keySelector, Func<TSource, TValue> valueSelector)
+    {
+        const int initialSize = 4;
+        const float loadFactor = 0.75f;
+
+        var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
+        var capacity = calculateCapacity(collectionSize, loadFactor);
+        var buckets = new Entry[capacity];
+        var indexFor = buckets.Length - 1;
+        var size = 0;
+        foreach (var x in source)
+        {
+            var key = keySelector(x);
+            var value = valueSelector(x);
+            var entry = new Entry(key, value, next: null);
+            if (!tryAdd(buckets, entry, indexFor))
+                ThrowHelper.ThrowDuplicatedKeyExists(key);
+            size++;
+        }
+
+        return new(buckets, size, indexFor);
+
+
+        #region Local Functions
+        static int calculateCapacity(int collectionSize, float loadFactor)
+        {
+            //--- Calculate estimate size
+            var size = (int)(collectionSize / loadFactor);
+
+            //--- Adjust to the power of 2
+            size--;
+            size |= size >> 1;
+            size |= size >> 2;
+            size |= size >> 4;
+            size |= size >> 8;
+            size |= size >> 16;
+            size += 1;
+
+            //--- Set minimum size
+            size = Math.Max(size, initialSize);
+            return size;
+        }
+
+
+        static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
+        {
+            var hash = CaseSensitiveUtf8StringHelpers.GetHashCode(entry.Key);
+            var index = hash & indexFor;
+            var target = buckets.At(index);
+            if (target is null)
+            {
+                //--- Add new entry
+                buckets.At(index) = entry;
+                return true;
+            }
+
+            while (true)
+            {
+                //--- Check duplicate
+                if (CaseSensitiveUtf8StringHelpers.Equals(target.Key, entry.Key))
+                    return false;
+
+                //--- Append entry
+                if (target.Next is null)
+                {
+                    target.Next = entry;
+                    return true;
+                }
+
+                target = target.Next;
+            }
+        }
+        #endregion
+    }
+    #endregion
+
+
+    #region like IReadOnlyDictionary<TKey, TValue>
+    public int Count
+        => this._size;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsKey(ReadOnlySpan<byte> key)
+        => this.TryGetValue(key, out _);
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryGetValue(ReadOnlySpan<byte> key, [MaybeNullWhen(false)] out TValue value)
+    {
+        var hash = CaseSensitiveUtf8StringHelpers.GetHashCode(key);
+        var index = hash & this._indexFor;
+        var entry = this._buckets.At(index);
+        while (entry is not null)
+        {
+            if (CaseSensitiveUtf8StringHelpers.Equals(key, entry.Key))
+            {
+                value = entry.Value;
+                return true;
+            }
+            entry = entry.Next;
+        }
+        value = default;
+        return false;
+    }
+    #endregion
+
+
+    #region Nested Types
+    private sealed class Entry(byte[] key, TValue value, Entry? next)
+    {
+        public readonly byte[] Key = key;
+        public readonly TValue Value = value;
+        public Entry? Next = next;
+    }
+    #endregion
+}

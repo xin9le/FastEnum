@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
 namespace FastEnumUtility.Internals;
@@ -52,4 +53,24 @@ internal static class CaseInsensitiveStringHelper
     [UnsafeAccessor(UnsafeAccessorKind.StaticMethod)]
     private static extern int GetHashCodeOrdinalIgnoreCase(string? self, ReadOnlySpan<char> value);
 #endif
+}
+
+
+
+internal static class CaseSensitiveUtf8StringHelpers
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetHashCode(ReadOnlySpan<byte> value)
+    {
+        // note:
+        //  - The return value is ulong because it is calculated in 64 bits.
+        //  - But if a 32-bit value is needed, simply truncate the value.
+
+        return unchecked((int)XxHash3.HashToUInt64(value));
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Equals(ReadOnlySpan<byte> x, ReadOnlySpan<byte> y)
+        => MemoryExtensions.SequenceEqual(x, y);
 }

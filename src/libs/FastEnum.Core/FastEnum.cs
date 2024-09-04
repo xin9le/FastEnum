@@ -296,6 +296,63 @@ public static class FastEnum
     #endregion
 
 
+    #region Parse | ReadOnlySpan<byte>
+    /// <summary>
+    /// Converts the string representation of the UTF-8 name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Parse<T>(ReadOnlySpan<byte> value)
+        where T : struct, Enum
+    {
+        if (!TryParse<T>(value, out var result))
+            ThrowHelper.ThrowValueNotDefined(nameof(value));
+        return result;
+    }
+
+
+    /// <summary>
+    /// Converts the string representation of the UTF-8 name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// The return value indicates whether the conversion succeeded.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse<T>(ReadOnlySpan<byte> value, out T result)
+        where T : struct, Enum
+    {
+        if (value.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        return tryParseNameCaseSensitive(value, out result);
+
+
+        #region Local Functions
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool tryParseNameCaseSensitive(ReadOnlySpan<byte> name, out T result)
+        {
+            if (EnumInfo<T>.s_memberByNameUtf8CaseSensitive.TryGetValue(name, out var member))
+            {
+                result = member.Value;
+                return true;
+            }
+            result = default;
+            return false;
+        }
+        #endregion
+    }
+    #endregion
+
+
     #region ToString
     /// <summary>
     /// Converts the specified value to its equivalent string representation.

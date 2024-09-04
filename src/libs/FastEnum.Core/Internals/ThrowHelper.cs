@@ -33,6 +33,14 @@ internal static class ThrowHelper
 
 
     [DoesNotReturn]
+    public static void ThrowValueNotDefined(string? paramName)
+    {
+        const string message = "Specified value is not defined.";
+        throw new ArgumentException(message, paramName);
+    }
+
+
+    [DoesNotReturn]
     public static void ThrowLabelNotFound(int index)
     {
         var message = $"{nameof(LabelAttribute)} that is specified index {index} is not found.";

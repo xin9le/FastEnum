@@ -191,11 +191,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-#if NET8_0_OR_GREATER
             return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return <#= x.CompatibleName #>.TryParse(text, out x);
-#endif
         }
 
 

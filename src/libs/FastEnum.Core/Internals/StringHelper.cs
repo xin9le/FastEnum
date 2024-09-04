@@ -31,13 +31,7 @@ internal static class CaseInsensitiveStringHelper
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetHashCode(ReadOnlySpan<char> value)
-    {
-#if NET8_0_OR_GREATER
-        return GetHashCodeOrdinalIgnoreCase(self: null, value);
-#else
-        return string.GetHashCode(value, StringComparison.OrdinalIgnoreCase);
-#endif
-    }
+        => GetHashCodeOrdinalIgnoreCase(self: null, value);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,11 +39,11 @@ internal static class CaseInsensitiveStringHelper
         => MemoryExtensions.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
 
-#if NET8_0_OR_GREATER
+    #region UnsafeAccessor
     // note:
     //  - UnsafeAccessor can't be defined within a Generic type.
 
     [UnsafeAccessor(UnsafeAccessorKind.StaticMethod)]
     private static extern int GetHashCodeOrdinalIgnoreCase(string? self, ReadOnlySpan<char> value);
-#endif
+    #endregion
 }

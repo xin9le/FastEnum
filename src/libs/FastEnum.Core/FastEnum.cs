@@ -333,10 +333,38 @@ public static class FastEnum
             return false;
         }
 
+        if (isNumeric(value.At(0)))
+            return UnderlyingOperation<T>.TryParseValue(value, out result);
+
         return tryParseNameCaseSensitive(value, out result);
 
 
         #region Local Functions
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool isNumeric(byte x)
+        {
+            // note:
+            //  - In this case, there is no change in speed with or without sequential numbering.
+
+            return x switch
+            {
+                (byte)'+' => true,  // 43
+                (byte)'-' => true,  // 45
+                (byte)'0' => true,  // 48
+                (byte)'1' => true,
+                (byte)'2' => true,
+                (byte)'3' => true,
+                (byte)'4' => true,
+                (byte)'5' => true,
+                (byte)'6' => true,
+                (byte)'7' => true,
+                (byte)'8' => true,
+                (byte)'9' => true,
+                _ => false,
+            };
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool tryParseNameCaseSensitive(ReadOnlySpan<byte> name, out T result)
         {

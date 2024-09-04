@@ -264,7 +264,7 @@ public static class FastEnum
         #region Local Functions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool isNumeric(char c)
-            => char.IsDigit(c) || (c is '-' or '+');
+            => char.IsAsciiDigit(c) || (c is '-' or '+');
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

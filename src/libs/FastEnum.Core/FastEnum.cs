@@ -145,6 +145,44 @@ public static class FastEnum
     #endregion
 
 
+    #region IsDefined
+    /// <summary>
+    /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined<T>(T value)
+        where T : struct, Enum
+        => UnderlyingOperation<T>.IsDefined(value);
+
+
+    /// <summary>
+    /// Returns an indication whether a constant with a specified name exists in a specified enumeration.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined<T>(ReadOnlySpan<char> name)
+        where T : struct, Enum
+        => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
+
+
+    /// <summary>
+    /// Returns an indication whether a constant with a specified UTF-8 name exists in a specified enumeration.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined<T>(ReadOnlySpan<byte> name)
+        where T : struct, Enum
+        => EnumInfo<T>.s_memberByNameUtf8CaseSensitive.ContainsKey(name);
+    #endregion
+
+
     #region Parse | ReadOnlySpan<char>
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.

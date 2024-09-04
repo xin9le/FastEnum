@@ -110,7 +110,7 @@ public static class FastEnum
     #endregion
 
 
-    #region Condition
+    #region IsXxx
     /// <summary>
     /// Returns whether the values of the constants in a specified enumeration are continuous.
     /// </summary>

@@ -8,10 +8,6 @@
         <PackageReference Include="System.IO.Hashing" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="System.Collections.Immutable" />
-    </ItemGroup>
-
     <!-- NuGet -->
     <PropertyGroup>
         <IsPackable>true</IsPackable>

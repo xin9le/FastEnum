@@ -228,11 +228,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
-#if NET8_0_OR_GREATER
             return sbyte.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return sbyte.TryParse(text, out x);
-#endif
         }
 
 
@@ -342,11 +338,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, byte>(ref result);
-#if NET8_0_OR_GREATER
             return byte.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return byte.TryParse(text, out x);
-#endif
         }
 
 
@@ -456,11 +448,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, short>(ref result);
-#if NET8_0_OR_GREATER
             return short.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return short.TryParse(text, out x);
-#endif
         }
 
 
@@ -570,11 +558,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ushort>(ref result);
-#if NET8_0_OR_GREATER
             return ushort.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return ushort.TryParse(text, out x);
-#endif
         }
 
 
@@ -684,11 +668,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, int>(ref result);
-#if NET8_0_OR_GREATER
             return int.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return int.TryParse(text, out x);
-#endif
         }
 
 
@@ -798,11 +778,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, uint>(ref result);
-#if NET8_0_OR_GREATER
             return uint.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return uint.TryParse(text, out x);
-#endif
         }
 
 
@@ -912,11 +888,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, long>(ref result);
-#if NET8_0_OR_GREATER
             return long.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return long.TryParse(text, out x);
-#endif
         }
 
 
@@ -1026,11 +998,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ulong>(ref result);
-#if NET8_0_OR_GREATER
             return ulong.TryParse(text, CultureInfo.InvariantCulture, out x);
-#else
-            return ulong.TryParse(text, out x);
-#endif
         }
 
 

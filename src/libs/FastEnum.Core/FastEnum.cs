@@ -181,7 +181,7 @@ public static class FastEnum
     #endregion
 
 
-    #region Parse
+    #region Parse | ReadOnlySpan<char>
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
     /// </summary>

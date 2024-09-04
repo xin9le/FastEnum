@@ -118,6 +118,34 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
+    {
+        switch (EnumInfo<T>.s_typeCode)
+        {
+            case TypeCode.SByte:
+                return SByteOperation.TryParseValue(text, out result);
+            case TypeCode.Byte:
+                return ByteOperation.TryParseValue(text, out result);
+            case TypeCode.Int16:
+                return Int16Operation.TryParseValue(text, out result);
+            case TypeCode.UInt16:
+                return UInt16Operation.TryParseValue(text, out result);
+            case TypeCode.Int32:
+                return Int32Operation.TryParseValue(text, out result);
+            case TypeCode.UInt32:
+                return UInt32Operation.TryParseValue(text, out result);
+            case TypeCode.Int64:
+                return Int64Operation.TryParseValue(text, out result);
+            case TypeCode.UInt64:
+                return UInt64Operation.TryParseValue(text, out result);
+            default:
+                result = default;
+                return false;
+        }
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -197,6 +225,15 @@ internal static class UnderlyingOperation<T>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, sbyte>(ref result);
+            return sbyte.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
@@ -302,6 +339,15 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, byte>(ref result);
+            return byte.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
         {
             if (EnumInfo<T>.s_isContinuous)
@@ -391,6 +437,15 @@ internal static class UnderlyingOperation<T>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, short>(ref result);
+            return short.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, short>(ref result);
@@ -496,6 +551,15 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, ushort>(ref result);
+            return ushort.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
         {
             if (EnumInfo<T>.s_isContinuous)
@@ -585,6 +649,15 @@ internal static class UnderlyingOperation<T>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, int>(ref result);
+            return int.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, int>(ref result);
@@ -690,6 +763,15 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, uint>(ref result);
+            return uint.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
         {
             if (EnumInfo<T>.s_isContinuous)
@@ -787,6 +869,15 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, long>(ref result);
+            return long.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
         {
             if (EnumInfo<T>.s_isContinuous)
@@ -876,6 +967,15 @@ internal static class UnderlyingOperation<T>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        {
+            Unsafe.SkipInit(out result);
+            ref var x = ref Unsafe.As<T, ulong>(ref result);
+            return ulong.TryParse(text, CultureInfo.InvariantCulture, out x);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ulong>(ref result);

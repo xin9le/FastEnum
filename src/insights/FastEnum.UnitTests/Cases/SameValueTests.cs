@@ -67,30 +67,30 @@ public class SameValueTests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined(TEnum.MinValue).Should().BeTrue();
         FastEnum.IsDefined(TEnum.Zero).Should().BeTrue();
         FastEnum.IsDefined(TEnum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined((TEnum)123).Should().BeFalse();
 
+        //--- Extension methods
         TEnum.MinValue.IsDefined().Should().BeTrue();
         TEnum.Zero.IsDefined().Should().BeTrue();
         TEnum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<TEnum>(nameof(TEnum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<TEnum>(nameof(TEnum.Zero)).Should().BeTrue();
         FastEnum.IsDefined<TEnum>(nameof(TEnum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<TEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<TEnum>("minvalue").Should().BeFalse();
 
-        /*
-        FastEnum.IsDefined<TEnum>(TUnderlying.MinValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>(TUnderlying.MaxValue).Should().BeTrue();
-        FastEnum.IsDefined<TEnum>((TUnderlying)123).Should().BeFalse();
-        FluentActions
-            .Invoking(static () => FastEnum.IsDefined<TEnum>((sbyte)123))
-            .Should()
-            .Throw<ArgumentException>();
-        */
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<TEnum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<TEnum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<TEnum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -103,18 +103,49 @@ public class SameValueTests
             (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero)    .ToString(CultureInfo.InvariantCulture)),
             (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<TEnum>(x.name).Should().Be(x.value);
-            FastEnum.Parse<TEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<TEnum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<TEnum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<TEnum>("123").Should().Be((TEnum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<TEnum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<TEnum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<TEnum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<TEnum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<TEnum>("123"u8).Should().Be((TEnum)123);
+        }
     }
 
 
@@ -136,9 +167,11 @@ public class SameValueTests
             FastEnum.Parse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<TEnum>("123").Should().Be((TEnum)123);
     }
 
 
@@ -151,24 +184,67 @@ public class SameValueTests
             (value: TEnum.Zero,     name: nameof(TEnum.Zero),     valueString: ((TUnderlying)TEnum.Zero)    .ToString(CultureInfo.InvariantCulture)),
             (value: TEnum.MaxValue, name: nameof(TEnum.MaxValue), valueString: ((TUnderlying)TEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<TEnum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<TEnum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<TEnum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<TEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<TEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<TEnum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<TEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<TEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<TEnum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("123", out var r).Should().BeTrue();
+            r.Should().Be((TEnum)123);
         }
-        FastEnum.TryParse<TEnum>("ABCDE", out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<TEnum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<TEnum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<TEnum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<TEnum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<TEnum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<TEnum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<TEnum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<TEnum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((TEnum)123);
+        }
     }
 
 
@@ -201,8 +277,12 @@ public class SameValueTests
             FastEnum.TryParse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-
+        FastEnum.TryParse<TEnum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>(" ", true, out var _).Should().BeFalse();
         FastEnum.TryParse<TEnum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((TEnum)123);
     }
 
 

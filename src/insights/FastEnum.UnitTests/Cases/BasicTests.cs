@@ -4,6 +4,7 @@
 #nullable enable
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -173,20 +174,30 @@ public sealed class SByteTests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<SByteEnum>(SByteEnum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>(SByteEnum.Zero).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>(SByteEnum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>((SByteEnum)123).Should().BeFalse();
 
+        //--- Extension methods
         SByteEnum.MinValue.IsDefined().Should().BeTrue();
         SByteEnum.Zero.IsDefined().Should().BeTrue();
         SByteEnum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<SByteEnum>(nameof(SByteEnum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>(nameof(SByteEnum.Zero)).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>(nameof(SByteEnum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<SByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<SByteEnum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<SByteEnum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<SByteEnum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<SByteEnum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<SByteEnum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<SByteEnum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -195,22 +206,53 @@ public sealed class SByteTests
     {
         var parameters = new[]
         {
-            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString()),
-            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString()),
-            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString()),
+            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<SByteEnum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<SByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<SByteEnum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<SByteEnum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<SByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<SByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<SByteEnum>("123").Should().Be((SByteEnum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<SByteEnum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<SByteEnum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<SByteEnum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<SByteEnum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<SByteEnum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<SByteEnum>("123"u8).Should().Be((SByteEnum)123);
+        }
     }
 
 
@@ -219,22 +261,24 @@ public sealed class SByteTests
     {
         var parameters = new[]
         {
-            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString()),
-            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString()),
-            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString()),
+            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<SByteEnum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<SByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<SByteEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<SByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<SByteEnum>("123").Should().Be((SByteEnum)123);
     }
 
 
@@ -243,29 +287,71 @@ public sealed class SByteTests
     {
         var parameters = new[]
         {
-            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString()),
-            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString()),
-            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString()),
+            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<SByteEnum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<SByteEnum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<SByteEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<SByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<SByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<SByteEnum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<SByteEnum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<SByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<SByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<SByteEnum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>("123", out var r).Should().BeTrue();
+            r.Should().Be((SByteEnum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<SByteEnum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<SByteEnum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<SByteEnum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<SByteEnum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<SByteEnum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<SByteEnum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<SByteEnum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<SByteEnum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<SByteEnum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((SByteEnum)123);
+        }
     }
 
 
@@ -274,32 +360,36 @@ public sealed class SByteTests
     {
         var parameters = new[]
         {
-            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString()),
-            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString()),
-            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString()),
+            (value: SByteEnum.MinValue, name: nameof(SByteEnum.MinValue), valueString: ((sbyte)SByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.Zero,     name: nameof(SByteEnum.Zero),     valueString: ((sbyte)SByteEnum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: SByteEnum.MaxValue, name: nameof(SByteEnum.MaxValue), valueString: ((sbyte)SByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<SByteEnum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<SByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<SByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<SByteEnum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<SByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<SByteEnum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<SByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<SByteEnum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<SByteEnum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<SByteEnum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<SByteEnum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<SByteEnum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<SByteEnum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((SByteEnum)123);
     }
 
 
@@ -520,17 +610,26 @@ public sealed class ByteTests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<ByteEnum>(ByteEnum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<ByteEnum>(ByteEnum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<ByteEnum>((ByteEnum)123).Should().BeFalse();
 
+        //--- Extension methods
         ByteEnum.MinValue.IsDefined().Should().BeTrue();
         ByteEnum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ByteEnum>(nameof(ByteEnum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<ByteEnum>(nameof(ByteEnum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<ByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<ByteEnum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<ByteEnum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<ByteEnum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<ByteEnum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<ByteEnum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -539,21 +638,52 @@ public sealed class ByteTests
     {
         var parameters = new[]
         {
-            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString()),
-            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString()),
+            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<ByteEnum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<ByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<ByteEnum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<ByteEnum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<ByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<ByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<ByteEnum>("123").Should().Be((ByteEnum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<ByteEnum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<ByteEnum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<ByteEnum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<ByteEnum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<ByteEnum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<ByteEnum>("123"u8).Should().Be((ByteEnum)123);
+        }
     }
 
 
@@ -562,21 +692,23 @@ public sealed class ByteTests
     {
         var parameters = new[]
         {
-            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString()),
-            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString()),
+            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<ByteEnum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<ByteEnum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<ByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<ByteEnum>("123").Should().Be((ByteEnum)123);
     }
 
 
@@ -585,28 +717,70 @@ public sealed class ByteTests
     {
         var parameters = new[]
         {
-            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString()),
-            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString()),
+            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<ByteEnum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<ByteEnum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<ByteEnum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<ByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<ByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<ByteEnum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<ByteEnum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<ByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<ByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<ByteEnum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>("123", out var r).Should().BeTrue();
+            r.Should().Be((ByteEnum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<ByteEnum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<ByteEnum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<ByteEnum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<ByteEnum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<ByteEnum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<ByteEnum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<ByteEnum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<ByteEnum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<ByteEnum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((ByteEnum)123);
+        }
     }
 
 
@@ -615,31 +789,35 @@ public sealed class ByteTests
     {
         var parameters = new[]
         {
-            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString()),
-            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString()),
+            (value: ByteEnum.MinValue, name: nameof(ByteEnum.MinValue), valueString: ((byte)ByteEnum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: ByteEnum.MaxValue, name: nameof(ByteEnum.MaxValue), valueString: ((byte)ByteEnum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<ByteEnum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<ByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<ByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<ByteEnum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<ByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<ByteEnum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<ByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<ByteEnum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<ByteEnum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<ByteEnum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<ByteEnum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<ByteEnum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<ByteEnum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((ByteEnum)123);
     }
 
 
@@ -859,20 +1037,30 @@ public sealed class Int16Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<Int16Enum>(Int16Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>(Int16Enum.Zero).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>(Int16Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>((Int16Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         Int16Enum.MinValue.IsDefined().Should().BeTrue();
         Int16Enum.Zero.IsDefined().Should().BeTrue();
         Int16Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<Int16Enum>(nameof(Int16Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>(nameof(Int16Enum.Zero)).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>(nameof(Int16Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int16Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<Int16Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int16Enum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int16Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int16Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<Int16Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -881,22 +1069,53 @@ public sealed class Int16Tests
     {
         var parameters = new[]
         {
-            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString()),
-            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString()),
-            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString()),
+            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<Int16Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<Int16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<Int16Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int16Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<Int16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<Int16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int16Enum>("123").Should().Be((Int16Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<Int16Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int16Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int16Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<Int16Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<Int16Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int16Enum>("123"u8).Should().Be((Int16Enum)123);
+        }
     }
 
 
@@ -905,22 +1124,24 @@ public sealed class Int16Tests
     {
         var parameters = new[]
         {
-            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString()),
-            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString()),
-            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString()),
+            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int16Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<Int16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int16Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<Int16Enum>("123").Should().Be((Int16Enum)123);
     }
 
 
@@ -929,29 +1150,71 @@ public sealed class Int16Tests
     {
         var parameters = new[]
         {
-            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString()),
-            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString()),
-            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString()),
+            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<Int16Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<Int16Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<Int16Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<Int16Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<Int16Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<Int16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<Int16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int16Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((Int16Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int16Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<Int16Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<Int16Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<Int16Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<Int16Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<Int16Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<Int16Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int16Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int16Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((Int16Enum)123);
+        }
     }
 
 
@@ -960,32 +1223,36 @@ public sealed class Int16Tests
     {
         var parameters = new[]
         {
-            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString()),
-            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString()),
-            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString()),
+            (value: Int16Enum.MinValue, name: nameof(Int16Enum.MinValue), valueString: ((short)Int16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.Zero,     name: nameof(Int16Enum.Zero),     valueString: ((short)Int16Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int16Enum.MaxValue, name: nameof(Int16Enum.MaxValue), valueString: ((short)Int16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<Int16Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<Int16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<Int16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<Int16Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<Int16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<Int16Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<Int16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int16Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int16Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int16Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int16Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int16Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int16Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((Int16Enum)123);
     }
 
 
@@ -1206,17 +1473,26 @@ public sealed class UInt16Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<UInt16Enum>(UInt16Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<UInt16Enum>(UInt16Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<UInt16Enum>((UInt16Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         UInt16Enum.MinValue.IsDefined().Should().BeTrue();
         UInt16Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<UInt16Enum>(nameof(UInt16Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt16Enum>(nameof(UInt16Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt16Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<UInt16Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt16Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt16Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<UInt16Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -1225,21 +1501,52 @@ public sealed class UInt16Tests
     {
         var parameters = new[]
         {
-            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString()),
-            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString()),
+            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<UInt16Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<UInt16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<UInt16Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt16Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<UInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt16Enum>("123").Should().Be((UInt16Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<UInt16Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt16Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt16Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<UInt16Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<UInt16Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt16Enum>("123"u8).Should().Be((UInt16Enum)123);
+        }
     }
 
 
@@ -1248,21 +1555,23 @@ public sealed class UInt16Tests
     {
         var parameters = new[]
         {
-            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString()),
-            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString()),
+            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt16Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<UInt16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<UInt16Enum>("123").Should().Be((UInt16Enum)123);
     }
 
 
@@ -1271,28 +1580,70 @@ public sealed class UInt16Tests
     {
         var parameters = new[]
         {
-            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString()),
-            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString()),
+            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<UInt16Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<UInt16Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<UInt16Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<UInt16Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<UInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<UInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt16Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((UInt16Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt16Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<UInt16Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt16Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt16Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<UInt16Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt16Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt16Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt16Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt16Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((UInt16Enum)123);
+        }
     }
 
 
@@ -1301,31 +1652,35 @@ public sealed class UInt16Tests
     {
         var parameters = new[]
         {
-            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString()),
-            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString()),
+            (value: UInt16Enum.MinValue, name: nameof(UInt16Enum.MinValue), valueString: ((ushort)UInt16Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt16Enum.MaxValue, name: nameof(UInt16Enum.MaxValue), valueString: ((ushort)UInt16Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<UInt16Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<UInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<UInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<UInt16Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<UInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt16Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<UInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt16Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt16Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt16Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt16Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt16Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt16Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((UInt16Enum)123);
     }
 
 
@@ -1545,20 +1900,30 @@ public sealed class Int32Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<Int32Enum>(Int32Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>(Int32Enum.Zero).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>(Int32Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>((Int32Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         Int32Enum.MinValue.IsDefined().Should().BeTrue();
         Int32Enum.Zero.IsDefined().Should().BeTrue();
         Int32Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<Int32Enum>(nameof(Int32Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>(nameof(Int32Enum.Zero)).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>(nameof(Int32Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int32Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<Int32Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int32Enum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int32Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int32Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<Int32Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -1567,22 +1932,53 @@ public sealed class Int32Tests
     {
         var parameters = new[]
         {
-            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString()),
-            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString()),
-            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString()),
+            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<Int32Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<Int32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<Int32Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int32Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<Int32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<Int32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int32Enum>("123").Should().Be((Int32Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<Int32Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int32Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int32Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<Int32Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<Int32Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int32Enum>("123"u8).Should().Be((Int32Enum)123);
+        }
     }
 
 
@@ -1591,22 +1987,24 @@ public sealed class Int32Tests
     {
         var parameters = new[]
         {
-            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString()),
-            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString()),
-            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString()),
+            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int32Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<Int32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int32Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<Int32Enum>("123").Should().Be((Int32Enum)123);
     }
 
 
@@ -1615,29 +2013,71 @@ public sealed class Int32Tests
     {
         var parameters = new[]
         {
-            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString()),
-            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString()),
-            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString()),
+            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<Int32Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<Int32Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<Int32Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<Int32Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<Int32Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<Int32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<Int32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int32Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((Int32Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int32Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<Int32Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<Int32Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<Int32Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<Int32Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<Int32Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<Int32Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int32Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int32Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((Int32Enum)123);
+        }
     }
 
 
@@ -1646,32 +2086,36 @@ public sealed class Int32Tests
     {
         var parameters = new[]
         {
-            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString()),
-            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString()),
-            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString()),
+            (value: Int32Enum.MinValue, name: nameof(Int32Enum.MinValue), valueString: ((int)Int32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.Zero,     name: nameof(Int32Enum.Zero),     valueString: ((int)Int32Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int32Enum.MaxValue, name: nameof(Int32Enum.MaxValue), valueString: ((int)Int32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<Int32Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<Int32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<Int32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<Int32Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<Int32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<Int32Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<Int32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int32Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int32Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int32Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int32Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int32Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int32Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((Int32Enum)123);
     }
 
 
@@ -1892,17 +2336,26 @@ public sealed class UInt32Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<UInt32Enum>(UInt32Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<UInt32Enum>(UInt32Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<UInt32Enum>((UInt32Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         UInt32Enum.MinValue.IsDefined().Should().BeTrue();
         UInt32Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<UInt32Enum>(nameof(UInt32Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt32Enum>(nameof(UInt32Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt32Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<UInt32Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt32Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt32Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<UInt32Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -1911,21 +2364,52 @@ public sealed class UInt32Tests
     {
         var parameters = new[]
         {
-            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString()),
-            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString()),
+            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<UInt32Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<UInt32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<UInt32Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt32Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<UInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt32Enum>("123").Should().Be((UInt32Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<UInt32Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt32Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt32Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<UInt32Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<UInt32Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt32Enum>("123"u8).Should().Be((UInt32Enum)123);
+        }
     }
 
 
@@ -1934,21 +2418,23 @@ public sealed class UInt32Tests
     {
         var parameters = new[]
         {
-            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString()),
-            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString()),
+            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt32Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<UInt32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<UInt32Enum>("123").Should().Be((UInt32Enum)123);
     }
 
 
@@ -1957,28 +2443,70 @@ public sealed class UInt32Tests
     {
         var parameters = new[]
         {
-            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString()),
-            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString()),
+            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<UInt32Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<UInt32Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<UInt32Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<UInt32Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<UInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<UInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt32Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((UInt32Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt32Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<UInt32Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt32Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt32Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<UInt32Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt32Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt32Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt32Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt32Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((UInt32Enum)123);
+        }
     }
 
 
@@ -1987,31 +2515,35 @@ public sealed class UInt32Tests
     {
         var parameters = new[]
         {
-            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString()),
-            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString()),
+            (value: UInt32Enum.MinValue, name: nameof(UInt32Enum.MinValue), valueString: ((uint)UInt32Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt32Enum.MaxValue, name: nameof(UInt32Enum.MaxValue), valueString: ((uint)UInt32Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<UInt32Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<UInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<UInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<UInt32Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<UInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt32Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<UInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt32Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt32Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt32Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt32Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt32Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt32Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((UInt32Enum)123);
     }
 
 
@@ -2231,20 +2763,30 @@ public sealed class Int64Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<Int64Enum>(Int64Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>(Int64Enum.Zero).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>(Int64Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>((Int64Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         Int64Enum.MinValue.IsDefined().Should().BeTrue();
         Int64Enum.Zero.IsDefined().Should().BeTrue();
         Int64Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<Int64Enum>(nameof(Int64Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>(nameof(Int64Enum.Zero)).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>(nameof(Int64Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<Int64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<Int64Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<Int64Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int64Enum>("Zero"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int64Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<Int64Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<Int64Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -2253,22 +2795,53 @@ public sealed class Int64Tests
     {
         var parameters = new[]
         {
-            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString()),
-            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString()),
-            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString()),
+            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<Int64Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<Int64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<Int64Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int64Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<Int64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<Int64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int64Enum>("123").Should().Be((Int64Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<Int64Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<Int64Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<Int64Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<Int64Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<Int64Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<Int64Enum>("123"u8).Should().Be((Int64Enum)123);
+        }
     }
 
 
@@ -2277,22 +2850,24 @@ public sealed class Int64Tests
     {
         var parameters = new[]
         {
-            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString()),
-            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString()),
-            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString()),
+            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<Int64Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<Int64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<Int64Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<Int64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<Int64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<Int64Enum>("123").Should().Be((Int64Enum)123);
     }
 
 
@@ -2301,29 +2876,71 @@ public sealed class Int64Tests
     {
         var parameters = new[]
         {
-            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString()),
-            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString()),
-            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString()),
+            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<Int64Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<Int64Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<Int64Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<Int64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<Int64Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<Int64Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<Int64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<Int64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int64Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((Int64Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int64Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<Int64Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<Int64Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<Int64Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<Int64Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<Int64Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<Int64Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<Int64Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<Int64Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((Int64Enum)123);
+        }
     }
 
 
@@ -2332,32 +2949,36 @@ public sealed class Int64Tests
     {
         var parameters = new[]
         {
-            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString()),
-            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString()),
-            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString()),
+            (value: Int64Enum.MinValue, name: nameof(Int64Enum.MinValue), valueString: ((long)Int64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.Zero,     name: nameof(Int64Enum.Zero),     valueString: ((long)Int64Enum.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: Int64Enum.MaxValue, name: nameof(Int64Enum.MaxValue), valueString: ((long)Int64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<Int64Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<Int64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<Int64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<Int64Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<Int64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<Int64Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<Int64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<Int64Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int64Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int64Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int64Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int64Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<Int64Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((Int64Enum)123);
     }
 
 
@@ -2578,17 +3199,26 @@ public sealed class UInt64Tests
     [TestMethod]
     public void IsDefined()
     {
+        //--- IsDefined(TEnum)
         FastEnum.IsDefined<UInt64Enum>(UInt64Enum.MinValue).Should().BeTrue();
         FastEnum.IsDefined<UInt64Enum>(UInt64Enum.MaxValue).Should().BeTrue();
         FastEnum.IsDefined<UInt64Enum>((UInt64Enum)123).Should().BeFalse();
 
+        //--- Extension methods
         UInt64Enum.MinValue.IsDefined().Should().BeTrue();
         UInt64Enum.MaxValue.IsDefined().Should().BeTrue();
 
+        //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<UInt64Enum>(nameof(UInt64Enum.MinValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt64Enum>(nameof(UInt64Enum.MaxValue)).Should().BeTrue();
         FastEnum.IsDefined<UInt64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<UInt64Enum>("minvalue").Should().BeFalse();
+
+        //--- IsDefined(ReadOnlySpan<byte>)
+        FastEnum.IsDefined<UInt64Enum>("MinValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt64Enum>("MaxValue"u8).Should().BeTrue();
+        FastEnum.IsDefined<UInt64Enum>("123"u8).Should().BeFalse();
+        FastEnum.IsDefined<UInt64Enum>("minvalue"u8).Should().BeFalse();
     }
 
 
@@ -2597,21 +3227,52 @@ public sealed class UInt64Tests
     {
         var parameters = new[]
         {
-            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString()),
-            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString()),
+            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.Parse<UInt64Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToLower())).Should().Throw<ArgumentException>();
-            FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToUpper())).Should().Throw<ArgumentException>();
-            FastEnum.Parse<UInt64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.valueString.ToLower()).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper()).Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.Parse<UInt64Enum>(x.name).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt64Enum>(x.valueString).Should().Be(x.value);
+                FastEnum.Parse<UInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
+                FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" ")).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt64Enum>("123").Should().Be((UInt64Enum)123);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(string.Empty)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.Parse<UInt64Enum>(nameUtf8).Should().Be(x.value);
+                FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(nameUtf8Lower)).Should().Throw<ArgumentException>();
+                FluentActions.Invoking(() => FastEnum.Parse<UInt64Enum>(nameUtf8Upper)).Should().Throw<ArgumentException>();
+                FastEnum.Parse<UInt64Enum>(valueUtf8).Should().Be(x.value);
+                FastEnum.Parse<UInt64Enum>(valueUtf8Lower).Should().Be(x.value);
+                FastEnum.Parse<UInt64Enum>(valueUtf8Upper).Should().Be(x.value);
+            }
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(""u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" "u8)).Should().Throw<ArgumentException>();
+            FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE"u8)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<UInt64Enum>("123"u8).Should().Be((UInt64Enum)123);
+        }
     }
 
 
@@ -2620,21 +3281,23 @@ public sealed class UInt64Tests
     {
         var parameters = new[]
         {
-            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString()),
-            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString()),
+            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.Parse<UInt64Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.name.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.name.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<UInt64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.valueString.ToLower(), true).Should().Be(x.value);
-            FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper(), true).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            FastEnum.Parse<UInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<UInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<UInt64Enum>("123").Should().Be((UInt64Enum)123);
     }
 
 
@@ -2643,28 +3306,70 @@ public sealed class UInt64Tests
     {
         var parameters = new[]
         {
-            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString()),
-            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString()),
+            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
-        foreach (var x in parameters)
+
+        //--- Parse(ReadOnlySpan<char>)
         {
-            FastEnum.TryParse<UInt64Enum>(x.name, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            foreach (var x in parameters)
+            {
+                FastEnum.TryParse<UInt64Enum>(x.name, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.name.ToLower(), out var _).Should().BeFalse();
-            FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
 
-            FastEnum.TryParse<UInt64Enum>(x.valueString, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+                FastEnum.TryParse<UInt64Enum>(x.valueString, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.valueString.ToLower(), out var r3).Should().BeTrue();
-            r3.Should().Be(x.value);
+                FastEnum.TryParse<UInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.valueString.ToUpper(), out var r4).Should().BeTrue();
-            r4.Should().Be(x.value);
+                FastEnum.TryParse<UInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt64Enum>((string?)null, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>("", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>(" ", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>("ABCDE", out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>("123", out var r).Should().BeTrue();
+            r.Should().Be((UInt64Enum)123);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt64Enum>(x, out var _).Should().BeFalse();
+
+        //--- Parse(ReadOnlySpan<byte>)
+        {
+            foreach (var x in parameters)
+            {
+                var nameUtf8 = Encoding.UTF8.GetBytes(x.name);
+                var nameUtf8Lower = Encoding.UTF8.GetBytes(x.name.ToLower(CultureInfo.InvariantCulture));
+                var nameUtf8Upper = Encoding.UTF8.GetBytes(x.name.ToUpper(CultureInfo.InvariantCulture));
+
+                var valueUtf8 = Encoding.UTF8.GetBytes(x.valueString);
+                var valueUtf8Lower = Encoding.UTF8.GetBytes(x.valueString.ToLower(CultureInfo.InvariantCulture));
+                var valueUtf8Upper = Encoding.UTF8.GetBytes(x.valueString.ToUpper(CultureInfo.InvariantCulture));
+
+                FastEnum.TryParse<UInt64Enum>(nameUtf8, out var r1).Should().BeTrue();
+                r1.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt64Enum>(nameUtf8Lower, out var _).Should().BeFalse();
+                FastEnum.TryParse<UInt64Enum>(nameUtf8Upper, out var _).Should().BeFalse();
+
+                FastEnum.TryParse<UInt64Enum>(valueUtf8, out var r2).Should().BeTrue();
+                r2.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt64Enum>(valueUtf8Lower, out var r3).Should().BeTrue();
+                r3.Should().Be(x.value);
+
+                FastEnum.TryParse<UInt64Enum>(valueUtf8Upper, out var r4).Should().BeTrue();
+                r4.Should().Be(x.value);
+            }
+            FastEnum.TryParse<UInt64Enum>(""u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>(" "u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>("ABCDE"u8, out var _).Should().BeFalse();
+            FastEnum.TryParse<UInt64Enum>("123"u8, out var r).Should().BeTrue();
+            r.Should().Be((UInt64Enum)123);
+        }
     }
 
 
@@ -2673,31 +3378,35 @@ public sealed class UInt64Tests
     {
         var parameters = new[]
         {
-            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString()),
-            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString()),
+            (value: UInt64Enum.MinValue, name: nameof(UInt64Enum.MinValue), valueString: ((ulong)UInt64Enum.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: UInt64Enum.MaxValue, name: nameof(UInt64Enum.MaxValue), valueString: ((ulong)UInt64Enum.MaxValue).ToString(CultureInfo.InvariantCulture)),
         };
         foreach (var x in parameters)
         {
             FastEnum.TryParse<UInt64Enum>(x.name, true, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.name.ToLower(), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<UInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<UInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
             FastEnum.TryParse<UInt64Enum>(x.valueString, true, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.valueString.ToLower(), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<UInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<UInt64Enum>(x.valueString.ToUpper(), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<UInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        foreach (var x in new[] { "ABCDE", "", null })
-            FastEnum.TryParse<UInt64Enum>(x, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt64Enum>((string?)null, true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt64Enum>("", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt64Enum>(" ", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt64Enum>("ABCDE", true, out var _).Should().BeFalse();
+        FastEnum.TryParse<UInt64Enum>("123", true, out var r).Should().BeTrue();
+        r.Should().Be((UInt64Enum)123);
     }
 
 

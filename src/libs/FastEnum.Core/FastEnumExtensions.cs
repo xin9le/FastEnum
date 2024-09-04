@@ -60,6 +60,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static sbyte ToSByte<T>(this T value)
         where T : struct, Enum
     {
@@ -75,6 +76,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte ToByte<T>(this T value)
         where T : struct, Enum
     {
@@ -90,6 +92,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short ToInt16<T>(this T value)
         where T : struct, Enum
     {
@@ -105,6 +108,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort ToUInt16<T>(this T value)
         where T : struct, Enum
     {
@@ -120,6 +124,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt32<T>(this T value)
         where T : struct, Enum
     {
@@ -135,6 +140,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ToUInt32<T>(this T value)
         where T : struct, Enum
     {
@@ -150,6 +156,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ToInt64<T>(this T value)
         where T : struct, Enum
     {
@@ -165,6 +172,7 @@ public static class FastEnumExtensions
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ToUInt64<T>(this T value)
         where T : struct, Enum
     {

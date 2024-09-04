@@ -79,23 +79,7 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseName(string text, out T result)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-<# foreach (var x in parameters) { #>
-            case TypeCode.<#= x.TypeName #>:
-                return <#= x.TypeName #>Operation.TryParseName(text, out result);
-<# } #>
-            default:
-                result = default;
-                return false;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseValue(string text, out T result)
+    public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
         {
@@ -178,23 +162,7 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseName(string text, out T result)
-        {
-            // note:
-            //  - Implement case-sensitive only
-
-            if (EnumInfo<T>.s_memberByName.TryGetValue(text, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(string text, out T result)
+        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
@@ -209,11 +177,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = val - min;
+                var index = (int)(val - min);
                 var members = EnumInfo<T>.s_orderedMembers;
                 if ((uint)index < (uint)members.Length)
                 {
-                    result = members[index];
+                    result = members.At(index);
                     return true;
                 }
                 else

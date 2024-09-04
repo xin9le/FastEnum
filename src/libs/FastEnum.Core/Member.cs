@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Text;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -29,6 +32,12 @@ public sealed class Member<T>
 
 
     /// <summary>
+    /// Gets the name of the specified enumeration member as a UTF-8 byte array.
+    /// </summary>
+    public ImmutableArray<byte> NameUtf8 { get; }
+
+
+    /// <summary>
     /// Gets the <see cref="System.Reflection.FieldInfo"/> of specified enumration member.
     /// </summary>
     public FieldInfo FieldInfo { get; }
@@ -43,7 +52,7 @@ public sealed class Member<T>
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FastDictionary<int, string?> Labels { get; }
+    internal FastReadOnlyDictionary<int, string?> Labels { get; }
     #endregion
 
 
@@ -56,12 +65,13 @@ public sealed class Member<T>
     {
         this.Value = Enum.Parse<T>(name);
         this.Name = name;
+        this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
         this.FieldInfo = typeof(T).GetField(name)!;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
         this.Labels
             = this.FieldInfo
             .GetCustomAttributes<LabelAttribute>()
-            .ToFastDictionary(static x => x.Index, static x => x.Value);
+            .ToFastReadOnlyDictionary(static x => x.Index, static x => x.Value);
     }
 
 

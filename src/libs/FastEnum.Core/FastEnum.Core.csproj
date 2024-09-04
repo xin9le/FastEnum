@@ -12,7 +12,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <PackageId>FastEnum</PackageId>
-        <Version>2.0.0.0-preview1</Version>
+        <Version>2.0.0.0-preview2</Version>
         <Description>The extremely fast enum utilities for C#/.NET. Provided methods are all achieved zero allocation and faster than System.Enum.</Description>
         <PackageProjectUrl>https://github.com/xin9le/FastEnum</PackageProjectUrl>
         <PackageTags>Enum, Utility</PackageTags>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TEnum = FastEnumUtility.UnitTests.Models.SameValueEnum;
@@ -39,8 +40,9 @@ public class SameValueTests
             .Select(static name =>
             {
                 var value = Enum.Parse<TEnum>(name);
+                var nameUtf8 = Encoding.UTF8.GetBytes(name);
                 var fieldInfo = typeof(TEnum).GetField(name);
-                return (value, name, fieldInfo);
+                return (value, name, nameUtf8, fieldInfo);
             })
             .ToArray();
         var actual = FastEnum.GetMembers<TEnum>();
@@ -52,6 +54,7 @@ public class SameValueTests
             var e = expect[i];
             a.Value.Should().Be(e.value);
             a.Name.Should().Be(e.name);
+            a.NameUtf8.Should().Equal(e.nameUtf8);
             a.FieldInfo.Should().Be(e.fieldInfo);
 
             var (name, value) = a;
@@ -109,6 +112,8 @@ public class SameValueTests
             FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<TEnum>(x.name.ToUpper(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
     }
 
@@ -131,6 +136,8 @@ public class SameValueTests
             FastEnum.Parse<TEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<TEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(string.Empty, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
     }
 
@@ -205,33 +212,39 @@ public class SameValueTests
         {
             var value = TEnum.MinValue;
             var name = nameof(TEnum.MinValue);
+            var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
             member.Should().NotBeNull();
             member.Name.Should().Be(name);
+            member.NameUtf8.Should().Equal(nameUtf8);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
         }
         {
             var value = TEnum.Zero;
             var name = nameof(TEnum.MinValue);  // If the same value exists, we can't control what is correct.
+            var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
             member.Should().NotBeNull();
             member.Name.Should().Be(name);
+            member.NameUtf8.Should().Equal(nameUtf8);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
         }
         {
             var value = TEnum.MaxValue;
             var name = nameof(TEnum.MaxValue);
+            var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(TEnum).GetField(name);
 
             member.Should().NotBeNull();
             member.Name.Should().Be(name);
+            member.NameUtf8.Should().Equal(nameUtf8);
             member.Value.Should().Be(value);
             member.FieldInfo.Should().Be(info);
         }

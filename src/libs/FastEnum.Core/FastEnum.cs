@@ -19,6 +19,7 @@ public static class FastEnum
     /// </summary>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Type GetUnderlyingType<T>()
         where T : struct, Enum
         => EnumInfo<T>.s_underlyingType;
@@ -140,9 +141,9 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(string name)
+    public static bool IsDefined<T>(ReadOnlySpan<char> name)
         where T : struct, Enum
-        => UnderlyingOperation<T>.TryParseName(name, out var _);
+        => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
 
 
     /// <summary>
@@ -175,8 +176,10 @@ public static class FastEnum
     /// <param name="value"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(string value)
+    public static T Parse<T>(ReadOnlySpan<char> value)
         where T : struct, Enum
         => Parse<T>(value, false);
 
@@ -189,8 +192,10 @@ public static class FastEnum
     /// <param name="ignoreCase"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(string value, bool ignoreCase)
+    public static T Parse<T>(ReadOnlySpan<char> value, bool ignoreCase)
         where T : struct, Enum
     {
         if (!TryParse<T>(value, ignoreCase, out var result))
@@ -208,7 +213,7 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string value, out T result)
+    public static bool TryParse<T>(ReadOnlySpan<char> value, out T result)
         where T : struct, Enum
         => TryParse(value, false, out result);
 
@@ -224,40 +229,50 @@ public static class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(string value, bool ignoreCase, out T result)
+    public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
-        if (string.IsNullOrEmpty(value))
+        if (value.IsEmpty)
         {
             result = default;
             return false;
         }
 
-        if (isNumeric(value[0]))
+        if (isNumeric(value.At(0)))
             return UnderlyingOperation<T>.TryParseValue(value, out result);
 
         if (ignoreCase)
-            return tryParseNameIgnoreCase(value, out result);
+            return tryParseNameCaseInsensitive(value, out result);
 
-        return UnderlyingOperation<T>.TryParseName(value, out result);
+        return tryParseNameCaseSensitive(value, out result);
 
 
         #region Local Functions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool isNumeric(char c)
-            => char.IsDigit(c) || (c is '-' or '+');
+            => char.IsAsciiDigit(c) || (c is '-' or '+');
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameIgnoreCase(ReadOnlySpan<char> name, out T result)
+        static bool tryParseNameCaseSensitive(ReadOnlySpan<char> name, out T result)
         {
-            foreach (var member in EnumInfo<T>.s_members.AsSpan())
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
             {
-                if (name.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = member.Value;
-                    return true;
-                }
+                result = member.Value;
+                return true;
+            }
+            result = default;
+            return false;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool tryParseNameCaseInsensitive(ReadOnlySpan<char> name, out T result)
+        {
+            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
+            {
+                result = member.Value;
+                return true;
             }
             result = default;
             return false;

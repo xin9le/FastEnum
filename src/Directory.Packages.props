@@ -9,7 +9,6 @@
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
     <PackageVersion Include="MSTest" Version="3.5.2" />
-    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageVersion Include="System.IO.Hashing" Version="8.0.0" />
   </ItemGroup>
 </Project>

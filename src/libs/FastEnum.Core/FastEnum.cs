@@ -11,7 +11,7 @@ namespace FastEnumUtility;
 /// <summary>
 /// Provides high performance utilities for <see cref="Enum"/> type.
 /// </summary>
-public static class FastEnum
+public static partial class FastEnum
 {
     #region Type
     /// <summary>
@@ -313,5 +313,28 @@ public static class FastEnum
     public static string ToString<T>(T value)
         where T : struct, Enum
         => UnderlyingOperation<T>.ToString(value);
+    #endregion
+}
+
+
+
+/// <inheritdoc/>
+partial class FastEnum
+{
+    // for IFastEnumBooster<T>
+
+    #region IsDefined
+    /// <summary>
+    /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined<TEnum, TBooster>(TEnum value)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => TBooster.IsDefined(value);
     #endregion
 }

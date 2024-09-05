@@ -312,6 +312,6 @@ public static class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToString<T>(T value)
         where T : struct, Enum
-        => UnderlyingOperation<T>.ToString(value);
+        => UnderlyingOperation<T>.GetName(value) ?? UnderlyingOperation<T>.ToNumberString(value);
     #endregion
 }

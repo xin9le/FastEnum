@@ -367,4 +367,20 @@ partial class FastEnum
         where TBooster : IFastEnumBooster<TEnum>
         => TBooster.IsDefined(name);
     #endregion
+
+
+    #region ToString
+    /// <summary>
+    /// Converts the specified value to its equivalent string representation.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string ToString<TEnum, TBooster>(TEnum value)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => TBooster.GetName(value) ?? UnderlyingOperation<TEnum>.ToNumberString(value);
+    #endregion
 }

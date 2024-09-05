@@ -336,5 +336,19 @@ partial class FastEnum
         where TEnum : struct, Enum
         where TBooster : IFastEnumBooster<TEnum>
         => TBooster.IsDefined(value);
+
+
+    /// <summary>
+    /// Returns an indication whether a constant with a specified name exists in a specified enumeration.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsDefined<TEnum, TBooster>(ReadOnlySpan<char> name)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => TBooster.IsDefined(name);
     #endregion
 }

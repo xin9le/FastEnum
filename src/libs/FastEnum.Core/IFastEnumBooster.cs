@@ -17,4 +17,12 @@ public interface IFastEnumBooster<T>
     /// <param name="value"></param>
     /// <returns></returns>
     static abstract bool IsDefined(T value);
+
+
+    /// <summary>
+    /// Returns an indication whether a constant with a specified name exists in a specified enumeration.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    static abstract bool IsDefined(ReadOnlySpan<char> name);
 }

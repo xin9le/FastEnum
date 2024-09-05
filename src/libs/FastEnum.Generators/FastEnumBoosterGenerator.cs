@@ -84,7 +84,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 #region IFastEnumBooster<T>
             """);
 
-        //--- GetName
+        //--- .GetName()
         {
             sb.AppendLine($$"""
                     /// <inheritdoc/>
@@ -105,7 +105,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 """);
         }
 
-        //--- IsDefined(TEnum)
+        //--- .IsDefined(TEnum)
         {
             sb.AppendLine($$"""
 
@@ -127,7 +127,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 """);
         }
 
-        //--- IsDefined(ReadOnlySpan<char>)
+        //--- .IsDefined(ReadOnlySpan<char>)
         {
             sb.AppendLine($$"""
 

@@ -95,22 +95,6 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-<# foreach (var x in parameters) { #>
-            case TypeCode.<#= x.TypeName #>:
-                return <#= x.TypeName #>Operation.TryParseValue(text, out result);
-<# } #>
-            default:
-                result = default;
-                return false;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -179,15 +163,6 @@ internal static class UnderlyingOperation<T>
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
-        {
-            Unsafe.SkipInit(out result);
-            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-            return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<byte> text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);

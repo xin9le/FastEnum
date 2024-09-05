@@ -90,34 +90,6 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToString(T value)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-            case TypeCode.SByte:
-                return SByteOperation.ToString(value);
-            case TypeCode.Byte:
-                return ByteOperation.ToString(value);
-            case TypeCode.Int16:
-                return Int16Operation.ToString(value);
-            case TypeCode.UInt16:
-                return UInt16Operation.ToString(value);
-            case TypeCode.Int32:
-                return Int32Operation.ToString(value);
-            case TypeCode.UInt32:
-                return UInt32Operation.ToString(value);
-            case TypeCode.Int64:
-                return Int64Operation.ToString(value);
-            case TypeCode.UInt64:
-                return UInt64Operation.ToString(value);
-            default:
-                ThrowHelper.ThrowUnexpectedCodeReached();
-                return null!;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -217,20 +189,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -317,20 +275,6 @@ internal static class UnderlyingOperation<T>
         {
             ref var x = ref Unsafe.As<T, byte>(ref value);
             return x.ToString(null, CultureInfo.InvariantCulture);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
         }
 
 
@@ -425,20 +369,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -525,20 +455,6 @@ internal static class UnderlyingOperation<T>
         {
             ref var x = ref Unsafe.As<T, ushort>(ref value);
             return x.ToString(null, CultureInfo.InvariantCulture);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
         }
 
 
@@ -633,20 +549,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -733,20 +635,6 @@ internal static class UnderlyingOperation<T>
         {
             ref var x = ref Unsafe.As<T, uint>(ref value);
             return x.ToString(null, CultureInfo.InvariantCulture);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
         }
 
 
@@ -841,20 +729,6 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
@@ -941,20 +815,6 @@ internal static class UnderlyingOperation<T>
         {
             ref var x = ref Unsafe.As<T, ulong>(ref value);
             return x.ToString(null, CultureInfo.InvariantCulture);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
         }
 
 

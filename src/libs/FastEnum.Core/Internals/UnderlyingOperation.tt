@@ -79,22 +79,6 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToString(T value)
-    {
-        switch (EnumInfo<T>.s_typeCode)
-        {
-<# foreach (var x in parameters) { #>
-            case TypeCode.<#= x.TypeName #>:
-                return <#= x.TypeName #>Operation.ToString(value);
-<# } #>
-            default:
-                ThrowHelper.ThrowUnexpectedCodeReached();
-                return null!;
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
@@ -167,20 +151,6 @@ internal static class UnderlyingOperation<T>
         {
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
             return x.ToString(null, CultureInfo.InvariantCulture);
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
-        {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                return ToNumberString(value);
-            }
         }
 
 

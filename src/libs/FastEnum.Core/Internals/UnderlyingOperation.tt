@@ -63,13 +63,13 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToString(T value)
+    public static string ToNumberString(T value)
     {
         switch (EnumInfo<T>.s_typeCode)
         {
 <# foreach (var x in parameters) { #>
             case TypeCode.<#= x.TypeName #>:
-                return <#= x.TypeName #>Operation.ToString(value);
+                return <#= x.TypeName #>Operation.ToNumberString(value);
 <# } #>
             default:
                 ThrowHelper.ThrowUnexpectedCodeReached();
@@ -147,17 +147,10 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToString(T value)
+        public static string ToNumberString(T value)
         {
-            if (TryGetMember(value, out var member))
-            {
-                return member.Name;
-            }
-            else
-            {
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
-                return x.ToString(null, CultureInfo.InvariantCulture);
-            }
+            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
 

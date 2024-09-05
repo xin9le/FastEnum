@@ -110,7 +110,7 @@ public static class FastEnum
     #endregion
 
 
-    #region IsXxx
+    #region Condition
     /// <summary>
     /// Returns whether the values of the constants in a specified enumeration are continuous.
     /// </summary>
@@ -122,30 +122,6 @@ public static class FastEnum
         => EnumInfo<T>.s_isContinuous;
 
 
-    /// <summary>
-    /// Returns whether no fields in a specified enumeration.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsEmpty<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isEmpty;
-
-
-    /// <summary>
-    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsFlags<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isFlags;
-    #endregion
-
-
-    #region IsDefined
     /// <summary>
     /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
     /// </summary>
@@ -168,6 +144,28 @@ public static class FastEnum
     public static bool IsDefined<T>(ReadOnlySpan<char> name)
         where T : struct, Enum
         => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
+
+
+    /// <summary>
+    /// Returns whether no fields in a specified enumeration.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEmpty<T>()
+        where T : struct, Enum
+        => EnumInfo<T>.s_isEmpty;
+
+
+    /// <summary>
+    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFlags<T>()
+        where T : struct, Enum
+        => EnumInfo<T>.s_isFlags;
     #endregion
 
 

@@ -84,9 +84,31 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 #region IFastEnumBooster<T>
             """);
 
+        //--- GetName
+        {
+            sb.AppendLine($$"""
+                    /// <inheritdoc/>
+                    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                    static string? IFastEnumBooster<{{param.EnumType.TypeName}}>.GetName({{param.EnumType.TypeName}} value)
+                    {
+                        return value switch
+                        {
+                """);
+            foreach (var filed in param.EnumType.Fields)
+            {
+                sb.AppendLine($"            {param.EnumType.TypeName}.{filed.Name} => nameof({param.EnumType.TypeName}.{filed.Name}),");
+            }
+            sb.AppendLine($$"""
+                            _ => null,
+                        };
+                    }
+                """);
+        }
+
         //--- IsDefined(TEnum)
         {
             sb.AppendLine($$"""
+
                     /// <inheritdoc/>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     static bool IFastEnumBooster<{{param.EnumType.TypeName}}>.IsDefined({{param.EnumType.TypeName}} value)

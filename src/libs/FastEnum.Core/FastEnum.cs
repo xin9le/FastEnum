@@ -323,6 +323,22 @@ partial class FastEnum
 {
     // for IFastEnumBooster<T>
 
+    #region Member
+    /// <summary>
+    /// Retrieves the name of the constant in the specified enumeration type that has the specified value.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <returns>A string containing the name of the enumerated constant in enumType whose value is value; or null if no such constant is found.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetName<TEnum, TBooster>(TEnum value)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => TBooster.GetName(value);
+    #endregion
+
+
     #region IsDefined
     /// <summary>
     /// Returns an indication whether a constant with a specified value exists in a specified enumeration.

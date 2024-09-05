@@ -65,14 +65,4 @@ internal static class CollectionExtensions
     public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
         => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
     #endregion
-
-
-    #region CaseSensitiveUtf8StringDictionary
-    public static CaseSensitiveUtf8StringDictionary<TValue> ToCaseSensitiveUtf8StringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, byte[]> keySelector)
-        => CaseSensitiveUtf8StringDictionary<TValue>.Create(source, keySelector, static x => x);
-
-
-    public static CaseSensitiveUtf8StringDictionary<TValue> ToCaseSensitiveUtf8StringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, byte[]> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseSensitiveUtf8StringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
 }

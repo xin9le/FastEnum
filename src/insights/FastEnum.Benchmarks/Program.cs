@@ -16,8 +16,7 @@ var switcher = new BenchmarkSwitcher(
     typeof(IsDefined_String),
     typeof(ToString_Defined),
     typeof(ToString_Undefined),
-    typeof(TryParse_Byte_CaseSensitive),
-    typeof(TryParse_Char_CaseInsensitive),
-    typeof(TryParse_Char_CaseSensitive),
+    typeof(TryParse_CaseInsensitive),
+    typeof(TryParse_CaseSensitive),
 ]);
 switcher.Run(args, config);

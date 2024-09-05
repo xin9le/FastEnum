@@ -11,7 +11,7 @@ namespace FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-public class TryParse_Char_CaseSensitive
+public class TryParse_CaseSensitive
 {
     private const string Value = nameof(Fruits.WaterMelon);
 

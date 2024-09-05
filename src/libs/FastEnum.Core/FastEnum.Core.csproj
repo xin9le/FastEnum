@@ -4,10 +4,6 @@
         <RootNamespace>FastEnumUtility</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.IO.Hashing" />
-    </ItemGroup>
-
     <!-- NuGet -->
     <PropertyGroup>
         <IsPackable>true</IsPackable>

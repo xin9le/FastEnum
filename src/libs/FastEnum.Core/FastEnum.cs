@@ -110,7 +110,7 @@ public static class FastEnum
     #endregion
 
 
-    #region IsXxx
+    #region Condition
     /// <summary>
     /// Returns whether the values of the constants in a specified enumeration are continuous.
     /// </summary>
@@ -122,30 +122,6 @@ public static class FastEnum
         => EnumInfo<T>.s_isContinuous;
 
 
-    /// <summary>
-    /// Returns whether no fields in a specified enumeration.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsEmpty<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isEmpty;
-
-
-    /// <summary>
-    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsFlags<T>()
-        where T : struct, Enum
-        => EnumInfo<T>.s_isFlags;
-    #endregion
-
-
-    #region IsDefined
     /// <summary>
     /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
     /// </summary>
@@ -171,19 +147,29 @@ public static class FastEnum
 
 
     /// <summary>
-    /// Returns an indication whether a constant with a specified UTF-8 name exists in a specified enumeration.
+    /// Returns whether no fields in a specified enumeration.
     /// </summary>
-    /// <param name="name"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(ReadOnlySpan<byte> name)
+    public static bool IsEmpty<T>()
         where T : struct, Enum
-        => EnumInfo<T>.s_memberByNameUtf8CaseSensitive.ContainsKey(name);
+        => EnumInfo<T>.s_isEmpty;
+
+
+    /// <summary>
+    /// Returns whether the <see cref="FlagsAttribute"/> is defined.
+    /// </summary>
+    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFlags<T>()
+        where T : struct, Enum
+        => EnumInfo<T>.s_isFlags;
     #endregion
 
 
-    #region Parse | ReadOnlySpan<char>
+    #region Parse
     /// <summary>
     /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
     /// </summary>
@@ -304,91 +290,6 @@ public static class FastEnum
         static bool tryParseNameCaseInsensitive(ReadOnlySpan<char> name, out T result)
         {
             if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
-            {
-                result = member.Value;
-                return true;
-            }
-            result = default;
-            return false;
-        }
-        #endregion
-    }
-    #endregion
-
-
-    #region Parse | ReadOnlySpan<byte>
-    /// <summary>
-    /// Converts the string representation of the UTF-8 name or numeric value of one or more enumerated constants to an equivalent enumerated object.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="ArgumentNullException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(ReadOnlySpan<byte> value)
-        where T : struct, Enum
-    {
-        if (!TryParse<T>(value, out var result))
-            ThrowHelper.ThrowValueNotDefined(nameof(value));
-        return result;
-    }
-
-
-    /// <summary>
-    /// Converts the string representation of the UTF-8 name or numeric value of one or more enumerated constants to an equivalent enumerated object.
-    /// The return value indicates whether the conversion succeeded.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="result"></param>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(ReadOnlySpan<byte> value, out T result)
-        where T : struct, Enum
-    {
-        if (value.IsEmpty)
-        {
-            result = default;
-            return false;
-        }
-
-        if (isNumeric(value.At(0)))
-            return UnderlyingOperation<T>.TryParseValue(value, out result);
-
-        return tryParseNameCaseSensitive(value, out result);
-
-
-        #region Local Functions
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool isNumeric(byte x)
-        {
-            // note:
-            //  - In this case, there is no change in speed with or without sequential numbering.
-
-            return x switch
-            {
-                (byte)'+' => true,  // 43
-                (byte)'-' => true,  // 45
-                (byte)'0' => true,  // 48
-                (byte)'1' => true,
-                (byte)'2' => true,
-                (byte)'3' => true,
-                (byte)'4' => true,
-                (byte)'5' => true,
-                (byte)'6' => true,
-                (byte)'7' => true,
-                (byte)'8' => true,
-                (byte)'9' => true,
-                _ => false,
-            };
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool tryParseNameCaseSensitive(ReadOnlySpan<byte> name, out T result)
-        {
-            if (EnumInfo<T>.s_memberByNameUtf8CaseSensitive.TryGetValue(name, out var member))
             {
                 result = member.Value;
                 return true;

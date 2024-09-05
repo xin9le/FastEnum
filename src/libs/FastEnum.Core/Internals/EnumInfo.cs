@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace FastEnumUtility.Internals;
 
@@ -24,7 +23,6 @@ internal static class EnumInfo<T>
     public static readonly Member<T>[] s_orderedMembers;
     public static readonly CaseSensitiveStringDictionary<Member<T>> s_memberByNameCaseSensitive;
     public static readonly CaseInsensitiveStringDictionary<Member<T>> s_memberByNameCaseInsensitive;
-    public static readonly CaseSensitiveUtf8StringDictionary<Member<T>> s_memberByNameUtf8CaseSensitive;
     public static readonly FastReadOnlyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
@@ -46,7 +44,6 @@ internal static class EnumInfo<T>
         s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
         s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
         s_memberByNameCaseInsensitive = s_members.ToCaseInsensitiveStringDictionary(static x => x.Name);
-        s_memberByNameUtf8CaseSensitive = s_members.ToCaseSensitiveUtf8StringDictionary(static x => ImmutableCollectionsMarshal.AsArray(x.NameUtf8) ?? []);
         s_memberByValue
             = s_orderedMembers
             .DistinctBy(static x => x.Value)

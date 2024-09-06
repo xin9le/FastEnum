@@ -149,6 +149,67 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 """);
         }
 
+        //--- .TryParseName()
+        {
+            sb.AppendLine($$"""
+
+                    /// <inheritdoc/>
+                    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                    static bool IFastEnumBooster<{{param.EnumType.TypeName}}>.TryParseName(ReadOnlySpan<char> text, bool ignoreCase, out {{param.EnumType.TypeName}} result)
+                    {
+                        return ignoreCase
+                            ? caseInsensitive(text, out result)
+                            : caseSensitive(text, out result);
+
+
+                        #region Local Functions
+                        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                        static bool caseSensitive(ReadOnlySpan<char> text, out {{param.EnumType.TypeName}} result)
+                        {
+                            switch (text)
+                            {
+                """);
+            foreach (var filed in param.EnumType.Fields)
+            {
+                sb.AppendLine($$"""
+                                    case nameof({{param.EnumType.TypeName}}.{{filed.Name}}):
+                                        result = {{param.EnumType.TypeName}}.{{filed.Name}};
+                                        return true;
+
+                    """);
+            }
+            sb.AppendLine($$"""
+                                default:
+                                    result = default;
+                                    return false;
+                            }
+                        }
+
+
+                        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                        static bool caseInsensitive(ReadOnlySpan<char> text, out {{param.EnumType.TypeName}} result)
+                        {
+                            const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+                """);
+            foreach (var filed in param.EnumType.Fields)
+            {
+                sb.AppendLine($$"""
+                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{filed.Name}}), comparison))
+                                {
+                                    result = {{param.EnumType.TypeName}}.{{filed.Name}};
+                                    return true;
+                                }
+                    """);
+            }
+            sb.AppendLine($$"""
+                            result = default;
+                            return false;
+                        }
+                        #endregion
+                    }
+                """);
+        }
+
         //--- end class
         sb.AppendLine("""
                 #endregion

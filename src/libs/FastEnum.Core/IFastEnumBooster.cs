@@ -33,4 +33,16 @@ public interface IFastEnumBooster<T>
     /// <param name="name"></param>
     /// <returns></returns>
     static abstract bool IsDefined(ReadOnlySpan<char> name);
+
+
+    /// <summary>
+    /// Converts the string representation of the name of enumerated constant to an equivalent enumerated object.
+    /// A parameter specifies whether the operation is case-sensitive.
+    /// The return value indicates whether the conversion succeeded.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="ignoreCase"></param>
+    /// <param name="result"></param>
+    /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+    static abstract bool TryParseName(ReadOnlySpan<char> value, bool ignoreCase, out T result);
 }

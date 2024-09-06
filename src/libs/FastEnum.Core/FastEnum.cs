@@ -369,6 +369,118 @@ partial class FastEnum
     #endregion
 
 
+    #region Parse
+    /// <summary>
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TEnum Parse<TEnum, TBooster>(ReadOnlySpan<char> value)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => Parse<TEnum, TBooster>(value, false);
+
+
+    /// <summary>
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
+    /// A parameter specifies whether the operation is case-insensitive.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <param name="ignoreCase"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TEnum Parse<TEnum, TBooster>(ReadOnlySpan<char> value, bool ignoreCase)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+    {
+        if (!TryParse<TEnum, TBooster>(value, ignoreCase, out var result))
+            ThrowHelper.ThrowValueNotDefined(value, nameof(value));
+        return result;
+    }
+
+
+    /// <summary>
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
+    /// The return value indicates whether the conversion succeeded.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse<TEnum, TBooster>(ReadOnlySpan<char> value, out TEnum result)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+        => TryParse<TEnum, TBooster>(value, false, out result);
+
+
+    /// <summary>
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
+    /// A parameter specifies whether the operation is case-sensitive.
+    /// The return value indicates whether the conversion succeeded.
+    /// </summary>
+    /// <typeparam name="TEnum"><see cref="Enum"/> type</typeparam>
+    /// <typeparam name="TBooster">Custom implementation</typeparam>
+    /// <param name="value"></param>
+    /// <param name="ignoreCase"></param>
+    /// <param name="result"></param>
+    /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse<TEnum, TBooster>(ReadOnlySpan<char> value, bool ignoreCase, out TEnum result)
+        where TEnum : struct, Enum
+        where TBooster : IFastEnumBooster<TEnum>
+    {
+        if (value.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        if (isNumeric(value.At(0)))
+            return UnderlyingOperation<TEnum>.TryParseValue(value, out result);
+
+        return TBooster.TryParseName(value, ignoreCase, out result);
+
+
+        #region Local Functions
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool isNumeric(char x)
+        {
+            // note:
+            //  - In this case, there is no change in speed with or without sequential numbering.
+
+            return x switch
+            {
+                '+' => true,  // 43
+                '-' => true,  // 45
+                '0' => true,  // 48
+                '1' => true,
+                '2' => true,
+                '3' => true,
+                '4' => true,
+                '5' => true,
+                '6' => true,
+                '7' => true,
+                '8' => true,
+                '9' => true,
+                _ => false,
+            };
+        }
+        #endregion
+    }
+    #endregion
+
+
     #region ToString
     /// <summary>
     /// Converts the specified value to its equivalent string representation.

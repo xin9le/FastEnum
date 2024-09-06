@@ -62,6 +62,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             #nullable enable
 
             using System;
+            using System.Diagnostics.CodeAnalysis;
             using System.Globalization;
             using System.Runtime.CompilerServices;
             using FastEnumUtility;
@@ -79,6 +80,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         //--- start class
         sb.AppendLine($$"""
 
+            [Experimental(diagnosticId: "FE0001")]
             partial {{param.ContainerType.TypeKind}} {{param.ContainerType.TypeName}} : IFastEnumBooster<{{param.EnumType.TypeName}}>
             {
                 #region IFastEnumBooster<T>

@@ -421,37 +421,10 @@ partial class FastEnum
             return false;
         }
 
-        if (isNumeric(value.At(0)))
+        if (StringHelper.IsNumeric(value.At(0)))
             return UnderlyingOperation<TEnum>.TryParseValue(value, out result);
 
         return TBooster.TryParseName(value, ignoreCase, out result);
-
-
-        #region Local Functions
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool isNumeric(char x)
-        {
-            // note:
-            //  - In this case, there is no change in speed with or without sequential numbering.
-
-            return x switch
-            {
-                '+' => true,  // 43
-                '-' => true,  // 45
-                '0' => true,  // 48
-                '1' => true,
-                '2' => true,
-                '3' => true,
-                '4' => true,
-                '5' => true,
-                '6' => true,
-                '7' => true,
-                '8' => true,
-                '9' => true,
-                _ => false,
-            };
-        }
-        #endregion
     }
     #endregion
 

@@ -7,6 +7,31 @@ namespace FastEnumUtility.Internals;
 
 internal static class StringHelper
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNumeric(char x)
+    {
+        // note:
+        //  - In this case, there is no change in speed with or without sequential numbering.
+
+        return x switch
+        {
+            '+' => true,  // 43
+            '-' => true,  // 45
+            '0' => true,  // 48
+            '1' => true,
+            '2' => true,
+            '3' => true,
+            '4' => true,
+            '5' => true,
+            '6' => true,
+            '7' => true,
+            '8' => true,
+            '9' => true,
+            _ => false,
+        };
+    }
+
+
     #region Nested Types
     public static class CaseSensitive
     {

@@ -171,7 +171,7 @@ public static partial class FastEnum
 
     #region Parse
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
     /// </summary>
     /// <param name="value"></param>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
@@ -185,7 +185,7 @@ public static partial class FastEnum
 
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
     /// A parameter specifies whether the operation is case-insensitive.
     /// </summary>
     /// <param name="value"></param>
@@ -205,7 +205,7 @@ public static partial class FastEnum
 
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
     /// The return value indicates whether the conversion succeeded.
     /// </summary>
     /// <param name="value"></param>
@@ -219,7 +219,7 @@ public static partial class FastEnum
 
 
     /// <summary>
-    /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object.
+    /// Converts the string representation of the name or numeric value of enumerated constant to an equivalent enumerated object.
     /// A parameter specifies whether the operation is case-sensitive.
     /// The return value indicates whether the conversion succeeded.
     /// </summary>

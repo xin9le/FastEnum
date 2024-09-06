@@ -222,7 +222,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = CaseSensitiveStringHelper.GetHashCode(entry.Key);
+            var hash = StringHelper.CaseSensitive.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets.At(index);
             if (target is null)
@@ -235,7 +235,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (CaseSensitiveStringHelper.Equals(target.Key, entry.Key))
+                if (StringHelper.CaseSensitive.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -266,12 +266,12 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = CaseSensitiveStringHelper.GetHashCode(key);
+        var hash = StringHelper.CaseSensitive.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
-            if (CaseSensitiveStringHelper.Equals(key, entry.Key))
+            if (StringHelper.CaseSensitive.Equals(key, entry.Key))
             {
                 value = entry.Value;
                 return true;
@@ -362,7 +362,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
 
         static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
         {
-            var hash = CaseInsensitiveStringHelper.GetHashCode(entry.Key);
+            var hash = StringHelper.CaseInsensitive.GetHashCode(entry.Key);
             var index = hash & indexFor;
             var target = buckets.At(index);
             if (target is null)
@@ -375,7 +375,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
             while (true)
             {
                 //--- Check duplicate
-                if (CaseInsensitiveStringHelper.Equals(target.Key, entry.Key))
+                if (StringHelper.CaseInsensitive.Equals(target.Key, entry.Key))
                     return false;
 
                 //--- Append entry
@@ -406,12 +406,12 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
-        var hash = CaseInsensitiveStringHelper.GetHashCode(key);
+        var hash = StringHelper.CaseInsensitive.GetHashCode(key);
         var index = hash & this._indexFor;
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
-            if (CaseInsensitiveStringHelper.Equals(entry.Key, key))
+            if (StringHelper.CaseInsensitive.Equals(entry.Key, key))
             {
                 value = entry.Value;
                 return true;

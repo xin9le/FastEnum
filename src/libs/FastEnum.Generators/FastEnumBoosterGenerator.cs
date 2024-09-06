@@ -94,9 +94,9 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         return value switch
                         {
                 """);
-            foreach (var filed in param.EnumType.Fields)
+            foreach (var field in param.EnumType.Fields)
             {
-                sb.AppendLine($"            {param.EnumType.TypeName}.{filed.Name} => nameof({param.EnumType.TypeName}.{filed.Name}),");
+                sb.AppendLine($"            {param.EnumType.TypeName}.{field.Name} => nameof({param.EnumType.TypeName}.{field.Name}),");
             }
             sb.AppendLine($$"""
                             _ => null,
@@ -116,9 +116,9 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         return value switch
                         {
                 """);
-            foreach (var filed in param.EnumType.Fields)
+            foreach (var field in param.EnumType.Fields)
             {
-                sb.AppendLine($"            {param.EnumType.TypeName}.{filed.Name} => true,");
+                sb.AppendLine($"            {param.EnumType.TypeName}.{field.Name} => true,");
             }
             sb.AppendLine($$"""
                             _ => false,
@@ -138,9 +138,9 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         return name switch
                         {
                 """);
-            foreach (var filed in param.EnumType.Fields)
+            foreach (var field in param.EnumType.Fields)
             {
-                sb.AppendLine($"            nameof({param.EnumType.TypeName}.{filed.Name}) => true,");
+                sb.AppendLine($"            nameof({param.EnumType.TypeName}.{field.Name}) => true,");
             }
             sb.AppendLine($$"""
                             _ => false,
@@ -169,11 +169,11 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                             switch (text)
                             {
                 """);
-            foreach (var filed in param.EnumType.Fields)
+            foreach (var field in param.EnumType.Fields)
             {
                 sb.AppendLine($$"""
-                                    case nameof({{param.EnumType.TypeName}}.{{filed.Name}}):
-                                        result = {{param.EnumType.TypeName}}.{{filed.Name}};
+                                    case nameof({{param.EnumType.TypeName}}.{{field.Name}}):
+                                        result = {{param.EnumType.TypeName}}.{{field.Name}};
                                         return true;
 
                     """);
@@ -191,12 +191,12 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         {
                             const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
                 """);
-            foreach (var filed in param.EnumType.Fields)
+            foreach (var field in param.EnumType.Fields)
             {
                 sb.AppendLine($$"""
-                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{filed.Name}}), comparison))
+                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), comparison))
                                 {
-                                    result = {{param.EnumType.TypeName}}.{{filed.Name}};
+                                    result = {{param.EnumType.TypeName}}.{{field.Name}};
                                     return true;
                                 }
                     """);

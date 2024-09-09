@@ -65,7 +65,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         if (!containerType.IsPartial)
         {
             var descriptor = DiagnosticDescriptorProvider.MustBePartial;
-            var location = containerType.SyntaxNode.GetLocation();
+            var location = containerType.SyntaxNode.Identifier.GetLocation();
             var args = containerType.TypeName;
             return Diagnostic.Create(descriptor, location, args);
         }

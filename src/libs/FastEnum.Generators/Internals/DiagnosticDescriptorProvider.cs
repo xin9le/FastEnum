@@ -43,5 +43,16 @@ internal static class DiagnosticDescriptorProvider
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true
         );
+
+
+    public static readonly DiagnosticDescriptor MustBeEnumType
+        = new(
+            id: "FE0004",
+            title: "The generic type argument of the FastEnumAttribute<T> must be an enum type",
+            messageFormat: "The generic type argument '{0}' of the FastEnumAttribute<T> must be an enum type",
+            category: Category,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true
+        );
 #pragma warning restore RS2008
 }

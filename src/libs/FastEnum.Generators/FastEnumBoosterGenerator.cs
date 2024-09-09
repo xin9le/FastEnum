@@ -92,6 +92,15 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             return Diagnostic.Create(descriptor, location, args);
         }
 
+        //--- Generic type argument must be enum type
+        if (!enumType.IsEnum)
+        {
+            var descriptor = DiagnosticDescriptorProvider.MustBeEnumType;
+            var location = enumType.SyntaxNode.GetLocation();
+            var args = enumType.SyntaxNode.GetText();
+            return Diagnostic.Create(descriptor, location, args);
+        }
+
         return null;
     }
 
@@ -387,6 +396,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         public TypeSyntax SyntaxNode { get; }
         public INamedTypeSymbol TypeSymbol { get; }
         public bool IsPublicOrInternal { get; }
+        public bool IsEnum { get; }
         public string TypeName { get; }
         public string UnderlyingType { get; }
         public IReadOnlyList<IFieldSymbol> Fields { get; }
@@ -399,6 +409,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             this.SyntaxNode = syntax;
             this.TypeSymbol = symbol;
             this.IsPublicOrInternal = isPublicOrInternal(symbol);
+            this.IsEnum = symbol.TypeKind is TypeKind.Enum;
             this.TypeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             this.UnderlyingType = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
             this.Fields = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();

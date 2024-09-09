@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FastEnumUtility.Generators.Internals;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -60,6 +61,14 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
     #region Helpers
     private static Diagnostic? Diagnose(GenerateParameters param)
     {
+        var containerType = param.ContainerType;
+        if (!containerType.IsPartial)
+        {
+            var descriptor = DiagnosticDescriptorProvider.MustBePartial;
+            var location = containerType.SyntaxNode.GetLocation();
+            var args = containerType.TypeName;
+            return Diagnostic.Create(descriptor, location, args);
+        }
         return null;
     }
 
@@ -252,12 +261,13 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         #region Constructors
         public GenerateParameters(GeneratorAttributeSyntaxContext context, CSharpParseOptions parseOptions)
         {
+            var containerNode = (TypeDeclarationSyntax)context.TargetNode;
             var containerSymbol = (INamedTypeSymbol)context.TargetSymbol;
             var enumSymbol = getEnumSymbol(context);
 
             this.LanguageVersion = parseOptions.LanguageVersion;
             this.FileName = createFileName(containerSymbol);
-            this.ContainerType = new(containerSymbol);
+            this.ContainerType = new(containerNode, containerSymbol);
             this.EnumType = new(enumSymbol);
 
 
@@ -284,17 +294,23 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
     private sealed class ContainerTypeMetadata
     {
+        public TypeDeclarationSyntax SyntaxNode { get; }
+        public INamedTypeSymbol TypeSymbol { get; }
         public bool IsGlobalNamespace { get; }
-        public bool IsGenericType { get; }
+        public bool IsGeneric { get; }
+        public bool IsPartial { get; }
         public string Namespace { get; }
         public string TypeKind { get; }
         public string TypeName { get; }
 
 
-        public ContainerTypeMetadata(INamedTypeSymbol symbol)
+        public ContainerTypeMetadata(TypeDeclarationSyntax syntax, INamedTypeSymbol symbol)
         {
+            this.SyntaxNode = syntax;
+            this.TypeSymbol = symbol;
             this.IsGlobalNamespace = symbol.ContainingNamespace.IsGlobalNamespace;
-            this.IsGenericType = symbol.IsGenericType;
+            this.IsGeneric = symbol.IsGenericType;
+            this.IsPartial = syntax.Modifiers.Any(static x => x.IsKind(SyntaxKind.PartialKeyword));
             this.Namespace = symbol.ContainingNamespace.ToDisplayString();
             this.TypeKind = toTypeKind(symbol);
             this.TypeName = symbol.Name;
@@ -319,6 +335,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
     private sealed class EnumTypeMetadata(INamedTypeSymbol symbol)
     {
+        public INamedTypeSymbol TypeSymbol { get; } = symbol;
         public string TypeName { get; } = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         public string UnderlyingType { get; } = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
         public IReadOnlyList<IFieldSymbol> Fields { get; } = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();

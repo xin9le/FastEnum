@@ -21,5 +21,16 @@ internal static class DiagnosticDescriptorProvider
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true
         );
+
+
+    public static readonly DiagnosticDescriptor MustNotBeNested
+        = new(
+            id: "FE0002",
+            title: "FastEnum booster type must not be nested",
+            messageFormat: "FastEnum booster type '{0}' must not be nested",
+            category: Category,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true
+        );
 #pragma warning restore RS2008
 }

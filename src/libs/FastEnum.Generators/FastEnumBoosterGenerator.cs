@@ -62,6 +62,8 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
     private static Diagnostic? Diagnose(GenerateParameters param)
     {
         var containerType = param.ContainerType;
+
+        //--- partial type only
         if (!containerType.IsPartial)
         {
             var descriptor = DiagnosticDescriptorProvider.MustBePartial;
@@ -69,6 +71,16 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             var args = containerType.TypeName;
             return Diagnostic.Create(descriptor, location, args);
         }
+
+        //--- Doesn't allow nested type
+        if (containerType.IsNested)
+        {
+            var descriptor = DiagnosticDescriptorProvider.MustNotBeNested;
+            var location = containerType.SyntaxNode.Identifier.GetLocation();
+            var args = containerType.TypeName;
+            return Diagnostic.Create(descriptor, location, args);
+        }
+
         return null;
     }
 
@@ -299,6 +311,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         public bool IsGlobalNamespace { get; }
         public bool IsGeneric { get; }
         public bool IsPartial { get; }
+        public bool IsNested { get; }
         public string Namespace { get; }
         public string TypeKind { get; }
         public string TypeName { get; }
@@ -311,6 +324,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             this.IsGlobalNamespace = symbol.ContainingNamespace.IsGlobalNamespace;
             this.IsGeneric = symbol.IsGenericType;
             this.IsPartial = syntax.Modifiers.Any(static x => x.IsKind(SyntaxKind.PartialKeyword));
+            this.IsNested = syntax.Parent is TypeDeclarationSyntax;
             this.Namespace = symbol.ContainingNamespace.ToDisplayString();
             this.TypeKind = toTypeKind(symbol);
             this.TypeName = symbol.Name;

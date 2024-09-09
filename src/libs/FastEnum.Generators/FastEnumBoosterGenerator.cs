@@ -306,6 +306,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
     private sealed class ContainerTypeMetadata
     {
+        #region Properties
         public TypeDeclarationSyntax SyntaxNode { get; }
         public INamedTypeSymbol TypeSymbol { get; }
         public bool IsGlobalNamespace { get; }
@@ -315,8 +316,10 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         public string Namespace { get; }
         public string TypeKind { get; }
         public string TypeName { get; }
+        #endregion
 
 
+        #region Constructors
         public ContainerTypeMetadata(TypeDeclarationSyntax syntax, INamedTypeSymbol symbol)
         {
             this.SyntaxNode = syntax;
@@ -343,6 +346,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             }
             #endregion
         }
+        #endregion
     }
 
 

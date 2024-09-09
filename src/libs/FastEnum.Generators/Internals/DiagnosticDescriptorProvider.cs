@@ -11,6 +11,7 @@ internal static class DiagnosticDescriptorProvider
     #endregion
 
 
+#pragma warning disable RS2008
     public static readonly DiagnosticDescriptor MustBePartial
         = new(
             id: "FE0001",
@@ -20,4 +21,5 @@ internal static class DiagnosticDescriptorProvider
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true
         );
+#pragma warning restore RS2008
 }

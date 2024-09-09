@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FastEnumUtility.Generators.Internals;
@@ -62,6 +63,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
     private static Diagnostic? Diagnose(GenerateParameters param)
     {
         var containerType = param.ContainerType;
+        var enumType = param.EnumType;
 
         //--- partial type only
         if (!containerType.IsPartial)
@@ -78,6 +80,15 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             var descriptor = DiagnosticDescriptorProvider.MustNotBeNested;
             var location = containerType.SyntaxNode.Identifier.GetLocation();
             var args = containerType.TypeName;
+            return Diagnostic.Create(descriptor, location, args);
+        }
+
+        //--- Allow public or internal only
+        if (!enumType.IsPublicOrInternal)
+        {
+            var descriptor = DiagnosticDescriptorProvider.MustBePublicOrInternal;
+            var location = enumType.SyntaxNode.GetLocation();
+            var args = enumType.SyntaxNode.GetText();
             return Diagnostic.Create(descriptor, location, args);
         }
 
@@ -275,12 +286,13 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         {
             var containerNode = (TypeDeclarationSyntax)context.TargetNode;
             var containerSymbol = (INamedTypeSymbol)context.TargetSymbol;
+            var enumNode = getEnumNode(containerNode);
             var enumSymbol = getEnumSymbol(context);
 
             this.LanguageVersion = parseOptions.LanguageVersion;
             this.FileName = createFileName(containerSymbol);
             this.ContainerType = new(containerNode, containerSymbol);
-            this.EnumType = new(enumSymbol);
+            this.EnumType = new(enumNode, enumSymbol);
 
 
             #region Local Functions
@@ -289,6 +301,24 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 var typeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
                 var escaped = typeName.Replace("global::", "").Replace("<", "_").Replace(">", "_");
                 return $"{escaped}.FastEnumBooster.g.cs";
+            }
+
+
+            static TypeSyntax getEnumNode(MemberDeclarationSyntax syntax)
+            {
+                var attributes = syntax.AttributeLists.SelectMany(static x => x.Attributes);
+                foreach (var attr in attributes)
+                {
+                    if (attr.Name is not GenericNameSyntax generic)
+                        continue;
+
+                    if (generic.Identifier.Text is not ("FastEnum" or "FastEnumAttribute"))
+                        continue;
+
+                    var @enum = generic.TypeArgumentList.Arguments.First();
+                    return @enum;
+                }
+                throw new InvalidOperationException("FastEnumAttribute<T> is not annotated.");
             }
 
 
@@ -351,12 +381,46 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
 
 
-    private sealed class EnumTypeMetadata(INamedTypeSymbol symbol)
+    private sealed class EnumTypeMetadata
     {
-        public INamedTypeSymbol TypeSymbol { get; } = symbol;
-        public string TypeName { get; } = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        public string UnderlyingType { get; } = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
-        public IReadOnlyList<IFieldSymbol> Fields { get; } = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();
+        #region Properties
+        public TypeSyntax SyntaxNode { get; }
+        public INamedTypeSymbol TypeSymbol { get; }
+        public bool IsPublicOrInternal { get; }
+        public string TypeName { get; }
+        public string UnderlyingType { get; }
+        public IReadOnlyList<IFieldSymbol> Fields { get; }
+        #endregion
+
+
+        #region Constructors
+        public EnumTypeMetadata(TypeSyntax syntax, INamedTypeSymbol symbol)
+        {
+            this.SyntaxNode = syntax;
+            this.TypeSymbol = symbol;
+            this.IsPublicOrInternal = isPublicOrInternal(symbol);
+            this.TypeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            this.UnderlyingType = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
+            this.Fields = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();
+
+
+            #region Local Functions
+            static bool isPublicOrInternal(INamedTypeSymbol symbol)
+            {
+                // note:
+                //  - For file-local types, accessibility is set to 'Friend' (= Internal).
+                //  - Therefore, it is necessary to determine separately that it is a file-local types.
+
+                if (symbol.IsFileLocal)
+                    return false;
+
+                return symbol.DeclaredAccessibility
+                    is Accessibility.Public
+                    or Accessibility.Internal;
+            }
+            #endregion
+        }
+        #endregion
     }
-    #endregion
+#endregion
 }

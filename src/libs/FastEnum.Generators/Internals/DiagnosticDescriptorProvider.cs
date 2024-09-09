@@ -32,5 +32,16 @@ internal static class DiagnosticDescriptorProvider
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true
         );
+
+
+    public static readonly DiagnosticDescriptor MustBePublicOrInternal
+        = new(
+            id: "FE0003",
+            title: "The accessibility of the enum type that is being boosted must be public or internal",
+            messageFormat: "The accessibility of the enum type '{0}' that is being boosted must be public or internal",
+            category: Category,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true
+        );
 #pragma warning restore RS2008
 }

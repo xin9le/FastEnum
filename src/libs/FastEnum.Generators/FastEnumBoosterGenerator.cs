@@ -42,6 +42,14 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             var syntax = source.Left;
             var options = (CSharpParseOptions)source.Right;
             var param = new GenerateParameters(syntax, options);
+
+            var diagnostic = Diagnose(param);
+            if (diagnostic is not null)
+            {
+                context.ReportDiagnostic(diagnostic);
+                return;
+            }
+
             var code = Generate(param);
             context.AddSource(param.FileName, code);
         });
@@ -50,6 +58,12 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
 
     #region Helpers
+    private static Diagnostic? Diagnose(GenerateParameters param)
+    {
+        return null;
+    }
+
+
     private static string Generate(GenerateParameters param)
     {
         var sb = new StringBuilder();

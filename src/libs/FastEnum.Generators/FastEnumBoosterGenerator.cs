@@ -72,7 +72,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             return Diagnostic.Create(descriptor, location, args);
         }
 
-        //--- Doesn't allow nested type
+        //--- Disallow nested type
         if (containerType.IsNested)
         {
             var descriptor = DiagnosticDescriptorProvider.MustNotBeNested;

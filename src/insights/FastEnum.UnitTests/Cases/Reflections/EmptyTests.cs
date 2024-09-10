@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TEnum = FastEnumUtility.UnitTests.Models.EmptyEnum;
 
-namespace FastEnumUtility.UnitTests.Cases;
+namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TEnum = FastEnumUtility.UnitTests.Models.SameValueEnum;
 using TUnderlying = System.Byte;
 
-namespace FastEnumUtility.UnitTests.Cases;
+namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 

@@ -246,12 +246,11 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         [MethodImpl(MethodImplOptions.AggressiveInlining)]
                         static bool caseInsensitive(ReadOnlySpan<char> text, out {{param.EnumType.TypeName}} result)
                         {
-                            const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
                 """);
             foreach (var field in param.EnumType.Fields)
             {
                 sb.AppendLine($$"""
-                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), comparison))
+                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), StringComparison.OrdinalIgnoreCase))
                                 {
                                     result = {{param.EnumType.TypeName}}.{{field.Name}};
                                     return true;

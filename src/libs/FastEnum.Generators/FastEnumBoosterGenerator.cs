@@ -151,7 +151,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         return value switch
                         {
                 """);
-            foreach (var field in param.EnumType.Fields)
+            foreach (var field in param.EnumType.DistinctedFields)
             {
                 sb.AppendLine($"            {param.EnumType.TypeName}.{field.Name} => nameof({param.EnumType.TypeName}.{field.Name}),");
             }
@@ -173,7 +173,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         return value switch
                         {
                 """);
-            foreach (var field in param.EnumType.Fields)
+            foreach (var field in param.EnumType.DistinctedFields)
             {
                 sb.AppendLine($"            {param.EnumType.TypeName}.{field.Name} => true,");
             }
@@ -399,6 +399,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         public string TypeName { get; }
         public string UnderlyingType { get; }
         public IReadOnlyList<IFieldSymbol> Fields { get; }
+        public IReadOnlyList<IFieldSymbol> DistinctedFields { get; }
         #endregion
 
 
@@ -412,6 +413,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             this.TypeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             this.UnderlyingType = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
             this.Fields = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();
+            this.DistinctedFields = this.Fields.Distinct(new FieldSymbolComparer()).ToArray();
 
 
             #region Local Functions
@@ -431,6 +433,21 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             #endregion
         }
         #endregion
+
+
+        #region Nested Types
+        private sealed class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
+        {
+            /// <inheritdoc/>
+            public bool Equals(IFieldSymbol x, IFieldSymbol y)
+                => x.ConstantValue == y.ConstantValue;
+
+
+            /// <inheritdoc/>
+            public int GetHashCode(IFieldSymbol obj)
+                => obj.ConstantValue?.GetHashCode() ?? 0;
+        }
+        #endregion
     }
-#endregion
+    #endregion
 }

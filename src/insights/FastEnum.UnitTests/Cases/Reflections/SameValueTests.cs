@@ -269,4 +269,18 @@ public class SameValueTests
         TEnum.Zero.ToName().Should().ContainAny(zeroStrings);
         TEnum.MaxValue.ToName().Should().Be(nameof(TEnum.MaxValue));
     }
+
+
+    [TestMethod]
+    public void FastToString()
+    {
+        var zeroStrings = new[]
+        {
+            nameof(TEnum.MinValue),
+            nameof(TEnum.Zero),
+        };
+        TEnum.MinValue.FastToString().Should().ContainAny(zeroStrings);
+        TEnum.Zero.FastToString().Should().ContainAny(zeroStrings);
+        TEnum.MaxValue.FastToString().Should().Be(nameof(TEnum.MaxValue));
+    }
 }

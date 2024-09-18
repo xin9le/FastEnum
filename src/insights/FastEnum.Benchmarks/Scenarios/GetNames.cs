@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
@@ -31,6 +32,6 @@ public class GetNames
 
 
     [Benchmark]
-    public IReadOnlyList<string> FastEnum()
+    public ImmutableArray<string> FastEnum()
         => _FastEnum.GetNames<Fruits>();
 }

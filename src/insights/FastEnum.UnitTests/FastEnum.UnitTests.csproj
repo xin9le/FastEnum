@@ -4,7 +4,6 @@
         <RootNamespace>FastEnumUtility.UnitTests</RootNamespace>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <NoWarn>$(NoWarn);FE0000</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

@@ -12,4 +12,10 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     </ItemGroup>
 
+    <!-- NuGet -->
+    <PropertyGroup>
+        <PackageId>FastEnum.Generators</PackageId>
+        <Description>Source code generator for FastEnum.</Description>
+    </PropertyGroup>
+
 </Project>

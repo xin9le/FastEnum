@@ -1,0 +1,24 @@
+<Project>
+    
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <Version>2.0.0.0-preview4</Version>
+        <PackageProjectUrl>https://github.com/xin9le/FastEnum</PackageProjectUrl>
+        <PackageTags>Enum, Utility</PackageTags>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <Company />
+        <Authors>xin9le</Authors>
+        <Copyright>Copyright© xin9le, All rights reserved.</Copyright>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../../README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+</Project>

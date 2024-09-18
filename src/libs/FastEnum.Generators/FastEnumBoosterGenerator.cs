@@ -190,16 +190,17 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     static bool IFastEnumBooster<{{param.EnumType.TypeName}}>.IsDefined(ReadOnlySpan<char> name)
                     {
-                        return name switch
-                        {
                 """);
             foreach (var field in param.EnumType.Fields)
             {
-                sb.AppendLine($"            nameof({param.EnumType.TypeName}.{field.Name}) => true,");
+                sb.AppendLine($$"""
+                            if (name.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), StringComparison.Ordinal))
+                                return true;
+
+                    """);
             }
             sb.AppendLine($$"""
-                            _ => false,
-                        };
+                        return false;
                     }
                 """);
         }

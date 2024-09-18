@@ -4,8 +4,8 @@ using FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-//var config = BenchmarkConfig.ForDefault();
-var config = BenchmarkConfig.ForShortRun();
+var config = BenchmarkConfig.ForDefault();
+//var config = BenchmarkConfig.ForShortRun();
 var switcher = new BenchmarkSwitcher(
 [
     typeof(EnumMemberAttribute),

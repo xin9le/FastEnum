@@ -22,11 +22,20 @@
 
     <!-- T4 Template -->
     <ItemGroup>
+        <Compile Update="Cases\Generators\BasicTests.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>BasicTests.tt</DependentUpon>
+        </Compile>
         <Compile Update="Cases\Reflections\BasicTests.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
+        <None Update="Cases\Generators\BasicTests.tt">
+            <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
         <None Update="Cases\Reflections\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>

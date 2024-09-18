@@ -439,12 +439,12 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         {
             /// <inheritdoc/>
             public bool Equals(IFieldSymbol x, IFieldSymbol y)
-                => x.ConstantValue == y.ConstantValue;
+                => EqualityComparer<object>.Default.Equals(x.ConstantValue!, y.ConstantValue!);
 
 
             /// <inheritdoc/>
             public int GetHashCode(IFieldSymbol obj)
-                => obj.ConstantValue?.GetHashCode() ?? 0;
+                => EqualityComparer<object>.Default.GetHashCode(obj.ConstantValue!);
         }
         #endregion
     }

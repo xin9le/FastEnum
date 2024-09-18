@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using FastEnumUtility;
 using FastEnumUtility.Sandbox;
 
@@ -17,8 +18,13 @@ namespace FastEnumUtility.Sandbox
     }
 
 
-    [FastEnum<Fruits>]
-    public partial class FruitsBooster
+    //[FastEnum<Fruits>]
+    //public partial class FruitsBooster
+    //{ }
+
+
+    [FastEnum<HttpStatusCode>]
+    public partial class HttpStatusCodeBooster
     { }
 }
 

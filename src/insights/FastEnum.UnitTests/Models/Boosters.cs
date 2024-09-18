@@ -51,11 +51,11 @@ public sealed partial class UInt64EnumBooster
 
 
 [FastEnum<SameValueEnum>]
-public readonly partial struct SameValueEnumBooster
+public sealed partial class SameValueEnumBooster
 { }
 
 
 
 [FastEnum<EmptyEnum>]
-public readonly partial record struct EmptyEnumBooster
+public sealed partial class EmptyEnumBooster
 { }

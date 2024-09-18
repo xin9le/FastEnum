@@ -17,7 +17,7 @@
         <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
         <ProjectReference Include="..\..\libs\FastEnum.Generators\FastEnum.Generators.csproj">
             <OutputItemType>Analyzer</OutputItemType>
-            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
     </ItemGroup>
 

@@ -26,6 +26,11 @@ public class IsDefined_String
 
 
     [Benchmark]
+    public bool NetEscapades()
+        => FruitsExtensions.IsDefined(Value);
+
+
+    [Benchmark]
     public bool FastEnum()
         => _FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
 }

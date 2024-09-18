@@ -33,6 +33,11 @@ public class IsDefined_Enum
 
 
     [Benchmark]
+    public bool NetEscapades()
+        => FruitsExtensions.IsDefined(Value);
+
+
+    [Benchmark]
     public bool FastEnum()
         => _FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
 }

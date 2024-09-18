@@ -33,6 +33,11 @@ public class ToString_Defined
 
 
     [Benchmark]
+    public string NetEscapades()
+        => FruitsExtensions.ToStringFast(Value);
+
+
+    [Benchmark]
     public string FastEnum()
         => _FastEnum.ToString<Fruits, FruitsBooster>(Value);
 }

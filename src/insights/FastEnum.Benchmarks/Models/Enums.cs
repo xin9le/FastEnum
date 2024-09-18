@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using NetEscapades.EnumGenerators;
 
 namespace FastEnumUtility.Benchmarks.Models;
 
 
 
+[EnumExtensions]
 public enum Fruits : byte
 {
     Unknown = 0,

@@ -33,6 +33,11 @@ public class TryParse_CaseInsensitive
 
 
     [Benchmark]
+    public bool NetEscapades()
+        => FruitsExtensions.TryParse(Value, out _, true);
+
+
+    [Benchmark]
     public bool FastEnum()
         => _FastEnum.TryParse<Fruits, FruitsBooster>(Value, true, out _);
 }

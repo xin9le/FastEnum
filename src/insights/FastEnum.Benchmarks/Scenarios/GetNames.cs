@@ -32,6 +32,11 @@ public class GetNames
 
 
     [Benchmark]
+    public string[] NetEscapades()
+        => FruitsExtensions.GetNames();
+
+
+    [Benchmark]
     public ImmutableArray<string> FastEnum()
         => _FastEnum.GetNames<Fruits>();
 }

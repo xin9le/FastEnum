@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -14,7 +15,7 @@ public class GetValues
     public void Setup()
     {
         _ = Enum.GetValues<Fruits>();
-        _ = FastEnum.GetValues<Fruits>();
+        _ = _FastEnum.GetValues<Fruits>();
     }
 
 
@@ -29,6 +30,6 @@ public class GetValues
 
 
     [Benchmark]
-    public IReadOnlyList<Fruits> FastEnum_Reflection()
-        => FastEnum.GetValues<Fruits>();
+    public IReadOnlyList<Fruits> FastEnum()
+        => _FastEnum.GetValues<Fruits>();
 }

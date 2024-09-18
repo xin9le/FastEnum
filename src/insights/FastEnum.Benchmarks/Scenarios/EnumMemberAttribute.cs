@@ -3,6 +3,7 @@ using System.Reflection;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 using EnumMemberAttr = System.Runtime.Serialization.EnumMemberAttribute;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
@@ -19,7 +20,7 @@ public class EnumMemberAttribute
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetMembers<Fruits>();
-        _ = FastEnum.GetMembers<Fruits>();
+        _ = _FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -43,6 +44,6 @@ public class EnumMemberAttribute
 
 
     [Benchmark]
-    public string? FastEnum_Reflection()
+    public string? FastEnum()
         => FastEnumExtensions.GetEnumMemberValue(Value);
 }

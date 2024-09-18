@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -17,7 +18,7 @@ public class ToString_Undefined
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetMembers<Fruits>();
-        _ = FastEnum.GetMembers<Fruits>();
+        _ = _FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -32,11 +33,6 @@ public class ToString_Undefined
 
 
     [Benchmark]
-    public string FastEnum_Reflection()
-        => FastEnum.ToString(Value);
-
-
-    [Benchmark]
-    public string FastEnum_SourceGen()
-        => FastEnum.ToString<Fruits, FruitsBooster>(Value);
+    public string FastEnum()
+        => _FastEnum.ToString<Fruits, FruitsBooster>(Value);
 }

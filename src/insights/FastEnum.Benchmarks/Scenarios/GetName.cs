@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -17,7 +18,7 @@ public class GetName
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetNames<Fruits>();
-        _ = FastEnum.GetNames<Fruits>();
+        _ = _FastEnum.GetNames<Fruits>();
     }
 
 
@@ -32,11 +33,6 @@ public class GetName
 
 
     [Benchmark]
-    public string? FastEnum_Reflection()
-        => FastEnum.GetName(Value);
-
-
-    [Benchmark]
-    public string? FastEnum_SourceGen()
-        => FastEnum.GetName<Fruits, FruitsBooster>(Value);
+    public string? FastEnum()
+        => _FastEnum.GetName<Fruits, FruitsBooster>(Value);
 }

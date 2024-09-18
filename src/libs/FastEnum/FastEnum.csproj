@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../NuGet.props" />
+
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <PackageId>FastEnum</PackageId>
+        <Description>The extremely fast enum utilities for C#/.NET. Provided methods are all achieved zero allocation and faster than System.Enum.</Description>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeContentInPack>true</IncludeContentInPack>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FastEnum.Core\FastEnum.Core.csproj" />
+        <ProjectReference Include="..\FastEnum.Generators\FastEnum.Generators.csproj" />
+    </ItemGroup>
+
+</Project>

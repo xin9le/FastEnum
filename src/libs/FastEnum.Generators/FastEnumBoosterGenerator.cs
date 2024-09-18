@@ -11,6 +11,9 @@ namespace FastEnumUtility.Generators;
 
 
 
+/// <summary>
+/// Provides code generation of IFastEnumBooster&lt;T&gt; implementation.
+/// </summary>
 [Generator(LanguageNames.CSharp)]
 public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 {

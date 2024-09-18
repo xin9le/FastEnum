@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Generators", "libs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastEnum.Sandbox", "insights\FastEnum.Sandbox\FastEnum.Sandbox.csproj", "{0602FACB-03F4-4688-8EAA-189419FE1ECD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastEnum", "libs\FastEnum\FastEnum.csproj", "{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{0602FACB-03F4-4688-8EAA-189419FE1ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0602FACB-03F4-4688-8EAA-189419FE1ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0602FACB-03F4-4688-8EAA-189419FE1ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{BB79F08A-A949-4DA3-BEAA-F7F70F8F4D94} = {429472C8-6367-4D7E-BAA9-9777B5E947B5}
 		{624C6F37-9FA7-4BC9-8307-15AB6360302B} = {78D54D2E-CAD6-4D50-AF7A-8B726DE45BB6}
 		{0602FACB-03F4-4688-8EAA-189419FE1ECD} = {429472C8-6367-4D7E-BAA9-9777B5E947B5}
+		{7C02C6ED-B6EF-4846-ADDF-96FACB0CD794} = {78D54D2E-CAD6-4D50-AF7A-8B726DE45BB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {62660904-8CA1-42C2-B709-FDCD0530AF5C}

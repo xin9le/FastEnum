@@ -34,4 +34,9 @@ public class ToString_Defined
     [Benchmark]
     public string FastEnum_Reflection()
         => FastEnum.ToString(Value);
+
+
+    [Benchmark]
+    public string FastEnum_SourceGen()
+        => FastEnum.ToString<Fruits, FruitsBooster>(Value);
 }

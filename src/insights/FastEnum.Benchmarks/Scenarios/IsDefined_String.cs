@@ -27,4 +27,9 @@ public class IsDefined_String
     [Benchmark]
     public bool FastEnum_Reflection()
         => FastEnum.IsDefined<Fruits>(Value);
+
+
+    [Benchmark]
+    public bool FastEnum_SourceGen()
+        => FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
 }

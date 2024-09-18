@@ -34,4 +34,9 @@ public class TryParse_CaseInsensitive
     [Benchmark]
     public bool FastEnum_Reflection()
         => FastEnum.TryParse<Fruits>(Value, true, out _);
+
+
+    [Benchmark]
+    public bool FastEnum_SourceGen()
+        => FastEnum.TryParse<Fruits, FruitsBooster>(Value, true, out _);
 }

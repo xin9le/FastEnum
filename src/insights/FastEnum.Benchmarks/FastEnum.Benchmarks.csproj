@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <RootNamespace>FastEnumUtility.Benchmarks</RootNamespace>
+        <NoWarn>$(NoWarn);FE0000</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

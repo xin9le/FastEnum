@@ -34,4 +34,9 @@ public class GetName
     [Benchmark]
     public string? FastEnum_Reflection()
         => FastEnum.GetName(Value);
+
+
+    [Benchmark]
+    public string? FastEnum_SourceGen()
+        => FastEnum.GetName<Fruits, FruitsBooster>(Value);
 }

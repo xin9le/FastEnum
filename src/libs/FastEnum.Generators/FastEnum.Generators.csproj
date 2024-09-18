@@ -13,6 +13,8 @@
     </ItemGroup>
 
     <!-- NuGet -->
+    <Import Project="../NuGet.props" />
+
     <PropertyGroup>
         <PackageId>FastEnum.Generators</PackageId>
         <Description>Source code generator for FastEnum.</Description>

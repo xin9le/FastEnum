@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TEnum = FastEnumUtility.UnitTests.Models.EmptyEnum;
 
-namespace FastEnumUtility.UnitTests.Cases;
+namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 
@@ -106,5 +106,17 @@ public class EmptyTests
         FastEnum.TryParse<TEnum>("ABCDE", true, out var _).Should().BeFalse();
         FastEnum.TryParse<TEnum>("123", true, out var r).Should().BeTrue();
         r.Should().Be((TEnum)123);
+    }
+
+
+    [TestMethod]
+    public void FastToString()
+    {
+        const TEnum undefined = (TEnum)123;
+        var expect = undefined.ToString();
+        var actual1 = FastEnum.ToString(undefined);
+        var actual2 = undefined.FastToString();
+        actual1.Should().Be(expect);
+        actual2.Should().Be(expect);
     }
 }

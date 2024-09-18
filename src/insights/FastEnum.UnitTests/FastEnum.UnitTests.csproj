@@ -13,16 +13,29 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
+        <ProjectReference Include="..\..\libs\FastEnum.Generators\FastEnum.Generators.csproj">
+            <OutputItemType>Analyzer</OutputItemType>
+            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+        </ProjectReference>
     </ItemGroup>
 
     <!-- T4 Template -->
     <ItemGroup>
-        <Compile Update="Cases\BasicTests.cs">
+        <Compile Update="Cases\Generators\BasicTests.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
-        <None Update="Cases\BasicTests.tt">
+        <Compile Update="Cases\Reflections\BasicTests.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>BasicTests.tt</DependentUpon>
+        </Compile>
+        <None Update="Cases\Generators\BasicTests.tt">
+            <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>

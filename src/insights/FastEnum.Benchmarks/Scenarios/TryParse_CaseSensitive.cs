@@ -1,11 +1,8 @@
-﻿extern alias FastEnumV1;
-
-using System;
+﻿using System;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
-using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
-using FastEnum2 = FastEnumUtility.FastEnum;
+using _FastEnum = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -21,8 +18,7 @@ public class TryParse_CaseSensitive
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetMembers<Fruits>();
-        _ = FastEnum1.GetMembers<Fruits>();
-        _ = FastEnum2.GetMembers<Fruits>();
+        _ = _FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -37,11 +33,11 @@ public class TryParse_CaseSensitive
 
 
     [Benchmark]
-    public bool FastEnum_v1()
-        => FastEnum1.TryParse<Fruits>(Value, out _);
+    public bool NetEscapades()
+        => FruitsExtensions.TryParse(Value, out _);
 
 
     [Benchmark]
-    public bool FastEnum_v2()
-        => FastEnum2.TryParse<Fruits>(Value, out _);
+    public bool FastEnum()
+        => _FastEnum.TryParse<Fruits, FruitsBooster>(Value, out _);
 }

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FastEnumUtility.UnitTests.Cases;
+namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 

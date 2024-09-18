@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TEnum = FastEnumUtility.UnitTests.Models.AnnotationEnum;
 
-namespace FastEnumUtility.UnitTests.Cases;
+namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 

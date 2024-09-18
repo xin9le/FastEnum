@@ -8,13 +8,18 @@
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" />
         <PackageReference Include="Enums.NET" />
-        <PackageReference Include="FastEnum">
-            <Aliases>FastEnumV1</Aliases>
+        <PackageReference Include="NetEscapades.EnumGenerators">
+            <PrivateAssets>all</PrivateAssets>
+            <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\libs\FastEnum.Core\FastEnum.Core.csproj" />
+        <ProjectReference Include="..\..\libs\FastEnum.Generators\FastEnum.Generators.csproj">
+            <OutputItemType>Analyzer</OutputItemType>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
     </ItemGroup>
 
 </Project>

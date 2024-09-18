@@ -8,9 +8,6 @@
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" />
         <PackageReference Include="Enums.NET" />
-        <PackageReference Include="FastEnum">
-            <Aliases>FastEnumV1</Aliases>
-        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

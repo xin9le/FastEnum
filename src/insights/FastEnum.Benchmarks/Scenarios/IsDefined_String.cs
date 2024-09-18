@@ -1,10 +1,6 @@
-﻿extern alias FastEnumV1;
-
-using System;
+﻿using System;
 using BenchmarkDotNet.Attributes;
 using FastEnumUtility.Benchmarks.Models;
-using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
-using FastEnum2 = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -19,8 +15,7 @@ public class IsDefined_String
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
-        _ = FastEnum1.GetMembers<Fruits>();
-        _ = FastEnum2.GetMembers<Fruits>();
+        _ = FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -30,11 +25,6 @@ public class IsDefined_String
 
 
     [Benchmark]
-    public bool FastEnum_v1()
-        => FastEnum1.IsDefined<Fruits>(Value);
-
-
-    [Benchmark]
-    public bool FastEnum_v2()
-        => FastEnum2.IsDefined<Fruits>(Value);
+    public bool FastEnum_Reflection()
+        => FastEnum.IsDefined<Fruits>(Value);
 }

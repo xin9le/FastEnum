@@ -1,16 +1,9 @@
-﻿extern alias FastEnumV1;
-
-using System;
+﻿using System;
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
 using EnumsNET;
 using FastEnumUtility.Benchmarks.Models;
 using EnumMemberAttr = System.Runtime.Serialization.EnumMemberAttribute;
-using FastEnum1 = FastEnumV1::FastEnumUtility.FastEnum;
-using FastEnum1Ex = FastEnumV1::FastEnumUtility.FastEnumExtensions;
-using FastEnum2 = FastEnumUtility.FastEnum;
-using FastEnum2Ex = FastEnumUtility.FastEnumExtensions;
-
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -26,8 +19,7 @@ public class EnumMemberAttribute
     {
         _ = Enum.GetNames<Fruits>();
         _ = Enums.GetMembers<Fruits>();
-        _ = FastEnum1.GetMembers<Fruits>();
-        _ = FastEnum2.GetMembers<Fruits>();
+        _ = FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -51,11 +43,6 @@ public class EnumMemberAttribute
 
 
     [Benchmark]
-    public string? FastEnum_v1()
-        => FastEnum1Ex.GetEnumMemberValue(Value);
-
-
-    [Benchmark]
-    public string? FastEnum_v2()
-        => FastEnum2Ex.GetEnumMemberValue(Value);
+    public string? FastEnum_Reflection()
+        => FastEnumExtensions.GetEnumMemberValue(Value);
 }

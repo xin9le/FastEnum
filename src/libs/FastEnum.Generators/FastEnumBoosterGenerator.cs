@@ -319,7 +319,8 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 var attributes = syntax.AttributeLists.SelectMany(static x => x.Attributes);
                 foreach (var attr in attributes)
                 {
-                    if (attr.Name is not GenericNameSyntax generic)
+                    var generic = getGenericNameSyntax(attr.Name);
+                    if (generic is null)
                         continue;
 
                     if (generic.Identifier.Text is not ("FastEnum" or "FastEnumAttribute"))
@@ -329,6 +330,18 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                     return @enum;
                 }
                 throw new InvalidOperationException("FastEnumAttribute<T> is not annotated.");
+            }
+
+
+            static GenericNameSyntax? getGenericNameSyntax(NameSyntax syntax)
+            {
+                if (syntax is QualifiedNameSyntax qualified)  // [global::FastEnumUtility.FastEnum<TEnum>]
+                    return getGenericNameSyntax(qualified.Right);
+
+                if (syntax is GenericNameSyntax generic)  // [FastEnum<TEnum>]
+                    return generic;
+
+                return null;
             }
 
 

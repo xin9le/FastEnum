@@ -415,7 +415,13 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             this.TypeName = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             this.UnderlyingType = symbol.EnumUnderlyingType?.ToDisplayString() ?? "int";
             this.Fields = symbol.GetMembers().OfType<IFieldSymbol>().ToArray();
+#pragma warning disable RS1024  // Use 'SymbolEqualityComparer' when comparing symbols
+            // note:
+            //  - In this case, where a custom IEqualityComparer<T> is being utilized, the RS1024 warning is deemed inappropriate and is recognized as a bug in Microsoft.CodeAnalysis.CSharp.
+            //  - Although this issue has been rectified in version 4.6.0, the use of version 4.4.0 does not present any functional problems.
+            //  - Consequently, we have opted to address this by suppressing the warning.
             this.DistinctedFields = this.Fields.Distinct(new FieldSymbolComparer()).ToArray();
+#pragma warning restore RS1024
 
 
             #region Local Functions

@@ -23,7 +23,7 @@ namespace FastEnumUtility.Sandbox
     //{ }
 
 
-    [FastEnum<HttpStatusCode>]
+    [global::FastEnumUtility.FastEnum<HttpStatusCode>]
     public partial class HttpStatusCodeBooster
     { }
 }

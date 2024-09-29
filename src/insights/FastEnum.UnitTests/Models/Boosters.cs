@@ -50,12 +50,12 @@ public sealed partial class UInt64EnumBooster
 
 
 
-[FastEnum<SameValueEnum>]
+[FastEnumUtility.FastEnum<SameValueEnum>]  // full qualified name syntax
 public sealed partial class SameValueEnumBooster
 { }
 
 
 
-[FastEnum<EmptyEnum>]
+[global::FastEnumUtility.FastEnum<EmptyEnum>]  // full qualified name syntax
 public sealed partial class EmptyEnumBooster
 { }

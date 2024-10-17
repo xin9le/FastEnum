@@ -5,9 +5,9 @@ name: Unit Testing
 on:
   workflow_dispatch:
   push:
-    branches: [ feature/refine-actions ]
+    branches: [ main ]
   pull_request:
-    branches: [ feature/refine-actions ]
+    branches: [ main ]
 
 env:
   BuildConfiguration: Release

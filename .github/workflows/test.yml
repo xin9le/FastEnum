@@ -15,7 +15,7 @@ env:
   ProjectName: FastEnum.UnitTests
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:

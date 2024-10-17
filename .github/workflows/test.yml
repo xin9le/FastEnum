@@ -1,31 +1,43 @@
-name: Build and Test
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Test
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ feature/refine-actions ]
   pull_request:
-    branches: [ main ]
+    branches: [ feature/refine-actions ]
+
+env:
+  BuildConfiguration: Release
+  CheckoutDirectory: checkout
+  ProjectName: FastEnum.UnitTests
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         include:
-        - dotnet-version: '8.0.x'
-          tfm: 'net8.0'
+        - DotnetVersion: 8.0.x
+          Tfm: net8.0
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Display dotnet version
+          dotnet-version: ${{ matrix.DotnetVersion }}
+
+      - name: Display .NET version
         run: dotnet --version
-      - name: Build
-        run: dotnet build --configuration Release --framework ${{ matrix.tfm }} ./src/libs/FastEnum.Core/FastEnum.Core.csproj
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.CheckoutDirectory }}
+          fetch-depth: 0
+
       - name: Test
-        run: dotnet test --verbosity normal --configuration Release --framework ${{ matrix.tfm }} ./src/insights/FastEnum.UnitTests/FastEnum.UnitTests.csproj
+        run: dotnet test --verbosity normal --configuration ${{ env.BuildConfiguration }} --framework ${{ matrix.Tfm }} ./${{ env.CheckoutDirectory }}/src/insights/${{ env.ProjectName }}/${{ env.ProjectName }}.csproj

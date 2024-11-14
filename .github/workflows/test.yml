@@ -23,6 +23,8 @@ jobs:
         include:
         - DotnetVersion: 8.0.x
           Tfm: net8.0
+        - DotnetVersion: 9.0.x
+          Tfm: net9.0
 
     steps:
       - name: Setup .NET SDK

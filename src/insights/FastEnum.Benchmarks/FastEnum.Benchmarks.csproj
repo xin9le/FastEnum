@@ -11,6 +11,7 @@
         <PackageReference Include="NetEscapades.EnumGenerators">
             <PrivateAssets>all</PrivateAssets>
             <ExcludeAssets>runtime</ExcludeAssets>
+            <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 

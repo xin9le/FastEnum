@@ -8,6 +8,6 @@
     <PackageVersion Include="FluentAssertions" Version="6.12.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageVersion Include="MSTest" Version="3.6.3" />
-    <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta09" />
+    <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta11" />
   </ItemGroup>
 </Project>

@@ -22,7 +22,7 @@ jobs:
       matrix:
         include:
         - DotnetVersion: 9.0.x
-          Tfm: [net8.0, net9.0]
+          Tfm: net9.0
 
     steps:
       - name: Setup .NET SDK

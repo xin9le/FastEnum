@@ -36,7 +36,7 @@ public class ContinuousValueTests
         FastEnum.GetName(ContinuousValueContainsSameValueEnum.A).Should().Be(nameof(ContinuousValueContainsSameValueEnum.A));
         FastEnum.GetName(ContinuousValueContainsSameValueEnum.B).Should().Be(nameof(ContinuousValueContainsSameValueEnum.B));
         FastEnum.GetName(ContinuousValueContainsSameValueEnum.C).Should().Be(nameof(ContinuousValueContainsSameValueEnum.C));
-        FastEnum.GetName(ContinuousValueContainsSameValueEnum.D).Should().Be(nameof(ContinuousValueContainsSameValueEnum.D));
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.D).Should().Be(nameof(ContinuousValueContainsSameValueEnum.C));  // should be same as C
         FastEnum.GetName(ContinuousValueContainsSameValueEnum.E).Should().Be(nameof(ContinuousValueContainsSameValueEnum.E));
 
         FastEnum.GetName(NotContinuousValueEnum.A).Should().Be(nameof(NotContinuousValueEnum.A));

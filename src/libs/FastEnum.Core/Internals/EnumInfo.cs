@@ -41,13 +41,14 @@ internal static class EnumInfo<T>
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
-        s_orderedMembers = s_members.OrderBy(static x => x.Value).ToArray();
+        s_orderedMembers
+            = s_members
+            .OrderBy(static x => x.Value)
+            .DistinctBy(static x => x.Value)
+            .ToArray();
         s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
         s_memberByNameCaseInsensitive = s_members.ToCaseInsensitiveStringDictionary(static x => x.Name);
-        s_memberByValue
-            = s_orderedMembers
-            .DistinctBy(static x => x.Value)
-            .ToFastReadOnlyDictionary(static x => x.Value);
+        s_memberByValue = s_orderedMembers.ToFastReadOnlyDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
         s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);

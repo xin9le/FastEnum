@@ -32,5 +32,17 @@ public class ContinuousValueTests
         FastEnum.GetName(ContinuousValueEnum.C).Should().Be(nameof(ContinuousValueEnum.C));
         FastEnum.GetName(ContinuousValueEnum.D).Should().Be(nameof(ContinuousValueEnum.D));
         FastEnum.GetName(ContinuousValueEnum.E).Should().Be(nameof(ContinuousValueEnum.E));
+
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.A).Should().Be(nameof(ContinuousValueContainsSameValueEnum.A));
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.B).Should().Be(nameof(ContinuousValueContainsSameValueEnum.B));
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.C).Should().Be(nameof(ContinuousValueContainsSameValueEnum.C));
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.D).Should().Be(nameof(ContinuousValueContainsSameValueEnum.C));  // should be same as C
+        FastEnum.GetName(ContinuousValueContainsSameValueEnum.E).Should().Be(nameof(ContinuousValueContainsSameValueEnum.E));
+
+        FastEnum.GetName(NotContinuousValueEnum.A).Should().Be(nameof(NotContinuousValueEnum.A));
+        FastEnum.GetName(NotContinuousValueEnum.B).Should().Be(nameof(NotContinuousValueEnum.B));
+        FastEnum.GetName(NotContinuousValueEnum.C).Should().Be(nameof(NotContinuousValueEnum.C));
+        FastEnum.GetName(NotContinuousValueEnum.D).Should().Be(nameof(NotContinuousValueEnum.D));
+        FastEnum.GetName(NotContinuousValueEnum.E).Should().Be(nameof(NotContinuousValueEnum.E));
     }
 }

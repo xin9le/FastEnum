@@ -38,7 +38,7 @@ internal static class CollectionExtensions
     #region FastReadOnlyDictionary
     public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
         where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, static x => x);
+        => ToFastReadOnlyDictionary(source, keySelector, static x => x);
 
 
     public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
@@ -49,7 +49,7 @@ internal static class CollectionExtensions
 
     #region CaseSensitiveStringDictionary
     public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
+        => ToCaseSensitiveStringDictionary(source, keySelector, static x => x);
 
 
     public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
@@ -59,7 +59,7 @@ internal static class CollectionExtensions
 
     #region CaseInsensitiveStringDictionary
     public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, static x => x);
+        => ToCaseInsensitiveStringDictionary(source, keySelector, static x => x);
 
 
     public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)

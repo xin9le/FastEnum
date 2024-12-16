@@ -6,7 +6,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using FastEnumUtility.UnitTests.Models;
 using FluentAssertions;

@@ -73,6 +73,150 @@ public enum UInt64Enum : ulong
 
 
 
+public enum ContinuousSByteEnum : sbyte
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousByteEnum : byte
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt16Enum : short
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt16Enum : ushort
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt32Enum : int
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt32Enum : uint
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt64Enum : long
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt64Enum : ulong
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum DiscontinuousSByteEnum : sbyte
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousByteEnum : byte
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt16Enum : short
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt16Enum : ushort
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt32Enum : int
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt32Enum : uint
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt64Enum : long
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt64Enum : ulong
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
 [Flags]
 public enum AnnotationEnum
 {
@@ -94,48 +238,22 @@ public enum AnnotationEnum
 
 
 
-public enum SameValueEnum : byte
+public enum SameValueContinuousEnum : byte
 {
-    MinValue = byte.MinValue,
-#pragma warning disable CA1069
-    Zero = 0,  // Name is different, but value is same as other member.
-#pragma warning restore CA1069
-    MaxValue = byte.MaxValue,
+    A = 1,
+    B = 2,
+    C = 2,  // Name is different, but value is same as other member.
+    D = 3,
 }
 
 
 
-public enum ContinuousValueEnum
+public enum SameValueDiscontinuousEnum : byte
 {
-    A = -1,
-    B,
-    C,
-    D,
-    E,
-}
-
-
-
-public enum ContinuousValueContainsSameValueEnum
-{
-    A = -1,
-    B = 0,
-    C = 1,
-#pragma warning disable CA1069
-    D = 1,  // Name is different, but value is same as other member.
-#pragma warning restore CA1069
-    E = 2,
-}
-
-
-
-public enum NotContinuousValueEnum
-{
-    A = -1,
-    B = 0,
-    C = 1,
-    D = 2,
-    E = 4,  // Not continuous value
+    A = 1,
+    B = 3,
+    C = 3,  // Name is different, but value is same as other member.
+    D = 5,
 }
 
 

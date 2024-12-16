@@ -26,17 +26,53 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
+        <Compile Update="Cases\Generators\SameValueTests.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>SameValueTests.tt</DependentUpon>
+        </Compile>
         <Compile Update="Cases\Reflections\BasicTests.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
+        <Compile Update="Cases\Reflections\ContinuousTests.cs">
+            <DependentUpon>ContinuousTests.tt</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
+        <Compile Update="Cases\Reflections\DiscontinuousTests.cs">
+            <DependentUpon>DiscontinuousTests.tt</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
+        <Compile Update="Cases\Reflections\SameValueTests.cs">
+            <DependentUpon>SameValueTests.tt</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
         <None Update="Cases\Generators\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
+        <None Update="Cases\Generators\SameValueTests.tt">
+            <LastGenOutput>SameValueTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
         <None Update="Cases\Reflections\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\ContinuousTests.tt">
+            <LastGenOutput>ContinuousTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\DiscontinuousTests.tt">
+            <LastGenOutput>DiscontinuousTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\SameValueTests.tt">
+            <LastGenOutput>SameValueTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

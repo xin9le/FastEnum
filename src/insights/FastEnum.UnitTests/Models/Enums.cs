@@ -73,6 +73,78 @@ public enum UInt64Enum : ulong
 
 
 
+public enum ContinuousSByteEnum : sbyte
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousByteEnum : byte
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt16Enum : short
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt16Enum : ushort
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt32Enum : int
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt32Enum : uint
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousInt64Enum : long
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
+public enum ContinuousUInt64Enum : ulong
+{
+    A = 1,
+    B,
+    C,
+}
+
+
+
 [Flags]
 public enum AnnotationEnum
 {

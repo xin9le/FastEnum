@@ -31,12 +31,21 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
+        <Compile Update="Cases\Reflections\ContinuousTests.cs">
+            <DependentUpon>ContinuousTests.tt</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
         <None Update="Cases\Generators\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <None Update="Cases\Reflections\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\ContinuousTests.tt">
+            <LastGenOutput>ContinuousTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

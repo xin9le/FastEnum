@@ -194,17 +194,21 @@ public sealed class Continuous<#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.A).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.B).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.C).Should().BeTrue();
+        FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)0).Should().BeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)123).Should().BeFalse();
 
         //--- Extension methods
         <#= x.EnumType #>.A.IsDefined().Should().BeTrue();
         <#= x.EnumType #>.B.IsDefined().Should().BeTrue();
         <#= x.EnumType #>.C.IsDefined().Should().BeTrue();
+        ((<#= x.EnumType #>)0).IsDefined().Should().BeFalse();
+        ((<#= x.EnumType #>)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.A)).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.B)).Should().BeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.C)).Should().BeTrue();
+        FastEnum.IsDefined<<#= x.EnumType #>>("0").Should().BeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("123").Should().BeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("value").Should().BeFalse();
     }

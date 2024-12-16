@@ -175,17 +175,21 @@ public sealed class ContinuousSByteTests
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousSByteEnum.A.IsDefined().Should().BeTrue();
         ContinuousSByteEnum.B.IsDefined().Should().BeTrue();
         ContinuousSByteEnum.C.IsDefined().Should().BeTrue();
+        ((ContinuousSByteEnum)0).IsDefined().Should().BeFalse();
+        ((ContinuousSByteEnum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousSByteEnum>(nameof(ContinuousSByteEnum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(nameof(ContinuousSByteEnum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(nameof(ContinuousSByteEnum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousSByteEnum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>("value").Should().BeFalse();
     }
@@ -534,17 +538,21 @@ public sealed class ContinuousByteTests
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousByteEnum.A.IsDefined().Should().BeTrue();
         ContinuousByteEnum.B.IsDefined().Should().BeTrue();
         ContinuousByteEnum.C.IsDefined().Should().BeTrue();
+        ((ContinuousByteEnum)0).IsDefined().Should().BeFalse();
+        ((ContinuousByteEnum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousByteEnum>(nameof(ContinuousByteEnum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(nameof(ContinuousByteEnum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(nameof(ContinuousByteEnum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousByteEnum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>("value").Should().BeFalse();
     }
@@ -893,17 +901,21 @@ public sealed class ContinuousInt16Tests
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousInt16Enum.A.IsDefined().Should().BeTrue();
         ContinuousInt16Enum.B.IsDefined().Should().BeTrue();
         ContinuousInt16Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousInt16Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousInt16Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousInt16Enum>(nameof(ContinuousInt16Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(nameof(ContinuousInt16Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(nameof(ContinuousInt16Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt16Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>("value").Should().BeFalse();
     }
@@ -1252,17 +1264,21 @@ public sealed class ContinuousUInt16Tests
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousUInt16Enum.A.IsDefined().Should().BeTrue();
         ContinuousUInt16Enum.B.IsDefined().Should().BeTrue();
         ContinuousUInt16Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousUInt16Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousUInt16Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousUInt16Enum>(nameof(ContinuousUInt16Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(nameof(ContinuousUInt16Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(nameof(ContinuousUInt16Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt16Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>("value").Should().BeFalse();
     }
@@ -1611,17 +1627,21 @@ public sealed class ContinuousInt32Tests
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousInt32Enum.A.IsDefined().Should().BeTrue();
         ContinuousInt32Enum.B.IsDefined().Should().BeTrue();
         ContinuousInt32Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousInt32Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousInt32Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousInt32Enum>(nameof(ContinuousInt32Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(nameof(ContinuousInt32Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(nameof(ContinuousInt32Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt32Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>("value").Should().BeFalse();
     }
@@ -1970,17 +1990,21 @@ public sealed class ContinuousUInt32Tests
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousUInt32Enum.A.IsDefined().Should().BeTrue();
         ContinuousUInt32Enum.B.IsDefined().Should().BeTrue();
         ContinuousUInt32Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousUInt32Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousUInt32Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousUInt32Enum>(nameof(ContinuousUInt32Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(nameof(ContinuousUInt32Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(nameof(ContinuousUInt32Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt32Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>("value").Should().BeFalse();
     }
@@ -2329,17 +2353,21 @@ public sealed class ContinuousInt64Tests
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousInt64Enum.A.IsDefined().Should().BeTrue();
         ContinuousInt64Enum.B.IsDefined().Should().BeTrue();
         ContinuousInt64Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousInt64Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousInt64Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousInt64Enum>(nameof(ContinuousInt64Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(nameof(ContinuousInt64Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(nameof(ContinuousInt64Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousInt64Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>("value").Should().BeFalse();
     }
@@ -2688,17 +2716,21 @@ public sealed class ContinuousUInt64Tests
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.A).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.B).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.C).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)0).Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)123).Should().BeFalse();
 
         //--- Extension methods
         ContinuousUInt64Enum.A.IsDefined().Should().BeTrue();
         ContinuousUInt64Enum.B.IsDefined().Should().BeTrue();
         ContinuousUInt64Enum.C.IsDefined().Should().BeTrue();
+        ((ContinuousUInt64Enum)0).IsDefined().Should().BeFalse();
+        ((ContinuousUInt64Enum)123).IsDefined().Should().BeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<ContinuousUInt64Enum>(nameof(ContinuousUInt64Enum.A)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(nameof(ContinuousUInt64Enum.B)).Should().BeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(nameof(ContinuousUInt64Enum.C)).Should().BeTrue();
+        FastEnum.IsDefined<ContinuousUInt64Enum>("0").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>("123").Should().BeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>("value").Should().BeFalse();
     }

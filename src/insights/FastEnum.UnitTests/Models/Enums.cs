@@ -249,37 +249,22 @@ public enum SameValueEnum : byte
 
 
 
-public enum ContinuousValueEnum
+public enum SameValueContinuousEnum : byte
 {
-    A = -1,
-    B,
-    C,
-    D,
-    E,
+    A = 1,
+    B = 2,
+    C = 2,  // Name is different, but value is same as other member.
+    D = 3,
 }
 
 
 
-public enum ContinuousValueContainsSameValueEnum
+public enum SameValueDiscontinuousEnum : byte
 {
-    A = -1,
-    B = 0,
-    C = 1,
-#pragma warning disable CA1069
-    D = 1,  // Name is different, but value is same as other member.
-#pragma warning restore CA1069
-    E = 2,
-}
-
-
-
-public enum NotContinuousValueEnum
-{
-    A = -1,
-    B = 0,
-    C = 1,
-    D = 2,
-    E = 4,  // Not continuous value
+    A = 1,
+    B = 3,
+    C = 3,  // Name is different, but value is same as other member.
+    D = 5,
 }
 
 

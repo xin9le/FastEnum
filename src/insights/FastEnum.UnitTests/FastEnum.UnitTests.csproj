@@ -41,6 +41,11 @@
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
         </Compile>
+        <Compile Update="Cases\Reflections\SameValueTests.cs">
+            <DependentUpon>SameValueTests.tt</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
         <None Update="Cases\Generators\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
@@ -55,6 +60,10 @@
         </None>
         <None Update="Cases\Reflections\DiscontinuousTests.tt">
             <LastGenOutput>DiscontinuousTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Reflections\SameValueTests.tt">
+            <LastGenOutput>SameValueTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

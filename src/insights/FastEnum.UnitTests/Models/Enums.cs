@@ -145,6 +145,78 @@ public enum ContinuousUInt64Enum : ulong
 
 
 
+public enum DiscontinuousSByteEnum : sbyte
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousByteEnum : byte
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt16Enum : short
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt16Enum : ushort
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt32Enum : int
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt32Enum : uint
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousInt64Enum : long
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
+public enum DiscontinuousUInt64Enum : ulong
+{
+    A = 1,
+    B = 3,
+    C = 5,
+}
+
+
+
 [Flags]
 public enum AnnotationEnum
 {

@@ -26,6 +26,11 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>BasicTests.tt</DependentUpon>
         </Compile>
+        <Compile Update="Cases\Generators\SameValueTests.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>SameValueTests.tt</DependentUpon>
+        </Compile>
         <Compile Update="Cases\Reflections\BasicTests.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
@@ -48,6 +53,10 @@
         </Compile>
         <None Update="Cases\Generators\BasicTests.tt">
             <LastGenOutput>BasicTests.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        <None Update="Cases\Generators\SameValueTests.tt">
+            <LastGenOutput>SameValueTests.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
         <None Update="Cases\Reflections\BasicTests.tt">

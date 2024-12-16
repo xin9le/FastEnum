@@ -238,17 +238,6 @@ public enum AnnotationEnum
 
 
 
-public enum SameValueEnum : byte
-{
-    MinValue = byte.MinValue,
-#pragma warning disable CA1069
-    Zero = 0,  // Name is different, but value is same as other member.
-#pragma warning restore CA1069
-    MaxValue = byte.MaxValue,
-}
-
-
-
 public enum SameValueContinuousEnum : byte
 {
     A = 1,

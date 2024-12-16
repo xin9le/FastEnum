@@ -20,7 +20,7 @@ namespace FastEnumUtility.UnitTests.Cases.Generators;
 /// Provides unit tests for enum based on <see cref="sbyte"/> type.
 /// </summary>
 [TestClass]
-public sealed class SByteTests
+public sealed class BasicSByteTests
 {
     [TestMethod]
     public void GetName()
@@ -207,7 +207,7 @@ public sealed class SByteTests
 /// Provides unit tests for enum based on <see cref="byte"/> type.
 /// </summary>
 [TestClass]
-public sealed class ByteTests
+public sealed class BasicByteTests
 {
     [TestMethod]
     public void GetName()
@@ -388,7 +388,7 @@ public sealed class ByteTests
 /// Provides unit tests for enum based on <see cref="short"/> type.
 /// </summary>
 [TestClass]
-public sealed class Int16Tests
+public sealed class BasicInt16Tests
 {
     [TestMethod]
     public void GetName()
@@ -575,7 +575,7 @@ public sealed class Int16Tests
 /// Provides unit tests for enum based on <see cref="ushort"/> type.
 /// </summary>
 [TestClass]
-public sealed class UInt16Tests
+public sealed class BasicUInt16Tests
 {
     [TestMethod]
     public void GetName()
@@ -756,7 +756,7 @@ public sealed class UInt16Tests
 /// Provides unit tests for enum based on <see cref="int"/> type.
 /// </summary>
 [TestClass]
-public sealed class Int32Tests
+public sealed class BasicInt32Tests
 {
     [TestMethod]
     public void GetName()
@@ -943,7 +943,7 @@ public sealed class Int32Tests
 /// Provides unit tests for enum based on <see cref="uint"/> type.
 /// </summary>
 [TestClass]
-public sealed class UInt32Tests
+public sealed class BasicUInt32Tests
 {
     [TestMethod]
     public void GetName()
@@ -1124,7 +1124,7 @@ public sealed class UInt32Tests
 /// Provides unit tests for enum based on <see cref="long"/> type.
 /// </summary>
 [TestClass]
-public sealed class Int64Tests
+public sealed class BasicInt64Tests
 {
     [TestMethod]
     public void GetName()
@@ -1311,7 +1311,7 @@ public sealed class Int64Tests
 /// Provides unit tests for enum based on <see cref="ulong"/> type.
 /// </summary>
 [TestClass]
-public sealed class UInt64Tests
+public sealed class BasicUInt64Tests
 {
     [TestMethod]
     public void GetName()

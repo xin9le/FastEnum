@@ -39,7 +39,7 @@ namespace FastEnumUtility.UnitTests.Cases.Reflections;
 /// Provides unit tests for enum based on <see cref="<#= x.UnderlyingType #>"/> type.
 /// </summary>
 [TestClass]
-public sealed class <#= x.AliasType #>Tests
+public sealed class Basic<#= x.AliasType #>Tests
 {
     [TestMethod]
     public void GetUnderlyingType()

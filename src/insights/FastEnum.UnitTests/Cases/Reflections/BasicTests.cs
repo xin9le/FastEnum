@@ -16,9 +16,6 @@ namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="sbyte"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicSByteTests
 {
@@ -378,9 +375,6 @@ public sealed class BasicSByteTests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="byte"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicByteTests
 {
@@ -732,9 +726,6 @@ public sealed class BasicByteTests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="short"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicInt16Tests
 {
@@ -1094,9 +1085,6 @@ public sealed class BasicInt16Tests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="ushort"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicUInt16Tests
 {
@@ -1448,9 +1436,6 @@ public sealed class BasicUInt16Tests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="int"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicInt32Tests
 {
@@ -1810,9 +1795,6 @@ public sealed class BasicInt32Tests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="uint"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicUInt32Tests
 {
@@ -2164,9 +2146,6 @@ public sealed class BasicUInt32Tests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="long"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicInt64Tests
 {
@@ -2526,9 +2505,6 @@ public sealed class BasicInt64Tests
 
 
 
-/// <summary>
-/// Provides unit tests for enum based on <see cref="ulong"/> type.
-/// </summary>
 [TestClass]
 public sealed class BasicUInt64Tests
 {

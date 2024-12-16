@@ -35,9 +35,6 @@ namespace FastEnumUtility.UnitTests.Cases.Reflections;
 
 
 <# foreach (var x in parameters) { #>
-/// <summary>
-/// Provides unit tests for enum based on <see cref="<#= x.UnderlyingType #>"/> type.
-/// </summary>
 [TestClass]
 public sealed class Continuous<#= x.AliasType #>Tests
 {

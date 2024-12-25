@@ -41,7 +41,7 @@ var values = FastEnum.GetValues<Fruits>();
 var names = FastEnum.GetNames<Fruits>();
 var name = FastEnum.GetName<Fruits>(Fruits.Apple);
 var toString = Fruits.Apple.FastToString();
-var defined = FastEnum.IsDefined<Fruits>(123);
+var defined = FastEnum.IsDefined((Fruits)123);
 var parse = FastEnum.Parse<Fruits>("Apple");
 var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
 ```

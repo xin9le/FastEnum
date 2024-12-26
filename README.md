@@ -39,20 +39,20 @@ This library super easy to use like `System.Enum` that is standard of .NET. Look
 //--- FastEnum
 var values = FastEnum.GetValues<Fruits>();
 var names = FastEnum.GetNames<Fruits>();
-var name = FastEnum.GetName<Fruits>(Fruits.Apple);
+var name = FastEnum.GetName(Fruits.Apple);
 var toString = Fruits.Apple.FastToString();
-var defined = FastEnum.IsDefined((Fruits)123);
+var defined = FastEnum.IsDefined(Fruits.Apple);
 var parse = FastEnum.Parse<Fruits>("Apple");
 var tryParse = FastEnum.TryParse<Fruits>("Apple", out var value);
 ```
 
 ```cs
 //--- .NET
-var values = Enum.GetValues(typeof(Fruits)) as Fruits[];
-var names = Enum.GetNames(typeof(Fruits));
-var name = Enum.GetName(typeof(Fruits), Fruits.Apple);
+var values = Enum.GetValues<Fruits>();
+var names = Enum.GetNames<Fruits>();
+var name = Enum.GetName(Fruits.Apple);
 var toString = Fruits.Apple.ToString();
-var defined = Enum.IsDefined(typeof(Fruits), 123);
+var defined = Enum.IsDefined(Fruits.Apple);
 var parse = Enum.Parse<Fruits>("Apple");
 var tryParse = Enum.TryParse<Fruits>("Apple", out var value);
 ```

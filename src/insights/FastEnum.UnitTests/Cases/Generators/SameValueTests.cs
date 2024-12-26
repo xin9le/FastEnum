@@ -88,10 +88,10 @@ public sealed class SameValueContinuousTests
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -99,7 +99,7 @@ public sealed class SameValueContinuousTests
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123").Should().Be((SameValueContinuousEnum)123);
+        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", true).Should().Be((SameValueContinuousEnum)123);
     }
 
 
@@ -268,10 +268,10 @@ public sealed class SameValueDiscontinuousTests
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -279,7 +279,7 @@ public sealed class SameValueDiscontinuousTests
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123").Should().Be((SameValueDiscontinuousEnum)123);
+        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", true).Should().Be((SameValueDiscontinuousEnum)123);
     }
 
 

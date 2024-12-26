@@ -101,10 +101,10 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -112,7 +112,7 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("123").Should().Be((<#= x.EnumType #>)123);
+        FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("123", true).Should().Be((<#= x.EnumType #>)123);
     }
 
 

@@ -260,3 +260,14 @@ public enum SameValueDiscontinuousEnum : byte
 
 public enum EmptyEnum
 { }
+
+
+
+public enum CaseInsensitiveEnum : byte
+{
+    A = 1,
+    a,
+    b,
+    B,
+    C,
+}

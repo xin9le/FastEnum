@@ -65,3 +65,9 @@ public sealed partial class SameValueDiscontinuousEnumBooster
 [FastEnum<EmptyEnum>]
 public sealed partial class EmptyEnumBooster
 { }
+
+
+
+[FastEnum<CaseInsensitiveEnum>]
+public sealed partial class CaseInsensitiveEnumBooster
+{ }

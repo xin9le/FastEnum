@@ -47,7 +47,10 @@ internal static class EnumInfo<T>
             .DistinctBy(static x => x.Value)
             .ToArray();
         s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
-        s_memberByNameCaseInsensitive = s_members.ToCaseInsensitiveStringDictionary(static x => x.Name);
+        s_memberByNameCaseInsensitive
+            = s_members
+            .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
+            .ToCaseInsensitiveStringDictionary(static x => x.Name);
         s_memberByValue = s_orderedMembers.ToFastReadOnlyDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();

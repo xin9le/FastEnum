@@ -101,7 +101,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("ABCDE")).Should().Throw<ArgumentException>();

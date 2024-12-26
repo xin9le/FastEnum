@@ -236,7 +236,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE")).Should().Throw<ArgumentException>();

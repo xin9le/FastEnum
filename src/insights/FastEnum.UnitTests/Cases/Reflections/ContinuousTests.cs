@@ -46,8 +46,8 @@ public sealed class ContinuousSByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousSByteEnum>())
         {
-            const ContinuousSByteEnum defined = ContinuousSByteEnum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -100,8 +100,8 @@ public sealed class ContinuousSByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousSByteEnum>())
         {
-            const ContinuousSByteEnum defined = ContinuousSByteEnum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -409,8 +409,8 @@ public sealed class ContinuousByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousByteEnum>())
         {
-            const ContinuousByteEnum defined = ContinuousByteEnum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -463,8 +463,8 @@ public sealed class ContinuousByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousByteEnum>())
         {
-            const ContinuousByteEnum defined = ContinuousByteEnum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -772,8 +772,8 @@ public sealed class ContinuousInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt16Enum>())
         {
-            const ContinuousInt16Enum defined = ContinuousInt16Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -826,8 +826,8 @@ public sealed class ContinuousInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt16Enum>())
         {
-            const ContinuousInt16Enum defined = ContinuousInt16Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1135,8 +1135,8 @@ public sealed class ContinuousUInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt16Enum>())
         {
-            const ContinuousUInt16Enum defined = ContinuousUInt16Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1189,8 +1189,8 @@ public sealed class ContinuousUInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt16Enum>())
         {
-            const ContinuousUInt16Enum defined = ContinuousUInt16Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1498,8 +1498,8 @@ public sealed class ContinuousInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt32Enum>())
         {
-            const ContinuousInt32Enum defined = ContinuousInt32Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1552,8 +1552,8 @@ public sealed class ContinuousInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt32Enum>())
         {
-            const ContinuousInt32Enum defined = ContinuousInt32Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1861,8 +1861,8 @@ public sealed class ContinuousUInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt32Enum>())
         {
-            const ContinuousUInt32Enum defined = ContinuousUInt32Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1915,8 +1915,8 @@ public sealed class ContinuousUInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt32Enum>())
         {
-            const ContinuousUInt32Enum defined = ContinuousUInt32Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2224,8 +2224,8 @@ public sealed class ContinuousInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt64Enum>())
         {
-            const ContinuousInt64Enum defined = ContinuousInt64Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -2278,8 +2278,8 @@ public sealed class ContinuousInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt64Enum>())
         {
-            const ContinuousInt64Enum defined = ContinuousInt64Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2587,8 +2587,8 @@ public sealed class ContinuousUInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt64Enum>())
         {
-            const ContinuousUInt64Enum defined = ContinuousUInt64Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -2641,8 +2641,8 @@ public sealed class ContinuousUInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt64Enum>())
         {
-            const ContinuousUInt64Enum defined = ContinuousUInt64Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 

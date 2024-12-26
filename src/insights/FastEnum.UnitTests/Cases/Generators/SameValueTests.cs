@@ -19,8 +19,7 @@ public sealed class SameValueContinuousTests
     [TestMethod]
     public void GetName()
     {
-        var values = Enum.GetValues<SameValueContinuousEnum>();
-        foreach (var x in values)
+        foreach (var x in Enum.GetValues<SameValueContinuousEnum>())
         {
             var expect = Enum.GetName(x);
             var actual = FastEnum.GetName<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x);
@@ -199,8 +198,7 @@ public sealed class SameValueDiscontinuousTests
     [TestMethod]
     public void GetName()
     {
-        var values = Enum.GetValues<SameValueDiscontinuousEnum>();
-        foreach (var x in values)
+        foreach (var x in Enum.GetValues<SameValueDiscontinuousEnum>())
         {
             var expect = Enum.GetName(x);
             var actual = FastEnum.GetName<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x);

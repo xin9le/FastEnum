@@ -32,8 +32,7 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
     [TestMethod]
     public void GetName()
     {
-        var values = Enum.GetValues<<#= x.EnumType #>>();
-        foreach (var x in values)
+        foreach (var x in Enum.GetValues<<#= x.EnumType #>>())
         {
             var expect = Enum.GetName(x);
             var actual = FastEnum.GetName<<#= x.EnumType #>, <#= x.BoosterType #>>(x);

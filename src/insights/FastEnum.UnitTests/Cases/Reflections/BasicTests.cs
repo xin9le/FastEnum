@@ -46,8 +46,8 @@ public sealed class BasicSByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<SByteEnum>())
         {
-            const SByteEnum defined = SByteEnum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -100,8 +100,8 @@ public sealed class BasicSByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<SByteEnum>())
         {
-            const SByteEnum defined = SByteEnum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -405,8 +405,8 @@ public sealed class BasicByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ByteEnum>())
         {
-            const ByteEnum defined = ByteEnum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -459,8 +459,8 @@ public sealed class BasicByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ByteEnum>())
         {
-            const ByteEnum defined = ByteEnum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -756,8 +756,8 @@ public sealed class BasicInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int16Enum>())
         {
-            const Int16Enum defined = Int16Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -810,8 +810,8 @@ public sealed class BasicInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int16Enum>())
         {
-            const Int16Enum defined = Int16Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1115,8 +1115,8 @@ public sealed class BasicUInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt16Enum>())
         {
-            const UInt16Enum defined = UInt16Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1169,8 +1169,8 @@ public sealed class BasicUInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt16Enum>())
         {
-            const UInt16Enum defined = UInt16Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1466,8 +1466,8 @@ public sealed class BasicInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int32Enum>())
         {
-            const Int32Enum defined = Int32Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1520,8 +1520,8 @@ public sealed class BasicInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int32Enum>())
         {
-            const Int32Enum defined = Int32Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1825,8 +1825,8 @@ public sealed class BasicUInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt32Enum>())
         {
-            const UInt32Enum defined = UInt32Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -1879,8 +1879,8 @@ public sealed class BasicUInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt32Enum>())
         {
-            const UInt32Enum defined = UInt32Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2176,8 +2176,8 @@ public sealed class BasicInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int64Enum>())
         {
-            const Int64Enum defined = Int64Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -2230,8 +2230,8 @@ public sealed class BasicInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<Int64Enum>())
         {
-            const Int64Enum defined = Int64Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2535,8 +2535,8 @@ public sealed class BasicUInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt64Enum>())
         {
-            const UInt64Enum defined = UInt64Enum.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -2589,8 +2589,8 @@ public sealed class BasicUInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<UInt64Enum>())
         {
-            const UInt64Enum defined = UInt64Enum.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 

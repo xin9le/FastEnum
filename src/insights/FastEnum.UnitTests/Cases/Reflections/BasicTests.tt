@@ -65,8 +65,8 @@ public sealed class Basic<#= x.AliasType #>Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -119,8 +119,8 @@ public sealed class Basic<#= x.AliasType #>Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 

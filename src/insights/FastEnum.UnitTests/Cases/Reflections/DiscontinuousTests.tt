@@ -65,8 +65,8 @@ public sealed class Discontinuous<#= x.AliasType #>Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
@@ -119,8 +119,8 @@ public sealed class Discontinuous<#= x.AliasType #>Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 

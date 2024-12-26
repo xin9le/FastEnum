@@ -87,20 +87,21 @@ public sealed class Basic<#= x.AliasType #>Tests
         const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue)),
 <# if (x.IsSignedType) { #>
-            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero),     valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero)),
 <# } #>
-            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MaxValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue)),
         };
         foreach (var x in parameters)
         {
+            var valueString = ((<#= x.UnderlyingType #>)x.value).ToString(CultureInfo.InvariantCulture);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name, ignoreCase).Should().Be(x.value);
             FluentActions.Invoking(() => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
             FluentActions.Invoking(() => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString, ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("", ignoreCase)).Should().Throw<ArgumentException>();
@@ -116,20 +117,21 @@ public sealed class Basic<#= x.AliasType #>Tests
         const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue)),
 <# if (x.IsSignedType) { #>
-            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero),     valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero)),
 <# } #>
-            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MaxValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue)),
         };
         foreach (var x in parameters)
         {
+            var valueString = ((<#= x.UnderlyingType #>)x.value).ToString(CultureInfo.InvariantCulture);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name, ignoreCase).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString, ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>, <#= x.BoosterType #>>("", ignoreCase)).Should().Throw<ArgumentException>();
@@ -145,27 +147,29 @@ public sealed class Basic<#= x.AliasType #>Tests
         const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue)),
 <# if (x.IsSignedType) { #>
-            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero),     valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero)),
 <# } #>
-            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MaxValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue)),
         };
         foreach (var x in parameters)
         {
+            var valueString = ((<#= x.UnderlyingType #>)x.value).ToString(CultureInfo.InvariantCulture);
+
             FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
             FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
             FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString, ignoreCase, out var r2).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
         FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null, ignoreCase, out var _).Should().BeFalse();
@@ -183,14 +187,16 @@ public sealed class Basic<#= x.AliasType #>Tests
         const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MinValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MinValue, name: nameof(<#= x.EnumType #>.MinValue)),
 <# if (x.IsSignedType) { #>
-            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero),     valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.Zero).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.Zero,     name: nameof(<#= x.EnumType #>.Zero)),
 <# } #>
-            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue), valueString: ((<#= x.UnderlyingType #>)<#= x.EnumType #>.MaxValue).ToString(CultureInfo.InvariantCulture)),
+            (value: <#= x.EnumType #>.MaxValue, name: nameof(<#= x.EnumType #>.MaxValue)),
         };
         foreach (var x in parameters)
         {
+            var valueString = ((<#= x.UnderlyingType #>)x.value).ToString(CultureInfo.InvariantCulture);
+
             FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
@@ -200,13 +206,13 @@ public sealed class Basic<#= x.AliasType #>Tests
             FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString, ignoreCase, out var r4).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
+            FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
         FastEnum.TryParse<<#= x.EnumType #>, <#= x.BoosterType #>>((string?)null, ignoreCase, out var _).Should().BeFalse();

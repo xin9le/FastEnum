@@ -51,7 +51,7 @@ public sealed class ContinuousSByteTests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -59,7 +59,7 @@ public sealed class ContinuousSByteTests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -414,7 +414,7 @@ public sealed class ContinuousByteTests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -422,7 +422,7 @@ public sealed class ContinuousByteTests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -777,7 +777,7 @@ public sealed class ContinuousInt16Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -785,7 +785,7 @@ public sealed class ContinuousInt16Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1140,7 +1140,7 @@ public sealed class ContinuousUInt16Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1148,7 +1148,7 @@ public sealed class ContinuousUInt16Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1503,7 +1503,7 @@ public sealed class ContinuousInt32Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1511,7 +1511,7 @@ public sealed class ContinuousInt32Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1866,7 +1866,7 @@ public sealed class ContinuousUInt32Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1874,7 +1874,7 @@ public sealed class ContinuousUInt32Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -2229,7 +2229,7 @@ public sealed class ContinuousInt64Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -2237,7 +2237,7 @@ public sealed class ContinuousInt64Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -2592,7 +2592,7 @@ public sealed class ContinuousUInt64Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -2600,7 +2600,7 @@ public sealed class ContinuousUInt64Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 

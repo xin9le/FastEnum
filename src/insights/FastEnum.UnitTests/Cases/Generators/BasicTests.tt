@@ -46,7 +46,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName<<#= x.EnumType #>, <#= x.BoosterType #>>(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -54,7 +54,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName<<#= x.EnumType #>, <#= x.BoosterType #>>(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 

@@ -46,12 +46,12 @@ public sealed class ContinuousSByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousSByteEnum>())
         {
-            const ContinuousSByteEnum defined = ContinuousSByteEnum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -59,7 +59,7 @@ public sealed class ContinuousSByteTests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -100,8 +100,8 @@ public sealed class ContinuousSByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousSByteEnum>())
         {
-            const ContinuousSByteEnum defined = ContinuousSByteEnum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -213,7 +213,7 @@ public sealed class ContinuousSByteTests
             FastEnum.Parse<ContinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -235,7 +235,7 @@ public sealed class ContinuousSByteTests
             FastEnum.Parse<ContinuousSByteEnum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousSByteEnum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousSByteEnum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -243,7 +243,7 @@ public sealed class ContinuousSByteTests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousSByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousSByteEnum>("123").Should().Be((ContinuousSByteEnum)123);
+        FastEnum.Parse<ContinuousSByteEnum>("123", true).Should().Be((ContinuousSByteEnum)123);
     }
 
 
@@ -409,12 +409,12 @@ public sealed class ContinuousByteTests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousByteEnum>())
         {
-            const ContinuousByteEnum defined = ContinuousByteEnum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -422,7 +422,7 @@ public sealed class ContinuousByteTests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -463,8 +463,8 @@ public sealed class ContinuousByteTests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousByteEnum>())
         {
-            const ContinuousByteEnum defined = ContinuousByteEnum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -576,7 +576,7 @@ public sealed class ContinuousByteTests
             FastEnum.Parse<ContinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -598,7 +598,7 @@ public sealed class ContinuousByteTests
             FastEnum.Parse<ContinuousByteEnum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousByteEnum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousByteEnum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -606,7 +606,7 @@ public sealed class ContinuousByteTests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousByteEnum>("123").Should().Be((ContinuousByteEnum)123);
+        FastEnum.Parse<ContinuousByteEnum>("123", true).Should().Be((ContinuousByteEnum)123);
     }
 
 
@@ -772,12 +772,12 @@ public sealed class ContinuousInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt16Enum>())
         {
-            const ContinuousInt16Enum defined = ContinuousInt16Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -785,7 +785,7 @@ public sealed class ContinuousInt16Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -826,8 +826,8 @@ public sealed class ContinuousInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt16Enum>())
         {
-            const ContinuousInt16Enum defined = ContinuousInt16Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -939,7 +939,7 @@ public sealed class ContinuousInt16Tests
             FastEnum.Parse<ContinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -961,7 +961,7 @@ public sealed class ContinuousInt16Tests
             FastEnum.Parse<ContinuousInt16Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousInt16Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousInt16Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -969,7 +969,7 @@ public sealed class ContinuousInt16Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousInt16Enum>("123").Should().Be((ContinuousInt16Enum)123);
+        FastEnum.Parse<ContinuousInt16Enum>("123", true).Should().Be((ContinuousInt16Enum)123);
     }
 
 
@@ -1135,12 +1135,12 @@ public sealed class ContinuousUInt16Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt16Enum>())
         {
-            const ContinuousUInt16Enum defined = ContinuousUInt16Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1148,7 +1148,7 @@ public sealed class ContinuousUInt16Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1189,8 +1189,8 @@ public sealed class ContinuousUInt16Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt16Enum>())
         {
-            const ContinuousUInt16Enum defined = ContinuousUInt16Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1302,7 +1302,7 @@ public sealed class ContinuousUInt16Tests
             FastEnum.Parse<ContinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -1324,7 +1324,7 @@ public sealed class ContinuousUInt16Tests
             FastEnum.Parse<ContinuousUInt16Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousUInt16Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousUInt16Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -1332,7 +1332,7 @@ public sealed class ContinuousUInt16Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousUInt16Enum>("123").Should().Be((ContinuousUInt16Enum)123);
+        FastEnum.Parse<ContinuousUInt16Enum>("123", true).Should().Be((ContinuousUInt16Enum)123);
     }
 
 
@@ -1498,12 +1498,12 @@ public sealed class ContinuousInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt32Enum>())
         {
-            const ContinuousInt32Enum defined = ContinuousInt32Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1511,7 +1511,7 @@ public sealed class ContinuousInt32Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1552,8 +1552,8 @@ public sealed class ContinuousInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt32Enum>())
         {
-            const ContinuousInt32Enum defined = ContinuousInt32Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -1665,7 +1665,7 @@ public sealed class ContinuousInt32Tests
             FastEnum.Parse<ContinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -1687,7 +1687,7 @@ public sealed class ContinuousInt32Tests
             FastEnum.Parse<ContinuousInt32Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousInt32Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousInt32Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -1695,7 +1695,7 @@ public sealed class ContinuousInt32Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousInt32Enum>("123").Should().Be((ContinuousInt32Enum)123);
+        FastEnum.Parse<ContinuousInt32Enum>("123", true).Should().Be((ContinuousInt32Enum)123);
     }
 
 
@@ -1861,12 +1861,12 @@ public sealed class ContinuousUInt32Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt32Enum>())
         {
-            const ContinuousUInt32Enum defined = ContinuousUInt32Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -1874,7 +1874,7 @@ public sealed class ContinuousUInt32Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -1915,8 +1915,8 @@ public sealed class ContinuousUInt32Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt32Enum>())
         {
-            const ContinuousUInt32Enum defined = ContinuousUInt32Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2028,7 +2028,7 @@ public sealed class ContinuousUInt32Tests
             FastEnum.Parse<ContinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -2050,7 +2050,7 @@ public sealed class ContinuousUInt32Tests
             FastEnum.Parse<ContinuousUInt32Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousUInt32Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousUInt32Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -2058,7 +2058,7 @@ public sealed class ContinuousUInt32Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousUInt32Enum>("123").Should().Be((ContinuousUInt32Enum)123);
+        FastEnum.Parse<ContinuousUInt32Enum>("123", true).Should().Be((ContinuousUInt32Enum)123);
     }
 
 
@@ -2224,12 +2224,12 @@ public sealed class ContinuousInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt64Enum>())
         {
-            const ContinuousInt64Enum defined = ContinuousInt64Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -2237,7 +2237,7 @@ public sealed class ContinuousInt64Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -2278,8 +2278,8 @@ public sealed class ContinuousInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousInt64Enum>())
         {
-            const ContinuousInt64Enum defined = ContinuousInt64Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2391,7 +2391,7 @@ public sealed class ContinuousInt64Tests
             FastEnum.Parse<ContinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -2413,7 +2413,7 @@ public sealed class ContinuousInt64Tests
             FastEnum.Parse<ContinuousInt64Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousInt64Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousInt64Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -2421,7 +2421,7 @@ public sealed class ContinuousInt64Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousInt64Enum>("123").Should().Be((ContinuousInt64Enum)123);
+        FastEnum.Parse<ContinuousInt64Enum>("123", true).Should().Be((ContinuousInt64Enum)123);
     }
 
 
@@ -2587,12 +2587,12 @@ public sealed class ContinuousUInt64Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt64Enum>())
         {
-            const ContinuousUInt64Enum defined = ContinuousUInt64Enum.A;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -2600,7 +2600,7 @@ public sealed class ContinuousUInt64Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -2641,8 +2641,8 @@ public sealed class ContinuousUInt64Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<ContinuousUInt64Enum>())
         {
-            const ContinuousUInt64Enum defined = ContinuousUInt64Enum.A;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -2754,7 +2754,7 @@ public sealed class ContinuousUInt64Tests
             FastEnum.Parse<ContinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
@@ -2776,7 +2776,7 @@ public sealed class ContinuousUInt64Tests
             FastEnum.Parse<ContinuousUInt64Enum>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<ContinuousUInt64Enum>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<ContinuousUInt64Enum>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<ContinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -2784,7 +2784,7 @@ public sealed class ContinuousUInt64Tests
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<ContinuousUInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<ContinuousUInt64Enum>("123").Should().Be((ContinuousUInt64Enum)123);
+        FastEnum.Parse<ContinuousUInt64Enum>("123", true).Should().Be((ContinuousUInt64Enum)123);
     }
 
 

@@ -65,12 +65,12 @@ public sealed class Basic<#= x.AliasType #>Tests
     public void GetName()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
             var expect = Enum.GetName(defined);
             var actual = FastEnum.GetName(defined);
             actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
         //--- undefined value
         {
@@ -78,7 +78,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             var expect = Enum.GetName(undefined);
             var actual = FastEnum.GetName(undefined);
             actual.Should().BeNull();
-            actual.Should().BeEquivalentTo(expect);
+            actual.Should().Be(expect);
         }
     }
 
@@ -119,8 +119,8 @@ public sealed class Basic<#= x.AliasType #>Tests
     public void GetMember()
     {
         //--- defined value
+        foreach (var defined in Enum.GetValues<<#= x.EnumType #>>())
         {
-            const <#= x.EnumType #> defined = <#= x.EnumType #>.MinValue;
             var expect = getMember(defined);
             var actual = FastEnum.GetMember(defined)!;
 
@@ -236,7 +236,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>((string?)null, true)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>((string?)null)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(" ")).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE")).Should().Throw<ArgumentException>();
@@ -260,7 +260,7 @@ public sealed class Basic<#= x.AliasType #>Tests
             FastEnum.Parse<<#= x.EnumType #>>(x.name, true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<<#= x.EnumType #>>(x.valueString).Should().Be(x.value);
+            FastEnum.Parse<<#= x.EnumType #>>(x.valueString, true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
             FastEnum.Parse<<#= x.EnumType #>>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
         }
@@ -268,7 +268,7 @@ public sealed class Basic<#= x.AliasType #>Tests
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>(" ", true)).Should().Throw<ArgumentException>();
         FluentActions.Invoking(static () => FastEnum.Parse<<#= x.EnumType #>>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<<#= x.EnumType #>>("123").Should().Be((<#= x.EnumType #>)123);
+        FastEnum.Parse<<#= x.EnumType #>>("123", true).Should().Be((<#= x.EnumType #>)123);
     }
 
 

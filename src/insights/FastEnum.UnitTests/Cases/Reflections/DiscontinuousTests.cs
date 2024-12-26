@@ -194,86 +194,93 @@ public sealed class DiscontinuousSByteTests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A), valueString: ((sbyte)DiscontinuousSByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B), valueString: ((sbyte)DiscontinuousSByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C), valueString: ((sbyte)DiscontinuousSByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A)),
+            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B)),
+            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((sbyte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousSByteEnum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousSByteEnum>("123").Should().Be((DiscontinuousSByteEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousSByteEnum>("123", ignoreCase).Should().Be((DiscontinuousSByteEnum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A), valueString: ((sbyte)DiscontinuousSByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B), valueString: ((sbyte)DiscontinuousSByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C), valueString: ((sbyte)DiscontinuousSByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A)),
+            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B)),
+            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((sbyte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousSByteEnum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousSByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousSByteEnum>("123", true).Should().Be((DiscontinuousSByteEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousSByteEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousSByteEnum>("123", ignoreCase).Should().Be((DiscontinuousSByteEnum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A), valueString: ((sbyte)DiscontinuousSByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B), valueString: ((sbyte)DiscontinuousSByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C), valueString: ((sbyte)DiscontinuousSByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A)),
+            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B)),
+            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((sbyte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousSByteEnum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousSByteEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousSByteEnum)123);
     }
 
@@ -281,37 +288,40 @@ public sealed class DiscontinuousSByteTests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A), valueString: ((sbyte)DiscontinuousSByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B), valueString: ((sbyte)DiscontinuousSByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C), valueString: ((sbyte)DiscontinuousSByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousSByteEnum.A, name: nameof(DiscontinuousSByteEnum.A)),
+            (value: DiscontinuousSByteEnum.B, name: nameof(DiscontinuousSByteEnum.B)),
+            (value: DiscontinuousSByteEnum.C, name: nameof(DiscontinuousSByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((sbyte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousSByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousSByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousSByteEnum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousSByteEnum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousSByteEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousSByteEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousSByteEnum)123);
     }
 
@@ -553,86 +563,93 @@ public sealed class DiscontinuousByteTests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A), valueString: ((byte)DiscontinuousByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B), valueString: ((byte)DiscontinuousByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C), valueString: ((byte)DiscontinuousByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A)),
+            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B)),
+            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousByteEnum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousByteEnum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousByteEnum>("123").Should().Be((DiscontinuousByteEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousByteEnum>("123", ignoreCase).Should().Be((DiscontinuousByteEnum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A), valueString: ((byte)DiscontinuousByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B), valueString: ((byte)DiscontinuousByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C), valueString: ((byte)DiscontinuousByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A)),
+            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B)),
+            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousByteEnum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousByteEnum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousByteEnum>("123", true).Should().Be((DiscontinuousByteEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousByteEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousByteEnum>("123", ignoreCase).Should().Be((DiscontinuousByteEnum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A), valueString: ((byte)DiscontinuousByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B), valueString: ((byte)DiscontinuousByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C), valueString: ((byte)DiscontinuousByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A)),
+            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B)),
+            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousByteEnum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousByteEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousByteEnum)123);
     }
 
@@ -640,37 +657,40 @@ public sealed class DiscontinuousByteTests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A), valueString: ((byte)DiscontinuousByteEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B), valueString: ((byte)DiscontinuousByteEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C), valueString: ((byte)DiscontinuousByteEnum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousByteEnum.A, name: nameof(DiscontinuousByteEnum.A)),
+            (value: DiscontinuousByteEnum.B, name: nameof(DiscontinuousByteEnum.B)),
+            (value: DiscontinuousByteEnum.C, name: nameof(DiscontinuousByteEnum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousByteEnum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousByteEnum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousByteEnum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousByteEnum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousByteEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousByteEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousByteEnum)123);
     }
 
@@ -912,86 +932,93 @@ public sealed class DiscontinuousInt16Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A), valueString: ((short)DiscontinuousInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B), valueString: ((short)DiscontinuousInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C), valueString: ((short)DiscontinuousInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A)),
+            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B)),
+            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((short)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt16Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt16Enum>("123").Should().Be((DiscontinuousInt16Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt16Enum>("123", ignoreCase).Should().Be((DiscontinuousInt16Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A), valueString: ((short)DiscontinuousInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B), valueString: ((short)DiscontinuousInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C), valueString: ((short)DiscontinuousInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A)),
+            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B)),
+            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((short)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt16Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt16Enum>("123", true).Should().Be((DiscontinuousInt16Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt16Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt16Enum>("123", ignoreCase).Should().Be((DiscontinuousInt16Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A), valueString: ((short)DiscontinuousInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B), valueString: ((short)DiscontinuousInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C), valueString: ((short)DiscontinuousInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A)),
+            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B)),
+            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((short)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt16Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt16Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt16Enum)123);
     }
 
@@ -999,37 +1026,40 @@ public sealed class DiscontinuousInt16Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A), valueString: ((short)DiscontinuousInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B), valueString: ((short)DiscontinuousInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C), valueString: ((short)DiscontinuousInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt16Enum.A, name: nameof(DiscontinuousInt16Enum.A)),
+            (value: DiscontinuousInt16Enum.B, name: nameof(DiscontinuousInt16Enum.B)),
+            (value: DiscontinuousInt16Enum.C, name: nameof(DiscontinuousInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((short)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt16Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt16Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt16Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt16Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt16Enum)123);
     }
 
@@ -1271,86 +1301,93 @@ public sealed class DiscontinuousUInt16Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A), valueString: ((ushort)DiscontinuousUInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B), valueString: ((ushort)DiscontinuousUInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C), valueString: ((ushort)DiscontinuousUInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A)),
+            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B)),
+            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((ushort)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt16Enum>("123").Should().Be((DiscontinuousUInt16Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt16Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt16Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A), valueString: ((ushort)DiscontinuousUInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B), valueString: ((ushort)DiscontinuousUInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C), valueString: ((ushort)DiscontinuousUInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A)),
+            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B)),
+            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((ushort)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt16Enum>("123", true).Should().Be((DiscontinuousUInt16Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt16Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt16Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt16Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A), valueString: ((ushort)DiscontinuousUInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B), valueString: ((ushort)DiscontinuousUInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C), valueString: ((ushort)DiscontinuousUInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A)),
+            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B)),
+            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((ushort)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt16Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt16Enum)123);
     }
 
@@ -1358,37 +1395,40 @@ public sealed class DiscontinuousUInt16Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A), valueString: ((ushort)DiscontinuousUInt16Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B), valueString: ((ushort)DiscontinuousUInt16Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C), valueString: ((ushort)DiscontinuousUInt16Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt16Enum.A, name: nameof(DiscontinuousUInt16Enum.A)),
+            (value: DiscontinuousUInt16Enum.B, name: nameof(DiscontinuousUInt16Enum.B)),
+            (value: DiscontinuousUInt16Enum.C, name: nameof(DiscontinuousUInt16Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((ushort)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt16Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt16Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt16Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt16Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt16Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt16Enum)123);
     }
 
@@ -1630,86 +1670,93 @@ public sealed class DiscontinuousInt32Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A), valueString: ((int)DiscontinuousInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B), valueString: ((int)DiscontinuousInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C), valueString: ((int)DiscontinuousInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A)),
+            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B)),
+            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((int)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt32Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt32Enum>("123").Should().Be((DiscontinuousInt32Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt32Enum>("123", ignoreCase).Should().Be((DiscontinuousInt32Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A), valueString: ((int)DiscontinuousInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B), valueString: ((int)DiscontinuousInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C), valueString: ((int)DiscontinuousInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A)),
+            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B)),
+            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((int)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt32Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt32Enum>("123", true).Should().Be((DiscontinuousInt32Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt32Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt32Enum>("123", ignoreCase).Should().Be((DiscontinuousInt32Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A), valueString: ((int)DiscontinuousInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B), valueString: ((int)DiscontinuousInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C), valueString: ((int)DiscontinuousInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A)),
+            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B)),
+            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((int)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt32Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt32Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt32Enum)123);
     }
 
@@ -1717,37 +1764,40 @@ public sealed class DiscontinuousInt32Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A), valueString: ((int)DiscontinuousInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B), valueString: ((int)DiscontinuousInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C), valueString: ((int)DiscontinuousInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt32Enum.A, name: nameof(DiscontinuousInt32Enum.A)),
+            (value: DiscontinuousInt32Enum.B, name: nameof(DiscontinuousInt32Enum.B)),
+            (value: DiscontinuousInt32Enum.C, name: nameof(DiscontinuousInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((int)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt32Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt32Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt32Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt32Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt32Enum)123);
     }
 
@@ -1989,86 +2039,93 @@ public sealed class DiscontinuousUInt32Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A), valueString: ((uint)DiscontinuousUInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B), valueString: ((uint)DiscontinuousUInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C), valueString: ((uint)DiscontinuousUInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A)),
+            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B)),
+            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((uint)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt32Enum>("123").Should().Be((DiscontinuousUInt32Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt32Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt32Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A), valueString: ((uint)DiscontinuousUInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B), valueString: ((uint)DiscontinuousUInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C), valueString: ((uint)DiscontinuousUInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A)),
+            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B)),
+            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((uint)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt32Enum>("123", true).Should().Be((DiscontinuousUInt32Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt32Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt32Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt32Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A), valueString: ((uint)DiscontinuousUInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B), valueString: ((uint)DiscontinuousUInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C), valueString: ((uint)DiscontinuousUInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A)),
+            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B)),
+            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((uint)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt32Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt32Enum)123);
     }
 
@@ -2076,37 +2133,40 @@ public sealed class DiscontinuousUInt32Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A), valueString: ((uint)DiscontinuousUInt32Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B), valueString: ((uint)DiscontinuousUInt32Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C), valueString: ((uint)DiscontinuousUInt32Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt32Enum.A, name: nameof(DiscontinuousUInt32Enum.A)),
+            (value: DiscontinuousUInt32Enum.B, name: nameof(DiscontinuousUInt32Enum.B)),
+            (value: DiscontinuousUInt32Enum.C, name: nameof(DiscontinuousUInt32Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((uint)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt32Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt32Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt32Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt32Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt32Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt32Enum)123);
     }
 
@@ -2348,86 +2408,93 @@ public sealed class DiscontinuousInt64Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A), valueString: ((long)DiscontinuousInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B), valueString: ((long)DiscontinuousInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C), valueString: ((long)DiscontinuousInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A)),
+            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B)),
+            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((long)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt64Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt64Enum>("123").Should().Be((DiscontinuousInt64Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt64Enum>("123", ignoreCase).Should().Be((DiscontinuousInt64Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A), valueString: ((long)DiscontinuousInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B), valueString: ((long)DiscontinuousInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C), valueString: ((long)DiscontinuousInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A)),
+            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B)),
+            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((long)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousInt64Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousInt64Enum>("123", true).Should().Be((DiscontinuousInt64Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousInt64Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousInt64Enum>("123", ignoreCase).Should().Be((DiscontinuousInt64Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A), valueString: ((long)DiscontinuousInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B), valueString: ((long)DiscontinuousInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C), valueString: ((long)DiscontinuousInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A)),
+            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B)),
+            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((long)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt64Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt64Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt64Enum)123);
     }
 
@@ -2435,37 +2502,40 @@ public sealed class DiscontinuousInt64Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A), valueString: ((long)DiscontinuousInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B), valueString: ((long)DiscontinuousInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C), valueString: ((long)DiscontinuousInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousInt64Enum.A, name: nameof(DiscontinuousInt64Enum.A)),
+            (value: DiscontinuousInt64Enum.B, name: nameof(DiscontinuousInt64Enum.B)),
+            (value: DiscontinuousInt64Enum.C, name: nameof(DiscontinuousInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((long)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousInt64Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousInt64Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousInt64Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousInt64Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousInt64Enum)123);
     }
 
@@ -2707,86 +2777,93 @@ public sealed class DiscontinuousUInt64Tests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A), valueString: ((ulong)DiscontinuousUInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B), valueString: ((ulong)DiscontinuousUInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C), valueString: ((ulong)DiscontinuousUInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A)),
+            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B)),
+            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((ulong)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt64Enum>("123").Should().Be((DiscontinuousUInt64Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt64Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt64Enum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A), valueString: ((ulong)DiscontinuousUInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B), valueString: ((ulong)DiscontinuousUInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C), valueString: ((ulong)DiscontinuousUInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A)),
+            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B)),
+            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<DiscontinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((ulong)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<DiscontinuousUInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<DiscontinuousUInt64Enum>("123", true).Should().Be((DiscontinuousUInt64Enum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<DiscontinuousUInt64Enum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<DiscontinuousUInt64Enum>("123", ignoreCase).Should().Be((DiscontinuousUInt64Enum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A), valueString: ((ulong)DiscontinuousUInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B), valueString: ((ulong)DiscontinuousUInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C), valueString: ((ulong)DiscontinuousUInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A)),
+            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B)),
+            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((ulong)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt64Enum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt64Enum)123);
     }
 
@@ -2794,37 +2871,40 @@ public sealed class DiscontinuousUInt64Tests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A), valueString: ((ulong)DiscontinuousUInt64Enum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B), valueString: ((ulong)DiscontinuousUInt64Enum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C), valueString: ((ulong)DiscontinuousUInt64Enum.C).ToString(CultureInfo.InvariantCulture)),
+            (value: DiscontinuousUInt64Enum.A, name: nameof(DiscontinuousUInt64Enum.A)),
+            (value: DiscontinuousUInt64Enum.B, name: nameof(DiscontinuousUInt64Enum.B)),
+            (value: DiscontinuousUInt64Enum.C, name: nameof(DiscontinuousUInt64Enum.C)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((ulong)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<DiscontinuousUInt64Enum>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<DiscontinuousUInt64Enum>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<DiscontinuousUInt64Enum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<DiscontinuousUInt64Enum>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<DiscontinuousUInt64Enum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((DiscontinuousUInt64Enum)123);
     }
 

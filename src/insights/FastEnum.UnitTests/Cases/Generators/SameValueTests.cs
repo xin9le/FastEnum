@@ -51,89 +51,96 @@ public sealed class SameValueContinuousTests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A), valueString: ((byte)SameValueContinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B), valueString: ((byte)SameValueContinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C), valueString: ((byte)SameValueContinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D), valueString: ((byte)SameValueContinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A)),
+            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B)),
+            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C)),
+            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123").Should().Be((SameValueContinuousEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", ignoreCase).Should().Be((SameValueContinuousEnum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A), valueString: ((byte)SameValueContinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B), valueString: ((byte)SameValueContinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C), valueString: ((byte)SameValueContinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D), valueString: ((byte)SameValueContinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A)),
+            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B)),
+            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C)),
+            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", true).Should().Be((SameValueContinuousEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", ignoreCase).Should().Be((SameValueContinuousEnum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A), valueString: ((byte)SameValueContinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B), valueString: ((byte)SameValueContinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C), valueString: ((byte)SameValueContinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D), valueString: ((byte)SameValueContinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A)),
+            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B)),
+            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C)),
+            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((SameValueContinuousEnum)123);
     }
 
@@ -141,38 +148,41 @@ public sealed class SameValueContinuousTests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A), valueString: ((byte)SameValueContinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B), valueString: ((byte)SameValueContinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C), valueString: ((byte)SameValueContinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D), valueString: ((byte)SameValueContinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueContinuousEnum.A, name: nameof(SameValueContinuousEnum.A)),
+            (value: SameValueContinuousEnum.B, name: nameof(SameValueContinuousEnum.B)),
+            (value: SameValueContinuousEnum.C, name: nameof(SameValueContinuousEnum.C)),
+            (value: SameValueContinuousEnum.D, name: nameof(SameValueContinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueContinuousEnum, SameValueContinuousEnumBooster>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((SameValueContinuousEnum)123);
     }
 
@@ -230,89 +240,96 @@ public sealed class SameValueDiscontinuousTests
     [TestMethod]
     public void Parse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A), valueString: ((byte)SameValueDiscontinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B), valueString: ((byte)SameValueDiscontinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C), valueString: ((byte)SameValueDiscontinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D), valueString: ((byte)SameValueDiscontinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A)),
+            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B)),
+            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C)),
+            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name).Should().Be(x.value);
-            FluentActions.Invoking(() => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture))).Should().Throw<ArgumentException>();
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture)).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture)).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, ignoreCase).Should().Be(x.value);
+            FluentActions.Invoking(() => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase)).Should().Throw<ArgumentException>();
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123").Should().Be((SameValueDiscontinuousEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", ignoreCase).Should().Be((SameValueDiscontinuousEnum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A), valueString: ((byte)SameValueDiscontinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B), valueString: ((byte)SameValueDiscontinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C), valueString: ((byte)SameValueDiscontinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D), valueString: ((byte)SameValueDiscontinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A)),
+            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B)),
+            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C)),
+            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString, true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true).Should().Be(x.value);
-            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true).Should().Be(x.value);
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase).Should().Be(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", true).Should().Be((SameValueDiscontinuousEnum)123);
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", ignoreCase).Should().Be((SameValueDiscontinuousEnum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
+        const bool ignoreCase = false;
         var parameters = new[]
         {
-            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A), valueString: ((byte)SameValueDiscontinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B), valueString: ((byte)SameValueDiscontinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C), valueString: ((byte)SameValueDiscontinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D), valueString: ((byte)SameValueDiscontinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A)),
+            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B)),
+            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C)),
+            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), out var _).Should().BeFalse();
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), out var _).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeFalse();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var _).Should().BeTrue();
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString, out var r2).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString, ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), out var r3).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), out var r4).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
         }
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", out var r).Should().BeTrue();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((SameValueDiscontinuousEnum)123);
     }
 
@@ -320,38 +337,41 @@ public sealed class SameValueDiscontinuousTests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
+        const bool ignoreCase = true;
         var parameters = new[]
         {
-            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A), valueString: ((byte)SameValueDiscontinuousEnum.A).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B), valueString: ((byte)SameValueDiscontinuousEnum.B).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C), valueString: ((byte)SameValueDiscontinuousEnum.C).ToString(CultureInfo.InvariantCulture)),
-            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D), valueString: ((byte)SameValueDiscontinuousEnum.D).ToString(CultureInfo.InvariantCulture)),
+            (value: SameValueDiscontinuousEnum.A, name: nameof(SameValueDiscontinuousEnum.A)),
+            (value: SameValueDiscontinuousEnum.B, name: nameof(SameValueDiscontinuousEnum.B)),
+            (value: SameValueDiscontinuousEnum.C, name: nameof(SameValueDiscontinuousEnum.C)),
+            (value: SameValueDiscontinuousEnum.D, name: nameof(SameValueDiscontinuousEnum.D)),
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, true, out var r1).Should().BeTrue();
+            var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
+
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
             r1.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), true, out var r2).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r2).Should().BeTrue();
             r2.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), true, out var r3).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.name.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r3).Should().BeTrue();
             r3.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString, true, out var r4).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString, ignoreCase, out var r4).Should().BeTrue();
             r4.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToLower(CultureInfo.InvariantCulture), true, out var r5).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToLower(CultureInfo.InvariantCulture), ignoreCase, out var r5).Should().BeTrue();
             r5.Should().Be(x.value);
 
-            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(x.valueString.ToUpper(CultureInfo.InvariantCulture), true, out var r6).Should().BeTrue();
+            FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(valueString.ToUpper(CultureInfo.InvariantCulture), ignoreCase, out var r6).Should().BeTrue();
             r6.Should().Be(x.value);
         }
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", true, out var r).Should().BeTrue();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<SameValueDiscontinuousEnum, SameValueDiscontinuousEnumBooster>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((SameValueDiscontinuousEnum)123);
     }
 

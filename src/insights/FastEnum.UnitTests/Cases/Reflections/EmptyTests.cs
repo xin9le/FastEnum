@@ -66,33 +66,36 @@ public class EmptyTests
     [TestMethod]
     public void Parse()
     {
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ")).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE")).Should().Throw<ArgumentException>();
-        FastEnum.Parse<TEnum>("123").Should().Be((TEnum)123);
+        const bool ignoreCase = false;
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<TEnum>("123", ignoreCase).Should().Be((TEnum)123);
     }
 
 
     [TestMethod]
     public void ParseIgnoreCase()
     {
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", true)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", true)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<TEnum>("123").Should().Be((TEnum)123);
+        const bool ignoreCase = true;
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>(" ", ignoreCase)).Should().Throw<ArgumentException>();
+        FluentActions.Invoking(static () => FastEnum.Parse<TEnum>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
+        FastEnum.Parse<TEnum>("123", ignoreCase).Should().Be((TEnum)123);
     }
 
 
     [TestMethod]
     public void TryParse()
     {
-        FastEnum.TryParse<TEnum>((string?)null, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("", out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>(" ", out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("ABCDE", out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("123", out var r).Should().BeTrue();
+        const bool ignoreCase = false;
+        FastEnum.TryParse<TEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((TEnum)123);
     }
 
@@ -100,11 +103,12 @@ public class EmptyTests
     [TestMethod]
     public void TryParseIgnoreCase()
     {
-        FastEnum.TryParse<TEnum>((string?)null, true, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>(" ", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("ABCDE", true, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum>("123", true, out var r).Should().BeTrue();
+        const bool ignoreCase = true;
+        FastEnum.TryParse<TEnum>((string?)null, ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>(" ", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("ABCDE", ignoreCase, out var _).Should().BeFalse();
+        FastEnum.TryParse<TEnum>("123", ignoreCase, out var r).Should().BeTrue();
         r.Should().Be((TEnum)123);
     }
 

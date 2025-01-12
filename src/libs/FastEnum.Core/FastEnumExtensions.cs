@@ -65,7 +65,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, sbyte>(nameof(value));
-        return Unsafe.As<T, sbyte>(ref value);
+        return Unsafe.BitCast<T, sbyte>(value);
     }
 
 
@@ -81,7 +81,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, byte>(nameof(value));
-        return Unsafe.As<T, byte>(ref value);
+        return Unsafe.BitCast<T, byte>(value);
     }
 
 
@@ -97,7 +97,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, short>(nameof(value));
-        return Unsafe.As<T, short>(ref value);
+        return Unsafe.BitCast<T, short>(value);
     }
 
 
@@ -113,7 +113,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ushort>(nameof(value));
-        return Unsafe.As<T, ushort>(ref value);
+        return Unsafe.BitCast<T, ushort>(value);
     }
 
 
@@ -129,7 +129,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, int>(nameof(value));
-        return Unsafe.As<T, int>(ref value);
+        return Unsafe.BitCast<T, int>(value);
     }
 
 
@@ -145,7 +145,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, uint>(nameof(value));
-        return Unsafe.As<T, uint>(ref value);
+        return Unsafe.BitCast<T, uint>(value);
     }
 
 
@@ -161,7 +161,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, long>(nameof(value));
-        return Unsafe.As<T, long>(ref value);
+        return Unsafe.BitCast<T, long>(value);
     }
 
 
@@ -177,7 +177,7 @@ public static class FastEnumExtensions
         where T : struct, Enum
     {
         ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ulong>(nameof(value));
-        return Unsafe.As<T, ulong>(ref value);
+        return Unsafe.BitCast<T, ulong>(value);
     }
     #endregion
 

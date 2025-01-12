@@ -75,14 +75,14 @@ internal static class EnumInfo<T>
         {
             return s_typeCode switch
             {
-                TypeCode.SByte => (ulong)Unsafe.As<T, sbyte>(ref value),
-                TypeCode.Byte => Unsafe.As<T, byte>(ref value),
-                TypeCode.Int16 => (ulong)Unsafe.As<T, short>(ref value),
-                TypeCode.UInt16 => Unsafe.As<T, ushort>(ref value),
-                TypeCode.Int32 => (ulong)Unsafe.As<T, int>(ref value),
-                TypeCode.UInt32 => Unsafe.As<T, uint>(ref value),
-                TypeCode.Int64 => (ulong)Unsafe.As<T, long>(ref value),
-                TypeCode.UInt64 => Unsafe.As<T, ulong>(ref value),
+                TypeCode.SByte => (ulong)Unsafe.BitCast<T, sbyte>(value),
+                TypeCode.Byte => Unsafe.BitCast<T, byte>(value),
+                TypeCode.Int16 => (ulong)Unsafe.BitCast<T, short>(value),
+                TypeCode.UInt16 => Unsafe.BitCast<T, ushort>(value),
+                TypeCode.Int32 => (ulong)Unsafe.BitCast<T, int>(value),
+                TypeCode.UInt32 => Unsafe.BitCast<T, uint>(value),
+                TypeCode.Int64 => (ulong)Unsafe.BitCast<T, long>(value),
+                TypeCode.UInt64 => Unsafe.BitCast<T, ulong>(value),
                 _ => throw new InvalidOperationException(),
             };
         }

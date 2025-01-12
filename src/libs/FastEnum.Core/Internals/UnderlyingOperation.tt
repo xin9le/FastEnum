@@ -139,7 +139,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static <#= x.CompatibleName #> toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+                var x = Unsafe.BitCast<T, <#= x.CompatibleName #>>(value);
                 return x;
             }
             #endregion
@@ -149,7 +149,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+            var x = Unsafe.BitCast<T, <#= x.CompatibleName #>>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -193,7 +193,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static <#= x.CompatibleName #> toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref value);
+                var x = Unsafe.BitCast<T, <#= x.CompatibleName #>>(value);
                 return x;
             }
             #endregion

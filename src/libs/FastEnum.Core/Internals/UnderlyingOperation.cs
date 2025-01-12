@@ -173,7 +173,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static sbyte toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, sbyte>(ref value);
+                var x = Unsafe.BitCast<T, sbyte>(value);
                 return x;
             }
             #endregion
@@ -183,7 +183,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, sbyte>(ref value);
+            var x = Unsafe.BitCast<T, sbyte>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -227,7 +227,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static sbyte toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, sbyte>(ref value);
+                var x = Unsafe.BitCast<T, sbyte>(value);
                 return x;
             }
             #endregion
@@ -263,7 +263,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static byte toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, byte>(ref value);
+                var x = Unsafe.BitCast<T, byte>(value);
                 return x;
             }
             #endregion
@@ -273,7 +273,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, byte>(ref value);
+            var x = Unsafe.BitCast<T, byte>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -317,7 +317,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static byte toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, byte>(ref value);
+                var x = Unsafe.BitCast<T, byte>(value);
                 return x;
             }
             #endregion
@@ -353,7 +353,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static short toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, short>(ref value);
+                var x = Unsafe.BitCast<T, short>(value);
                 return x;
             }
             #endregion
@@ -363,7 +363,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, short>(ref value);
+            var x = Unsafe.BitCast<T, short>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -407,7 +407,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static short toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, short>(ref value);
+                var x = Unsafe.BitCast<T, short>(value);
                 return x;
             }
             #endregion
@@ -443,7 +443,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static ushort toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, ushort>(ref value);
+                var x = Unsafe.BitCast<T, ushort>(value);
                 return x;
             }
             #endregion
@@ -453,7 +453,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, ushort>(ref value);
+            var x = Unsafe.BitCast<T, ushort>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -497,7 +497,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static ushort toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, ushort>(ref value);
+                var x = Unsafe.BitCast<T, ushort>(value);
                 return x;
             }
             #endregion
@@ -533,7 +533,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static int toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, int>(ref value);
+                var x = Unsafe.BitCast<T, int>(value);
                 return x;
             }
             #endregion
@@ -543,7 +543,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, int>(ref value);
+            var x = Unsafe.BitCast<T, int>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -587,7 +587,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static int toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, int>(ref value);
+                var x = Unsafe.BitCast<T, int>(value);
                 return x;
             }
             #endregion
@@ -623,7 +623,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static uint toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, uint>(ref value);
+                var x = Unsafe.BitCast<T, uint>(value);
                 return x;
             }
             #endregion
@@ -633,7 +633,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, uint>(ref value);
+            var x = Unsafe.BitCast<T, uint>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -677,7 +677,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static uint toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, uint>(ref value);
+                var x = Unsafe.BitCast<T, uint>(value);
                 return x;
             }
             #endregion
@@ -713,7 +713,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static long toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, long>(ref value);
+                var x = Unsafe.BitCast<T, long>(value);
                 return x;
             }
             #endregion
@@ -723,7 +723,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, long>(ref value);
+            var x = Unsafe.BitCast<T, long>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -767,7 +767,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static long toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, long>(ref value);
+                var x = Unsafe.BitCast<T, long>(value);
                 return x;
             }
             #endregion
@@ -803,7 +803,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static ulong toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, ulong>(ref value);
+                var x = Unsafe.BitCast<T, ulong>(value);
                 return x;
             }
             #endregion
@@ -813,7 +813,7 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
-            ref var x = ref Unsafe.As<T, ulong>(ref value);
+            var x = Unsafe.BitCast<T, ulong>(value);
             return x.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -857,7 +857,7 @@ internal static class UnderlyingOperation<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static ulong toNumber(T value)
             {
-                ref var x = ref Unsafe.As<T, ulong>(ref value);
+                var x = Unsafe.BitCast<T, ulong>(value);
                 return x;
             }
             #endregion

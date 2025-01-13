@@ -12,6 +12,8 @@ internal static class ThrowHelper
         where TEnum : struct, Enum
         where TUnderlying : INumberBase<TUnderlying>
     {
+        // note:
+        //  - https://github.com/xin9le/FastEnum/pull/66
         if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(TUnderlying))
             return;
 

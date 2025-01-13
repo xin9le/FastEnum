@@ -23,7 +23,7 @@ internal static class ThrowHelper
         //  - Extract the throw statement into a separate function to avoid hindering inlining.
         static void @throw(string? paramName)
         {
-            const string message = $"The underlying type of the enum and the value must be the same type.";
+            const string message = "The underlying type of the enum and the value must be the same type.";
             throw new ArgumentException(message, paramName);
         }
         #endregion

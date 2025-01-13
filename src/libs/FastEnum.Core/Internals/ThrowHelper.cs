@@ -15,13 +15,13 @@ internal static class ThrowHelper
         if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(TUnderlying))
             return;
 
-        ThrowArgumentException(paramName);
+        @throw(paramName);
 
 
         #region Local Functions
         // note:
         //  - Extract the throw statement into a separate function to avoid hindering inlining.
-        static void ThrowArgumentException(string? paramName)
+        static void @throw(string? paramName)
         {
             const string message = $"The underlying type of the enum and the value must be the same type.";
             throw new ArgumentException(message, paramName);

@@ -12,14 +12,23 @@ internal static class ThrowHelper
         where TEnum : struct, Enum
         where TUnderlying : INumberBase<TUnderlying>
     {
+        // note:
+        //  - https://github.com/xin9le/FastEnum/pull/66
         if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(TUnderlying))
             return;
-        ThrowArgumentException(paramName);
-        static void ThrowArgumentException(string? paramName)
+
+        @throw(paramName);
+
+
+        #region Local Functions
+        // note:
+        //  - Extract the throw statement into a separate function to avoid hindering inlining.
+        static void @throw(string? paramName)
         {
-            const string message = $"The underlying type of the enum and the value must be the same type.";
+            const string message = "The underlying type of the enum and the value must be the same type.";
             throw new ArgumentException(message, paramName);
         }
+        #endregion
     }
 
 

@@ -15,7 +15,6 @@ internal static class EnumInfo<T>
 {
     #region Fields
     public static readonly Type s_type;
-    public static readonly Type s_underlyingType;
     public static readonly TypeCode s_typeCode;
     public static readonly string[] s_names;
     public static readonly T[] s_values;
@@ -36,7 +35,6 @@ internal static class EnumInfo<T>
     static EnumInfo()
     {
         s_type = typeof(T);
-        s_underlyingType = Enum.GetUnderlyingType(s_type);
         s_typeCode = Type.GetTypeCode(s_type);
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);

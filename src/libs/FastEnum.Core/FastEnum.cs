@@ -22,7 +22,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Type GetUnderlyingType<T>()
         where T : struct, Enum
-        => EnumInfo<T>.s_underlyingType;
+        => Enum.GetUnderlyingType(typeof(T));
     #endregion
 
 

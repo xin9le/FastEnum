@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" />
         <PackageReference Include="MSTest" />
         <PackageReference Include="Shouldly" />
     </ItemGroup>

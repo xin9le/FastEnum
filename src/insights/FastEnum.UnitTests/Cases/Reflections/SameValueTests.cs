@@ -237,8 +237,8 @@ public sealed class SameValueContinuousTests
     public void ToMember()
     {
         {
-            var value = SameValueContinuousEnum.A;
-            var name = nameof(SameValueContinuousEnum.A);
+            const SameValueContinuousEnum value = SameValueContinuousEnum.A;
+            const string name = nameof(SameValueContinuousEnum.A);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueContinuousEnum).GetField(name);
@@ -250,8 +250,8 @@ public sealed class SameValueContinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueContinuousEnum.B;
-            var name = nameof(SameValueContinuousEnum.B);  // If the same value exists, we can't control what is correct.
+            const SameValueContinuousEnum value = SameValueContinuousEnum.B;
+            const string name = nameof(SameValueContinuousEnum.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueContinuousEnum).GetField(name);
@@ -263,8 +263,8 @@ public sealed class SameValueContinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueContinuousEnum.C;
-            var name = nameof(SameValueContinuousEnum.B);  // If the same value exists, we can't control what is correct.
+            const SameValueContinuousEnum value = SameValueContinuousEnum.C;
+            const string name = nameof(SameValueContinuousEnum.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueContinuousEnum).GetField(name);
@@ -276,8 +276,8 @@ public sealed class SameValueContinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueContinuousEnum.D;
-            var name = nameof(SameValueContinuousEnum.D);
+            const SameValueContinuousEnum value = SameValueContinuousEnum.D;
+            const string name = nameof(SameValueContinuousEnum.D);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueContinuousEnum).GetField(name);
@@ -541,8 +541,8 @@ public sealed class SameValueDiscontinuousTests
     public void ToMember()
     {
         {
-            var value = SameValueDiscontinuousEnum.A;
-            var name = nameof(SameValueDiscontinuousEnum.A);
+            const SameValueDiscontinuousEnum value = SameValueDiscontinuousEnum.A;
+            const string name = nameof(SameValueDiscontinuousEnum.A);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueDiscontinuousEnum).GetField(name);
@@ -554,8 +554,8 @@ public sealed class SameValueDiscontinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueDiscontinuousEnum.B;
-            var name = nameof(SameValueDiscontinuousEnum.B);  // If the same value exists, we can't control what is correct.
+            const SameValueDiscontinuousEnum value = SameValueDiscontinuousEnum.B;
+            const string name = nameof(SameValueDiscontinuousEnum.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueDiscontinuousEnum).GetField(name);
@@ -567,8 +567,8 @@ public sealed class SameValueDiscontinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueDiscontinuousEnum.C;
-            var name = nameof(SameValueDiscontinuousEnum.B);  // If the same value exists, we can't control what is correct.
+            const SameValueDiscontinuousEnum value = SameValueDiscontinuousEnum.C;
+            const string name = nameof(SameValueDiscontinuousEnum.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueDiscontinuousEnum).GetField(name);
@@ -580,8 +580,8 @@ public sealed class SameValueDiscontinuousTests
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = SameValueDiscontinuousEnum.D;
-            var name = nameof(SameValueDiscontinuousEnum.D);
+            const SameValueDiscontinuousEnum value = SameValueDiscontinuousEnum.D;
+            const string name = nameof(SameValueDiscontinuousEnum.D);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(SameValueDiscontinuousEnum).GetField(name);

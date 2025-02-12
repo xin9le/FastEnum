@@ -250,8 +250,8 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
     public void ToMember()
     {
         {
-            var value = <#= x.EnumType #>.A;
-            var name = nameof(<#= x.EnumType #>.A);
+            const <#= x.EnumType #> value = <#= x.EnumType #>.A;
+            const string name = nameof(<#= x.EnumType #>.A);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(<#= x.EnumType #>).GetField(name);
@@ -263,8 +263,8 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = <#= x.EnumType #>.B;
-            var name = nameof(<#= x.EnumType #>.B);  // If the same value exists, we can't control what is correct.
+            const <#= x.EnumType #> value = <#= x.EnumType #>.B;
+            const string name = nameof(<#= x.EnumType #>.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(<#= x.EnumType #>).GetField(name);
@@ -276,8 +276,8 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = <#= x.EnumType #>.C;
-            var name = nameof(<#= x.EnumType #>.B);  // If the same value exists, we can't control what is correct.
+            const <#= x.EnumType #> value = <#= x.EnumType #>.C;
+            const string name = nameof(<#= x.EnumType #>.B);  // If the same value exists, we can't control what is correct.
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(<#= x.EnumType #>).GetField(name);
@@ -289,8 +289,8 @@ public sealed class SameValue<#= x.IsContinuous ? "Continuous" : "Discontinuous"
             member.FieldInfo.ShouldBe(info);
         }
         {
-            var value = <#= x.EnumType #>.D;
-            var name = nameof(<#= x.EnumType #>.D);
+            const <#= x.EnumType #> value = <#= x.EnumType #>.D;
+            const string name = nameof(<#= x.EnumType #>.D);
             var nameUtf8 = Encoding.UTF8.GetBytes(name);
             var member = value.ToMember()!;
             var info = typeof(<#= x.EnumType #>).GetField(name);

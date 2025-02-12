@@ -329,8 +329,8 @@ public sealed class BasicSByteTests
     [TestMethod]
     public void ToMember()
     {
-        var value = SByteEnum.MaxValue;
-        var name = nameof(SByteEnum.MaxValue);
+        const SByteEnum value = SByteEnum.MaxValue;
+        const string name = nameof(SByteEnum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(SByteEnum).GetField(name);
@@ -355,17 +355,17 @@ public sealed class BasicSByteTests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = SByteEnum.MinValue;
-        var value = sbyte.MinValue;
+        const SByteEnum @enum = SByteEnum.MinValue;
+        const sbyte value = sbyte.MinValue;
 
         @enum.ToSByte().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -691,8 +691,8 @@ public sealed class BasicByteTests
     [TestMethod]
     public void ToMember()
     {
-        var value = ByteEnum.MaxValue;
-        var name = nameof(ByteEnum.MaxValue);
+        const ByteEnum value = ByteEnum.MaxValue;
+        const string name = nameof(ByteEnum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(ByteEnum).GetField(name);
@@ -716,17 +716,17 @@ public sealed class BasicByteTests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = ByteEnum.MinValue;
-        var value = byte.MinValue;
+        const ByteEnum @enum = ByteEnum.MinValue;
+        const byte value = byte.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
         @enum.ToByte().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1059,8 +1059,8 @@ public sealed class BasicInt16Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = Int16Enum.MaxValue;
-        var name = nameof(Int16Enum.MaxValue);
+        const Int16Enum value = Int16Enum.MaxValue;
+        const string name = nameof(Int16Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(Int16Enum).GetField(name);
@@ -1085,17 +1085,17 @@ public sealed class BasicInt16Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = Int16Enum.MinValue;
-        var value = short.MinValue;
+        const Int16Enum @enum = Int16Enum.MinValue;
+        const short value = short.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
         @enum.ToInt16().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1421,8 +1421,8 @@ public sealed class BasicUInt16Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = UInt16Enum.MaxValue;
-        var name = nameof(UInt16Enum.MaxValue);
+        const UInt16Enum value = UInt16Enum.MaxValue;
+        const string name = nameof(UInt16Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(UInt16Enum).GetField(name);
@@ -1446,17 +1446,17 @@ public sealed class BasicUInt16Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = UInt16Enum.MinValue;
-        var value = ushort.MinValue;
+        const UInt16Enum @enum = UInt16Enum.MinValue;
+        const ushort value = ushort.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
         @enum.ToUInt16().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1789,8 +1789,8 @@ public sealed class BasicInt32Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = Int32Enum.MaxValue;
-        var name = nameof(Int32Enum.MaxValue);
+        const Int32Enum value = Int32Enum.MaxValue;
+        const string name = nameof(Int32Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(Int32Enum).GetField(name);
@@ -1815,17 +1815,17 @@ public sealed class BasicInt32Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = Int32Enum.MinValue;
-        var value = int.MinValue;
+        const Int32Enum @enum = Int32Enum.MinValue;
+        const int value = int.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
         @enum.ToInt32().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2151,8 +2151,8 @@ public sealed class BasicUInt32Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = UInt32Enum.MaxValue;
-        var name = nameof(UInt32Enum.MaxValue);
+        const UInt32Enum value = UInt32Enum.MaxValue;
+        const string name = nameof(UInt32Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(UInt32Enum).GetField(name);
@@ -2176,17 +2176,17 @@ public sealed class BasicUInt32Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = UInt32Enum.MinValue;
-        var value = uint.MinValue;
+        const UInt32Enum @enum = UInt32Enum.MinValue;
+        const uint value = uint.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
         @enum.ToUInt32().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2519,8 +2519,8 @@ public sealed class BasicInt64Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = Int64Enum.MaxValue;
-        var name = nameof(Int64Enum.MaxValue);
+        const Int64Enum value = Int64Enum.MaxValue;
+        const string name = nameof(Int64Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(Int64Enum).GetField(name);
@@ -2545,17 +2545,17 @@ public sealed class BasicInt64Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = Int64Enum.MinValue;
-        var value = long.MinValue;
+        const Int64Enum @enum = Int64Enum.MinValue;
+        const long value = long.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
         @enum.ToInt64().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2881,8 +2881,8 @@ public sealed class BasicUInt64Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = UInt64Enum.MaxValue;
-        var name = nameof(UInt64Enum.MaxValue);
+        const UInt64Enum value = UInt64Enum.MaxValue;
+        const string name = nameof(UInt64Enum.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(UInt64Enum).GetField(name);
@@ -2906,16 +2906,16 @@ public sealed class BasicUInt64Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = UInt64Enum.MinValue;
-        var value = ulong.MinValue;
+        const UInt64Enum @enum = UInt64Enum.MinValue;
+        const ulong value = ulong.MinValue;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
         @enum.ToUInt64().ShouldBe(value);
     }
 

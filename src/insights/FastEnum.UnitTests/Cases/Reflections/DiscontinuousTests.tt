@@ -348,8 +348,8 @@ public sealed class Discontinuous<#= x.AliasType #>Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = <#= x.EnumType #>.A;
-        var name = nameof(<#= x.EnumType #>.A);
+        const <#= x.EnumType #> value = <#= x.EnumType #>.A;
+        const string name = nameof(<#= x.EnumType #>.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(<#= x.EnumType #>).GetField(name);
@@ -374,14 +374,14 @@ public sealed class Discontinuous<#= x.AliasType #>Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = <#= x.EnumType #>.A;
+        const <#= x.EnumType #> @enum = <#= x.EnumType #>.A;
         const <#= x.UnderlyingType #> value = 1;
 
 <# foreach (var y in parameters) { #>
 <# if (x.EnumType == y.EnumType) { #>
         @enum.To<#= y.AliasType #>().ShouldBe(value);
 <# } else { #>
-        Should.Throw<ArgumentException>(() => @enum.To<#= y.AliasType #>());
+        Should.Throw<ArgumentException>(static () => @enum.To<#= y.AliasType #>());
 <# } #>
 <# } #>
     }

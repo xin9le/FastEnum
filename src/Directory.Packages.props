@@ -7,7 +7,7 @@
     <PackageVersion Include="Enums.NET" Version="5.0.0" />
     <PackageVersion Include="FluentAssertions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
-    <PackageVersion Include="MSTest" Version="3.7.0" />
+    <PackageVersion Include="MSTest" Version="3.8.0" />
     <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta11" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
   </ItemGroup>

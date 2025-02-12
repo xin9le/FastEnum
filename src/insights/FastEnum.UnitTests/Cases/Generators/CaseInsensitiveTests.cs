@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
 using TBooster = FastEnumUtility.UnitTests.Models.CaseInsensitiveEnumBooster;
 using TEnum = FastEnumUtility.UnitTests.Models.CaseInsensitiveEnum;
 
@@ -27,14 +27,14 @@ public class CaseInsensitiveTests
         foreach (var x in parameters)
         {
             var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
-            FastEnum.Parse<TEnum, TBooster>(x.name, ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<TEnum, TBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<TEnum, TBooster>(x.name, ignoreCase).ShouldBe(x.value);
+            FastEnum.Parse<TEnum, TBooster>(valueString, ignoreCase).ShouldBe(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<TEnum, TBooster>("123", ignoreCase).Should().Be((TEnum)123);
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>((string?)null, ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>("", ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>(" ", ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>("ABCDE", ignoreCase));
+        FastEnum.Parse<TEnum, TBooster>("123", ignoreCase).ShouldBe((TEnum)123);
     }
 
 
@@ -53,14 +53,14 @@ public class CaseInsensitiveTests
         foreach (var x in parameters)
         {
             var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
-            FastEnum.Parse<TEnum, TBooster>(x.name, ignoreCase).Should().Be(x.value);
-            FastEnum.Parse<TEnum, TBooster>(valueString, ignoreCase).Should().Be(x.value);
+            FastEnum.Parse<TEnum, TBooster>(x.name, ignoreCase).ShouldBe(x.value);
+            FastEnum.Parse<TEnum, TBooster>(valueString, ignoreCase).ShouldBe(x.value);
         }
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>((string?)null, ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>("", ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>(" ", ignoreCase)).Should().Throw<ArgumentException>();
-        FluentActions.Invoking(static () => FastEnum.Parse<TEnum, TBooster>("ABCDE", ignoreCase)).Should().Throw<ArgumentException>();
-        FastEnum.Parse<TEnum, TBooster>("123", ignoreCase).Should().Be((TEnum)123);
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>((string?)null, ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>("", ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>(" ", ignoreCase));
+        Should.Throw<ArgumentException>(static () => FastEnum.Parse<TEnum, TBooster>("ABCDE", ignoreCase));
+        FastEnum.Parse<TEnum, TBooster>("123", ignoreCase).ShouldBe((TEnum)123);
     }
 
 
@@ -78,19 +78,19 @@ public class CaseInsensitiveTests
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<TEnum, TBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            FastEnum.TryParse<TEnum, TBooster>(x.name, ignoreCase, out var r1).ShouldBeTrue();
+            r1.ShouldBe(x.value);
 
             var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
-            FastEnum.TryParse<TEnum, TBooster>(valueString, ignoreCase, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+            FastEnum.TryParse<TEnum, TBooster>(valueString, ignoreCase, out var r2).ShouldBeTrue();
+            r2.ShouldBe(x.value);
         }
-        FastEnum.TryParse<TEnum, TBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>(" ", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("123", ignoreCase, out var r).Should().BeTrue();
-        r.Should().Be((TEnum)123);
+        FastEnum.TryParse<TEnum, TBooster>((string?)null, ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>(" ", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("ABCDE", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("123", ignoreCase, out var r).ShouldBeTrue();
+        r.ShouldBe((TEnum)123);
     }
 
 
@@ -108,18 +108,18 @@ public class CaseInsensitiveTests
         };
         foreach (var x in parameters)
         {
-            FastEnum.TryParse<TEnum, TBooster>(x.name, ignoreCase, out var r1).Should().BeTrue();
-            r1.Should().Be(x.value);
+            FastEnum.TryParse<TEnum, TBooster>(x.name, ignoreCase, out var r1).ShouldBeTrue();
+            r1.ShouldBe(x.value);
 
             var valueString = ((byte)x.value).ToString(CultureInfo.InvariantCulture);
-            FastEnum.TryParse<TEnum, TBooster>(valueString, ignoreCase, out var r2).Should().BeTrue();
-            r2.Should().Be(x.value);
+            FastEnum.TryParse<TEnum, TBooster>(valueString, ignoreCase, out var r2).ShouldBeTrue();
+            r2.ShouldBe(x.value);
         }
-        FastEnum.TryParse<TEnum, TBooster>((string?)null, ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>(" ", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("ABCDE", ignoreCase, out var _).Should().BeFalse();
-        FastEnum.TryParse<TEnum, TBooster>("123", ignoreCase, out var r).Should().BeTrue();
-        r.Should().Be((TEnum)123);
+        FastEnum.TryParse<TEnum, TBooster>((string?)null, ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>(" ", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("ABCDE", ignoreCase, out var _).ShouldBeFalse();
+        FastEnum.TryParse<TEnum, TBooster>("123", ignoreCase, out var r).ShouldBeTrue();
+        r.ShouldBe((TEnum)123);
     }
 }

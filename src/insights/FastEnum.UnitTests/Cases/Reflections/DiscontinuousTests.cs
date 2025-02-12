@@ -329,8 +329,8 @@ public sealed class DiscontinuousSByteTests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousSByteEnum.A;
-        var name = nameof(DiscontinuousSByteEnum.A);
+        const DiscontinuousSByteEnum value = DiscontinuousSByteEnum.A;
+        const string name = nameof(DiscontinuousSByteEnum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousSByteEnum).GetField(name);
@@ -355,17 +355,17 @@ public sealed class DiscontinuousSByteTests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousSByteEnum.A;
+        const DiscontinuousSByteEnum @enum = DiscontinuousSByteEnum.A;
         const sbyte value = 1;
 
         @enum.ToSByte().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -698,8 +698,8 @@ public sealed class DiscontinuousByteTests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousByteEnum.A;
-        var name = nameof(DiscontinuousByteEnum.A);
+        const DiscontinuousByteEnum value = DiscontinuousByteEnum.A;
+        const string name = nameof(DiscontinuousByteEnum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousByteEnum).GetField(name);
@@ -724,17 +724,17 @@ public sealed class DiscontinuousByteTests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousByteEnum.A;
+        const DiscontinuousByteEnum @enum = DiscontinuousByteEnum.A;
         const byte value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
         @enum.ToByte().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1067,8 +1067,8 @@ public sealed class DiscontinuousInt16Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousInt16Enum.A;
-        var name = nameof(DiscontinuousInt16Enum.A);
+        const DiscontinuousInt16Enum value = DiscontinuousInt16Enum.A;
+        const string name = nameof(DiscontinuousInt16Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousInt16Enum).GetField(name);
@@ -1093,17 +1093,17 @@ public sealed class DiscontinuousInt16Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousInt16Enum.A;
+        const DiscontinuousInt16Enum @enum = DiscontinuousInt16Enum.A;
         const short value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
         @enum.ToInt16().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1436,8 +1436,8 @@ public sealed class DiscontinuousUInt16Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousUInt16Enum.A;
-        var name = nameof(DiscontinuousUInt16Enum.A);
+        const DiscontinuousUInt16Enum value = DiscontinuousUInt16Enum.A;
+        const string name = nameof(DiscontinuousUInt16Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousUInt16Enum).GetField(name);
@@ -1462,17 +1462,17 @@ public sealed class DiscontinuousUInt16Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousUInt16Enum.A;
+        const DiscontinuousUInt16Enum @enum = DiscontinuousUInt16Enum.A;
         const ushort value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
         @enum.ToUInt16().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -1805,8 +1805,8 @@ public sealed class DiscontinuousInt32Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousInt32Enum.A;
-        var name = nameof(DiscontinuousInt32Enum.A);
+        const DiscontinuousInt32Enum value = DiscontinuousInt32Enum.A;
+        const string name = nameof(DiscontinuousInt32Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousInt32Enum).GetField(name);
@@ -1831,17 +1831,17 @@ public sealed class DiscontinuousInt32Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousInt32Enum.A;
+        const DiscontinuousInt32Enum @enum = DiscontinuousInt32Enum.A;
         const int value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
         @enum.ToInt32().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2174,8 +2174,8 @@ public sealed class DiscontinuousUInt32Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousUInt32Enum.A;
-        var name = nameof(DiscontinuousUInt32Enum.A);
+        const DiscontinuousUInt32Enum value = DiscontinuousUInt32Enum.A;
+        const string name = nameof(DiscontinuousUInt32Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousUInt32Enum).GetField(name);
@@ -2200,17 +2200,17 @@ public sealed class DiscontinuousUInt32Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousUInt32Enum.A;
+        const DiscontinuousUInt32Enum @enum = DiscontinuousUInt32Enum.A;
         const uint value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
         @enum.ToUInt32().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2543,8 +2543,8 @@ public sealed class DiscontinuousInt64Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousInt64Enum.A;
-        var name = nameof(DiscontinuousInt64Enum.A);
+        const DiscontinuousInt64Enum value = DiscontinuousInt64Enum.A;
+        const string name = nameof(DiscontinuousInt64Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousInt64Enum).GetField(name);
@@ -2569,17 +2569,17 @@ public sealed class DiscontinuousInt64Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousInt64Enum.A;
+        const DiscontinuousInt64Enum @enum = DiscontinuousInt64Enum.A;
         const long value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
         @enum.ToInt64().ShouldBe(value);
-        Should.Throw<ArgumentException>(() => @enum.ToUInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt64());
     }
 
 
@@ -2912,8 +2912,8 @@ public sealed class DiscontinuousUInt64Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = DiscontinuousUInt64Enum.A;
-        var name = nameof(DiscontinuousUInt64Enum.A);
+        const DiscontinuousUInt64Enum value = DiscontinuousUInt64Enum.A;
+        const string name = nameof(DiscontinuousUInt64Enum.A);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(DiscontinuousUInt64Enum).GetField(name);
@@ -2938,16 +2938,16 @@ public sealed class DiscontinuousUInt64Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = DiscontinuousUInt64Enum.A;
+        const DiscontinuousUInt64Enum @enum = DiscontinuousUInt64Enum.A;
         const ulong value = 1;
 
-        Should.Throw<ArgumentException>(() => @enum.ToSByte());
-        Should.Throw<ArgumentException>(() => @enum.ToByte());
-        Should.Throw<ArgumentException>(() => @enum.ToInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt16());
-        Should.Throw<ArgumentException>(() => @enum.ToInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToUInt32());
-        Should.Throw<ArgumentException>(() => @enum.ToInt64());
+        Should.Throw<ArgumentException>(static () => @enum.ToSByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToByte());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt16());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToUInt32());
+        Should.Throw<ArgumentException>(static () => @enum.ToInt64());
         @enum.ToUInt64().ShouldBe(value);
     }
 

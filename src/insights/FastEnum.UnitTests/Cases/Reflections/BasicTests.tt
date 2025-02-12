@@ -362,8 +362,8 @@ public sealed class Basic<#= x.AliasType #>Tests
     [TestMethod]
     public void ToMember()
     {
-        var value = <#= x.EnumType #>.MaxValue;
-        var name = nameof(<#= x.EnumType #>.MaxValue);
+        const <#= x.EnumType #> value = <#= x.EnumType #>.MaxValue;
+        const string name = nameof(<#= x.EnumType #>.MaxValue);
         var nameUtf8 = Encoding.UTF8.GetBytes(name);
         var member = value.ToMember()!;
         var info = typeof(<#= x.EnumType #>).GetField(name);
@@ -390,14 +390,14 @@ public sealed class Basic<#= x.AliasType #>Tests
     [TestMethod]
     public void ToUnderlying()
     {
-        var @enum = <#= x.EnumType #>.MinValue;
-        var value = <#= x.UnderlyingType #>.MinValue;
+        const <#= x.EnumType #> @enum = <#= x.EnumType #>.MinValue;
+        const <#= x.UnderlyingType #> value = <#= x.UnderlyingType #>.MinValue;
 
 <# foreach (var y in parameters) { #>
 <# if (x.EnumType == y.EnumType) { #>
         @enum.To<#= y.AliasType #>().ShouldBe(value);
 <# } else { #>
-        Should.Throw<ArgumentException>(() => @enum.To<#= y.AliasType #>());
+        Should.Throw<ArgumentException>(static () => @enum.To<#= y.AliasType #>());
 <# } #>
 <# } #>
     }

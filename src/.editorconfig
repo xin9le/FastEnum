@@ -72,6 +72,7 @@ dotnet_diagnostic.IDE0251.severity = error
 dotnet_diagnostic.IDE0270.severity = silent
 dotnet_diagnostic.IDE0290.severity = error
 dotnet_diagnostic.IDE0300.severity = error
+dotnet_diagnostic.IDE0305.severity = silent
 
 dotnet_sort_system_directives_first = true
 dotnet_style_qualification_for_field = true

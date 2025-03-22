@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/insights/">
+    <Project Path="insights/FastEnum.Benchmarks/FastEnum.Benchmarks.csproj" />
+    <Project Path="insights/FastEnum.Sandbox/FastEnum.Sandbox.csproj" />
+    <Project Path="insights/FastEnum.UnitTests/FastEnum.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/libs/">
+    <Project Path="libs/FastEnum.Core/FastEnum.Core.csproj" />
+    <Project Path="libs/FastEnum.Generators/FastEnum.Generators.csproj" />
+    <Project Path="libs/FastEnum/FastEnum.csproj" />
+  </Folder>
+</Solution>

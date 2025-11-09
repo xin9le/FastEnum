@@ -165,7 +165,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -219,7 +219,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -255,7 +255,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -309,7 +309,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -345,7 +345,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -399,7 +399,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -435,7 +435,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -489,7 +489,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -525,7 +525,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -579,7 +579,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -615,7 +615,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -669,7 +669,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -705,7 +705,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -759,7 +759,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 
@@ -795,7 +795,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.ContainsKey(value);
+                return EnumInfo<T>.s_memberByValue!.ContainsKey(value);
             }
 
 
@@ -849,7 +849,7 @@ internal static class UnderlyingOperation<T>
             }
             else
             {
-                return EnumInfo<T>.s_memberByValue.TryGetValue(value, out result);
+                return EnumInfo<T>.s_memberByValue!.TryGetValue(value, out result);
             }
 
 

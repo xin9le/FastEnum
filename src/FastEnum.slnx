@@ -1,4 +1,11 @@
 <Solution>
+  <Folder Name="/assets/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="libs/NuGet.props" />
+    <File Path="NuGet.config" />
+  </Folder>
   <Folder Name="/insights/">
     <Project Path="insights/FastEnum.Benchmarks/FastEnum.Benchmarks.csproj" />
     <Project Path="insights/FastEnum.Sandbox/FastEnum.Sandbox.csproj" />

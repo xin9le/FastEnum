@@ -5,6 +5,7 @@
         <LangVersion>14.0</LangVersion>
         <Nullable>enable</Nullable>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+        <UseArtifactsOutput>true</UseArtifactsOutput>
     </PropertyGroup>
     
 </Project>

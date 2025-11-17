@@ -14,6 +14,7 @@ var switcher = new BenchmarkSwitcher(
     typeof(GetValues),
     typeof(IsDefined_Enum),
     typeof(IsDefined_String),
+    typeof(SpecializedDictionary),
     typeof(ToString_Defined),
     typeof(ToString_Undefined),
     typeof(TryParse_CaseInsensitive),

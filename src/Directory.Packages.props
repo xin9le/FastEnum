@@ -3,11 +3,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.4" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.6" />
     <PackageVersion Include="Enums.NET" Version="5.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
-    <PackageVersion Include="MSTest" Version="4.0.1" />
-    <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta11" />
+    <PackageVersion Include="MSTest" Version="4.0.2" />
+    <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta16" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
   </ItemGroup>
 </Project>

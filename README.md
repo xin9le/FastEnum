@@ -1,4 +1,4 @@
-# FastEnum
+﻿# FastEnum
 FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than .NET. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature.
 
 [![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
@@ -9,15 +9,15 @@ FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than
 
 
 # Performance
-![Benchmark](https://github.com/user-attachments/assets/81755afc-30ad-4e20-9737-fa3031ef52aa)
+![Benchmark](https://github.com/user-attachments/assets/3473435a-0756-4224-9625-8509f74dfc2b)
 
 
 ``` ini
-BenchmarkDotNet v0.14.0, Windows 11 (10.0.22621.4037/22H2/2022Update/SunValley2)
-13th Gen Intel Core i7-1360P, 1 CPU, 16 logical and 12 physical cores
-.NET SDK 8.0.400
-  [Host]     : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
-  Job-CYQAVK : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+BenchmarkDotNet v0.15.6, Windows 11 (10.0.26200.7171)
+Intel Core Ultra 7 155H 3.00GHz, 1 CPU, 22 logical and 16 physical cores
+.NET SDK 10.0.100
+  [Host]     : .NET 10.0.0 (10.0.0, 10.0.25.52411), X64 RyuJIT x86-64-v3
+  DefaultJob : .NET 10.0.0 (10.0.0, 10.0.25.52411), X64 RyuJIT x86-64-v3
 ```
 
 

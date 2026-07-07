@@ -10,19 +10,28 @@ namespace FastEnumUtility.Benchmarks.Internals;
 internal static class BenchmarkConfig
 {
     public static IConfig ForDefault()
-    {
-        return ManualConfig.CreateMinimumViable()
-            .AddExporter(MarkdownExporter.GitHub)
-            .AddDiagnoser(MemoryDiagnoser.Default)
-            .AddJob(Job.Default);
-    }
+        => CreateSharedConfig(Job.Default);
 
 
     public static IConfig ForShortRun()
+        => CreateSharedConfig(Job.ShortRun);
+
+
+    #region Helpers
+    private static ManualConfig CreateSharedConfig(Job job)
     {
-        return ManualConfig.CreateMinimumViable()
+        return ManualConfig
+            .CreateMinimumViable()
             .AddExporter(MarkdownExporter.GitHub)
             .AddDiagnoser(MemoryDiagnoser.Default)
-            .AddJob(Job.ShortRun);
+            .AddDiagnoser(new DisassemblyDiagnoser(new
+            (
+                maxDepth: 3,
+                printSource: true,
+                exportGithubMarkdown: true,
+                exportCombinedDisassemblyReport: true
+            )))
+            .AddJob(job);
     }
+    #endregion
 }

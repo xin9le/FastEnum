@@ -43,7 +43,7 @@ internal static class StringHelper
             //
             // Bit composition:
             //  - (length << 16) ^ (first << 8) ^ (middle << 4) ^ last
-            //      - length         -> occupies bit16 and above
+            //      - length         -> occupies bit16-31
             //      - first  (16bit) -> occupies bit8-23
             //      - middle (16bit) -> occupies bit4-19
             //      - last   (16bit) -> occupies bit0-15

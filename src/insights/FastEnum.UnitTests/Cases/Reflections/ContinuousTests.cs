@@ -6,6 +6,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using FastEnumUtility.UnitTests.Models;
@@ -175,14 +176,18 @@ public sealed class ContinuousSByteTests
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousSByteEnum>(ContinuousSByteEnum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)sbyte.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)zero<sbyte>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)sbyte.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>((ContinuousSByteEnum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousSByteEnum.A.IsDefined().ShouldBeTrue();
         ContinuousSByteEnum.B.IsDefined().ShouldBeTrue();
         ContinuousSByteEnum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousSByteEnum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousSByteEnum)sbyte.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousSByteEnum)zero<sbyte>()).IsDefined().ShouldBeFalse();
+        ((ContinuousSByteEnum)sbyte.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousSByteEnum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -192,6 +197,12 @@ public sealed class ContinuousSByteTests
         FastEnum.IsDefined<ContinuousSByteEnum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousSByteEnum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -548,14 +559,18 @@ public sealed class ContinuousByteTests
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousByteEnum>(ContinuousByteEnum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)byte.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)zero<byte>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)byte.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>((ContinuousByteEnum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousByteEnum.A.IsDefined().ShouldBeTrue();
         ContinuousByteEnum.B.IsDefined().ShouldBeTrue();
         ContinuousByteEnum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousByteEnum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousByteEnum)byte.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousByteEnum)zero<byte>()).IsDefined().ShouldBeFalse();
+        ((ContinuousByteEnum)byte.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousByteEnum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -565,6 +580,12 @@ public sealed class ContinuousByteTests
         FastEnum.IsDefined<ContinuousByteEnum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousByteEnum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -921,14 +942,18 @@ public sealed class ContinuousInt16Tests
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt16Enum>(ContinuousInt16Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)short.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)zero<short>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)short.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>((ContinuousInt16Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousInt16Enum.A.IsDefined().ShouldBeTrue();
         ContinuousInt16Enum.B.IsDefined().ShouldBeTrue();
         ContinuousInt16Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousInt16Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousInt16Enum)short.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousInt16Enum)zero<short>()).IsDefined().ShouldBeFalse();
+        ((ContinuousInt16Enum)short.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousInt16Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -938,6 +963,12 @@ public sealed class ContinuousInt16Tests
         FastEnum.IsDefined<ContinuousInt16Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt16Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -1294,14 +1325,18 @@ public sealed class ContinuousUInt16Tests
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt16Enum>(ContinuousUInt16Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)ushort.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)zero<ushort>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)ushort.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>((ContinuousUInt16Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousUInt16Enum.A.IsDefined().ShouldBeTrue();
         ContinuousUInt16Enum.B.IsDefined().ShouldBeTrue();
         ContinuousUInt16Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousUInt16Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt16Enum)ushort.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt16Enum)zero<ushort>()).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt16Enum)ushort.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousUInt16Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -1311,6 +1346,12 @@ public sealed class ContinuousUInt16Tests
         FastEnum.IsDefined<ContinuousUInt16Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt16Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -1667,14 +1708,18 @@ public sealed class ContinuousInt32Tests
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt32Enum>(ContinuousInt32Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)int.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)zero<int>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)int.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>((ContinuousInt32Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousInt32Enum.A.IsDefined().ShouldBeTrue();
         ContinuousInt32Enum.B.IsDefined().ShouldBeTrue();
         ContinuousInt32Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousInt32Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousInt32Enum)int.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousInt32Enum)zero<int>()).IsDefined().ShouldBeFalse();
+        ((ContinuousInt32Enum)int.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousInt32Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -1684,6 +1729,12 @@ public sealed class ContinuousInt32Tests
         FastEnum.IsDefined<ContinuousInt32Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt32Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2040,14 +2091,18 @@ public sealed class ContinuousUInt32Tests
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt32Enum>(ContinuousUInt32Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)uint.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)zero<uint>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)uint.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>((ContinuousUInt32Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousUInt32Enum.A.IsDefined().ShouldBeTrue();
         ContinuousUInt32Enum.B.IsDefined().ShouldBeTrue();
         ContinuousUInt32Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousUInt32Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt32Enum)uint.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt32Enum)zero<uint>()).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt32Enum)uint.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousUInt32Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -2057,6 +2112,12 @@ public sealed class ContinuousUInt32Tests
         FastEnum.IsDefined<ContinuousUInt32Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt32Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2413,14 +2474,18 @@ public sealed class ContinuousInt64Tests
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousInt64Enum>(ContinuousInt64Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)long.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)zero<long>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)long.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>((ContinuousInt64Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousInt64Enum.A.IsDefined().ShouldBeTrue();
         ContinuousInt64Enum.B.IsDefined().ShouldBeTrue();
         ContinuousInt64Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousInt64Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousInt64Enum)long.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousInt64Enum)zero<long>()).IsDefined().ShouldBeFalse();
+        ((ContinuousInt64Enum)long.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousInt64Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -2430,6 +2495,12 @@ public sealed class ContinuousInt64Tests
         FastEnum.IsDefined<ContinuousInt64Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousInt64Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2786,14 +2857,18 @@ public sealed class ContinuousUInt64Tests
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<ContinuousUInt64Enum>(ContinuousUInt64Enum.C).ShouldBeTrue();
-        FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)0).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)ulong.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)zero<ulong>()).ShouldBeFalse();
+        FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)ulong.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>((ContinuousUInt64Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         ContinuousUInt64Enum.A.IsDefined().ShouldBeTrue();
         ContinuousUInt64Enum.B.IsDefined().ShouldBeTrue();
         ContinuousUInt64Enum.C.IsDefined().ShouldBeTrue();
-        ((ContinuousUInt64Enum)0).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt64Enum)ulong.MinValue).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt64Enum)zero<ulong>()).IsDefined().ShouldBeFalse();
+        ((ContinuousUInt64Enum)ulong.MaxValue).IsDefined().ShouldBeFalse();
         ((ContinuousUInt64Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
@@ -2803,6 +2878,12 @@ public sealed class ContinuousUInt64Tests
         FastEnum.IsDefined<ContinuousUInt64Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<ContinuousUInt64Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 

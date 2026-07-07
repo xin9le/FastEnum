@@ -158,10 +158,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (byte)(max - min);
+                var lower = (byte)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -248,10 +253,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (byte)(max - min);
+                var lower = (byte)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -338,10 +348,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (ushort)(max - min);
+                var lower = (ushort)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -428,10 +443,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (ushort)(max - min);
+                var lower = (ushort)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -518,10 +538,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (uint)(max - min);
+                var lower = (uint)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -608,10 +633,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (uint)(max - min);
+                var lower = (uint)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -698,10 +728,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (ulong)(max - min);
+                var lower = (ulong)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {
@@ -788,10 +823,15 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
+
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                return (min <= val) && (val <= max);
+                var upper = (ulong)(max - min);
+                var lower = (ulong)(val - min);
+                return unchecked(lower <= upper);
             }
             else
             {

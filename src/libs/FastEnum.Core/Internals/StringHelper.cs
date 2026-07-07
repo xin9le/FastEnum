@@ -42,16 +42,17 @@ internal static class StringHelper
             //  - Computes a hash in O(1) without scanning the whole string, using only the length, the first character, and the last character.
             //
             // Bit composition:
-            //  - (length << 16) ^ (first << 8) ^ last
-            //      - length        -> occupies bit16 and above
-            //      - first (16bit) -> occupies bit8-23
-            //      - last  (16bit) -> occupies bit0-15
+            //  - (length << 16) ^ (first << 8) ^ (middle << 4) ^ last
+            //      - length         -> occupies bit16 and above
+            //      - first  (16bit) -> occupies bit8-23
+            //      - middle (16bit) -> occupies bit4-19
+            //      - last   (16bit) -> occupies bit0-15
             //  - The bit 8-23 and bit 16-23 ranges intentionally overlap; XOR-ing them (instead of simple bit-packing) improves diffusion slightly.
-            //  - Note: when (length == 1), (first == last), but different shift amounts prevent the hash from degenerating to a constant.
+            //  - Note: when (length == 1), (first == middle == last), but different shift amounts prevent the hash from degenerating to a constant.
             //
             // Trade-off:
             //  + Constant-time cost regardless of string length.
-            //  - Strings with the same length/first/last but different middle content collide (e.g. "aXXXXc" vs "aYYYYc").
+            //  - Strings with the same length/first/middle/last but different middle content collide (e.g. "aXXbXXc" vs "aYYbYYc").
             //      => Intended to be used as a cheap pre-filter, always paired with a strict equality check (e.g. SequenceEqual) after a hash match.
             //
             // Determinism:
@@ -61,9 +62,13 @@ internal static class StringHelper
             if (length is 0)
                 return 0;
 
+            var first = value.At(0);
+            var middle = value.At(length >> 1);
+            var last = value.At(length - 1);
             return (length << 16)
-                ^ (value.At(0) << 8)
-                ^ value.At(length - 1);
+                ^ (first << 8)
+                ^ (middle << 4)
+                ^ last;
 
             /*
             // note:
@@ -90,11 +95,10 @@ internal static class StringHelper
         public static int GetHashCode(ReadOnlySpan<char> value)
         {
             // Difference from the base version:
-            //  - Structurally identical (same length guard, same bit composition), except the first and last characters are normalized via `char.ToUpperInvariant()` before being folded into the hash:
-            //  - (length << 16) ^ (ToUpperInvariant(first) << 8) ^ ToUpperInvariant(last)
+            //  - Structurally identical (same length guard, same bit composition), except the first/middle/last characters are normalized via `char.ToUpperInvariant()` before being folded into the hash.
             //
             // Purpose:
-            //  - Produces a case-insensitive hash. E.g. "Get", "GET", and "get" all hash to the same value, since their first/last characters normalize to the same uppercase form.
+            //  - Produces a case-insensitive hash. E.g. "Get", "GET", and "get" all hash to the same value, since their first/middle/last characters normalize to the same uppercase form.
             //
             // Why this is required, not optional:
             //  - A hash function must respect the same equivalence relation as its paired equality comparer (the hash contract: x == y implies hash(x) == hash(y)).
@@ -112,9 +116,13 @@ internal static class StringHelper
             if (length is 0)
                 return 0;
 
+            var first = value.At(0);
+            var middle = value.At(length >> 1);
+            var last = value.At(length - 1);
             return (length << 16)
-                ^ (char.ToUpperInvariant(value.At(0)) << 8)
-                ^ char.ToUpperInvariant(value.At(length - 1));
+                ^ (char.ToUpperInvariant(first) << 8)
+                ^ (char.ToUpperInvariant(middle) << 4)
+                ^ char.ToUpperInvariant(last);
 
             /*
             // note:

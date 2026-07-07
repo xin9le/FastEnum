@@ -24,6 +24,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using FastEnumUtility.UnitTests.Models;
@@ -194,19 +195,33 @@ public sealed class Discontinuous<#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.A).ShouldBeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.B).ShouldBeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(<#= x.EnumType #>.C).ShouldBeTrue();
+        FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)<#= x.UnderlyingType #>.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)zero<<#= x.UnderlyingType #>>()).ShouldBeFalse();
+        FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)<#= x.UnderlyingType #>.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>((<#= x.EnumType #>)123).ShouldBeFalse();
 
         //--- Extension methods
         <#= x.EnumType #>.A.IsDefined().ShouldBeTrue();
         <#= x.EnumType #>.B.IsDefined().ShouldBeTrue();
         <#= x.EnumType #>.C.IsDefined().ShouldBeTrue();
+        ((<#= x.EnumType #>)<#= x.UnderlyingType #>.MinValue).IsDefined().ShouldBeFalse();
+        ((<#= x.EnumType #>)zero<<#= x.UnderlyingType #>>()).IsDefined().ShouldBeFalse();
+        ((<#= x.EnumType #>)<#= x.UnderlyingType #>.MaxValue).IsDefined().ShouldBeFalse();
+        ((<#= x.EnumType #>)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.A)).ShouldBeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.B)).ShouldBeTrue();
         FastEnum.IsDefined<<#= x.EnumType #>>(nameof(<#= x.EnumType #>.C)).ShouldBeTrue();
+        FastEnum.IsDefined<<#= x.EnumType #>>("0").ShouldBeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("123").ShouldBeFalse();
         FastEnum.IsDefined<<#= x.EnumType #>>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 

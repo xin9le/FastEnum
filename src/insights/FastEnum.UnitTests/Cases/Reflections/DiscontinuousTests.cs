@@ -6,6 +6,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using FastEnumUtility.UnitTests.Models;
@@ -175,19 +176,33 @@ public sealed class DiscontinuousSByteTests
         FastEnum.IsDefined<DiscontinuousSByteEnum>(DiscontinuousSByteEnum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousSByteEnum>(DiscontinuousSByteEnum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousSByteEnum>(DiscontinuousSByteEnum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousSByteEnum>((DiscontinuousSByteEnum)sbyte.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousSByteEnum>((DiscontinuousSByteEnum)zero<sbyte>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousSByteEnum>((DiscontinuousSByteEnum)sbyte.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousSByteEnum>((DiscontinuousSByteEnum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousSByteEnum.A.IsDefined().ShouldBeTrue();
         DiscontinuousSByteEnum.B.IsDefined().ShouldBeTrue();
         DiscontinuousSByteEnum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousSByteEnum)sbyte.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousSByteEnum)zero<sbyte>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousSByteEnum)sbyte.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousSByteEnum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousSByteEnum>(nameof(DiscontinuousSByteEnum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousSByteEnum>(nameof(DiscontinuousSByteEnum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousSByteEnum>(nameof(DiscontinuousSByteEnum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousSByteEnum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousSByteEnum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousSByteEnum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -544,19 +559,33 @@ public sealed class DiscontinuousByteTests
         FastEnum.IsDefined<DiscontinuousByteEnum>(DiscontinuousByteEnum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousByteEnum>(DiscontinuousByteEnum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousByteEnum>(DiscontinuousByteEnum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousByteEnum>((DiscontinuousByteEnum)byte.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousByteEnum>((DiscontinuousByteEnum)zero<byte>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousByteEnum>((DiscontinuousByteEnum)byte.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousByteEnum>((DiscontinuousByteEnum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousByteEnum.A.IsDefined().ShouldBeTrue();
         DiscontinuousByteEnum.B.IsDefined().ShouldBeTrue();
         DiscontinuousByteEnum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousByteEnum)byte.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousByteEnum)zero<byte>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousByteEnum)byte.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousByteEnum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousByteEnum>(nameof(DiscontinuousByteEnum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousByteEnum>(nameof(DiscontinuousByteEnum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousByteEnum>(nameof(DiscontinuousByteEnum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousByteEnum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousByteEnum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousByteEnum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -913,19 +942,33 @@ public sealed class DiscontinuousInt16Tests
         FastEnum.IsDefined<DiscontinuousInt16Enum>(DiscontinuousInt16Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt16Enum>(DiscontinuousInt16Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt16Enum>(DiscontinuousInt16Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt16Enum>((DiscontinuousInt16Enum)short.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt16Enum>((DiscontinuousInt16Enum)zero<short>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt16Enum>((DiscontinuousInt16Enum)short.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt16Enum>((DiscontinuousInt16Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousInt16Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousInt16Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousInt16Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousInt16Enum)short.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt16Enum)zero<short>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt16Enum)short.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt16Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousInt16Enum>(nameof(DiscontinuousInt16Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt16Enum>(nameof(DiscontinuousInt16Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt16Enum>(nameof(DiscontinuousInt16Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt16Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt16Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt16Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -1282,19 +1325,33 @@ public sealed class DiscontinuousUInt16Tests
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(DiscontinuousUInt16Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(DiscontinuousUInt16Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(DiscontinuousUInt16Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt16Enum>((DiscontinuousUInt16Enum)ushort.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt16Enum>((DiscontinuousUInt16Enum)zero<ushort>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt16Enum>((DiscontinuousUInt16Enum)ushort.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>((DiscontinuousUInt16Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousUInt16Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousUInt16Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousUInt16Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousUInt16Enum)ushort.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt16Enum)zero<ushort>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt16Enum)ushort.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt16Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(nameof(DiscontinuousUInt16Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(nameof(DiscontinuousUInt16Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>(nameof(DiscontinuousUInt16Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt16Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt16Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -1651,19 +1708,33 @@ public sealed class DiscontinuousInt32Tests
         FastEnum.IsDefined<DiscontinuousInt32Enum>(DiscontinuousInt32Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt32Enum>(DiscontinuousInt32Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt32Enum>(DiscontinuousInt32Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt32Enum>((DiscontinuousInt32Enum)int.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt32Enum>((DiscontinuousInt32Enum)zero<int>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt32Enum>((DiscontinuousInt32Enum)int.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt32Enum>((DiscontinuousInt32Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousInt32Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousInt32Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousInt32Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousInt32Enum)int.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt32Enum)zero<int>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt32Enum)int.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt32Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousInt32Enum>(nameof(DiscontinuousInt32Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt32Enum>(nameof(DiscontinuousInt32Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt32Enum>(nameof(DiscontinuousInt32Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt32Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt32Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt32Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2020,19 +2091,33 @@ public sealed class DiscontinuousUInt32Tests
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(DiscontinuousUInt32Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(DiscontinuousUInt32Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(DiscontinuousUInt32Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt32Enum>((DiscontinuousUInt32Enum)uint.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt32Enum>((DiscontinuousUInt32Enum)zero<uint>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt32Enum>((DiscontinuousUInt32Enum)uint.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>((DiscontinuousUInt32Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousUInt32Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousUInt32Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousUInt32Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousUInt32Enum)uint.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt32Enum)zero<uint>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt32Enum)uint.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt32Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(nameof(DiscontinuousUInt32Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(nameof(DiscontinuousUInt32Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>(nameof(DiscontinuousUInt32Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt32Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt32Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2389,19 +2474,33 @@ public sealed class DiscontinuousInt64Tests
         FastEnum.IsDefined<DiscontinuousInt64Enum>(DiscontinuousInt64Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt64Enum>(DiscontinuousInt64Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt64Enum>(DiscontinuousInt64Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt64Enum>((DiscontinuousInt64Enum)long.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt64Enum>((DiscontinuousInt64Enum)zero<long>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousInt64Enum>((DiscontinuousInt64Enum)long.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt64Enum>((DiscontinuousInt64Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousInt64Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousInt64Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousInt64Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousInt64Enum)long.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt64Enum)zero<long>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt64Enum)long.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousInt64Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousInt64Enum>(nameof(DiscontinuousInt64Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt64Enum>(nameof(DiscontinuousInt64Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousInt64Enum>(nameof(DiscontinuousInt64Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousInt64Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt64Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousInt64Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 
@@ -2758,19 +2857,33 @@ public sealed class DiscontinuousUInt64Tests
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(DiscontinuousUInt64Enum.A).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(DiscontinuousUInt64Enum.B).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(DiscontinuousUInt64Enum.C).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt64Enum>((DiscontinuousUInt64Enum)ulong.MinValue).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt64Enum>((DiscontinuousUInt64Enum)zero<ulong>()).ShouldBeFalse();
+        FastEnum.IsDefined<DiscontinuousUInt64Enum>((DiscontinuousUInt64Enum)ulong.MaxValue).ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>((DiscontinuousUInt64Enum)123).ShouldBeFalse();
 
         //--- Extension methods
         DiscontinuousUInt64Enum.A.IsDefined().ShouldBeTrue();
         DiscontinuousUInt64Enum.B.IsDefined().ShouldBeTrue();
         DiscontinuousUInt64Enum.C.IsDefined().ShouldBeTrue();
+        ((DiscontinuousUInt64Enum)ulong.MinValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt64Enum)zero<ulong>()).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt64Enum)ulong.MaxValue).IsDefined().ShouldBeFalse();
+        ((DiscontinuousUInt64Enum)123).IsDefined().ShouldBeFalse();
 
         //--- IsDefined(ReadOnlySpan<char>)
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(nameof(DiscontinuousUInt64Enum.A)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(nameof(DiscontinuousUInt64Enum.B)).ShouldBeTrue();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>(nameof(DiscontinuousUInt64Enum.C)).ShouldBeTrue();
+        FastEnum.IsDefined<DiscontinuousUInt64Enum>("0").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>("123").ShouldBeFalse();
         FastEnum.IsDefined<DiscontinuousUInt64Enum>("value").ShouldBeFalse();
+
+        #region Local Functions
+        static T zero<T>()
+            where T : INumberBase<T>
+            => T.Zero;
+        #endregion
     }
 
 

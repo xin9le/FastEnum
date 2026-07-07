@@ -107,7 +107,7 @@ internal static class StringHelper
             //
             // Why ToUpperInvariant (not ToUpper / ToLower):
             //  - `Invariant` avoids culture-dependent casing rules (e.g. Turkish i/İ), keeping the hash deterministic regardless of the runtime's locale.
-            //  - Using "upper" consistently (rather than mixing upper/lower) is what actually matters; the codebase settles on ToUpperInvariant throughout.
+            //  - Using "upper" consistently (rather than mixing upper/lower) is what actually matters; this implementation uses ToUpperInvariant for consistency.
             //
             // Cost:
             //  - Adds two O(1) char-normalization calls versus the base version; overall complexity remains O(1). Negligible price for case-insensitive semantics.

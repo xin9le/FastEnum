@@ -132,10 +132,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                    var upper = (<#= x.RangeCheckName #>)(max - min);
-                    var lower = (<#= x.RangeCheckName #>)(val - min);
+                var upper = (<#= x.RangeCheckName #>)(max - min);
+                var lower = (<#= x.RangeCheckName #>)(val - min);
                     return lower <= upper;
-                }
+            }
             }
             else
             {
@@ -157,8 +157,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, <#= x.CompatibleName #>>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 

@@ -14,6 +14,13 @@ internal static class BenchmarkConfig
         return ManualConfig.CreateMinimumViable()
             .AddExporter(MarkdownExporter.GitHub)
             .AddDiagnoser(MemoryDiagnoser.Default)
+            .AddDiagnoser(new DisassemblyDiagnoser(new
+            (
+                maxDepth: 3,
+                printSource: true,
+                exportGithubMarkdown: true,
+                exportCombinedDisassemblyReport: true
+            )))
             .AddJob(Job.Default);
     }
 
@@ -23,6 +30,13 @@ internal static class BenchmarkConfig
         return ManualConfig.CreateMinimumViable()
             .AddExporter(MarkdownExporter.GitHub)
             .AddDiagnoser(MemoryDiagnoser.Default)
+            .AddDiagnoser(new DisassemblyDiagnoser(new
+            (
+                maxDepth: 3,
+                printSource: true,
+                exportGithubMarkdown: true,
+                exportCombinedDisassemblyReport: true
+            )))
             .AddJob(Job.ShortRun);
     }
 }

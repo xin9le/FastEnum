@@ -132,10 +132,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (<#= x.RangeCheckName #>)(max - min);
-                var lower = (<#= x.RangeCheckName #>)(val - min);
+                    var upper = (<#= x.RangeCheckName #>)(max - min);
+                    var lower = (<#= x.RangeCheckName #>)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {

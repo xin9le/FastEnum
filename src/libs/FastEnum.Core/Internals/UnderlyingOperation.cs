@@ -166,10 +166,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (byte)(max - min);
-                var lower = (byte)(val - min);
+                    var upper = (byte)(max - min);
+                    var lower = (byte)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -270,10 +270,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (byte)(max - min);
-                var lower = (byte)(val - min);
+                    var upper = (byte)(max - min);
+                    var lower = (byte)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -374,10 +374,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (ushort)(max - min);
-                var lower = (ushort)(val - min);
+                    var upper = (ushort)(max - min);
+                    var lower = (ushort)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -478,10 +478,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (ushort)(max - min);
-                var lower = (ushort)(val - min);
+                    var upper = (ushort)(max - min);
+                    var lower = (ushort)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -582,10 +582,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (uint)(max - min);
-                var lower = (uint)(val - min);
+                    var upper = (uint)(max - min);
+                    var lower = (uint)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -686,10 +686,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (uint)(max - min);
-                var lower = (uint)(val - min);
+                    var upper = (uint)(max - min);
+                    var lower = (uint)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -790,10 +790,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (ulong)(max - min);
-                var lower = (ulong)(val - min);
+                    var upper = (ulong)(max - min);
+                    var lower = (ulong)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {
@@ -894,10 +894,10 @@ internal static class UnderlyingOperation<T>
                 var val = toNumber(value);
                 unchecked
                 {
-                var upper = (ulong)(max - min);
-                var lower = (ulong)(val - min);
+                    var upper = (ulong)(max - min);
+                    var lower = (ulong)(val - min);
                     return lower <= upper;
-            }
+                }
             }
             else
             {

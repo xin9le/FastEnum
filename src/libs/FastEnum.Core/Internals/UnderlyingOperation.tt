@@ -130,9 +130,12 @@ internal static class UnderlyingOperation<T>
                 var min = toNumber(EnumInfo<T>.s_minValue);
                 var max = toNumber(EnumInfo<T>.s_maxValue);
                 var val = toNumber(value);
-                var upper = (<#= x.RangeCheckName #>)(max - min);
-                var lower = (<#= x.RangeCheckName #>)(val - min);
-                return unchecked(lower <= upper);
+                unchecked
+                {
+                    var upper = (<#= x.RangeCheckName #>)(max - min);
+                    var lower = (<#= x.RangeCheckName #>)(val - min);
+                    return lower <= upper;
+                }
             }
             else
             {

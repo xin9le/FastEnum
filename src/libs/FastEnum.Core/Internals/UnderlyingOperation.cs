@@ -191,8 +191,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, sbyte>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -289,8 +295,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, byte>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -387,8 +399,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, short>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -485,8 +503,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, ushort>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -583,8 +607,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, int>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -681,8 +711,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, uint>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -779,8 +815,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, long>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 
@@ -877,8 +919,14 @@ internal static class UnderlyingOperation<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToNumberString(T value)
         {
+            // note:
+            //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
+            //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
+
             var x = Unsafe.BitCast<T, ulong>(value);
-            return x.ToString(null, CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+            return x.ToString();
+#pragma warning restore CA1305
         }
 
 

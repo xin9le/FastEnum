@@ -372,8 +372,12 @@ public sealed class BasicSByteTests
     [TestMethod]
     public void FastToString()
     {
-        const SByteEnum undefined = (SByteEnum)123;
-        var values = Enum.GetValues<SByteEnum>().Append(undefined);
+        const SByteEnum undefined1 = (SByteEnum)123;
+        const SByteEnum undefined2 = (SByteEnum)(-123);
+        var values
+            = Enum.GetValues<SByteEnum>()
+            .Append(undefined1)
+            .Append(undefined2);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -733,8 +737,8 @@ public sealed class BasicByteTests
     [TestMethod]
     public void FastToString()
     {
-        const ByteEnum undefined = (ByteEnum)123;
-        var values = Enum.GetValues<ByteEnum>().Append(undefined);
+        const ByteEnum undefined1 = (ByteEnum)123;
+        var values = Enum.GetValues<ByteEnum>().Append(undefined1);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -1102,8 +1106,12 @@ public sealed class BasicInt16Tests
     [TestMethod]
     public void FastToString()
     {
-        const Int16Enum undefined = (Int16Enum)123;
-        var values = Enum.GetValues<Int16Enum>().Append(undefined);
+        const Int16Enum undefined1 = (Int16Enum)123;
+        const Int16Enum undefined2 = (Int16Enum)(-123);
+        var values
+            = Enum.GetValues<Int16Enum>()
+            .Append(undefined1)
+            .Append(undefined2);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -1463,8 +1471,8 @@ public sealed class BasicUInt16Tests
     [TestMethod]
     public void FastToString()
     {
-        const UInt16Enum undefined = (UInt16Enum)123;
-        var values = Enum.GetValues<UInt16Enum>().Append(undefined);
+        const UInt16Enum undefined1 = (UInt16Enum)123;
+        var values = Enum.GetValues<UInt16Enum>().Append(undefined1);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -1832,8 +1840,12 @@ public sealed class BasicInt32Tests
     [TestMethod]
     public void FastToString()
     {
-        const Int32Enum undefined = (Int32Enum)123;
-        var values = Enum.GetValues<Int32Enum>().Append(undefined);
+        const Int32Enum undefined1 = (Int32Enum)123;
+        const Int32Enum undefined2 = (Int32Enum)(-123);
+        var values
+            = Enum.GetValues<Int32Enum>()
+            .Append(undefined1)
+            .Append(undefined2);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -2193,8 +2205,8 @@ public sealed class BasicUInt32Tests
     [TestMethod]
     public void FastToString()
     {
-        const UInt32Enum undefined = (UInt32Enum)123;
-        var values = Enum.GetValues<UInt32Enum>().Append(undefined);
+        const UInt32Enum undefined1 = (UInt32Enum)123;
+        var values = Enum.GetValues<UInt32Enum>().Append(undefined1);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -2562,8 +2574,12 @@ public sealed class BasicInt64Tests
     [TestMethod]
     public void FastToString()
     {
-        const Int64Enum undefined = (Int64Enum)123;
-        var values = Enum.GetValues<Int64Enum>().Append(undefined);
+        const Int64Enum undefined1 = (Int64Enum)123;
+        const Int64Enum undefined2 = (Int64Enum)(-123);
+        var values
+            = Enum.GetValues<Int64Enum>()
+            .Append(undefined1)
+            .Append(undefined2);
         foreach (var x in values)
         {
             var expect = x.ToString();
@@ -2923,8 +2939,8 @@ public sealed class BasicUInt64Tests
     [TestMethod]
     public void FastToString()
     {
-        const UInt64Enum undefined = (UInt64Enum)123;
-        var values = Enum.GetValues<UInt64Enum>().Append(undefined);
+        const UInt64Enum undefined1 = (UInt64Enum)123;
+        var values = Enum.GetValues<UInt64Enum>().Append(undefined1);
         foreach (var x in values)
         {
             var expect = x.ToString();

@@ -406,8 +406,16 @@ public sealed class Basic<#= x.AliasType #>Tests
     [TestMethod]
     public void FastToString()
     {
-        const <#= x.EnumType #> undefined = (<#= x.EnumType #>)123;
-        var values = Enum.GetValues<<#= x.EnumType #>>().Append(undefined);
+        const <#= x.EnumType #> undefined1 = (<#= x.EnumType #>)123;
+<# if (x.IsSignedType) { #>
+        const <#= x.EnumType #> undefined2 = (<#= x.EnumType #>)(-123);
+        var values
+            = Enum.GetValues<<#= x.EnumType #>>()
+            .Append(undefined1)
+            .Append(undefined2);
+<# } else { #>
+        var values = Enum.GetValues<<#= x.EnumType #>>().Append(undefined1);
+<# } #>
         foreach (var x in values)
         {
             var expect = x.ToString();

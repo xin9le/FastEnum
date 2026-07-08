@@ -247,18 +247,36 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                         [MethodImpl(MethodImplOptions.AggressiveInlining)]
                         static bool caseInsensitive(ReadOnlySpan<char> text, out {{param.EnumType.TypeName}} result)
                         {
+                            switch (text.Length)
+                            {
                 """);
-            foreach (var field in param.EnumType.Fields)
+            var byNameLength
+                = param.EnumType.Fields
+                .GroupBy(static x => x.Name.Length)
+                .OrderBy(static x => x.Key);
+            foreach (var group in byNameLength)
             {
-                sb.AppendLine($$"""
-                                if (text.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), StringComparison.OrdinalIgnoreCase))
-                                {
-                                    result = {{param.EnumType.TypeName}}.{{field.Name}};
-                                    return true;
-                                }
+                sb.AppendLine($"                case {group.Key}:");
+                foreach (var field in group)
+                {
+                    sb.AppendLine($$"""
+                                            if (text.Equals(nameof({{param.EnumType.TypeName}}.{{field.Name}}), StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                result = {{param.EnumType.TypeName}}.{{field.Name}};
+                                                return true;
+                                            }
+                        """);
+                }
+                sb.AppendLine("""
+                                        break;
+
                     """);
             }
-            sb.AppendLine($$"""
+            sb.AppendLine("""
+                                default:
+                                    break;
+                            }
+
                             result = default;
                             return false;
                         }

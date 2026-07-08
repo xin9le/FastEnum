@@ -242,7 +242,9 @@ public enum SameValueContinuousEnum : byte
 {
     A = 1,
     B = 2,
+#pragma warning disable CA1069
     C = 2,  // Name is different, but value is same as other member.
+#pragma warning restore CA1069
     D = 3,
 }
 
@@ -252,7 +254,9 @@ public enum SameValueDiscontinuousEnum : byte
 {
     A = 1,
     B = 3,
+#pragma warning disable CA1069
     C = 3,  // Name is different, but value is same as other member.
+#pragma warning restore CA1069
     D = 5,
 }
 

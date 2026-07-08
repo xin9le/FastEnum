@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 
@@ -31,7 +32,7 @@ internal static class BenchmarkConfig
                 exportGithubMarkdown: true,
                 exportCombinedDisassemblyReport: true
             )))
-            .AddJob(job);
+            .AddJob(job.WithRuntime(CoreRuntime.Core10_0));
     }
     #endregion
 }

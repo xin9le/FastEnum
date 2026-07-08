@@ -1,7 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using FastEnumUtility.Benchmarks.Models;
-using _FastEnum = FastEnumUtility.FastEnum;
 
 namespace FastEnumUtility.Benchmarks.Scenarios;
 
@@ -16,7 +15,7 @@ public class IsDefined_String
     public void Setup()
     {
         _ = Enum.GetNames<Fruits>();
-        _ = _FastEnum.GetMembers<Fruits>();
+        _ = FastEnum.GetMembers<Fruits>();
     }
 
 
@@ -31,6 +30,11 @@ public class IsDefined_String
 
 
     [Benchmark]
-    public bool FastEnum()
-        => _FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
+    public bool FastEnum_Reflection()
+        => FastEnum.IsDefined<Fruits>(Value);
+
+
+    [Benchmark]
+    public bool FastEnum_SourceGen()
+        => FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
 }

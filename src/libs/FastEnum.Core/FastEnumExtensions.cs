@@ -8,270 +8,246 @@ namespace FastEnumUtility;
 
 
 /// <summary>
-/// Provides <see cref="Enum"/> extension methods.
+/// Provides extension methods for FastEnum.
 /// </summary>
 public static class FastEnumExtensions
 {
-    #region ToMember
     /// <summary>
-    /// Converts to the member information of the constant in the specified enumeration value.
+    /// Provides <see cref="Enum"/> extension methods.
     /// </summary>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Member<T>? ToMember<T>(this T value)
-        where T : struct, Enum
-        => FastEnum.GetMember(value);
-
-
-    /// <summary>
-    /// Converts to the name of the constant in the specified enumeration value.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns>A string containing the name of the enumerated constant in enum type whose value is value; or null if no such constant is found.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? ToName<T>(this T value)
-        where T : struct, Enum
-        => FastEnum.GetName(value);
-    #endregion
-
-
-    #region ToString
-    /// <summary>
-    /// Converts the specified value to its equivalent string representation.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string FastToString<T>(this T value)
-        where T : struct, Enum
-        => FastEnum.ToString(value);
-    #endregion
-
-
-    #region ToNumber
-    /// <summary>
-    /// Converts to the 8-bit signed integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static sbyte ToSByte<T>(this T value)
+    /// <param name="this"></param>
+    extension<T>(T @this)
         where T : struct, Enum
     {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, sbyte>(nameof(value));
-        return Unsafe.BitCast<T, sbyte>(value);
-    }
+        #region ToMember
+        /// <summary>
+        /// Converts to the member information of the constant in the specified enumeration value.
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Member<T>? ToMember()
+            => FastEnum.GetMember(@this);
 
 
-    /// <summary>
-    /// Converts to the 8-bit unsigned integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte ToByte<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, byte>(nameof(value));
-        return Unsafe.BitCast<T, byte>(value);
-    }
+        /// <summary>
+        /// Converts to the name of the constant in the specified enumeration value.
+        /// </summary>
+        /// <returns>A string containing the name of the enumerated constant in enum type whose value is value; or null if no such constant is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string? ToName()
+            => FastEnum.GetName(@this);
+        #endregion
 
 
-    /// <summary>
-    /// Converts to the 16-bit signed integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static short ToInt16<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, short>(nameof(value));
-        return Unsafe.BitCast<T, short>(value);
-    }
+        #region ToString
+        /// <summary>
+        /// Converts the specified value to its equivalent string representation.
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string FastToString()
+            => FastEnum.ToString(@this);
+        #endregion
 
 
-    /// <summary>
-    /// Converts to the 16-bit unsigned integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ushort ToUInt16<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ushort>(nameof(value));
-        return Unsafe.BitCast<T, ushort>(value);
-    }
-
-
-    /// <summary>
-    /// Converts to the 32-bit signed integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ToInt32<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, int>(nameof(value));
-        return Unsafe.BitCast<T, int>(value);
-    }
-
-
-    /// <summary>
-    /// Converts to the 32-bit unsigned integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint ToUInt32<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, uint>(nameof(value));
-        return Unsafe.BitCast<T, uint>(value);
-    }
-
-
-    /// <summary>
-    /// Converts to the 64-bit signed integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long ToInt64<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, long>(nameof(value));
-        return Unsafe.BitCast<T, long>(value);
-    }
-
-
-    /// <summary>
-    /// Converts to the 64-bit unsigned integer.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ToUInt64<T>(this T value)
-        where T : struct, Enum
-    {
-        ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ulong>(nameof(value));
-        return Unsafe.BitCast<T, ulong>(value);
-    }
-    #endregion
-
-
-    #region Condition
-    /// <summary>
-    /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(this T value)
-        where T : struct, Enum
-        => FastEnum.IsDefined(value);
-    #endregion
-
-
-    #region Attribute
-    /// <summary>
-    /// Gets the <see cref="EnumMemberAttribute.Value"/> of specified enumration member.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <param name="throwIfNotFound"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetEnumMemberValue<T>(this T value, bool throwIfNotFound = true)
-        where T : struct, Enum
-    {
-        var member = value.ToMember();
-        if (throwIfNotFound)
+        #region ToNumber
+        /// <summary>
+        /// Converts to the 8-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sbyte ToSByte()
         {
-            if (member is null)
-                ThrowHelper.ThrowValueNotDefined(value);
-
-            var attr = member.EnumMemberAttribute;
-            if (attr is null)
-                ThrowHelper.ThrowAttributeNotDefined<T, EnumMemberAttribute>(value);
-
-            return attr.Value;
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, sbyte>(nameof(@this));
+            return Unsafe.BitCast<T, sbyte>(@this);
         }
-        else
+
+
+        /// <summary>
+        /// Converts to the 8-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public byte ToByte()
         {
-            return member?.EnumMemberAttribute?.Value;
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, byte>(nameof(@this));
+            return Unsafe.BitCast<T, byte>(@this);
         }
+
+
+        /// <summary>
+        /// Converts to the 16-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public short ToInt16()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, short>(nameof(@this));
+            return Unsafe.BitCast<T, short>(@this);
+        }
+
+
+        /// <summary>
+        /// Converts to the 16-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ushort ToUInt16()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ushort>(nameof(@this));
+            return Unsafe.BitCast<T, ushort>(@this);
+        }
+
+
+        /// <summary>
+        /// Converts to the 32-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int ToInt32()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, int>(nameof(@this));
+            return Unsafe.BitCast<T, int>(@this);
+        }
+
+
+        /// <summary>
+        /// Converts to the 32-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint ToUInt32()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, uint>(nameof(@this));
+            return Unsafe.BitCast<T, uint>(@this);
+        }
+
+
+        /// <summary>
+        /// Converts to the 64-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long ToInt64()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, long>(nameof(@this));
+            return Unsafe.BitCast<T, long>(@this);
+        }
+
+
+        /// <summary>
+        /// Converts to the 64-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ulong ToUInt64()
+        {
+            ThrowHelper.ThrowIfUnderlyingTypeMismatch<T, ulong>(nameof(@this));
+            return Unsafe.BitCast<T, ulong>(@this);
+        }
+        #endregion
+
+
+        #region Condition
+        /// <summary>
+        /// Returns an indication whether a constant with a specified value exists in a specified enumeration.
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsDefined()
+            => FastEnum.IsDefined(@this);
+        #endregion
+
+
+        #region Attribute
+        /// <summary>
+        /// Gets the <see cref="EnumMemberAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <param name="throwIfNotFound"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string? GetEnumMemberValue(bool throwIfNotFound = true)
+        {
+            var member = @this.ToMember();
+            if (throwIfNotFound)
+            {
+                if (member is null)
+                    ThrowHelper.ThrowValueNotDefined(@this);
+
+                var attr = member.EnumMemberAttribute;
+                if (attr is null)
+                    ThrowHelper.ThrowAttributeNotDefined<T, EnumMemberAttribute>(@this);
+
+                return attr.Value;
+            }
+            else
+            {
+                return member?.EnumMemberAttribute?.Value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="throwIfNotFound"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotFoundException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string? GetLabel(int index = 0, bool throwIfNotFound = true)
+        {
+            var member = @this.ToMember();
+            if (throwIfNotFound && member is null)
+                ThrowHelper.ThrowValueNotDefined(@this);
+            return member?.GetLabel(index, throwIfNotFound);
+        }
+        #endregion
     }
+
 
 
     /// <summary>
-    /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+    /// Provides <see cref="Member{T}"/> extension methods.
     /// </summary>
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="member"></param>
-    /// <param name="index"></param>
-    /// <param name="throwIfNotFound"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="NotFoundException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetLabel<T>(this Member<T> member, int index = 0, bool throwIfNotFound = true)
+    /// <param name="this"></param>
+    extension<T>(Member<T> @this)
         where T : struct, Enum
     {
-        ArgumentNullException.ThrowIfNull(member);
+        #region Attribute
+        /// <summary>
+        /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="throwIfNotFound"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotFoundException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string? GetLabel(int index = 0, bool throwIfNotFound = true)
+        {
+            ArgumentNullException.ThrowIfNull(@this);
 
-        if (member.Labels.TryGetValue(index, out var label))
-            return label;
+            if (@this.Labels.TryGetValue(index, out var label))
+                return label;
 
-        if (throwIfNotFound)
-            ThrowHelper.ThrowLabelNotFound(index);
+            if (throwIfNotFound)
+                ThrowHelper.ThrowLabelNotFound(index);
 
-        return null;
+            return null;
+        }
+        #endregion
     }
-
-
-    /// <summary>
-    /// Gets the <see cref="LabelAttribute.Value"/> of specified enumration member.
-    /// </summary>
-    /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
-    /// <param name="value"></param>
-    /// <param name="index"></param>
-    /// <param name="throwIfNotFound"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="NotFoundException"></exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetLabel<T>(this T value, int index = 0, bool throwIfNotFound = true)
-        where T : struct, Enum
-    {
-        var member = value.ToMember();
-        if (throwIfNotFound && member is null)
-            ThrowHelper.ThrowValueNotDefined(value);
-        return member?.GetLabel(index, throwIfNotFound);
-    }
-    #endregion
 }

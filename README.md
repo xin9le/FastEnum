@@ -9,15 +9,15 @@ FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than
 
 
 # Performance
-![Benchmark](https://github.com/user-attachments/assets/3473435a-0756-4224-9625-8509f74dfc2b)
+![Benchmark](https://raw.githubusercontent.com/xin9le/FastEnum/main/assets/images/benchmark.png)
 
 
 ``` ini
-BenchmarkDotNet v0.15.6, Windows 11 (10.0.26200.7171)
+BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.8737/25H2/2025Update/HudsonValley2)
 Intel Core Ultra 7 155H 3.00GHz, 1 CPU, 22 logical and 16 physical cores
-.NET SDK 10.0.100
-  [Host]     : .NET 10.0.0 (10.0.0, 10.0.25.52411), X64 RyuJIT x86-64-v3
-  DefaultJob : .NET 10.0.0 (10.0.0, 10.0.25.52411), X64 RyuJIT x86-64-v3
+.NET SDK 10.0.301
+  [Host]     : .NET 8.0.28 (8.0.28, 8.0.2826.26413), X64 RyuJIT x86-64-v3
+  DefaultJob : .NET 10.0.9 (10.0.9, 10.0.926.27113), X64 RyuJIT x86-64-v3
 ```
 
 

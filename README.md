@@ -9,7 +9,7 @@ FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than
 
 
 # Performance
-![Benchmark](https://github.com/user-attachments/assets/3473435a-0756-4224-9625-8509f74dfc2b)
+![Benchmark](https://raw.githubusercontent.com/xin9le/FastEnum/main/assets/images/benchmark.png)
 
 
 ``` ini

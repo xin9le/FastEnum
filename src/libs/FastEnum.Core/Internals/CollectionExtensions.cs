@@ -9,60 +9,69 @@ namespace FastEnumUtility.Internals;
 
 internal static class CollectionExtensions
 {
-    #region .At()
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T At<T>(this ReadOnlySpan<T> span, int index)
+    extension<T>(ReadOnlySpan<T> @this)
     {
-        // note:
-        //  - `Span[i]` includes a range check, but using `Unsafe` eliminates it.
-        //  - While this increases the risk, it is expected to speed up the process.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T At(int index)
+        {
+            // note:
+            //  - `Span[i]` includes a range check, but using `Unsafe` eliminates it.
+            //  - While this increases the risk, it is expected to speed up the process.
 
-        ref var pointer = ref MemoryMarshal.GetReference(span);
-        return ref Unsafe.Add(ref pointer, index);
+            ref var pointer = ref MemoryMarshal.GetReference(@this);
+            return ref Unsafe.Add(ref pointer, index);
+        }
     }
 
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T At<T>(this T[] array, int index)
+
+    extension<T>(T[] @this)
     {
-        // note:
-        //  - `Array[i]` includes a range check, but using `Unsafe` eliminates it.
-        //  - While this increases the risk, it is expected to speed up the process.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T At(int index)
+        {
+            // note:
+            //  - `Array[i]` includes a range check, but using `Unsafe` eliminates it.
+            //  - While this increases the risk, it is expected to speed up the process.
 
-        ref var pointer = ref MemoryMarshal.GetArrayDataReference(array);
-        return ref Unsafe.Add(ref pointer, index);
+            ref var pointer = ref MemoryMarshal.GetArrayDataReference(@this);
+            return ref Unsafe.Add(ref pointer, index);
+        }
     }
-    #endregion
 
 
-    #region FastReadOnlyDictionary
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
-        where TKey : notnull
-        => ToFastReadOnlyDictionary(source, keySelector, static x => x);
+
+    extension<TSource>(IEnumerable<TSource> @this)
+    {
+        #region FastReadOnlyDictionary
+        public FastReadOnlyDictionary<TKey, TSource> ToFastReadOnlyDictionary<TKey>(Func<TSource, TKey> keySelector)
+            where TKey : notnull
+            => ToFastReadOnlyDictionary(@this, keySelector, static x => x);
 
 
-    public static FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-        where TKey : notnull
-        => FastReadOnlyDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
-    #endregion
+        public FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+            where TKey : notnull
+            => FastReadOnlyDictionary<TKey, TValue>.Create(@this, keySelector, valueSelector);
+        #endregion
 
 
-    #region CaseSensitiveStringDictionary
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => ToCaseSensitiveStringDictionary(source, keySelector, static x => x);
+        #region CaseSensitiveStringDictionary
+        public CaseSensitiveStringDictionary<TSource> ToCaseSensitiveStringDictionary(Func<TSource, string> keySelector)
+            => ToCaseSensitiveStringDictionary(@this, keySelector, static x => x);
 
 
-    public static CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseSensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
+        public CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+            => CaseSensitiveStringDictionary<TValue>.Create(@this, keySelector, valueSelector);
+        #endregion
 
 
-    #region CaseInsensitiveStringDictionary
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(this IEnumerable<TValue> source, Func<TValue, string> keySelector)
-        => ToCaseInsensitiveStringDictionary(source, keySelector, static x => x);
+        #region CaseInsensitiveStringDictionary
+        public CaseInsensitiveStringDictionary<TSource> ToCaseInsensitiveStringDictionary(Func<TSource, string> keySelector)
+            => ToCaseInsensitiveStringDictionary(@this, keySelector, static x => x);
 
 
-    public static CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-        => CaseInsensitiveStringDictionary<TValue>.Create(source, keySelector, valueSelector);
-    #endregion
+        public CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
+            => CaseInsensitiveStringDictionary<TValue>.Create(@this, keySelector, valueSelector);
+        #endregion
+    }
 }

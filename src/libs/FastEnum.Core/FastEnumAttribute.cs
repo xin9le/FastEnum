@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFRAMEWORK
+using System;
 
 namespace FastEnumUtility;
 
@@ -12,3 +13,4 @@ namespace FastEnumUtility;
 public sealed class FastEnumAttribute<T> : Attribute
     where T : struct, Enum
 { }
+#endif

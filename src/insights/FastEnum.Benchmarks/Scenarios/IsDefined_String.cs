@@ -34,7 +34,9 @@ public class IsDefined_String
         => FastEnum.IsDefined<Fruits>(Value);
 
 
+#if !NETFRAMEWORK
     [Benchmark]
     public bool FastEnum_SourceGen()
         => FastEnum.IsDefined<Fruits, FruitsBooster>(Value);
+#endif
 }

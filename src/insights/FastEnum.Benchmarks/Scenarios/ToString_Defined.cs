@@ -41,7 +41,9 @@ public class ToString_Defined
         => FastEnum.ToString(Value);
 
 
+#if !NETFRAMEWORK
     [Benchmark]
     public string FastEnum_SourceGen()
         => FastEnum.ToString<Fruits, FruitsBooster>(Value);
+#endif
 }

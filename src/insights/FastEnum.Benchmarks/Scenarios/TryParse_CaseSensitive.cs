@@ -41,7 +41,9 @@ public class TryParse_CaseSensitive
         => FastEnum.TryParse<Fruits>(Value, out _);
 
 
+#if !NETFRAMEWORK
     [Benchmark]
     public bool FastEnum_SourceGen()
         => FastEnum.TryParse<Fruits, FruitsBooster>(Value, out _);
+#endif
 }

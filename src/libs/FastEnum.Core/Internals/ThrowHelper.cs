@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+#if NETFRAMEWORK
+using StringType = string;
+#else
 using System.Numerics;
+using StringType = System.ReadOnlySpan<char>;
+#endif
 
 namespace FastEnumUtility.Internals;
 
@@ -35,7 +40,7 @@ internal static class ThrowHelper
 
 
     [DoesNotReturn]
-    public static void ThrowValueNotDefined(ReadOnlySpan<char> value, string? paramName)
+    public static void ThrowValueNotDefined(StringType value, string? paramName)
     {
         var message = $"Specified value '{value}' is not defined.";
         throw new ArgumentException(message, paramName);

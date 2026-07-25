@@ -10,6 +10,7 @@ namespace System
     using System.Runtime.CompilerServices;
 
 
+
     internal static class ArgumentNullExceptionExtensions
     {
         extension(ArgumentNullException)
@@ -60,6 +61,43 @@ namespace System.Diagnostics.CodeAnalysis
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     internal sealed class DoesNotReturnAttribute : Attribute
     { }
+}
+
+
+
+namespace System.Linq
+{
+    using System.Collections;
+    using System.Collections.Generic;
+
+
+
+    internal static class EnumerableExtensions
+    {
+        extension<TSource>(IEnumerable<TSource> @this)
+        {
+            public bool TryGetNonEnumeratedCount(out int count)
+            {
+                if (@this is ICollection<TSource> x1)
+                {
+                    count = x1.Count;
+                    return true;
+                }
+                if (@this is ICollection x2)
+                {
+                    count = x2.Count;
+                    return true;
+                }
+                if (@this is IReadOnlyCollection<TSource> x3)
+                {
+                    count = x3.Count;
+                    return true;
+                }
+                count = 0;
+                return false;
+            }
+        }
+    }
 }
 
 

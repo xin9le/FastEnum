@@ -69,6 +69,7 @@ namespace System.Linq
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
 
 
 
@@ -76,6 +77,44 @@ namespace System.Linq
     {
         extension<TSource>(IEnumerable<TSource> @this)
         {
+            public IEnumerable<TSource> DistinctBy<TKey>(Func<TSource, TKey> keySelector)
+                => DistinctBy(@this, keySelector, null);
+
+
+            public IEnumerable<TSource> DistinctBy<TKey>(Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+            {
+                return isEmptyArray(@this)
+                    ? []
+                    : distinctByIterator(@this, keySelector, comparer);
+
+
+                #region Local Functions
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                static bool isEmptyArray(IEnumerable<TSource> self)
+                    => self is TSource[] { Length: 0 };
+
+
+                static IEnumerable<TSource> distinctByIterator(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+                {
+                    using (var enumerator = source.GetEnumerator())
+                    {
+                        if (enumerator.MoveNext())
+                        {
+                            var set = new HashSet<TKey>(capacity: 7, comparer);
+                            do
+                            {
+                                var element = enumerator.Current;
+                                if (set.Add(keySelector(element)))
+                                    yield return element;
+                            }
+                            while (enumerator.MoveNext());
+                        }
+                    }
+                }
+                #endregion
+            }
+
+
             public bool TryGetNonEnumeratedCount(out int count)
             {
                 if (@this is ICollection<TSource> x1)

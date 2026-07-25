@@ -10,7 +10,9 @@ internal static class ThrowHelper
 {
     public static void ThrowIfUnderlyingTypeMismatch<TEnum, TUnderlying>(string? paramName)
         where TEnum : struct, Enum
+#if !NETFRAMEWORK
         where TUnderlying : INumberBase<TUnderlying>
+#endif
     {
         // note:
         //  - https://github.com/xin9le/FastEnum/pull/66

@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 #pragma warning disable IDE0130
-#pragma warning disable IDE0161
 #pragma warning disable IDE0290
 
 
@@ -40,5 +39,19 @@ namespace System.Diagnostics.CodeAnalysis
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     internal sealed class DoesNotReturnAttribute : Attribute
     { }
+}
+
+
+
+namespace System.Runtime.InteropServices
+{
+    internal static class MemoryMarshalExtensions
+    {
+        extension(MemoryMarshal)
+        {
+            public static ref T GetArrayDataReference<T>(T[] array)
+                => ref MemoryMarshal.GetReference(array);
+        }
+    }
 }
 #endif

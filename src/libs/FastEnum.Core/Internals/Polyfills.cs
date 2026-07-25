@@ -39,7 +39,7 @@ namespace System
 
     internal static class StringExtensions
     {
-        extension(string @this)
+        extension(string? @this)
         {
             public bool IsEmpty
                 => @this.AsSpan().Length is 0;

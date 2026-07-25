@@ -7,11 +7,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-#if NETFRAMEWORK
-using StringType = string;
-#else
-using StringType = System.ReadOnlySpan<char>;
-#endif
 
 namespace FastEnumUtility.Internals;
 
@@ -95,7 +90,13 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseValue(StringType text, out T result)
+    public static bool TryParseValue(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
         {
@@ -208,7 +209,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
@@ -312,7 +319,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, byte>(ref result);
@@ -416,7 +429,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, short>(ref result);
@@ -520,7 +539,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ushort>(ref result);
@@ -624,7 +649,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, int>(ref result);
@@ -728,7 +759,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, uint>(ref result);
@@ -832,7 +869,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, long>(ref result);
@@ -936,7 +979,13 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(StringType text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ulong>(ref result);

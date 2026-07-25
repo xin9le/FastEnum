@@ -1,4 +1,5 @@
-﻿namespace FastEnumUtility.UnitTests.Models;
+﻿#if !NETFRAMEWORK
+namespace FastEnumUtility.UnitTests.Models;
 
 
 
@@ -71,3 +72,4 @@ public sealed partial class EmptyEnumBooster
 [FastEnum<CaseInsensitiveEnum>]
 public sealed partial class CaseInsensitiveEnumBooster
 { }
+#endif

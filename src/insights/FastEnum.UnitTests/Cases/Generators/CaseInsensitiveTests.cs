@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFRAMEWORK
+using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -123,3 +124,4 @@ public class CaseInsensitiveTests
         r.ShouldBe((TEnum)123);
     }
 }
+#endif

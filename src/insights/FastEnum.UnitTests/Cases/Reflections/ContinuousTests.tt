@@ -218,9 +218,14 @@ public sealed class Continuous<#= x.AliasType #>Tests
         FastEnum.IsDefined<<#= x.EnumType #>>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 

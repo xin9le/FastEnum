@@ -8,6 +8,7 @@ namespace System
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
+    using FastEnumUtility.Internals;
 
 
 
@@ -31,6 +32,25 @@ namespace System
         {
             public static T Parse<T>(string name)
                 => (T)Enum.Parse(typeof(T), name);
+        }
+    }
+
+
+
+    internal static class StringExtensions
+    {
+        extension(string @this)
+        {
+            public bool IsEmpty
+                => @this.AsSpan().Length is 0;
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ref char At(int index)
+            {
+                var span = @this.AsSpan();
+                return ref CollectionExtensions.At(span, index);
+            }
         }
     }
 }

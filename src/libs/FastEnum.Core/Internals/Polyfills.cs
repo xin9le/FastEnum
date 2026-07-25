@@ -4,6 +4,27 @@
 
 
 
+namespace System
+{
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.CompilerServices;
+
+
+    internal static class ArgumentNullExceptionExtensions
+    {
+        extension(ArgumentNullException)
+        {
+            public static void ThrowIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+            {
+                if (argument is null)
+                    throw new ArgumentNullException(paramName);
+            }
+        }
+    }
+}
+
+
+
 namespace System.Diagnostics.CodeAnalysis
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
@@ -45,6 +66,18 @@ namespace System.Diagnostics.CodeAnalysis
 
 namespace System.Runtime.CompilerServices
 {
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    internal sealed class CallerArgumentExpressionAttribute : Attribute
+    {
+        public CallerArgumentExpressionAttribute(string parameterName)
+            => this.ParameterName = parameterName;
+
+
+        public string ParameterName { get; }
+    }
+
+
+
     internal static class UnsafeExtensions
     {
         extension(Unsafe)

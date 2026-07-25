@@ -293,6 +293,7 @@ public static partial class FastEnum
 
 
 
+#if !NETFRAMEWORK
 /// <inheritdoc/>
 partial class FastEnum
 {
@@ -444,3 +445,4 @@ partial class FastEnum
         => TBooster.GetName(value) ?? UnderlyingOperation<TEnum>.ToNumberString(value);
     #endregion
 }
+#endif

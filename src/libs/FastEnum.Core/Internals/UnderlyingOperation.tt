@@ -178,7 +178,7 @@ internal static class UnderlyingOperation<T>
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, <#= x.CompatibleName #>>(ref result);
-            return <#= x.CompatibleName #>.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return <#= x.CompatibleName #>.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 

@@ -22,6 +22,17 @@ namespace System
             }
         }
     }
+
+
+
+    internal static class EnumExtensions
+    {
+        extension(Enum)
+        {
+            public static T Parse<T>(string name)
+                => (T)Enum.Parse(typeof(T), name);
+        }
+    }
 }
 
 

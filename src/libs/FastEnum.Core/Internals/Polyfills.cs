@@ -43,6 +43,24 @@ namespace System.Diagnostics.CodeAnalysis
 
 
 
+namespace System.Runtime.CompilerServices
+{
+    internal static class UnsafeExtensions
+    {
+        extension(Unsafe)
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TTo BitCast<TFrom, TTo>(TFrom source)
+            {
+                ref var @byte = ref Unsafe.As<TFrom, byte>(ref source);
+                return Unsafe.ReadUnaligned<TTo>(ref @byte);
+            }
+        }
+    }
+}
+
+
+
 namespace System.Runtime.InteropServices
 {
     internal static class MemoryMarshalExtensions

@@ -10,4 +10,7 @@
     <PackageVersion Include="NetEscapades.EnumGenerators" Version="1.0.0-beta21" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
+  </ItemGroup>    
 </Project>

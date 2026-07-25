@@ -4,6 +4,10 @@
         <RootNamespace>FastEnumUtility</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+        <PackageReference Include="System.Collections.Immutable" />
+    </ItemGroup>    
+
     <!-- NuGet -->
     <Import Project="../NuGet.props" />
 
@@ -28,7 +32,7 @@
 
     <!-- for Insights -->
     <ItemGroup>
-        <InternalsVisibleTo Include="FastEnum.Benchmarks"/>
+        <InternalsVisibleTo Include="FastEnum.Benchmarks" />
     </ItemGroup>
 
 </Project>

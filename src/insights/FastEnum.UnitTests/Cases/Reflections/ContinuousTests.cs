@@ -199,9 +199,14 @@ public sealed class ContinuousSByteTests
         FastEnum.IsDefined<ContinuousSByteEnum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -582,9 +587,14 @@ public sealed class ContinuousByteTests
         FastEnum.IsDefined<ContinuousByteEnum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -965,9 +975,14 @@ public sealed class ContinuousInt16Tests
         FastEnum.IsDefined<ContinuousInt16Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -1348,9 +1363,14 @@ public sealed class ContinuousUInt16Tests
         FastEnum.IsDefined<ContinuousUInt16Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -1731,9 +1751,14 @@ public sealed class ContinuousInt32Tests
         FastEnum.IsDefined<ContinuousInt32Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -2114,9 +2139,14 @@ public sealed class ContinuousUInt32Tests
         FastEnum.IsDefined<ContinuousUInt32Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -2497,9 +2527,14 @@ public sealed class ContinuousInt64Tests
         FastEnum.IsDefined<ContinuousInt64Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 
@@ -2880,9 +2915,14 @@ public sealed class ContinuousUInt64Tests
         FastEnum.IsDefined<ContinuousUInt64Enum>("value").ShouldBeFalse();
 
         #region Local Functions
+#if NETFRAMEWORK
+        static int zero<T>()
+            => 0;
+#else
         static T zero<T>()
             where T : INumberBase<T>
             => T.Zero;
+#endif
         #endregion
     }
 

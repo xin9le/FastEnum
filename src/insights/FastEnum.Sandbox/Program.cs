@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using FastEnumUtility;
 using FastEnumUtility.Sandbox;
 
@@ -11,6 +10,18 @@ Console.WriteLine(fruit);
 
 namespace FastEnumUtility.Sandbox
 {
+#if NETFRAMEWORK
+    public enum Fruits
+    {
+        Apple = 1,
+
+        [Obsolete]
+        Banana,
+    }
+#else
+    using System.Net;
+
+
     //[Obsolete(DiagnosticId = "FE0003")]
     public enum Fruits
     {
@@ -42,5 +53,5 @@ namespace FastEnumUtility.Sandbox
     [global::FastEnumUtility.FastEnum<LoaderOptimization>]
     public partial class LoaderOptimizationBooster
     { }
+#endif
 }
-

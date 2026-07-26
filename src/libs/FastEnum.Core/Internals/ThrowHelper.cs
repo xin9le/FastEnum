@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+#if !NETFRAMEWORK
 using System.Numerics;
+#endif
 
 namespace FastEnumUtility.Internals;
 
@@ -10,7 +12,9 @@ internal static class ThrowHelper
 {
     public static void ThrowIfUnderlyingTypeMismatch<TEnum, TUnderlying>(string? paramName)
         where TEnum : struct, Enum
+#if !NETFRAMEWORK
         where TUnderlying : INumberBase<TUnderlying>
+#endif
     {
         // note:
         //  - https://github.com/xin9le/FastEnum/pull/66
@@ -33,7 +37,13 @@ internal static class ThrowHelper
 
 
     [DoesNotReturn]
-    public static void ThrowValueNotDefined(ReadOnlySpan<char> value, string? paramName)
+    public static void ThrowValueNotDefined(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        value, string? paramName)
     {
         var message = $"Specified value '{value}' is not defined.";
         throw new ArgumentException(message, paramName);

@@ -90,7 +90,13 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+    public static bool TryParseValue(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        text, out T result)
     {
         switch (EnumInfo<T>.s_typeCode)
         {
@@ -203,11 +209,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, sbyte>(ref result);
-            return sbyte.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return sbyte.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -307,11 +319,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, byte>(ref result);
-            return byte.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return byte.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -411,11 +429,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, short>(ref result);
-            return short.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return short.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -515,11 +539,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ushort>(ref result);
-            return ushort.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return ushort.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -619,11 +649,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, int>(ref result);
-            return int.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -723,11 +759,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, uint>(ref result);
-            return uint.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return uint.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -827,11 +869,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, long>(ref result);
-            return long.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -931,11 +979,17 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue(
+#if NETFRAMEWORK
+            string?
+#else
+            ReadOnlySpan<char>
+#endif
+            text, out T result)
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, ulong>(ref result);
-            return ulong.TryParse(text, CultureInfo.InvariantCulture, out x);
+            return ulong.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
         }
 
 

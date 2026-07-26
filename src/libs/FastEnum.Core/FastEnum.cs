@@ -141,7 +141,13 @@ public static partial class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined<T>(ReadOnlySpan<char> name)
+    public static bool IsDefined<T>(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        name)
         where T : struct, Enum
         => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
 
@@ -179,7 +185,13 @@ public static partial class FastEnum
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(ReadOnlySpan<char> value)
+    public static T Parse<T>(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        value)
         where T : struct, Enum
         => Parse<T>(value, false);
 
@@ -195,7 +207,13 @@ public static partial class FastEnum
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Parse<T>(ReadOnlySpan<char> value, bool ignoreCase)
+    public static T Parse<T>(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        value, bool ignoreCase)
         where T : struct, Enum
     {
         if (!TryParse<T>(value, ignoreCase, out var result))
@@ -213,7 +231,13 @@ public static partial class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(ReadOnlySpan<char> value, out T result)
+    public static bool TryParse<T>(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        value, out T result)
         where T : struct, Enum
         => TryParse(value, false, out result);
 
@@ -229,7 +253,13 @@ public static partial class FastEnum
     /// <typeparam name="T"><see cref="Enum"/> type</typeparam>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse<T>(ReadOnlySpan<char> value, bool ignoreCase, out T result)
+    public static bool TryParse<T>(
+#if NETFRAMEWORK
+        string?
+#else
+        ReadOnlySpan<char>
+#endif
+        value, bool ignoreCase, out T result)
         where T : struct, Enum
     {
         if (value.IsEmpty)
@@ -293,6 +323,7 @@ public static partial class FastEnum
 
 
 
+#if !NETFRAMEWORK
 /// <inheritdoc/>
 partial class FastEnum
 {
@@ -444,3 +475,4 @@ partial class FastEnum
         => TBooster.GetName(value) ?? UnderlyingOperation<TEnum>.ToNumberString(value);
     #endregion
 }
+#endif

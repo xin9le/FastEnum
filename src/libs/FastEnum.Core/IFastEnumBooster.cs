@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFRAMEWORK
+using System;
 
 namespace FastEnumUtility;
 
@@ -46,3 +47,4 @@ public interface IFastEnumBooster<T>
     /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
     static abstract bool TryParseName(ReadOnlySpan<char> value, bool ignoreCase, out T result);
 }
+#endif

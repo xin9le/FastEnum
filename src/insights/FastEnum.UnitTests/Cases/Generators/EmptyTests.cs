@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFRAMEWORK
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 using TBooster = FastEnumUtility.UnitTests.Models.EmptyEnumBooster;
@@ -83,3 +84,4 @@ public class EmptyTests
         actual.ShouldBe(expect);
     }
 }
+#endif

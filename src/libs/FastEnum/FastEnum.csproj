@@ -12,6 +12,9 @@
 
     <ItemGroup>
         <ProjectReference Include="..\FastEnum.Core\FastEnum.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != 'net472'">
         <ProjectReference Include="..\FastEnum.Generators\FastEnum.Generators.csproj" />
     </ItemGroup>
 

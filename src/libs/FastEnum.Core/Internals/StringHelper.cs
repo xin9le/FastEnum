@@ -124,7 +124,6 @@ internal static class StringHelper
             //  - If any of the three characters is non-ASCII, all of them go through `char.ToUpperInvariant()` first.
             //    For ASCII, `(ToUpperInvariant(c) & mask) == (c & mask)`, so both paths always agree.
 
-            const int mask = ~0x20;
             var first = value.At(0);
             var middle = value.At(length >> 1);
             var last = value.At(length - 1);
@@ -134,6 +133,8 @@ internal static class StringHelper
                 middle = char.ToUpperInvariant(middle);
                 last = char.ToUpperInvariant(last);
             }
+
+            const int mask = ~0x20;
             return (length << 16)
                 ^ ((first & mask) << 8)
                 ^ ((middle & mask) << 4)

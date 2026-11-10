@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace FastEnumUtility.Internals;
 
@@ -411,7 +412,11 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
-            if (StringHelper.CaseInsensitive.Equals(entry.Key, key))
+            var equals
+                = entry.IsAsciiOnly
+                ? StringHelper.CaseInsensitive.EqualsAscii(entry.Key, key)
+                : StringHelper.CaseInsensitive.Equals(entry.Key, key);
+            if (equals)
             {
                 value = entry.Value;
                 return true;
@@ -429,6 +434,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     {
         public readonly string Key = key;
         public readonly TValue Value = value;
+        public readonly bool IsAsciiOnly = Ascii.IsValid(key);
         public Entry? Next = next;
     }
     #endregion

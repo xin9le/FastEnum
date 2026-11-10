@@ -275,3 +275,37 @@ public enum CaseInsensitiveEnum : byte
     B,
     C,
 }
+
+
+
+public enum IgnoreCaseEnum
+{
+    // ASCII only : the length decides how the names are compared
+    X,                      //  1
+    Ab,                     //  2
+    Abc,                    //  3
+    Abcd,                   //  4
+    Abcde,                  //  5
+    Abcdef,                 //  6
+    Abcdefg,                //  7
+    Abcdefgh,               //  8
+    Abcdefghi,              //  9
+    Abcdefghijklmno,        // 15
+    Abcdefghijklmnop,       // 16
+    Abcdefghijklmnopq,      // 17
+    Abcdefghijklmnopqrstuvwxyz_0123456789,
+
+    // ASCII only : digit / underscore / all upper / all lower
+    Z9_z,
+    _0_1_2_3,
+    UPPER_CASE,
+    lower_case,
+    Ks,
+
+    // non-ASCII
+    Äpfel,
+    Ünïcödé,
+    Straße,
+    日本語,
+    Ｆｕｌｌｗｉｄｔｈ,
+}

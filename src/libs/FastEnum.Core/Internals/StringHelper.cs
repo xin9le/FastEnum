@@ -191,16 +191,16 @@ internal static class StringHelper
                 if (length <= 16 && Vector128.IsHardwareAccelerated)
                 {
                     var tail = (nuint)(uint)(length - 8) * sizeof(char);
-                    var head = difference128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
-                    var rest = difference128(Vector128.LoadUnsafe(ref x, tail).AsUInt16(), Vector128.LoadUnsafe(ref y, tail).AsUInt16());
+                    var head = diff128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
+                    var rest = diff128(Vector128.LoadUnsafe(ref x, tail).AsUInt16(), Vector128.LoadUnsafe(ref y, tail).AsUInt16());
                     return (head | rest) == Vector128<ushort>.Zero;
                 }
             }
             else if (length >= 4)
             {
                 var tail = (nint)(uint)(length - 4) * sizeof(char);
-                var head = difference64(Unsafe.ReadUnaligned<ulong>(ref x), Unsafe.ReadUnaligned<ulong>(ref y));
-                var rest = difference64(Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref x, tail)), Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref y, tail)));
+                var head = diff64(Unsafe.ReadUnaligned<ulong>(ref x), Unsafe.ReadUnaligned<ulong>(ref y));
+                var rest = diff64(Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref x, tail)), Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref y, tail)));
                 return (head | rest) is 0;
             }
             return MemoryExtensions.Equals(ascii, other, StringComparison.OrdinalIgnoreCase);
@@ -211,7 +211,7 @@ internal static class StringHelper
             //  - Returns non-zero if any character differs in something other than the case of an ASCII letter.
             //  - 4 chars are packed in 64 bits; every char of 'ascii' is less than 0x80, so additions never carry over into the next char.
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ulong difference64(ulong ascii, ulong other)
+            static ulong diff64(ulong ascii, ulong other)
             {
                 const ulong each = 0x0001_0001_0001_0001;
                 var lower = ascii | (0x20 * each);
@@ -224,7 +224,7 @@ internal static class StringHelper
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static Vector128<ushort> difference128(Vector128<ushort> ascii, Vector128<ushort> other)
+            static Vector128<ushort> diff128(Vector128<ushort> ascii, Vector128<ushort> other)
             {
                 var caseMask = Vector128.Create((ushort)0x20);
                 var lower = ascii | caseMask;

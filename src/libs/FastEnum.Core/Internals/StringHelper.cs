@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
 
 namespace FastEnumUtility.Internals;
 
@@ -116,13 +118,26 @@ internal static class StringHelper
             if (length is 0)
                 return 0;
 
-            var first = value.At(0);
-            var middle = value.At(length >> 1);
-            var last = value.At(length - 1);
+            // Fast path for ASCII:
+            //  - Clearing the 0x20 bit maps an ASCII letter of either case to the same value, so no call to `char.ToUpperInvariant()` is needed.
+            //  - It also folds a few non-letters together (e.g. '[' and '{'), which only costs an extra equality check and never breaks the hash contract.
+            //  - If any of the three characters is non-ASCII, all of them go through `char.ToUpperInvariant()` first.
+            //    For ASCII, `(ToUpperInvariant(c) & mask) == (c & mask)`, so both paths always agree.
+
+            const int mask = ~0x20;
+            int first = value.At(0);
+            int middle = value.At(length >> 1);
+            int last = value.At(length - 1);
+            if (((first | middle | last) & ~0x7F) is not 0)
+            {
+                first = char.ToUpperInvariant((char)first);
+                middle = char.ToUpperInvariant((char)middle);
+                last = char.ToUpperInvariant((char)last);
+            }
             return (length << 16)
-                ^ (char.ToUpperInvariant(first) << 8)
-                ^ (char.ToUpperInvariant(middle) << 4)
-                ^ char.ToUpperInvariant(last);
+                ^ ((first & mask) << 8)
+                ^ ((middle & mask) << 4)
+                ^ (last & mask);
 
             /*
             // note:
@@ -144,6 +159,78 @@ internal static class StringHelper
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Equals(ReadOnlySpan<char> x, ReadOnlySpan<char> y)
             => MemoryExtensions.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+
+
+        /// <summary>
+        /// Determines whether two strings are equal under <see cref="StringComparison.OrdinalIgnoreCase"/>, where <paramref name="ascii"/> consists only of ASCII characters.
+        /// </summary>
+        /// <param name="ascii">ASCII only string.</param>
+        /// <param name="other">Any string.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool EqualsAscii(ReadOnlySpan<char> ascii, ReadOnlySpan<char> other)
+        {
+            // Why this is equivalent to OrdinalIgnoreCase:
+            //  - No non-ASCII character is equal to an ASCII character under OrdinalIgnoreCase.
+            //  - Therefore, when one side is ASCII only, two characters are equal only if they are identical or differ only in the case of an ASCII letter (= 0x20 bit).
+            //
+            // Why this is faster:
+            //  - `MemoryExtensions.Equals()` isn't inlined and branches on StringComparison every time.
+            //  - Enum names are short, so two overlapping loads cover the whole string without a loop. (4-8 chars: 64 bits x 2 / 8-16 chars: 128 bits x 2)
+
+            var length = ascii.Length;
+            if (length != other.Length)
+                return false;
+
+            ref var x = ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(ascii));
+            ref var y = ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(other));
+            if (length >= 8)
+            {
+                if (length <= 16 && Vector128.IsHardwareAccelerated)
+                {
+                    var tail = (nuint)(uint)(length - 8) * sizeof(char);
+                    var head = difference128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
+                    var rest = difference128(Vector128.LoadUnsafe(ref x, tail).AsUInt16(), Vector128.LoadUnsafe(ref y, tail).AsUInt16());
+                    return (head | rest) == Vector128<ushort>.Zero;
+                }
+            }
+            else if (length >= 4)
+            {
+                var tail = (nint)(uint)(length - 4) * sizeof(char);
+                var head = difference64(Unsafe.ReadUnaligned<ulong>(ref x), Unsafe.ReadUnaligned<ulong>(ref y));
+                var rest = difference64(Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref x, tail)), Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref y, tail)));
+                return (head | rest) is 0;
+            }
+            return MemoryExtensions.Equals(ascii, other, StringComparison.OrdinalIgnoreCase);
+
+
+            #region Local Functions
+            // note:
+            //  - Returns non-zero if any character differs in something other than the case of an ASCII letter.
+            //  - 4 chars are packed in 64 bits; every char of 'ascii' is less than 0x80, so additions never carry over into the next char.
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static ulong difference64(ulong ascii, ulong other)
+            {
+                const ulong each = 0x0001_0001_0001_0001;
+                var lower = ascii | (0x20 * each);
+                var geA = lower + ((0x8000 - 'a') * each);        // bit 15 is set if 'a' <= lower
+                var gtZ = lower + ((0x8000 - ('z' + 1)) * each);  // bit 15 is set if 'z' <  lower
+                var letter = geA & ~gtZ & (0x8000 * each);        // bit 15 is set if ASCII letter
+                var caseBit = letter >> 10;                       // 0x20 if ASCII letter
+                return (ascii ^ other) & ~caseBit;
+            }
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Vector128<ushort> difference128(Vector128<ushort> ascii, Vector128<ushort> other)
+            {
+                var lower = ascii | Vector128.Create((ushort)0x20);
+                var letter = Vector128.LessThan(lower - Vector128.Create((ushort)'a'), Vector128.Create((ushort)26));
+                var caseBit = letter & Vector128.Create((ushort)0x20);
+                return (ascii ^ other) & ~caseBit;
+            }
+            #endregion
+        }
     }
     #endregion
 }

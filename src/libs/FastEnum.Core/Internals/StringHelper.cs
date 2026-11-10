@@ -226,9 +226,12 @@ internal static class StringHelper
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Vector128<ushort> difference128(Vector128<ushort> ascii, Vector128<ushort> other)
             {
-                var lower = ascii | Vector128.Create((ushort)0x20);
-                var letter = Vector128.LessThan(lower - Vector128.Create((ushort)'a'), Vector128.Create((ushort)26));
-                var caseBit = letter & Vector128.Create((ushort)0x20);
+                var caseMask = Vector128.Create((ushort)0x20);
+                var lower = ascii | caseMask;
+                var offset = lower - Vector128.Create((ushort)'a');  // distance from 'a' (wraps around if below 'a')
+                var alphabetCount = Vector128.Create((ushort)26);
+                var letter = Vector128.LessThan(offset, alphabetCount);  // all bits set if 'a' <= lower <= 'z'
+                var caseBit = letter & caseMask;
                 return (ascii ^ other) & ~caseBit;
             }
             #endregion

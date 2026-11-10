@@ -71,16 +71,6 @@ internal static class StringHelper
                 ^ (first << 8)
                 ^ (middle << 4)
                 ^ last;
-
-            /*
-            // note:
-            //  - Suppress CA1307 : Specify StringComparison for clarity
-            //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
-
-#pragma warning disable CA1307
-            return string.GetHashCode(value);
-#pragma warning restore CA1307
-            */
         }
 
 
@@ -165,21 +155,6 @@ internal static class StringHelper
                 return value is 0;
             }
             #endregion
-
-            /*
-            // note:
-            //  - Overload that specify StringComparison is slow because of internal branching by switch statements.
-
-            return string_GetHashCodeOrdinalIgnoreCase(self: null, value);
-
-
-            #region Local Functions
-            // note:
-            //  - UnsafeAccessor can't be defined within a Generic type.
-            [UnsafeAccessor(UnsafeAccessorKind.StaticMethod, Name = "GetHashCodeOrdinalIgnoreCase")]
-            static extern int string_GetHashCodeOrdinalIgnoreCase(string? self, ReadOnlySpan<char> value);
-            #endregion
-            */
         }
 
 

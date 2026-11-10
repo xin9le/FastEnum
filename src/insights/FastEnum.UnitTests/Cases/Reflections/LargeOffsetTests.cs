@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using FastEnumUtility.UnitTests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -26,7 +25,9 @@ public sealed class LargeOffsetTests
     public void Int64(long number)
     {
         var undefined = (ContinuousInt64Enum)number;
-        var numberString = number.ToString(CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+        var numberString = number.ToString();
+#pragma warning restore CA1305
 
         {
             var expect = Enum.IsDefined(undefined);
@@ -89,7 +90,9 @@ public sealed class LargeOffsetTests
     public void UInt64(ulong number)
     {
         var undefined = (ContinuousUInt64Enum)number;
-        var numberString = number.ToString(CultureInfo.InvariantCulture);
+#pragma warning disable CA1305
+        var numberString = number.ToString();
+#pragma warning restore CA1305
 
         {
             var expect = Enum.IsDefined(undefined);

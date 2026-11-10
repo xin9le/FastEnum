@@ -218,11 +218,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((byte)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -322,11 +322,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((byte)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -426,11 +426,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((ushort)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -530,11 +530,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((ushort)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -634,11 +634,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((uint)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -738,11 +738,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((uint)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -842,11 +842,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((ulong)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else
@@ -946,11 +946,11 @@ internal static class UnderlyingOperation<T>
             {
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = (int)(val - min);
+                var index = unchecked((ulong)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
                 var members = EnumInfo<T>.s_orderedMembers;
-                if ((uint)index < (uint)members.Length)
+                if (index < (uint)members.Length)
                 {
-                    result = members.At(index);
+                    result = members.At((int)index);
                     return true;
                 }
                 else

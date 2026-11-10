@@ -125,14 +125,14 @@ internal static class StringHelper
             //    For ASCII, `(ToUpperInvariant(c) & mask) == (c & mask)`, so both paths always agree.
 
             const int mask = ~0x20;
-            int first = value.At(0);
-            int middle = value.At(length >> 1);
-            int last = value.At(length - 1);
+            var first = value.At(0);
+            var middle = value.At(length >> 1);
+            var last = value.At(length - 1);
             if (!isAsciiOnly(first, middle, last))
             {
-                first = char.ToUpperInvariant((char)first);
-                middle = char.ToUpperInvariant((char)middle);
-                last = char.ToUpperInvariant((char)last);
+                first = char.ToUpperInvariant(first);
+                middle = char.ToUpperInvariant(middle);
+                last = char.ToUpperInvariant(last);
             }
             return (length << 16)
                 ^ ((first & mask) << 8)
@@ -142,7 +142,7 @@ internal static class StringHelper
 
             #region Local Functions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static bool isAsciiOnly(int first, int middle, int last)
+            static bool isAsciiOnly(char first, char middle, char last)
             {
                 const int mask = ~0x7F;
                 var value = (first | middle | last) & mask;

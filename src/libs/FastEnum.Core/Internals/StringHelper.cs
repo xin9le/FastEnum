@@ -145,6 +145,21 @@ internal static class StringHelper
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static bool isAsciiOnly(char first, char middle, char last)
             {
+                // Purpose:
+                //  - Returns true if all three characters are in the ASCII range (U+0000 - U+007F).
+                //
+                // How it works:
+                //  - An ASCII character fits in the lower 7 bits (0x00 - 0x7F), so none of its bits 7-15 are set.
+                //  - `~0x7F` is a mask that keeps only bits 7 and above.
+                //  - OR-ing the three characters merges all their set bits into one value.
+                //    If any one of them is non-ASCII, at least one of bits 7-15 is set in the result.
+                //  - So `(first | middle | last) & ~0x7F` is 0 exactly when all three characters are ASCII.
+                //
+                // Why this form:
+                //  - A single OR/AND/compare with no branches, instead of three separate range checks
+                //    (e.g. `char.IsAscii(first) && char.IsAscii(middle) && char.IsAscii(last)`).
+                //  - Keeps the ASCII fast path cheap; the more expensive `char.ToUpperInvariant()` is called only when needed.
+
                 const int mask = ~0x7F;
                 var value = (first | middle | last) & mask;
                 return value is 0;

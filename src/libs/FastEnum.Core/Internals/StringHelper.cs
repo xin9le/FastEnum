@@ -128,7 +128,7 @@ internal static class StringHelper
             int first = value.At(0);
             int middle = value.At(length >> 1);
             int last = value.At(length - 1);
-            if (((first | middle | last) & ~0x7F) is not 0)
+            if (!isAsciiOnly(first, middle, last))
             {
                 first = char.ToUpperInvariant((char)first);
                 middle = char.ToUpperInvariant((char)middle);
@@ -138,6 +138,17 @@ internal static class StringHelper
                 ^ ((first & mask) << 8)
                 ^ ((middle & mask) << 4)
                 ^ (last & mask);
+
+
+            #region Local Functions
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static bool isAsciiOnly(int first, int middle, int last)
+            {
+                const int mask = ~0x7F;
+                var value = (first | middle | last) & mask;
+                return value is 0;
+            }
+            #endregion
 
             /*
             // note:

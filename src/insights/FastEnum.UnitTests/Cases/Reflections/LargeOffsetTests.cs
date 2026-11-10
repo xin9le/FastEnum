@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using FastEnumUtility.UnitTests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -25,15 +26,56 @@ public sealed class LargeOffsetTests
     public void Int64(long number)
     {
         var undefined = (ContinuousInt64Enum)number;
-        Enum.IsDefined(undefined).ShouldBeFalse();
+        var numberString = number.ToString(CultureInfo.InvariantCulture);
 
-        FastEnum.IsDefined(undefined).ShouldBeFalse();
-        FastEnum.GetName(undefined).ShouldBeNull();
-        FastEnum.GetMember(undefined).ShouldBeNull();
-        FastEnum.ToString(undefined).ShouldBe(undefined.ToString());
-        undefined.ToName().ShouldBeNull();
-        undefined.ToMember().ShouldBeNull();
-        undefined.FastToString().ShouldBe(undefined.ToString());
+        {
+            var expect = Enum.IsDefined(undefined);
+            var actual = FastEnum.IsDefined(undefined);
+            actual.ShouldBeFalse();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.ShouldBeNull();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetMember(undefined);
+            actual.ShouldBeNull();
+            actual?.Name.ShouldBe(expect);
+        }
+        {
+            var expect = undefined.ToString();
+            var actual = FastEnum.ToString(undefined);
+            actual.ShouldBe(numberString);
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.IsDefined(undefined);
+            var actual = undefined.IsDefined();
+            actual.ShouldBeFalse();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = undefined.ToName();
+            actual.ShouldBeNull();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = undefined.ToMember();
+            actual.ShouldBeNull();
+            actual?.Name.ShouldBe(expect);
+        }
+        {
+            var expect = undefined.ToString();
+            var actual = undefined.FastToString();
+            actual.ShouldBe(numberString);
+            actual.ShouldBe(expect);
+        }
     }
 
 
@@ -47,14 +89,55 @@ public sealed class LargeOffsetTests
     public void UInt64(ulong number)
     {
         var undefined = (ContinuousUInt64Enum)number;
-        Enum.IsDefined(undefined).ShouldBeFalse();
+        var numberString = number.ToString(CultureInfo.InvariantCulture);
 
-        FastEnum.IsDefined(undefined).ShouldBeFalse();
-        FastEnum.GetName(undefined).ShouldBeNull();
-        FastEnum.GetMember(undefined).ShouldBeNull();
-        FastEnum.ToString(undefined).ShouldBe(undefined.ToString());
-        undefined.ToName().ShouldBeNull();
-        undefined.ToMember().ShouldBeNull();
-        undefined.FastToString().ShouldBe(undefined.ToString());
+        {
+            var expect = Enum.IsDefined(undefined);
+            var actual = FastEnum.IsDefined(undefined);
+            actual.ShouldBeFalse();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetName(undefined);
+            actual.ShouldBeNull();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = FastEnum.GetMember(undefined);
+            actual.ShouldBeNull();
+            actual?.Name.ShouldBe(expect);
+        }
+        {
+            var expect = undefined.ToString();
+            var actual = FastEnum.ToString(undefined);
+            actual.ShouldBe(numberString);
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.IsDefined(undefined);
+            var actual = undefined.IsDefined();
+            actual.ShouldBeFalse();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = undefined.ToName();
+            actual.ShouldBeNull();
+            actual.ShouldBe(expect);
+        }
+        {
+            var expect = Enum.GetName(undefined);
+            var actual = undefined.ToMember();
+            actual.ShouldBeNull();
+            actual?.Name.ShouldBe(expect);
+        }
+        {
+            var expect = undefined.ToString();
+            var actual = undefined.FastToString();
+            actual.ShouldBe(numberString);
+            actual.ShouldBe(expect);
+        }
     }
 }

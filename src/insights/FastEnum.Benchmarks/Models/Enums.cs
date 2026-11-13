@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using NetEscapades.EnumGenerators;
 
 namespace FastEnumUtility.Benchmarks.Models;
@@ -90,4 +91,29 @@ public enum Fruits : byte
     A_62,
     A_63,
     */
+}
+
+
+
+/// <summary>
+/// Sparse flags enum whose values spread over 31 bits.
+/// </summary>
+[Flags]
+public enum Permissions : int
+{
+    None = 0,
+    Read = 1 << 0,
+    Write = 1 << 1,
+    Execute = 1 << 2,
+    Delete = 1 << 3,
+    Share = 1 << 4,
+    Admin = 1 << 5,
+    Audit = 1 << 8,
+    Export = 1 << 12,
+    Import = 1 << 16,
+    Backup = 1 << 20,
+    Restore = 1 << 24,
+    Owner = 1 << 30,
+    ReadWrite = Read | Write,
+    All = Read | Write | Execute | Delete | Share | Admin,
 }

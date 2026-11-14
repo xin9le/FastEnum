@@ -118,8 +118,9 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
                 //--- Collided, so it moves to the next slot (linear probing)
                 if (entries[index].Key == item.Key)
                 {
-                    var duplicated = item.Key;
-                    ThrowHelper.ThrowDuplicatedKeyExists(Unsafe.As<ulong, TKey>(ref duplicated));
+                    var key = item.Key;
+                    var duplicated = Unsafe.As<ulong, TKey>(ref key);
+                    ThrowHelper.ThrowDuplicatedKeyExists(duplicated);
                 }
 
                 index++;

@@ -104,7 +104,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
                     multiplier = candidate;
                     break;
                 }
-                candidate = next(candidate);
+                candidate = nextMultiplierCandidate(candidate);
             }
         }
 
@@ -194,7 +194,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         }
 
 
-        static ulong next(ulong x)
+        static ulong nextMultiplierCandidate(ulong x)
         {
             // note:
             //  - xorshift64. It is deterministic, so the same keys always get the same table.

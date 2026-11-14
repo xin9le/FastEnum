@@ -20,7 +20,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 {
     // note:
     //  - I really don't want to make my own custom dictionary.
-    //  - However, this is faster than FrozonDictionary<TKey, TValue>, so I have no choice but to prepare it.
+    //  - However, this is faster than FrozenDictionary<TKey, TValue>, so I have no choice but to prepare it.
 
     // How it works:
     //  - Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.
@@ -87,7 +87,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         var shift = 64 - bits;
 
         //--- Search the multiplier that makes all keys collision-free
-        var multiplier = 0x9E3779B97F4A7C15;  // 2^64 (= golden ratio)
+        var multiplier = 0x9E3779B97F4A7C15;  // 2^64 / golden ratio
         {
             const int maxTrials = 1024;
             var candidate = multiplier;

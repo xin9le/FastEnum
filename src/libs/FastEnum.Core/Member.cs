@@ -4,11 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
-#if NET10_0_OR_GREATER
 using System.Collections.Frozen;
-#else
-using FastEnumUtility.Internals;
-#endif
 
 namespace FastEnumUtility;
 
@@ -56,11 +52,7 @@ public sealed class Member<T>
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-#if NET10_0_OR_GREATER
     internal FrozenDictionary<int, string?> Labels { get; }
-#else
-    internal FastReadOnlyDictionary<int, string?> Labels { get; }
-#endif
     #endregion
 
 
@@ -79,11 +71,7 @@ public sealed class Member<T>
         this.Labels
             = this.FieldInfo
             .GetCustomAttributes<LabelAttribute>()
-#if NET10_0_OR_GREATER
             .ToFrozenDictionary(static x => x.Index, static x => x.Value);
-#else
-            .ToFastReadOnlyDictionary(static x => x.Index, static x => x.Value);
-#endif
     }
 
 

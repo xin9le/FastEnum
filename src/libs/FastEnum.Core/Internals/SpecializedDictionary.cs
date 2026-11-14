@@ -26,6 +26,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     //  - Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.
     //  - The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : (key * multiplier) >> shift
     //  - If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.
+    //  - On the fallback, the multiplier that makes the maximum displacement the smallest is chosen from some candidates.
     //  - The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.
 
     // Why struct
@@ -123,10 +124,32 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             }
         }
 
-        //--- Build the table with linear probing
+        //--- Collision-free multiplier is not found, so choose the multiplier that makes the probing distance the shortest
         // note:
         //  - Probing does not wrap around; in the worst case, all items line up from the last slot.
+        //  - Looking up an undefined key always probes up to the maximum distance, so the maximum distance comes first.
+        //  - The total distance is the tiebreaker; it is the cost of looking up the defined keys.
         var occupied = new bool[capacity + items.Length];
+        {
+            const int maxCandidates = 64;
+            var candidate = multiplier;
+            var bestMaxDistance = int.MaxValue;
+            var bestTotalDistance = int.MaxValue;
+            for (var i = 0; i < maxCandidates; i++)
+            {
+                var (max, total) = measureDistance(items, candidate, shift, occupied);
+                if (max < bestMaxDistance || (max == bestMaxDistance && total < bestTotalDistance))
+                {
+                    multiplier = candidate;
+                    bestMaxDistance = max;
+                    bestTotalDistance = total;
+                }
+                candidate = nextMultiplierCandidate(candidate);
+            }
+            Array.Clear(occupied);
+        }
+
+        //--- Build the table with linear probing
         var entries = new Entry[capacity + items.Length];
         var maxDistance = 0;
         foreach (var item in items)
@@ -199,6 +222,32 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
                 slot = trial;
             }
             return true;
+        }
+
+
+        static (int max, int total) measureDistance(ReadOnlySpan<Entry> items, ulong multiplier, int shift, bool[] occupied)
+        {
+            // note:
+            //  - Simulates linear probing without building the table.
+            //  - `occupied` is shared across candidates, so it is cleared every time.
+
+            Array.Clear(occupied);
+            var max = 0;
+            var total = 0;
+            foreach (var x in items)
+            {
+                var index = ToIndex(x.Key, multiplier, shift);
+                var distance = 0;
+                while (occupied[index])
+                {
+                    index++;
+                    distance++;
+                }
+                occupied[index] = true;
+                max = Math.Max(max, distance);
+                total += distance;
+            }
+            return (max, total);
         }
 
 

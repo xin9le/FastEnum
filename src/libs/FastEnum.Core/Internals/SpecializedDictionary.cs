@@ -68,7 +68,10 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     public static EnumKeyDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
     {
         //--- Materialize
-        var items = new List<Entry>();
+        List<Entry> items
+            = source.TryGetNonEnumeratedCount(out var count)
+            ? new(count)
+            : [];
         foreach (var x in source)
         {
             var key = ToKey(keySelector(x));

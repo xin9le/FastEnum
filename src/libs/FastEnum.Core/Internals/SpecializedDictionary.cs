@@ -96,14 +96,34 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             {
                 if (isCollisionFree(items, candidate, shift, used, trial))
                 {
-                    multiplier = candidate;
-                    break;
+                    //--- Fast path
+                    // note:
+                    //  - Every item is placed at its home slot, so probing and the extra slots are not needed.
+                    //  - The slot is occupied if `used` holds the current trial number.
+                    //  - Duplicated keys always collide, so they never reach here.
+
+                    var table = new Entry[capacity];
+                    foreach (var item in items)
+                    {
+                        var index = ToIndex(item.Key, candidate, shift);
+                        table[index] = item;
+                    }
+
+                    var inv = inverseOf(candidate);
+                    for (var i = 0; i < table.Length; i++)
+                    {
+                        if (used[i] == trial)
+                            continue;
+
+                        table[i] = createEmptyEntry(i, capacity, shift, inv);
+                    }
+                    return new(table, items.Length, candidate, shift, maxDistance: 0);
                 }
                 candidate = nextMultiplierCandidate(candidate);
             }
         }
 
-        //--- Build the table
+        //--- Build the table with linear probing
         // note:
         //  - Probing does not wrap around; in the worst case, all items line up from the last slot.
         var occupied = new bool[capacity + items.Length];
@@ -134,27 +154,36 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //--- Trim the extra slots that are not used
         Array.Resize(ref entries, capacity + maxDistance);
 
-        //--- An empty slot holds the key that is never looked up at the slot.
-        //--- Therefore, comparing the key is enough and checking whether the slot is empty is not needed.
+        //--- Fill the empty slots
         var inverse = inverseOf(multiplier);
         for (var i = 0; i < entries.Length; i++)
         {
             if (occupied[i])
                 continue;
 
-            // note:
-            //  - A lookup probes [home, home + maxDistance], so the slot is never reached from the next home.
-            //  - The slots at the end do not have the next home, but they are never reached from the first home because maxDistance is less than (capacity - 1).
-            //  - `key * multiplier == home << shift` is solved by the modular inverse of the multiplier.
-            var home = (ulong)((i + 1 < capacity) ? i + 1 : 0);
-            var key = (home << shift) * inverse;
-            entries[i] = new(key, default!);
+            entries[i] = createEmptyEntry(i, capacity, shift, inverse);
         }
 
         return new(entries, items.Length, multiplier, shift, maxDistance);
 
 
         #region Local Functions
+        static Entry createEmptyEntry(int index, int capacity, int shift, ulong inverse)
+        {
+            // note:
+            //  - An empty slot holds the key that is never looked up at the slot.
+            //  - Therefore, comparing the key is enough and checking whether the slot is empty is not needed.
+            //  - A lookup probes [home, home + maxDistance], so the slot is never reached from the next home.
+            //  - The slots at the end do not have the next home, but they are never reached from the first home because maxDistance is less than (capacity - 1).
+            //  - `key * multiplier == home << shift` is solved by the modular inverse of the multiplier.
+
+            var next = index + 1;
+            var home = (ulong)((next < capacity) ? next : 0);
+            var key = (home << shift) * inverse;
+            return new(key, default!);
+        }
+
+
         static bool isCollisionFree(ReadOnlySpan<Entry> items, ulong multiplier, int shift, int[] used, int trial)
         {
             // note:

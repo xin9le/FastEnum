@@ -185,7 +185,11 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
             var inverse = x;
             for (var i = 0; i < 5; i++)
-                inverse *= 2 - (x * inverse);
+            {
+                var product = x * inverse;
+                var correction = 2UL - product;
+                inverse *= correction;
+            }
             return inverse;
         }
 

@@ -72,15 +72,15 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         ReadOnlySpan<Entry> items;
         {
             List<Entry> buffer
-            = source.TryGetNonEnumeratedCount(out var count)
-            ? new(count)
-            : [];
-        foreach (var x in source)
-        {
-            var key = ToKey(keySelector(x));
-            var value = valueSelector(x);
+                = source.TryGetNonEnumeratedCount(out var count)
+                ? new(count)
+                : [];
+            foreach (var x in source)
+            {
+                var key = ToKey(keySelector(x));
+                var value = valueSelector(x);
                 buffer.Add(new(key, value));
-        }
+            }
             items = CollectionsMarshal.AsSpan(buffer);
         }
 
@@ -164,9 +164,10 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             // note:
             //  - `used` is shared across trials; the slot is in use if it holds the current trial number.
 
-            foreach (var item in items)
+            foreach (var x in items)
             {
-                ref var slot = ref used[ToIndex(item.Key, multiplier, shift)];
+                var index = ToIndex(x.Key, multiplier, shift);
+                ref var slot = ref used[index];
                 if (slot == trial)
                     return false;
 
@@ -228,7 +229,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         }
 
         //--- Linear probing (only when not collision-free)
-        for (var i = this._maxDistance; i > 0; i--)
+        for (var i = this._maxDistance; 0 < i; i--)
         {
             entry = ref Unsafe.Add(ref entry, 1);
             if (entry.Key == bits)

@@ -38,12 +38,6 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     //  - A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.
 
 
-    #region Constants
-    private const ulong InitialMultiplier = 0x9E3779B97F4A7C15;  // 2^64 / golden ratio
-    private const int MaxTrials = 1024;
-    #endregion
-
-
     #region Fields
     private readonly Entry[] _entries;
     private readonly int _size;
@@ -93,11 +87,12 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         var shift = 64 - bits;
 
         //--- Search the multiplier that makes all keys collision-free
-        var multiplier = InitialMultiplier;
+        var multiplier = 0x9E3779B97F4A7C15;  // 2^64 (= golden ratio)
         {
-            var candidate = InitialMultiplier;
+            const int maxTrials = 1024;
+            var candidate = multiplier;
             var used = new int[capacity];
-            for (var trial = 1; trial <= MaxTrials; trial++)
+            for (var trial = 1; trial <= maxTrials; trial++)
             {
                 if (isCollisionFree(items, candidate, shift, used, trial))
                 {

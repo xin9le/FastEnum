@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FastEnumUtility.Internals;
@@ -68,7 +69,9 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     public static EnumKeyDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
     {
         //--- Materialize
-        List<Entry> items
+        ReadOnlySpan<Entry> items;
+        {
+            List<Entry> buffer
             = source.TryGetNonEnumeratedCount(out var count)
             ? new(count)
             : [];
@@ -76,12 +79,14 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         {
             var key = ToKey(keySelector(x));
             var value = valueSelector(x);
-            items.Add(new(key, value));
+                buffer.Add(new(key, value));
+        }
+            items = CollectionsMarshal.AsSpan(buffer);
         }
 
         //--- Table size is the power of 2, and the load factor is 0.5 or less
         var bits = 1;
-        while ((1 << bits) < items.Count * 2)
+        while ((1 << bits) < items.Length * 2)
             bits++;
 
         var capacity = 1 << bits;
@@ -106,8 +111,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //--- Build the table
         // note:
         //  - Probing does not wrap around; in the worst case, all items line up from the last slot.
-        var occupied = new bool[capacity + items.Count];
-        var entries = new Entry[capacity + items.Count];
+        var occupied = new bool[capacity + items.Length];
+        var entries = new Entry[capacity + items.Length];
         var maxDistance = 0;
         foreach (var item in items)
         {
@@ -150,11 +155,11 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             entries[i] = new(key, default!);
         }
 
-        return new(entries, items.Count, multiplier, shift, maxDistance);
+        return new(entries, items.Length, multiplier, shift, maxDistance);
 
 
         #region Local Functions
-        static bool isCollisionFree(List<Entry> items, ulong multiplier, int shift, int[] used, int trial)
+        static bool isCollisionFree(ReadOnlySpan<Entry> items, ulong multiplier, int shift, int[] used, int trial)
         {
             // note:
             //  - `used` is shared across trials; the slot is in use if it holds the current trial number.

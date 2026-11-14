@@ -43,18 +43,6 @@ internal static class CollectionExtensions
 
     extension<TSource>(IEnumerable<TSource> @this)
     {
-        #region FastReadOnlyDictionary
-        public FastReadOnlyDictionary<TKey, TSource> ToFastReadOnlyDictionary<TKey>(Func<TSource, TKey> keySelector)
-            where TKey : notnull
-            => ToFastReadOnlyDictionary(@this, keySelector, static x => x);
-
-
-        public FastReadOnlyDictionary<TKey, TValue> ToFastReadOnlyDictionary<TKey, TValue>(Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-            where TKey : notnull
-            => FastReadOnlyDictionary<TKey, TValue>.Create(@this, keySelector, valueSelector);
-        #endregion
-
-
         #region CaseSensitiveStringDictionary
         public CaseSensitiveStringDictionary<TSource> ToCaseSensitiveStringDictionary(Func<TSource, string> keySelector)
             => ToCaseSensitiveStringDictionary(@this, keySelector, static x => x);

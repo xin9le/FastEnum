@@ -9,39 +9,34 @@ namespace FastEnumUtility.Internals;
 
 
 
-// note:
-//  - I really don't want to make my own custom dictionary.
-//  - However, this is faster than FrozonDictionary<TKey, TValue>, so I have no choice but to prepare it.
-
-
-
 /// <summary>
 /// Provides the read-only dictionary specialized for lookup by enum value.
 /// </summary>
 /// <typeparam name="TKey"><see cref="Enum"/> type</typeparam>
 /// <typeparam name="TValue"></typeparam>
-/// <remarks>
-/// <para>How it works</para>
-/// <list type="bullet">
-/// <item><description>Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.</description></item>
-/// <item><description>The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : <c>(key * multiplier) >> shift</c></description></item>
-/// <item><description>The multiplier that makes all keys collision-free is searched on creation. If found, a lookup is just one multiplication and one comparison.</description></item>
-/// <item><description>If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.</description></item>
-/// <item><description>The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.</description></item>
-/// </list>
-/// <para>Why struct</para>
-/// <list type="bullet">
-/// <item><description>When it is held in a <c>static readonly</c> field, JIT can embed its fields into the caller as constants.</description></item>
-/// <item><description><c>default</c> is not usable because the table is null; an instance must be created by <see cref="Create"/>. It is not guarded so as not to slow down the lookup.</description></item>
-/// </list>
-/// <para>Why specialized for enum</para>
-/// <list type="bullet">
-/// <item><description>Comparing the key is enough to find the entry. A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.</description></item>
-/// </list>
-/// </remarks>
 internal readonly struct EnumKeyDictionary<TKey, TValue>
     where TKey : struct, Enum
 {
+    // note:
+    //  - I really don't want to make my own custom dictionary.
+    //  - However, this is faster than FrozonDictionary<TKey, TValue>, so I have no choice but to prepare it.
+
+    // How it works:
+    //  - Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.
+    //  - The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : (key * multiplier) >> shift
+    //  - If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.
+    //  - The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.
+
+    // Why struct
+    //  - When it is held in a <c>static readonly</c> field, JIT can embed its fields into the caller as constants.
+    //  - 'default' is not usable because the table is null; an instance must be created by '.Create()'.
+    //  - It is not guarded so as not to slow down the lookup.
+
+    // Why specialized for enum
+    //  - Comparing the key is enough to find the entry.
+    //  - A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.
+
+
     #region Constants
     private const ulong InitialMultiplier = 0x9E3779B97F4A7C15;  // 2^64 / golden ratio
     private const int MaxTrials = 1024;

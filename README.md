@@ -23,7 +23,7 @@ Intel Core Ultra 7 155H 3.00GHz, 1 CPU, 22 logical and 16 physical cores
 
 
 # Support Platform
-- .NET 8.0+
+- .NET 10.0+
 
 > [!Important]
 > For those who wish to use this on older platforms, please use v1.8.0. It supports follows.

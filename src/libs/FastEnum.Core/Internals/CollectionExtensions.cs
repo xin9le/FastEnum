@@ -43,6 +43,18 @@ internal static class CollectionExtensions
 
     extension<TSource>(IEnumerable<TSource> @this)
     {
+        #region EnumKeyDictionary
+        public EnumKeyDictionary<TKey, TSource> ToEnumKeyDictionary<TKey>(Func<TSource, TKey> keySelector)
+            where TKey : struct, Enum
+            => ToEnumKeyDictionary(@this, keySelector, static x => x);
+
+
+        public EnumKeyDictionary<TKey, TValue> ToEnumKeyDictionary<TKey, TValue>(Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+            where TKey : struct, Enum
+            => EnumKeyDictionary<TKey, TValue>.Create(@this, keySelector, valueSelector);
+        #endregion
+
+
         #region CaseSensitiveStringDictionary
         public CaseSensitiveStringDictionary<TSource> ToCaseSensitiveStringDictionary(Func<TSource, string> keySelector)
             => ToCaseSensitiveStringDictionary(@this, keySelector, static x => x);

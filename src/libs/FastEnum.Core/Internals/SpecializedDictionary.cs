@@ -9,6 +9,276 @@ namespace FastEnumUtility.Internals;
 
 
 
+// note:
+//  - I really don't want to make my own custom dictionary.
+//  - However, this is faster than FrozonDictionary<TKey, TValue>, so I have no choice but to prepare it.
+
+
+
+/// <summary>
+/// Provides the read-only dictionary specialized for lookup by enum value.
+/// </summary>
+/// <typeparam name="TKey"><see cref="Enum"/> type</typeparam>
+/// <typeparam name="TValue"></typeparam>
+/// <remarks>
+/// <para>How it works</para>
+/// <list type="bullet">
+/// <item><description>Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.</description></item>
+/// <item><description>The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : <c>(key * multiplier) >> shift</c></description></item>
+/// <item><description>The multiplier that makes all keys collision-free is searched on creation. If found, a lookup is just one multiplication and one comparison.</description></item>
+/// <item><description>If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.</description></item>
+/// <item><description>The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.</description></item>
+/// </list>
+/// <para>Why struct</para>
+/// <list type="bullet">
+/// <item><description>When it is held in a <c>static readonly</c> field, JIT can embed its fields into the caller as constants.</description></item>
+/// <item><description><c>default</c> is not usable because the table is null; an instance must be created by <see cref="Create"/>. It is not guarded so as not to slow down the lookup.</description></item>
+/// </list>
+/// <para>Why specialized for enum</para>
+/// <list type="bullet">
+/// <item><description>Comparing the key is enough to find the entry. A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.</description></item>
+/// </list>
+/// </remarks>
+internal readonly struct EnumKeyDictionary<TKey, TValue>
+    where TKey : struct, Enum
+{
+    #region Constants
+    private const ulong InitialMultiplier = 0x9E3779B97F4A7C15;  // 2^64 / golden ratio
+    private const int MaxTrials = 1024;
+    #endregion
+
+
+    #region Fields
+    private readonly Entry[] _entries;
+    private readonly int _size;
+    private readonly ulong _multiplier;
+    private readonly int _shift;
+    private readonly int _maxDistance;  // 0 means collision-free
+    #endregion
+
+
+    #region Constructors
+    private EnumKeyDictionary(Entry[] entries, int size, ulong multiplier, int shift, int maxDistance)
+    {
+        this._entries = entries;
+        this._size = size;
+        this._multiplier = multiplier;
+        this._shift = shift;
+        this._maxDistance = maxDistance;
+    }
+    #endregion
+
+
+    #region Factories
+    public static EnumKeyDictionary<TKey, TValue> Create<TSource>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+    {
+        //--- Materialize
+        var items = new List<Entry>();
+        foreach (var x in source)
+        {
+            var key = ToKey(keySelector(x));
+            var value = valueSelector(x);
+            items.Add(new(key, value));
+        }
+
+        //--- Table size is the power of 2, and the load factor is 0.5 or less
+        var bits = 1;
+        while ((1 << bits) < items.Count * 2)
+            bits++;
+
+        var capacity = 1 << bits;
+        var shift = 64 - bits;
+
+        //--- Search the multiplier that makes all keys collision-free
+        var multiplier = InitialMultiplier;
+        {
+            var candidate = InitialMultiplier;
+            var used = new int[capacity];
+            for (var trial = 1; trial <= MaxTrials; trial++)
+            {
+                if (isCollisionFree(items, candidate, shift, used, trial))
+                {
+                    multiplier = candidate;
+                    break;
+                }
+                candidate = next(candidate);
+            }
+        }
+
+        //--- Build the table
+        // note:
+        //  - Probing does not wrap around; in the worst case, all items line up from the last slot.
+        var occupied = new bool[capacity + items.Count];
+        var entries = new Entry[capacity + items.Count];
+        var maxDistance = 0;
+        foreach (var item in items)
+        {
+            var index = ToIndex(item.Key, multiplier, shift);
+            var distance = 0;
+            while (occupied[index])
+            {
+                //--- Collided, so it moves to the next slot (linear probing)
+                if (entries[index].Key == item.Key)
+                {
+                    var duplicated = item.Key;
+                    ThrowHelper.ThrowDuplicatedKeyExists(Unsafe.As<ulong, TKey>(ref duplicated));
+                }
+
+                index++;
+                distance++;
+            }
+            occupied[index] = true;
+            entries[index] = item;
+            maxDistance = Math.Max(maxDistance, distance);
+        }
+
+        //--- Trim the extra slots that are not used
+        Array.Resize(ref entries, capacity + maxDistance);
+
+        //--- An empty slot holds the key that is never looked up at the slot.
+        //--- Therefore, comparing the key is enough and checking whether the slot is empty is not needed.
+        var inverse = inverseOf(multiplier);
+        for (var i = 0; i < entries.Length; i++)
+        {
+            if (occupied[i])
+                continue;
+
+            // note:
+            //  - A lookup probes [home, home + maxDistance], so the slot is never reached from the next home.
+            //  - The slots at the end do not have the next home, but they are never reached from the first home because maxDistance is less than (capacity - 1).
+            //  - `key * multiplier == home << shift` is solved by the modular inverse of the multiplier.
+            var home = (ulong)((i + 1 < capacity) ? i + 1 : 0);
+            var key = (home << shift) * inverse;
+            entries[i] = new(key, default!);
+        }
+
+        return new(entries, items.Count, multiplier, shift, maxDistance);
+
+
+        #region Local Functions
+        static bool isCollisionFree(List<Entry> items, ulong multiplier, int shift, int[] used, int trial)
+        {
+            // note:
+            //  - `used` is shared across trials; the slot is in use if it holds the current trial number.
+
+            foreach (var item in items)
+            {
+                ref var slot = ref used[ToIndex(item.Key, multiplier, shift)];
+                if (slot == trial)
+                    return false;
+
+                slot = trial;
+            }
+            return true;
+        }
+
+
+        static ulong inverseOf(ulong x)
+        {
+            // note:
+            //  - Modular multiplicative inverse in 2^64 by Newton method. It exists because the multiplier is odd.
+            //  - Each iteration doubles the number of correct bits. (3 -> 6 -> 12 -> 24 -> 48 -> 96)
+
+            var inverse = x;
+            for (var i = 0; i < 5; i++)
+                inverse *= 2 - (x * inverse);
+            return inverse;
+        }
+
+
+        static ulong next(ulong x)
+        {
+            // note:
+            //  - xorshift64. It is deterministic, so the same keys always get the same table.
+            //  - Multiplier must be odd.
+
+            x ^= x << 13;
+            x ^= x >> 7;
+            x ^= x << 17;
+            return x | 1;
+        }
+        #endregion
+    }
+    #endregion
+
+
+    #region like IReadOnlyDictionary<TKey, TValue>
+    public int Count
+        => this._size;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsKey(TKey key)
+        => this.TryGetValue(key, out _);
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+    {
+        var bits = ToKey(key);
+        var index = ToIndex(bits, this._multiplier, this._shift);
+        ref var entry = ref this._entries.At(index);
+        if (entry.Key == bits)
+        {
+            value = entry.Value;
+            return true;
+        }
+
+        //--- Linear probing (only when not collision-free)
+        for (var i = this._maxDistance; i > 0; i--)
+        {
+            entry = ref Unsafe.Add(ref entry, 1);
+            if (entry.Key == bits)
+            {
+                value = entry.Value;
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
+    }
+    #endregion
+
+
+    #region Helpers
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ulong ToKey(TKey key)
+    {
+        // note:
+        //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
+        //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(byte))
+            return Unsafe.As<TKey, byte>(ref key);
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(ushort))
+            return Unsafe.As<TKey, ushort>(ref key);
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(uint))
+            return Unsafe.As<TKey, uint>(ref key);
+
+        return Unsafe.As<TKey, ulong>(ref key);
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int ToIndex(ulong key, ulong multiplier, int shift)
+        => (int)((key * multiplier) >> shift);
+    #endregion
+
+
+    #region Nested Types
+    private readonly struct Entry(ulong key, TValue value)
+    {
+        public readonly ulong Key = key;
+        public readonly TValue Value = value;
+    }
+    #endregion
+}
+
+
+
 internal sealed class CaseSensitiveStringDictionary<TValue>
 {
     #region Fields

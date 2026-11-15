@@ -480,12 +480,12 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly nuint _indexFor;  // nuint, so that the masked hash is used as the offset without sign extension
+    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
     #endregion
 
 
     #region Constructors
-    private CaseSensitiveStringDictionary(Entry[] buckets, int size, nuint indexFor)
+    private CaseSensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -503,7 +503,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var capacity = calculateCapacity(collectionSize, loadFactor);
         var buckets = new Entry[capacity];
-        var indexFor = (nuint)(uint)(buckets.Length - 1);
+        var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
         foreach (var x in source)
         {
@@ -539,10 +539,10 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, nuint indexFor)
+        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
         {
             var hash = StringHelper.CaseSensitive.GetHashCode(entry.Key);
-            var index = (nuint)hash & indexFor;
+            var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -586,7 +586,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseSensitive.GetHashCode(key);
-        var index = (nuint)hash & this._indexFor;
+        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
@@ -620,12 +620,12 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly nuint _indexFor;  // nuint, so that the masked hash is used as the offset without sign extension
+    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
     #endregion
 
 
     #region Constructors
-    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, nuint indexFor)
+    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -643,7 +643,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var capacity = calculateCapacity(collectionSize, loadFactor);
         var buckets = new Entry[capacity];
-        var indexFor = (nuint)(uint)(buckets.Length - 1);
+        var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
         foreach (var x in source)
         {
@@ -679,10 +679,10 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, nuint indexFor)
+        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
         {
             var hash = StringHelper.CaseInsensitive.GetHashCode(entry.Key);
-            var index = (nuint)hash & indexFor;
+            var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -726,7 +726,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseInsensitive.GetHashCode(key);
-        var index = (nuint)hash & this._indexFor;
+        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
         var entry = this._buckets.At(index);
         while (entry is not null)
         {

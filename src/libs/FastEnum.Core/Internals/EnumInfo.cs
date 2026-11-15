@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Frozen;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -23,7 +22,7 @@ internal static class EnumInfo<T>
     public static readonly Member<T>[] s_orderedMembers;
     public static readonly CaseSensitiveStringDictionary<Member<T>> s_memberByNameCaseSensitive;
     public static readonly CaseInsensitiveStringDictionary<Member<T>> s_memberByNameCaseInsensitive;
-    public static readonly FrozenDictionary<T, Member<T>> s_memberByValue;
+    public static readonly EnumKeyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
     public static readonly bool s_isContinuous;
@@ -50,7 +49,7 @@ internal static class EnumInfo<T>
             = s_members
             .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
             .ToCaseInsensitiveStringDictionary(static x => x.Name);
-        s_memberByValue = s_orderedMembers.ToFrozenDictionary(static x => x.Value);
+        s_memberByValue = s_orderedMembers.ToEnumKeyDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
         s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);

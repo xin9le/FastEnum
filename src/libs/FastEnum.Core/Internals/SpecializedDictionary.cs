@@ -256,10 +256,10 @@ internal static class EnumKeyDictionary
             //  - The total distance is the tiebreaker; it is the cost of looking up the defined keys.
             {
                 var pool = ArrayPool<int>.Shared;
-                var ownersBuffer = pool.Rent(capacity + keys.Length);
+                var buffer = pool.Rent(capacity + keys.Length);
                 try
                 {
-                    var owners = ownersBuffer.AsSpan(0, capacity + keys.Length);  // 0 means empty, otherwise (index of the key + 1)
+                    var owners = buffer.AsSpan(0, capacity + keys.Length);  // 0 means empty, otherwise (index of the key + 1)
                     {
                         const int maxCandidates = 64;
                         var candidate = multiplier;
@@ -303,7 +303,7 @@ internal static class EnumKeyDictionary
                 }
                 finally
                 {
-                    pool.Return(ownersBuffer);
+                    pool.Return(buffer);
                 }
             }
         }

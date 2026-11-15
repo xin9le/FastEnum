@@ -120,6 +120,11 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         }
 
         //--- Linear probing (only when not collision-free)
+        // note:
+        //  - The loop alone leaves its entry check in the code even when the maximum distance is the constant 0.
+        //  - This explicit check lets JIT remove the whole block, so looking up an undefined key takes no extra branch.
+        if (0 < this._maxDistance)
+        {
         for (var i = this._maxDistance; 0 < i; i--)
         {
             entry = ref Unsafe.Add(ref entry, 1);
@@ -128,6 +133,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
                 value = entry.Value;
                 return true;
             }
+        }
         }
 
         value = default;

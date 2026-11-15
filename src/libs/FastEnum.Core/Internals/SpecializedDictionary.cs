@@ -25,6 +25,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     // How it works:
     //  - Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.
     //  - The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : (key * multiplier) >> shift
+    //  - The collision-free multiplier is searched up to 1,024 trials or 65,536 tested keys, whichever comes first.
     //  - If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.
     //  - On the fallback, the multiplier that makes the maximum displacement the smallest is chosen from some candidates.
     //  - The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.
@@ -208,8 +209,12 @@ internal static class EnumKeyDictionary
             {
                 // note:
                 //  - The rented buffer is dirty, so it must be cleared; otherwise a slot could look in use.
+                //  - The search also ends when the number of tested keys reaches the limit (= 1,024 trials * 64 keys).
+                //  - A large enum either finds the multiplier early or never finds it, so the rest of trials is just a waste of time.
 
                 const int maxTrials = 1024;
+                const int maxSteps = 65536;
+                var steps = 0;
                 var candidate = multiplier;
                 var found = false;
                 var pool = ArrayPool<int>.Shared;
@@ -218,9 +223,9 @@ internal static class EnumKeyDictionary
                 {
                     var used = buffer.AsSpan(0, capacity);
                     used.Clear();
-                    for (var trial = 1; trial <= maxTrials; trial++)
+                    for (var trial = 1; trial <= maxTrials && steps < maxSteps; trial++)
                     {
-                        if (isCollisionFree(keys, candidate, shift, used, trial))
+                        if (isCollisionFree(keys, candidate, shift, used, trial, ref steps))
                         {
                             found = true;
                             break;
@@ -310,15 +315,17 @@ internal static class EnumKeyDictionary
 
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        static bool isCollisionFree(ReadOnlySpan<ulong> keys, ulong multiplier, int shift, Span<int> used, int trial)
+        static bool isCollisionFree(ReadOnlySpan<ulong> keys, ulong multiplier, int shift, Span<int> used, int trial, ref int steps)
         {
             // note:
             //  - `used` is shared across trials; the slot is in use if it holds the current trial number.
+            //  - `steps` is the number of tested keys accumulated across trials.
             //  - This is called up to 1,024 times at the first use of an enum type, when the code is typically not optimized yet.
             //  - Therefore, it is compiled with full optimization from the beginning.
 
             foreach (var x in keys)
             {
+                steps++;
                 var index = ToIndex(x, multiplier, shift);
                 ref var slot = ref used[index];
                 if (slot == trial)

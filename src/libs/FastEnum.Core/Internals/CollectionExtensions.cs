@@ -21,6 +21,12 @@ internal static class CollectionExtensions
             ref var pointer = ref MemoryMarshal.GetReference(@this);
             return ref Unsafe.Add(ref pointer, index);
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public EnumKeyDictionary<TKey, T> ToEnumKeyDictionary<TKey>(Func<T, TKey> keySelector)
+            where TKey : struct, Enum
+            => EnumKeyDictionary<TKey, T>.Create(@this, keySelector);
     }
 
 
@@ -43,18 +49,6 @@ internal static class CollectionExtensions
 
     extension<TSource>(IEnumerable<TSource> @this)
     {
-        #region EnumKeyDictionary
-        public EnumKeyDictionary<TKey, TSource> ToEnumKeyDictionary<TKey>(Func<TSource, TKey> keySelector)
-            where TKey : struct, Enum
-            => ToEnumKeyDictionary(@this, keySelector, static x => x);
-
-
-        public EnumKeyDictionary<TKey, TValue> ToEnumKeyDictionary<TKey, TValue>(Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
-            where TKey : struct, Enum
-            => EnumKeyDictionary<TKey, TValue>.Create(@this, keySelector, valueSelector);
-        #endregion
-
-
         #region CaseSensitiveStringDictionary
         public CaseSensitiveStringDictionary<TSource> ToCaseSensitiveStringDictionary(Func<TSource, string> keySelector)
             => ToCaseSensitiveStringDictionary(@this, keySelector, static x => x);

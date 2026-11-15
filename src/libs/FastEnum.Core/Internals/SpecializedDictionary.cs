@@ -81,7 +81,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             for (var i = 0; i < source.Length; i++)
             {
                 var key = keySelector(source[i]);
-                keys[i] = ToUlong(key);
+                keys[i] = EnumKeyDictionary.ToUlong(key);
             }
             entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
         }
@@ -107,7 +107,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = ToUlong(key);
+        var bits = EnumKeyDictionary.ToUlong(key);
         var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref this._entries.At(index);
         if (entry.Key == bits)
@@ -129,28 +129,6 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
         value = default;
         return false;
-    }
-    #endregion
-
-
-    #region Helpers
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ulong ToUlong(TKey key)
-    {
-        // note:
-        //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
-        //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(byte))
-            return Unsafe.As<TKey, byte>(ref key);
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(ushort))
-            return Unsafe.As<TKey, ushort>(ref key);
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(uint))
-            return Unsafe.As<TKey, uint>(ref key);
-
-        return Unsafe.As<TKey, ulong>(ref key);
     }
     #endregion
 }
@@ -427,6 +405,26 @@ internal static class EnumKeyDictionary
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToIndex(ulong key, ulong multiplier, int shift)
         => (int)((key * multiplier) >> shift);
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ulong ToUlong<TKey>(TKey key)
+    {
+        // note:
+        //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
+        //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(byte))
+            return Unsafe.As<TKey, byte>(ref key);
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(ushort))
+            return Unsafe.As<TKey, ushort>(ref key);
+
+        if (Unsafe.SizeOf<TKey>() is sizeof(uint))
+            return Unsafe.As<TKey, uint>(ref key);
+
+        return Unsafe.As<TKey, ulong>(ref key);
+    }
     #endregion
 
 

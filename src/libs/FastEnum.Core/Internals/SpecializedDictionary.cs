@@ -75,19 +75,20 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         ulong multiplier;
         int shift;
         int maxDistance;
-        var keys = EnumKeyDictionary.RentKeysBuffer(source.Length);
+        var buffer = EnumKeyDictionary.RentKeysBuffer(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
             {
                 var key = keySelector(source[i]);
-                keys[i] = EnumKeyDictionary.ToUlong(key);
+                buffer[i] = EnumKeyDictionary.ToUlong(key);
             }
+            var keys = buffer.AsSpan(0, source.Length);
             entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
         }
         finally
         {
-            EnumKeyDictionary.ReturnKeysBuffer(keys);
+            EnumKeyDictionary.ReturnKeysBuffer(buffer);
         }
         return new(entries, source.Length, multiplier, shift, maxDistance);
     }
@@ -141,13 +142,12 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 internal static class EnumKeyDictionary
 {
     #region Build
-    public static Entry<TValue>[] BuildTable<TValue>(ulong[] rentedKeys, ReadOnlySpan<TValue> values, out ulong multiplier, out int shift, out int maxDistance)
+    public static Entry<TValue>[] BuildTable<TValue>(ReadOnlySpan<ulong> keys, ReadOnlySpan<TValue> values, out ulong multiplier, out int shift, out int maxDistance)
     {
         // note:
         //  - This is shared by all enum types as long as TValue is a reference type.
         //  - The rented array can be longer than requested, so it is sliced by the number of values.
 
-        var keys = rentedKeys.AsSpan(0, values.Length);
         var pool = ArrayPool<int>.Shared;
         var buffer = pool.Rent(keys.Length);
         try

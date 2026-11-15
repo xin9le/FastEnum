@@ -12,7 +12,7 @@ internal static class CollectionExtensions
     extension<T>(ReadOnlySpan<T> @this)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref T At(int index)
+        public ref T At(nuint index)
         {
             // note:
             //  - `Span[i]` includes a range check, but using `Unsafe` eliminates it.

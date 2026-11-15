@@ -32,7 +32,7 @@ internal static class BenchmarkConfig
                 exportGithubMarkdown: true,
                 exportCombinedDisassemblyReport: true
             )))
-            .AddJob(job.WithRuntime(CoreRuntime.Core10_0));
+            .AddJob(job.WithRuntime(CoreRuntime.Core11_0));
     }
     #endregion
 }

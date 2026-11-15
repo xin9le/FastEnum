@@ -81,7 +81,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             for (var i = 0; i < source.Length; i++)
             {
                 var key = keySelector(source[i]);
-                keys[i] = ToUlongKey(key);
+                keys[i] = ToUlong(key);
             }
             entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
         }
@@ -107,7 +107,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = ToUlongKey(key);
+        var bits = ToUlong(key);
         var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref this._entries.At(index);
         if (entry.Key == bits)
@@ -135,7 +135,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
     #region Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ulong ToUlongKey(TKey key)
+    private static ulong ToUlong(TKey key)
     {
         // note:
         //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.

@@ -125,15 +125,15 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - This explicit check lets JIT remove the whole block, so looking up an undefined key takes no extra branch.
         if (0 < this._maxDistance)
         {
-        for (var i = this._maxDistance; 0 < i; i--)
-        {
-            entry = ref Unsafe.Add(ref entry, 1);
-            if (entry.Key == bits)
+            for (var i = this._maxDistance; 0 < i; i--)
             {
-                value = entry.Value;
-                return true;
+                entry = ref Unsafe.Add(ref entry, 1);
+                if (entry.Key == bits)
+                {
+                    value = entry.Value;
+                    return true;
+                }
             }
-        }
         }
 
         value = default;
@@ -270,7 +270,7 @@ internal static class EnumKeyDictionary
                     //  - Duplicated keys always collide, so they never reach here.
 
                     for (var i = 0; i < keys.Length; i++)
-                        slots[i] = ToIndex(keys[i], candidate, shift);
+                        slots[i] = (int)ToIndex(keys[i], candidate, shift);
 
                     multiplier = candidate;
                     maxDistance = 0;
@@ -313,7 +313,7 @@ internal static class EnumKeyDictionary
                     for (var i = 0; i < keys.Length; i++)
                     {
                         var key = keys[i];
-                        var index = ToIndex(key, multiplier, shift);
+                        var index = (int)ToIndex(key, multiplier, shift);
                         var distance = 0;
                         while (owners[index] is not 0)
                         {
@@ -350,7 +350,7 @@ internal static class EnumKeyDictionary
             foreach (var x in keys)
             {
                 steps++;
-                var index = ToIndex(x, multiplier, shift);
+                var index = (int)ToIndex(x, multiplier, shift);
                 ref var slot = ref used[index];
                 if (slot == trial)
                     return false;
@@ -374,7 +374,7 @@ internal static class EnumKeyDictionary
             var total = 0;
             foreach (var x in keys)
             {
-                var index = ToIndex(x, multiplier, shift);
+                var index = (int)ToIndex(x, multiplier, shift);
                 var distance = 0;
                 while (owners[index] is not 0)
                 {
@@ -434,8 +434,13 @@ internal static class EnumKeyDictionary
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ToIndex(ulong key, ulong multiplier, int shift)
-        => (int)((key * multiplier) >> shift);
+    public static nuint ToIndex(ulong key, ulong multiplier, int shift)
+    {
+        // note:
+        //  - It is not converted into int; otherwise the lookup needs an extra instruction to extend it when it is used as the offset.
+
+        return (nuint)((key * multiplier) >> shift);
+    }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -475,12 +480,12 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly int _indexFor;
+    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
     #endregion
 
 
     #region Constructors
-    private CaseSensitiveStringDictionary(Entry[] buckets, int size, int indexFor)
+    private CaseSensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -498,7 +503,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var capacity = calculateCapacity(collectionSize, loadFactor);
         var buckets = new Entry[capacity];
-        var indexFor = buckets.Length - 1;
+        var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
         foreach (var x in source)
         {
@@ -534,10 +539,10 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
+        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
         {
             var hash = StringHelper.CaseSensitive.GetHashCode(entry.Key);
-            var index = hash & indexFor;
+            var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -581,7 +586,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseSensitive.GetHashCode(key);
-        var index = hash & this._indexFor;
+        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
@@ -615,12 +620,12 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly int _indexFor;
+    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
     #endregion
 
 
     #region Constructors
-    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, int indexFor)
+    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
     {
         this._buckets = buckets;
         this._size = size;
@@ -638,7 +643,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         var collectionSize = source.TryGetNonEnumeratedCount(out var count) ? count : initialSize;
         var capacity = calculateCapacity(collectionSize, loadFactor);
         var buckets = new Entry[capacity];
-        var indexFor = buckets.Length - 1;
+        var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
         foreach (var x in source)
         {
@@ -674,10 +679,10 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, int indexFor)
+        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
         {
             var hash = StringHelper.CaseInsensitive.GetHashCode(entry.Key);
-            var index = hash & indexFor;
+            var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -721,7 +726,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseInsensitive.GetHashCode(key);
-        var index = hash & this._indexFor;
+        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
         var entry = this._buckets.At(index);
         while (entry is not null)
         {

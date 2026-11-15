@@ -216,13 +216,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((byte)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (nuint)unchecked((byte)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -320,13 +327,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((byte)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (nuint)unchecked((byte)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -424,13 +438,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((ushort)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (nuint)unchecked((ushort)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -528,13 +549,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((ushort)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (nuint)unchecked((ushort)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -632,13 +660,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((uint)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (uint)unchecked((uint)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -736,13 +771,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((uint)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (uint)unchecked((uint)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -840,13 +882,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((ulong)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (ulong)unchecked((ulong)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else
@@ -944,13 +993,20 @@ internal static class UnderlyingOperation<T>
         {
             if (EnumInfo<T>.s_isContinuous)
             {
+                // note:
+                //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
+                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
+                //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
+                //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
+                //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+
                 var val = toNumber(value);
                 var min = toNumber(EnumInfo<T>.s_minValue);
-                var index = unchecked((ulong)(val - min));  // must not be truncated to int, otherwise 64-bit values wrap around
+                var index = (ulong)unchecked((ulong)(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < (uint)members.Length)
                 {
-                    result = members.At((int)index);
+                    result = members.At((nuint)index);
                     return true;
                 }
                 else

@@ -65,8 +65,8 @@ internal static class StringHelper
                 return 0;
 
             var first = value.At(0);
-            var middle = value.At(length >> 1);
-            var last = value.At(length - 1);
+            var middle = value.At((nuint)(length >> 1));
+            var last = value.At((nuint)(length - 1));
             return (length << 16)
                 ^ (first << 8)
                 ^ (middle << 4)
@@ -115,8 +115,8 @@ internal static class StringHelper
             //    For ASCII, `(ToUpperInvariant(c) & mask) == (c & mask)`, so both paths always agree.
 
             var first = value.At(0);
-            var middle = value.At(length >> 1);
-            var last = value.At(length - 1);
+            var middle = value.At((nuint)(length >> 1));
+            var last = value.At((nuint)(length - 1));
             if (!isAsciiOnly(first, middle, last))
             {
                 first = char.ToUpperInvariant(first);

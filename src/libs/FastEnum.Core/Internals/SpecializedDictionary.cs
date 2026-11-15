@@ -75,7 +75,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         ulong multiplier;
         int shift;
         int maxDistance;
-        var keys = EnumKeyDictionary.RentKeys(source.Length);
+        var keys = EnumKeyDictionary.RentKeysBuffer(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
@@ -87,7 +87,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         }
         finally
         {
-            EnumKeyDictionary.ReturnKeys(keys);
+            EnumKeyDictionary.ReturnKeysBuffer(keys);
         }
         return new(entries, source.Length, multiplier, shift, maxDistance);
     }
@@ -393,12 +393,12 @@ internal static class EnumKeyDictionary
 
     #region Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong[] RentKeys(int count)
+    public static ulong[] RentKeysBuffer(int count)
         => ArrayPool<ulong>.Shared.Rent(count);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ReturnKeys(ulong[] keys)
+    public static void ReturnKeysBuffer(ulong[] keys)
         => ArrayPool<ulong>.Shared.Return(keys);
 
 

@@ -25,7 +25,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     // How it works:
     //  - Open addressing hash table. Key and value are placed side by side in a single array, so a lookup touches only one cache line.
     //  - The key is the value of enum itself (64 bits), and the index is computed by multiply-shift hashing : (key * multiplier) >> shift
-    //  - The collision-free multiplier is searched up to 1,024 trials or 65,536 tested keys, whichever comes first.
+    //  - If the keys are distinct in their low bits, the low bits are used as the index as they are (= direct index); this is the fastest.
+    //  - Otherwise, the collision-free multiplier is searched up to 1,024 trials or 65,536 tested keys, whichever comes first.
     //  - If not found (= too many keys), it falls back to linear probing, whose distance is limited to the maximum displacement measured on creation.
     //  - On the fallback, the multiplier that makes the maximum displacement the smallest is chosen from some candidates.
     //  - The table has extra slots at the end as many as the maximum displacement, so probing never wraps around.
@@ -165,12 +166,14 @@ internal static class EnumKeyDictionary
             //  - A lookup probes [home, home + maxDistance], so the slot is never reached from the next home.
             //  - The slots at the end do not have the next home, but they are never reached from the first home because maxDistance is less than (capacity - 1).
             //  - `key * multiplier == home << shift` is solved by the modular inverse of the multiplier.
+            //  - On the direct index, the multiplier is even and has no inverse; the home itself is the key because the index is the low bits of the key.
+            var isDirect = multiplier == (1UL << shift);
             var inverse = inverseOf(multiplier);
             for (var i = 0; i < entries.Length; i++)
             {
                 var next = i + 1;
                 var home = (ulong)((next < capacity) ? next : 0);
-                var key = (home << shift) * inverse;
+                var key = isDirect ? home : (home << shift) * inverse;
                 entries[i] = new(key, default!);
             }
 
@@ -223,7 +226,22 @@ internal static class EnumKeyDictionary
                 {
                     var used = buffer.AsSpan(0, capacity);
                     used.Clear();
-                    for (var trial = 1; trial <= maxTrials && steps < maxSteps; trial++)
+
+                    //--- Direct index
+                    // note:
+                    //  - (key << shift) >> shift == key & (capacity - 1), so the multiplier of 2^shift makes the low bits of the key the index.
+                    //  - JIT replaces the multiplication by this constant with a shift, so the lookup gets faster without any special code path.
+                    //  - It is tested with the trial number that the search never uses, and is not counted as the search.
+                    var direct = 1UL << shift;
+                    if (isCollisionFree(keys, direct, shift, used, maxTrials + 1, ref steps))
+                    {
+                        candidate = direct;
+                        found = true;
+                    }
+                    steps = 0;
+
+                    //--- Search
+                    for (var trial = 1; !found && trial <= maxTrials && steps < maxSteps; trial++)
                     {
                         if (isCollisionFree(keys, candidate, shift, used, trial, ref steps))
                         {
@@ -381,7 +399,7 @@ internal static class EnumKeyDictionary
         static ulong inverseOf(ulong x)
         {
             // note:
-            //  - Modular multiplicative inverse in 2^64 by Newton method. It exists because the multiplier is odd.
+            //  - Modular multiplicative inverse in 2^64 by Newton method. It exists only when the multiplier is odd.
             //  - Each iteration doubles the number of correct bits. (3 -> 6 -> 12 -> 24 -> 48 -> 96)
 
             var inverse = x;

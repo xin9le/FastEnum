@@ -47,7 +47,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     // Why the table is not a field of this struct
     //  - JIT cannot embed the reference to an array because GC may move it, so the lookup loads it from memory every time.
     //  - As a field of this struct, the lookup loads the box of this struct first, then the table, and checks null.
-    //  - As a <c>static readonly</c> field of the class dedicated to the pair of TKey and TValue, JIT knows it is not null and loads it directly.
+    //  - As a <c>static readonly</c> field of the nested class dedicated to the pair of TKey and TValue, JIT knows it is not null and loads it directly.
     //  - Therefore, only one instance can be created for each pair of TKey and TValue; EnumInfo<T> is the only caller and creates it only once.
 
 
@@ -96,8 +96,31 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         {
             EnumKeyDictionary.ReturnKeysBuffer(buffer);
         }
-        EnumKeyDictionary.Publish<TKey, TValue>(entries);
+        Publish(entries);
         return new(source.Length, multiplier, shift, maxDistance);
+    }
+
+
+    private static void Publish(EnumKeyDictionary.Entry<TValue>[] entries)
+    {
+        // note:
+        //  - Hands the table to the static constructor of Table through the thread static field.
+        //  - Table has the explicit static constructor, so it runs on this thread exactly when the field is read first.
+        //  - If the table has been already published, the static constructor never runs again and the old one stays; it is an error.
+
+        EnumKeyDictionary.t_pending = entries;
+        EnumKeyDictionary.Entry<TValue>[] published;
+        try
+        {
+            published = Table.s_entries;
+        }
+        finally
+        {
+            EnumKeyDictionary.t_pending = null;
+        }
+
+        if (!ReferenceEquals(published, entries))
+            ThrowHelper.ThrowDictionaryAlreadyCreated<TKey>();
     }
     #endregion
 
@@ -117,7 +140,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     {
         var bits = EnumKeyDictionary.ToUlong(key);
         var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
-        ref var entry = ref EnumKeyDictionary.Table<TKey, TValue>.s_entries.At(index);
+        ref var entry = ref Table.s_entries.At(index);
         if (entry.Key == bits)
         {
             value = entry.Value;
@@ -145,6 +168,22 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         return false;
     }
     #endregion
+
+
+    #region Nested Types
+    private static class Table
+    {
+        // note:
+        //  - A nested class of the generic struct is generic over TKey and TValue as well, so the table is dedicated to each enum type.
+        //  - It must not be a static field of this struct; calling '.Create()' would run its static constructor before the table is handed.
+        //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than Publish() hands the table.
+
+        public static readonly EnumKeyDictionary.Entry<TValue>[] s_entries;
+
+        static Table()
+            => s_entries = (EnumKeyDictionary.Entry<TValue>[])EnumKeyDictionary.t_pending!;
+    }
+    #endregion
 }
 
 
@@ -155,33 +194,10 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 internal static class EnumKeyDictionary
 {
     #region Fields
+    // note:
+    //  - It is non-generic, so that a thread static field is not created for every enum type.
     [ThreadStatic]
-    private static object? t_pending;  // the table being handed to Table<TKey, TValue>
-    #endregion
-
-
-    #region Publish
-    public static void Publish<TKey, TValue>(Entry<TValue>[] entries)
-    {
-        // note:
-        //  - Hands the table to the static constructor of Table<TKey, TValue> through the thread static field.
-        //  - Table<TKey, TValue> has the explicit static constructor, so it runs on this thread exactly when the field is read first.
-        //  - If the table has been already published, the static constructor never runs again and the old one stays; it is an error.
-
-        t_pending = entries;
-        Entry<TValue>[] published;
-        try
-        {
-            published = Table<TKey, TValue>.s_entries;
-        }
-        finally
-        {
-            t_pending = null;
-        }
-
-        if (!ReferenceEquals(published, entries))
-            ThrowHelper.ThrowDictionaryAlreadyCreated<TKey>();
-    }
+    internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Table
     #endregion
 
 
@@ -501,19 +517,6 @@ internal static class EnumKeyDictionary
 
 
     #region Nested Types
-    public static class Table<TKey, TValue>
-    {
-        // note:
-        //  - TKey is not used in the body, but it dedicates this class (= the table) to each enum type.
-        //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than Publish() hands the table.
-
-        public static readonly Entry<TValue>[] s_entries;
-
-        static Table()
-            => s_entries = (Entry<TValue>[])t_pending!;
-    }
-
-
     public readonly struct Entry<TValue>(ulong key, TValue value)
     {
         public readonly ulong Key = key;

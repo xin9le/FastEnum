@@ -47,7 +47,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     // Why the table is not a field of this struct
     //  - JIT cannot embed the reference to an array because GC may move it, so the lookup loads it from memory every time.
     //  - As a field of this struct, the lookup loads the box of this struct first, then the table, and checks null.
-    //  - As a <c>static readonly</c> field of the nested class dedicated to the pair of TKey and TValue, JIT knows it is not null and loads it directly.
+    //  - As a <c>static readonly</c> field of the nested Cache class dedicated to the pair of TKey and TValue, JIT knows it is not null and loads it directly.
     //  - Therefore, only one instance can be created for each pair of TKey and TValue; EnumInfo<T> is the only caller and creates it only once.
 
 
@@ -91,7 +91,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             }
             var keys = buffer.AsSpan(0, source.Length);
             entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
-            publish(entries);
+            staticCache(entries);
         }
         finally
         {
@@ -101,25 +101,25 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
         #region Local Functions
-        static void publish(EnumKeyDictionary.Entry<TValue>[] entries)
+        static void staticCache(EnumKeyDictionary.Entry<TValue>[] entries)
         {
             // note:
-            //  - Hands the table to the static constructor of Table through the thread static field.
-            //  - Table has the explicit static constructor, so it runs on this thread exactly when the field is read first.
-            //  - If the table has been already published, the static constructor never runs again and the old one stays; it is an error.
+            //  - Hands the table to the static constructor of Cache through the thread static field.
+            //  - Cache has the explicit static constructor, so it runs on this thread exactly when the field is read first.
+            //  - If the table has been already cached, the static constructor never runs again and the old one stays; it is an error.
 
             EnumKeyDictionary.t_pending = entries;
-            EnumKeyDictionary.Entry<TValue>[] published;
+            EnumKeyDictionary.Entry<TValue>[] cached;
             try
             {
-                published = Table.s_entries;
+                cached = Cache.s_entries;
             }
             finally
             {
                 EnumKeyDictionary.t_pending = null;
             }
 
-            if (!ReferenceEquals(published, entries))
+            if (!ReferenceEquals(cached, entries))
                 ThrowHelper.ThrowDictionaryAlreadyCreated<TKey>();
         }
         #endregion
@@ -142,7 +142,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     {
         var bits = EnumKeyDictionary.ToUlong(key);
         var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
-        ref var entry = ref Table.s_entries.At(index);
+        ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)
         {
             value = entry.Value;
@@ -173,12 +173,12 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
     #region Nested Types
-    private static class Table
+    private static class Cache
     {
         // note:
         //  - A nested class of the generic struct is generic over TKey and TValue as well, so the table is dedicated to each enum type.
         //  - It must not be a static field of this struct; calling '.Create()' would run its static constructor before the table is handed.
-        //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than '.Create()' hands the table.
+        //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than 'staticCache()' hands the table.
 
         #region Fields
         public static readonly EnumKeyDictionary.Entry<TValue>[] s_entries;
@@ -186,7 +186,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
         #region Constructors
-        static Table()
+        static Cache()
             => s_entries = (EnumKeyDictionary.Entry<TValue>[])EnumKeyDictionary.t_pending!;
         #endregion
     }
@@ -204,7 +204,7 @@ internal static class EnumKeyDictionary
     // note:
     //  - It is non-generic, so that a thread static field is not created for every enum type.
     [ThreadStatic]
-    internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Table
+    internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
     #endregion
 
 

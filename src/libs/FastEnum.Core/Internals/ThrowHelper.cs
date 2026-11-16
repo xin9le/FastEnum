@@ -89,4 +89,12 @@ internal static class ThrowHelper
         var message = $"Key '{key}' was already exists.";
         throw new ArgumentException(message);
     }
+
+
+    [DoesNotReturn]
+    public static void ThrowDictionaryAlreadyCreated<TKey>()
+    {
+        var message = $"The dictionary for '{typeof(TKey)}' was already created.";
+        throw new InvalidOperationException(message);
+    }
 }

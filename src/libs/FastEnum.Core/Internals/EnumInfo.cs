@@ -38,7 +38,7 @@ internal static class EnumInfo<T>
         s_typeCode = Type.GetTypeCode(s_type);
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
-        s_members = s_names.Select(static x => new Member<T>(x)).ToArray();
+        s_members = toMembers(s_names);
         s_orderedMembers
             = s_members
             .OrderBy(static x => x.Value)
@@ -63,6 +63,21 @@ internal static class EnumInfo<T>
         }
 
         #region Local Functions
+        static Member<T>[] toMembers(ReadOnlySpan<string> names)
+        {
+            // note:
+            //  - A plain loop avoids JIT of the generic LINQ .Select() / .ToArray() for each T.
+
+            var members = new Member<T>[names.Length];
+            for (var i = 0; i < names.Length; i++)
+            {
+                var name = names[i];
+                members[i] = new(name);
+            }
+            return members;
+        }
+
+
         static T getValueOrDefault(ReadOnlySpan<Member<T>> members, Index index)
         {
             // note:

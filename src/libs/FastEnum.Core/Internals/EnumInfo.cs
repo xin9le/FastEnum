@@ -49,13 +49,18 @@ internal static class EnumInfo<T>
             = s_members
             .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
             .ToCaseInsensitiveStringDictionary(static x => x.Name);
-        s_memberByValue = s_orderedMembers.ToEnumKeyDictionary(static x => x.Value);
         s_minValue = s_values.DefaultIfEmpty().Min();
         s_maxValue = s_values.DefaultIfEmpty().Max();
-        s_isContinuous = isContinuous(s_memberByValue.Count, s_maxValue, s_minValue);
+        s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);
         s_isEmpty = s_values.Length is 0;
         s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
-
+        if (!s_isContinuous)
+        {
+            // note:
+            //  - It is used only when the values are not continuous; otherwise the lookup indexes s_orderedMembers directly.
+            //  - It stays default when continuous. JIT removes the branch to it, because s_isContinuous is static readonly.
+            s_memberByValue = s_orderedMembers.ToEnumKeyDictionary(static x => x.Value);
+        }
 
         #region Local Functions
         static bool isContinuous(int uniqueCount, T max, T min)

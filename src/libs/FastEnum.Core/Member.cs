@@ -62,18 +62,15 @@ public sealed class Member<T>
     /// </summary>
     /// <param name="name"></param>
     /// <param name="value"></param>
-    /// <param name="fieldInfo"></param>
-    internal Member(string name, T value, FieldInfo fieldInfo)
+    /// <param name="field"></param>
+    internal Member(string name, T value, FieldInfo field)
     {
         this.Value = value;
         this.Name = name;
         this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
-        this.FieldInfo = fieldInfo;
+        this.FieldInfo = field;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
-        this.Labels
-            = this.FieldInfo
-            .GetCustomAttributes<LabelAttribute>()
-            .ToFrozenDictionary(static x => x.Index, static x => x.Value);
+        this.Labels = MemberHelper.CreateLabels(this.FieldInfo);
     }
 
 
@@ -87,5 +84,24 @@ public sealed class Member<T>
         name = this.Name;
         value = this.Value;
     }
+    #endregion
+}
+
+
+
+/// <summary>
+/// Provides the helpers for <see cref="Member{T}"/> which do not depend on the enum type.
+/// </summary>
+internal static class MemberHelper
+{
+    // note:
+    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
+    //  - Lambdas written in Member<T> belong to its generic closure class, so they are compiled for each enum type.
+
+    #region Methods
+    public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
+        => field
+        .GetCustomAttributes<LabelAttribute>()
+        .ToFrozenDictionary(static x => x.Index, static x => x.Value);
     #endregion
 }

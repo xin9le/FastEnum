@@ -49,8 +49,8 @@ internal static class EnumInfo<T>
             = s_members
             .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
             .ToCaseInsensitiveStringDictionary(static x => x.Name);
-        s_minValue = s_values.DefaultIfEmpty().Min();
-        s_maxValue = s_values.DefaultIfEmpty().Max();
+        s_minValue = getValueOrDefault(s_orderedMembers, 0);
+        s_maxValue = getValueOrDefault(s_orderedMembers, ^1);
         s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);
         s_isEmpty = s_values.Length is 0;
         s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
@@ -63,6 +63,21 @@ internal static class EnumInfo<T>
         }
 
         #region Local Functions
+        static T getValueOrDefault(ReadOnlySpan<Member<T>> members, Index index)
+        {
+            // note:
+            //  - s_orderedMembers is already sorted by Comparer<T>.Default, which is the same order that LINQ Min / Max use.
+            //  - So its first / last are the min / max, and it avoids JIT of the generic LINQ methods for each T.
+            //  - It is default when empty, same as DefaultIfEmpty().
+
+            if (members.Length is 0)
+                return default;
+
+            var member = members[index];
+            return member.Value;
+        }
+
+
         static bool isContinuous(int uniqueCount, T max, T min)
         {
             if (uniqueCount <= 0)

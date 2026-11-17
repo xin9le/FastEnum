@@ -33,7 +33,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
     // Why struct
     //  - When it is held in a <c>static readonly</c> field, JIT can embed its fields into the caller as constants.
-    //  - 'default' is not usable because the table is null; an instance must be created by '.Create()'.
+    //  - 'default' is not usable because it has neither the table nor the parameters to look it up; an instance must be created by '.Create()'.
     //  - It is not guarded so as not to slow down the lookup.
 
     // Why specialized for enum
@@ -44,9 +44,14 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     //  - TKey is a value type, so everything in this struct is JIT-compiled for every enum type.
     //  - Building the table does not depend on TKey once the keys are converted into ulong, so it is compiled only once.
 
+    // Why the table is not a field of this struct
+    //  - JIT cannot embed the reference to an array because GC may move it, so the lookup loads it from memory every time.
+    //  - As a field of this struct, the lookup loads the box of this struct first, then the table, and checks null.
+    //  - As a <c>static readonly</c> field of the nested Cache class dedicated to the pair of TKey and TValue, JIT knows it is not null and loads it directly.
+    //  - Therefore, only one instance can be created for each pair of TKey and TValue; EnumInfo<T> is the only caller and creates it only once.
+
 
     #region Fields
-    private readonly EnumKeyDictionary.Entry<TValue>[] _entries;
     private readonly int _size;
     private readonly ulong _multiplier;
     private readonly int _shift;
@@ -55,9 +60,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
     #region Constructors
-    private EnumKeyDictionary(EnumKeyDictionary.Entry<TValue>[] entries, int size, ulong multiplier, int shift, int maxDistance)
+    private EnumKeyDictionary(int size, ulong multiplier, int shift, int maxDistance)
     {
-        this._entries = entries;
         this._size = size;
         this._multiplier = multiplier;
         this._shift = shift;
@@ -87,12 +91,38 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             }
             var keys = buffer.AsSpan(0, source.Length);
             entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
+            staticCache(entries);
         }
         finally
         {
             EnumKeyDictionary.ReturnKeysBuffer(buffer);
         }
-        return new(entries, source.Length, multiplier, shift, maxDistance);
+        return new(source.Length, multiplier, shift, maxDistance);
+
+
+        #region Local Functions
+        static void staticCache(EnumKeyDictionary.Entry<TValue>[] entries)
+        {
+            // note:
+            //  - Hands the table to the static constructor of Cache through the thread static field.
+            //  - Cache has the explicit static constructor, so it runs on this thread exactly when the field is read first.
+            //  - If the table has been already cached, the static constructor never runs again and the old one stays; it is an error.
+
+            EnumKeyDictionary.t_pending = entries;
+            EnumKeyDictionary.Entry<TValue>[] cached;
+            try
+            {
+                cached = Cache.s_entries;
+            }
+            finally
+            {
+                EnumKeyDictionary.t_pending = null;
+            }
+
+            if (!ReferenceEquals(cached, entries))
+                ThrowHelper.ThrowDictionaryAlreadyCreated<TKey>();
+        }
+        #endregion
     }
     #endregion
 
@@ -112,7 +142,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     {
         var bits = EnumKeyDictionary.ToUlong(key);
         var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
-        ref var entry = ref this._entries.At(index);
+        ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)
         {
             value = entry.Value;
@@ -140,6 +170,27 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         return false;
     }
     #endregion
+
+
+    #region Nested Types
+    private static class Cache
+    {
+        // note:
+        //  - A nested class of the generic struct is generic over TKey and TValue as well, so the table is dedicated to each enum type.
+        //  - It must not be a static field of this struct; calling '.Create()' would run its static constructor before the table is handed.
+        //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than 'staticCache()' hands the table.
+
+        #region Fields
+        public static readonly EnumKeyDictionary.Entry<TValue>[] s_entries;
+        #endregion
+
+
+        #region Constructors
+        static Cache()
+            => s_entries = (EnumKeyDictionary.Entry<TValue>[])EnumKeyDictionary.t_pending!;
+        #endregion
+    }
+    #endregion
 }
 
 
@@ -149,6 +200,14 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 /// </summary>
 internal static class EnumKeyDictionary
 {
+    #region Fields
+    // note:
+    //  - It is non-generic, so that a thread static field is not created for every enum type.
+    [ThreadStatic]
+    internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
+    #endregion
+
+
     #region Build
     public static Entry<TValue>[] BuildTable<TValue>(ReadOnlySpan<ulong> keys, ReadOnlySpan<TValue> values, out ulong multiplier, out int shift, out int maxDistance)
     {

@@ -77,46 +77,46 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - Working buffers are rented from ArrayPool, so only the table itself is allocated.
         //  - The buffer is rented / returned via non-generic methods; calling ArrayPool directly here makes the first call for every enum type slower.
 
-        EnumKeyDictionary.Entry<TValue>[] entries;
+        EnumKeyDictionaryHelper.Entry<TValue>[] entries;
         ulong multiplier;
         int shift;
         int maxDistance;
-        var buffer = EnumKeyDictionary.RentKeysBuffer(source.Length);
+        var buffer = EnumKeyDictionaryHelper.RentKeysBuffer(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
             {
                 var key = keySelector(source[i]);
-                buffer[i] = EnumKeyDictionary.ToUlong(key);
+                buffer[i] = EnumKeyDictionaryHelper.ToUlong(key);
             }
             var keys = buffer.AsSpan(0, source.Length);
-            entries = EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
+            entries = EnumKeyDictionaryHelper.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
             staticCache(entries);
         }
         finally
         {
-            EnumKeyDictionary.ReturnKeysBuffer(buffer);
+            EnumKeyDictionaryHelper.ReturnKeysBuffer(buffer);
         }
         return new(source.Length, multiplier, shift, maxDistance);
 
 
         #region Local Functions
-        static void staticCache(EnumKeyDictionary.Entry<TValue>[] entries)
+        static void staticCache(EnumKeyDictionaryHelper.Entry<TValue>[] entries)
         {
             // note:
             //  - Hands the table to the static constructor of Cache through the thread static field.
             //  - Cache has the explicit static constructor, so it runs on this thread exactly when the field is read first.
             //  - If the table has been already cached, the static constructor never runs again and the old one stays; it is an error.
 
-            EnumKeyDictionary.t_pending = entries;
-            EnumKeyDictionary.Entry<TValue>[] cached;
+            EnumKeyDictionaryHelper.t_pending = entries;
+            EnumKeyDictionaryHelper.Entry<TValue>[] cached;
             try
             {
                 cached = Cache.s_entries;
             }
             finally
             {
-                EnumKeyDictionary.t_pending = null;
+                EnumKeyDictionaryHelper.t_pending = null;
             }
 
             if (!ReferenceEquals(cached, entries))
@@ -140,8 +140,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = EnumKeyDictionary.ToUlong(key);
-        var index = EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
+        var bits = EnumKeyDictionaryHelper.ToUlong(key);
+        var index = EnumKeyDictionaryHelper.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)
         {
@@ -181,13 +181,13 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than 'staticCache()' hands the table.
 
         #region Fields
-        public static readonly EnumKeyDictionary.Entry<TValue>[] s_entries;
+        public static readonly EnumKeyDictionaryHelper.Entry<TValue>[] s_entries;
         #endregion
 
 
         #region Constructors
         static Cache()
-            => s_entries = (EnumKeyDictionary.Entry<TValue>[])EnumKeyDictionary.t_pending!;
+            => s_entries = (EnumKeyDictionaryHelper.Entry<TValue>[])EnumKeyDictionaryHelper.t_pending!;
         #endregion
     }
     #endregion
@@ -196,9 +196,9 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
 /// <summary>
-/// Provides the table builder for <see cref="EnumKeyDictionary{TKey, TValue}"/>.
+/// Provides the helpers for <see cref="EnumKeyDictionary{TKey, TValue}"/> which do not depend on the enum type.
 /// </summary>
-internal static class EnumKeyDictionary
+internal static class EnumKeyDictionaryHelper
 {
     #region Fields
     // note:
@@ -208,7 +208,7 @@ internal static class EnumKeyDictionary
     #endregion
 
 
-    #region Build
+    #region Helpers
     public static Entry<TValue>[] BuildTable<TValue>(ReadOnlySpan<ulong> keys, ReadOnlySpan<TValue> values, out ulong multiplier, out int shift, out int maxDistance)
     {
         // note:
@@ -478,10 +478,8 @@ internal static class EnumKeyDictionary
         }
         #endregion
     }
-    #endregion
 
 
-    #region Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong[] RentKeysBuffer(int count)
         => ArrayPool<ulong>.Shared.Rent(count);

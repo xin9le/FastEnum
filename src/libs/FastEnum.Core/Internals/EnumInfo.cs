@@ -78,31 +78,12 @@ internal static class EnumInfo<T>
             {
                 var name = names[i];
                 var value = values[i];
-                var index = findFieldIndex(fields, name, cursor);
+                var index = EnumInfoHelper.FindFieldIndex(fields, name, cursor);
                 var field = fields[index];
                 members[i] = new(name, value, field);
                 cursor = index + 1;
             }
             return members;
-        }
-
-
-        static int findFieldIndex(ReadOnlySpan<FieldInfo> fields, string name, int hint)
-        {
-            // note:
-            //  - The order of fields (declared order) is not guaranteed to be the same as the names (sorted by value), but it often is.
-            //  - So it checks the next of the last found field first, then falls back to the linear search.
-            //  - Even if the order is off at one place, the following fields are found at first try again as long as they are in order.
-
-            if ((uint)hint < (uint)fields.Length && fields[hint].Name == name)
-                return hint;
-
-            for (var i = 0; i < fields.Length; i++)
-            {
-                if (fields[i].Name == name)
-                    return i;
-            }
-            throw new InvalidOperationException();
         }
 
 
@@ -148,6 +129,38 @@ internal static class EnumInfo<T>
             };
         }
         #endregion
+    }
+    #endregion
+}
+
+
+
+/// <summary>
+/// Provides the helpers for <see cref="EnumInfo{T}"/> which do not depend on the enum type.
+/// </summary>
+internal static class EnumInfoHelper
+{
+    // note:
+    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
+    //  - Even if a method does not use T, it is compiled for each enum type when it is placed in EnumInfo<T>.
+
+    #region Methods
+    public static int FindFieldIndex(ReadOnlySpan<FieldInfo> fields, string name, int hint)
+    {
+        // note:
+        //  - The order of fields (declared order) is not guaranteed to be the same as the names (sorted by value), but it often is.
+        //  - So it checks the next of the last found field first, then falls back to the linear search.
+        //  - Even if the order is off at one place, the following fields are found at first try again as long as they are in order.
+
+        if ((uint)hint < (uint)fields.Length && fields[hint].Name == name)
+            return hint;
+
+        for (var i = 0; i < fields.Length; i++)
+        {
+            if (fields[i].Name == name)
+                return i;
+        }
+        throw new InvalidOperationException();
     }
     #endregion
 }

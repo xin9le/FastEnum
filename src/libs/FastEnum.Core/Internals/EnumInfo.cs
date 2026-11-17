@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace FastEnumUtility.Internals;
@@ -38,7 +39,7 @@ internal static class EnumInfo<T>
         s_typeCode = Type.GetTypeCode(s_type);
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
-        s_members = toMembers(s_names);
+        s_members = toMembers(s_names, s_values);
         s_orderedMembers
             = s_members
             .OrderBy(static x => x.Value)
@@ -63,18 +64,45 @@ internal static class EnumInfo<T>
         }
 
         #region Local Functions
-        static Member<T>[] toMembers(ReadOnlySpan<string> names)
+        static Member<T>[] toMembers(ReadOnlySpan<string> names, ReadOnlySpan<T> values)
         {
             // note:
             //  - A plain loop avoids JIT of the generic LINQ .Select() / .ToArray() for each T.
+            //  - names and values are in the same order (both come from Enum.GetNames / GetValues), so Enum.Parse<T>() is not needed.
+            //  - All fields are fetched at once instead of Type.GetField() for each name.
 
+            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static);
             var members = new Member<T>[names.Length];
+            var cursor = 0;  // the next index of the last found field
             for (var i = 0; i < names.Length; i++)
             {
                 var name = names[i];
-                members[i] = new(name);
+                var value = values[i];
+                var index = findFieldIndex(fields, name, cursor);
+                var field = fields[index];
+                members[i] = new(name, value, field);
+                cursor = index + 1;
             }
             return members;
+        }
+
+
+        static int findFieldIndex(ReadOnlySpan<FieldInfo> fields, string name, int hint)
+        {
+            // note:
+            //  - The order of fields (declared order) is not guaranteed to be the same as the names (sorted by value), but it often is.
+            //  - So it checks the next of the last found field first, then falls back to the linear search.
+            //  - Even if the order is off at one place, the following fields are found at first try again as long as they are in order.
+
+            if ((uint)hint < (uint)fields.Length && fields[hint].Name == name)
+                return hint;
+
+            for (var i = 0; i < fields.Length; i++)
+            {
+                if (fields[i].Name == name)
+                    return i;
+            }
+            throw new InvalidOperationException();
         }
 
 

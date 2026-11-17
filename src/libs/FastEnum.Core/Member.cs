@@ -61,12 +61,14 @@ public sealed class Member<T>
     /// Creates instance.
     /// </summary>
     /// <param name="name"></param>
-    internal Member(string name)
+    /// <param name="value"></param>
+    /// <param name="fieldInfo"></param>
+    internal Member(string name, T value, FieldInfo fieldInfo)
     {
-        this.Value = Enum.Parse<T>(name);
+        this.Value = value;
         this.Name = name;
         this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
-        this.FieldInfo = typeof(T).GetField(name)!;
+        this.FieldInfo = fieldInfo;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
         this.Labels
             = this.FieldInfo

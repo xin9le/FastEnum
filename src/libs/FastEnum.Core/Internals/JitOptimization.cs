@@ -14,7 +14,7 @@ internal static class JitOptimization
     //  - Methods here are non-generic or generic only over reference types, so they are compiled by JIT only once and shared by all enum types.
 
 
-    public static class CaseStringDictionaryHelper
+    public static class CaseStringDictionary
     {
         #region Methods
         public static int CalculateCapacity(int collectionSize)
@@ -36,7 +36,7 @@ internal static class JitOptimization
 
 
 
-    public static class EnumInfoHelper
+    public static class EnumInfo
     {
         #region Methods
         public static int FindFieldIndex(ReadOnlySpan<FieldInfo> fields, string name, int hint)
@@ -123,7 +123,7 @@ internal static class JitOptimization
 
 
 
-    public static class EnumKeyDictionaryHelper
+    public static class EnumKeyDictionary
     {
         #region Fields
         // note:

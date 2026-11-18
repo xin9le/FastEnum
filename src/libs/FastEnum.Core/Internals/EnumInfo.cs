@@ -67,7 +67,7 @@ internal static class EnumInfo<T>
             {
                 var name = names[i];
                 var value = values[i];
-                var index = JitOptimization.EnumInfoHelper.FindFieldIndex(fields, name, cursor);
+                var index = JitOptimization.EnumInfo.FindFieldIndex(fields, name, cursor);
                 var field = fields[index];
                 members[i] = new(name, value, field);
                 cursor = index + 1;
@@ -95,7 +95,7 @@ internal static class EnumInfo<T>
                     var value = members[i].Value;
                     orderKeys[i] = toUInt64(value);
                 }
-                return JitOptimization.EnumInfoHelper.ToOrderedMembers(members, orderKeys, type.IsSigned);
+                return JitOptimization.EnumInfo.ToOrderedMembers(members, orderKeys, type.IsSigned);
             }
             finally
             {

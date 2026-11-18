@@ -69,46 +69,46 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - Working buffers are rented from ArrayPool, so only the table itself is allocated.
         //  - The buffer is rented / returned via non-generic methods; calling ArrayPool directly here makes the first call for every enum type slower.
 
-        JitOptimization.EnumKeyDictionaryHelper.Entry<TValue>[] entries;
+        JitOptimization.EnumKeyDictionary.Entry<TValue>[] entries;
         ulong multiplier;
         int shift;
         int maxDistance;
-        var buffer = JitOptimization.EnumKeyDictionaryHelper.RentKeysBuffer(source.Length);
+        var buffer = JitOptimization.EnumKeyDictionary.RentKeysBuffer(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
             {
                 var key = source[i].Value;
-                buffer[i] = JitOptimization.EnumKeyDictionaryHelper.ToUInt64(key);
+                buffer[i] = JitOptimization.EnumKeyDictionary.ToUInt64(key);
             }
             var keys = buffer.AsSpan(0, source.Length);
-            entries = JitOptimization.EnumKeyDictionaryHelper.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
+            entries = JitOptimization.EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
             staticCache(entries);
         }
         finally
         {
-            JitOptimization.EnumKeyDictionaryHelper.ReturnKeysBuffer(buffer);
+            JitOptimization.EnumKeyDictionary.ReturnKeysBuffer(buffer);
         }
         return new(source.Length, multiplier, shift, maxDistance);
 
 
         #region Local Functions
-        static void staticCache(JitOptimization.EnumKeyDictionaryHelper.Entry<TValue>[] entries)
+        static void staticCache(JitOptimization.EnumKeyDictionary.Entry<TValue>[] entries)
         {
             // note:
             //  - Hands the table to the static constructor of Cache through the thread static field.
             //  - Cache has the explicit static constructor, so it runs on this thread exactly when the field is read first.
             //  - If the table has been already cached, the static constructor never runs again and the old one stays; it is an error.
 
-            JitOptimization.EnumKeyDictionaryHelper.t_pending = entries;
-            JitOptimization.EnumKeyDictionaryHelper.Entry<TValue>[] cached;
+            JitOptimization.EnumKeyDictionary.t_pending = entries;
+            JitOptimization.EnumKeyDictionary.Entry<TValue>[] cached;
             try
             {
                 cached = Cache.s_entries;
             }
             finally
             {
-                JitOptimization.EnumKeyDictionaryHelper.t_pending = null;
+                JitOptimization.EnumKeyDictionary.t_pending = null;
             }
 
             if (!ReferenceEquals(cached, entries))
@@ -132,8 +132,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = JitOptimization.EnumKeyDictionaryHelper.ToUInt64(key);
-        var index = JitOptimization.EnumKeyDictionaryHelper.ToIndex(bits, this._multiplier, this._shift);
+        var bits = JitOptimization.EnumKeyDictionary.ToUInt64(key);
+        var index = JitOptimization.EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)
         {
@@ -173,13 +173,13 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than 'staticCache()' hands the table.
 
         #region Fields
-        public static readonly JitOptimization.EnumKeyDictionaryHelper.Entry<TValue>[] s_entries;
+        public static readonly JitOptimization.EnumKeyDictionary.Entry<TValue>[] s_entries;
         #endregion
 
 
         #region Constructors
         static Cache()
-            => s_entries = (JitOptimization.EnumKeyDictionaryHelper.Entry<TValue>[])JitOptimization.EnumKeyDictionaryHelper.t_pending!;
+            => s_entries = (JitOptimization.EnumKeyDictionary.Entry<TValue>[])JitOptimization.EnumKeyDictionary.t_pending!;
         #endregion
     }
     #endregion

@@ -30,7 +30,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Factories
     public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = JitOptimization.CaseStringDictionaryHelper.CalculateCapacity(values.Length);
+        var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -146,7 +146,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Factories
     public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = JitOptimization.CaseStringDictionaryHelper.CalculateCapacity(values.Length);
+        var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;

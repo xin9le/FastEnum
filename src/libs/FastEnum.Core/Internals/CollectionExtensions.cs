@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -42,29 +41,5 @@ internal static class CollectionExtensions
             ref var pointer = ref MemoryMarshal.GetArrayDataReference(@this);
             return ref Unsafe.Add(ref pointer, index);
         }
-    }
-
-
-
-    extension<TSource>(IEnumerable<TSource> @this)
-    {
-        #region CaseSensitiveStringDictionary
-        public CaseSensitiveStringDictionary<TSource> ToCaseSensitiveStringDictionary(Func<TSource, string> keySelector)
-            => ToCaseSensitiveStringDictionary(@this, keySelector, static x => x);
-
-
-        public CaseSensitiveStringDictionary<TValue> ToCaseSensitiveStringDictionary<TValue>(Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-            => CaseSensitiveStringDictionary<TValue>.Create(@this, keySelector, valueSelector);
-        #endregion
-
-
-        #region CaseInsensitiveStringDictionary
-        public CaseInsensitiveStringDictionary<TSource> ToCaseInsensitiveStringDictionary(Func<TSource, string> keySelector)
-            => ToCaseInsensitiveStringDictionary(@this, keySelector, static x => x);
-
-
-        public CaseInsensitiveStringDictionary<TValue> ToCaseInsensitiveStringDictionary<TValue>(Func<TSource, string> keySelector, Func<TSource, TValue> valueSelector)
-            => CaseInsensitiveStringDictionary<TValue>.Create(@this, keySelector, valueSelector);
-        #endregion
     }
 }

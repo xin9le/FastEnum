@@ -45,11 +45,8 @@ internal static class EnumInfo<T>
             .OrderBy(static x => x.Value)
             .DistinctBy(static x => x.Value)
             .ToArray();
-        s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
-        s_memberByNameCaseInsensitive
-            = s_members
-            .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
-            .ToCaseInsensitiveStringDictionary(static x => x.Name);
+        s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
+        s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
         s_minValue = getValueOrDefault(s_orderedMembers, 0);
         s_maxValue = getValueOrDefault(s_orderedMembers, ^1);
         s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);

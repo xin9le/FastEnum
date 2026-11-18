@@ -21,8 +21,8 @@ internal static class EnumInfo<T>
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
     public static readonly Member<T>[] s_orderedMembers;
-    public static readonly CaseSensitiveStringDictionary<Member<T>> s_memberByNameCaseSensitive;
-    public static readonly CaseInsensitiveStringDictionary<Member<T>> s_memberByNameCaseInsensitive;
+    public static readonly CaseSensitiveStringDictionary<T> s_memberByNameCaseSensitive;
+    public static readonly CaseInsensitiveStringDictionary<T> s_memberByNameCaseInsensitive;
     public static readonly EnumKeyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
@@ -45,11 +45,8 @@ internal static class EnumInfo<T>
             .OrderBy(static x => x.Value)
             .DistinctBy(static x => x.Value)
             .ToArray();
-        s_memberByNameCaseSensitive = s_members.ToCaseSensitiveStringDictionary(static x => x.Name);
-        s_memberByNameCaseInsensitive
-            = s_members
-            .DistinctBy(static x => x.Name, StringComparer.OrdinalIgnoreCase)
-            .ToCaseInsensitiveStringDictionary(static x => x.Name);
+        s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<T>.Create(s_members);
+        s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<T>.Create(s_members);
         s_minValue = getValueOrDefault(s_orderedMembers, 0);
         s_maxValue = getValueOrDefault(s_orderedMembers, ^1);
         s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);

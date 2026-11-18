@@ -8,8 +8,8 @@ namespace FastEnumUtility.Internals;
 
 
 
-internal sealed class CaseSensitiveStringDictionary<TEnum>
-    where TEnum : struct, Enum
+internal sealed class CaseSensitiveStringDictionary<TValue>
+    where TValue : class
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -29,16 +29,16 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
     #region Factories
-    public static CaseSensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
+    public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<string> keys, ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(keys.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
-        foreach (var x in source)
+        for (var i = 0; i < keys.Length; i++)
         {
-            var key = x.Name;
-            var value = x.Value;
+            var key = keys[i];
+            var value = values[i];
             if (!tryAdd(buckets, key, value, indexFor))
                 ThrowHelper.ThrowDuplicatedKeyExists(key);
             size++;
@@ -48,7 +48,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
         #region Local Functions
-        static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TValue value, uint indexFor)
         {
             var hash = StringHelper.CaseSensitive.GetHashCode(key);
             var index = (nuint)((uint)hash & indexFor);
@@ -92,7 +92,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TEnum value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseSensitive.GetHashCode(key);
         var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
@@ -113,10 +113,10 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
     #region Nested Types
-    private sealed class Entry(string key, TEnum value)
+    private sealed class Entry(string key, TValue value)
     {
         public readonly string Key = key;
-        public readonly TEnum Value = value;
+        public readonly TValue Value = value;
         public Entry? Next;
     }
     #endregion
@@ -124,8 +124,8 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
 
-internal sealed class CaseInsensitiveStringDictionary<TEnum>
-    where TEnum : struct, Enum
+internal sealed class CaseInsensitiveStringDictionary<TValue>
+    where TValue : class
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -145,16 +145,16 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
     #region Factories
-    public static CaseInsensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
+    public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<string> keys, ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(keys.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
-        foreach (var x in source)
+        for (var i = 0; i < keys.Length; i++)
         {
-            var key = x.Name;
-            var value = x.Value;
+            var key = keys[i];
+            var value = values[i];
             if (tryAdd(buckets, key, value, indexFor))
                 size++;
         }
@@ -163,7 +163,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
         #region Local Functions
-        static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TValue value, uint indexFor)
         {
             var hash = StringHelper.CaseInsensitive.GetHashCode(key);
             var index = (nuint)((uint)hash & indexFor);
@@ -207,7 +207,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TEnum value)
+    public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseInsensitive.GetHashCode(key);
         var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
@@ -232,10 +232,10 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
     #region Nested Types
-    private sealed class Entry(string key, TEnum value)
+    private sealed class Entry(string key, TValue value)
     {
         public readonly string Key = key;
-        public readonly TEnum Value = value;
+        public readonly TValue Value = value;
         public readonly bool IsAsciiOnly = Ascii.IsValid(key);
         public Entry? Next;
     }

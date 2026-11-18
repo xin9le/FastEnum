@@ -251,9 +251,9 @@ public static partial class FastEnum
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool tryParseNameCaseSensitive(ReadOnlySpan<char> name, out T result)
         {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var value))
+            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
             {
-                result = value;
+                result = member.Value;
                 return true;
             }
             result = default;
@@ -264,9 +264,9 @@ public static partial class FastEnum
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool tryParseNameCaseInsensitive(ReadOnlySpan<char> name, out T result)
         {
-            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var value))
+            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
             {
-                result = value;
+                result = member.Value;
                 return true;
             }
             result = default;

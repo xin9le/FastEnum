@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Collections.Frozen;
 
 namespace FastEnumUtility;
 
@@ -15,22 +15,24 @@ namespace FastEnumUtility;
 /// Represents the member information of the constant in the specified enumeration.
 /// </summary>
 /// <typeparam name="T">Enum type</typeparam>
-public sealed class Member<T>
+public sealed class Member<T> : IMemberName
     where T : struct, Enum
 {
-    #region Properties
     /// <summary>
     /// Gets the value of specified enumration member.
     /// </summary>
     public T Value { get; }
 
 
+    #region IMemberName
     /// <summary>
     /// Gets the name of specified enumration member.
     /// </summary>
     public string Name { get; }
+    #endregion
 
 
+    #region Properties
     /// <summary>
     /// Gets the name of the specified enumeration member as a UTF-8 byte array.
     /// </summary>
@@ -104,4 +106,11 @@ internal static class MemberHelper
         .GetCustomAttributes<LabelAttribute>()
         .ToFrozenDictionary(static x => x.Index, static x => x.Value);
     #endregion
+}
+
+
+
+internal interface IMemberName
+{
+    public string Name { get; }
 }

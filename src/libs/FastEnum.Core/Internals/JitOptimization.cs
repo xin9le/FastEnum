@@ -426,23 +426,21 @@ internal static class JitOptimization
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong ToUInt64<TKey>(TKey key)
+        public static ulong ToUInt64<T>(T value)
         {
             // note:
             //  - Unlike the others here, it is generic over the enum type; it is always inlined into the caller, which is compiled for each enum type anyway.
             //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
             //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
 
-            if (Unsafe.SizeOf<TKey>() is sizeof(byte))
-                return Unsafe.As<TKey, byte>(ref key);
-
-            if (Unsafe.SizeOf<TKey>() is sizeof(ushort))
-                return Unsafe.As<TKey, ushort>(ref key);
-
-            if (Unsafe.SizeOf<TKey>() is sizeof(uint))
-                return Unsafe.As<TKey, uint>(ref key);
-
-            return Unsafe.As<TKey, ulong>(ref key);
+            var size = Unsafe.SizeOf<T>();
+            return size switch
+            {
+                sizeof(byte) => Unsafe.As<T, byte>(ref value),
+                sizeof(ushort) => Unsafe.As<T, ushort>(ref value),
+                sizeof(uint) => Unsafe.As<T, uint>(ref value),
+                _ => Unsafe.As<T, ulong>(ref value)
+            };
         }
         #endregion
 

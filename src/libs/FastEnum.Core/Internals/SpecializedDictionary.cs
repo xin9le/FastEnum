@@ -553,9 +553,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
     #region Factories
     public static CaseSensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
-        const int initialSize = 4;
         const float loadFactor = 0.75f;
-
         var capacity = calculateCapacity(source.Length, loadFactor);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
@@ -564,8 +562,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
         {
             var key = x.Name;
             var value = x.Value;
-            var entry = new Entry(key, value, next: null);
-            if (!tryAdd(buckets, entry, indexFor))
+            if (!tryAdd(buckets, key, value, indexFor))
                 ThrowHelper.ThrowDuplicatedKeyExists(key);
             size++;
         }
@@ -589,33 +586,34 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
             size += 1;
 
             //--- Set minimum size
+            const int initialSize = 4;
             size = Math.Max(size, initialSize);
             return size;
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
         {
-            var hash = StringHelper.CaseSensitive.GetHashCode(entry.Key);
+            var hash = StringHelper.CaseSensitive.GetHashCode(key);
             var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
                 //--- Add new entry
-                buckets.At(index) = entry;
+                buckets.At(index) = new(key, value);
                 return true;
             }
 
             while (true)
             {
                 //--- Check duplicate
-                if (StringHelper.CaseSensitive.Equals(target.Key, entry.Key))
+                if (StringHelper.CaseSensitive.Equals(target.Key, key))
                     return false;
 
                 //--- Append entry
                 if (target.Next is null)
                 {
-                    target.Next = entry;
+                    target.Next = new(key, value);
                     return true;
                 }
 
@@ -659,11 +657,11 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
     #region Nested Types
-    private sealed class Entry(string key, TEnum value, Entry? next)
+    private sealed class Entry(string key, TEnum value)
     {
         public readonly string Key = key;
         public readonly TEnum Value = value;
-        public Entry? Next = next;
+        public Entry? Next;
     }
     #endregion
 }
@@ -693,9 +691,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
     #region Factories
     public static CaseInsensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
-        const int initialSize = 4;
         const float loadFactor = 0.75f;
-
         var capacity = calculateCapacity(source.Length, loadFactor);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
@@ -704,8 +700,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
         {
             var key = x.Name;
             var value = x.Value;
-            var entry = new Entry(key, value, next: null);
-            if (tryAdd(buckets, entry, indexFor))
+            if (tryAdd(buckets, key, value, indexFor))
                 size++;
         }
 
@@ -728,33 +723,34 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
             size += 1;
 
             //--- Set minimum size
+            const int initialSize = 4;
             size = Math.Max(size, initialSize);
             return size;
         }
 
 
-        static bool tryAdd(Entry[] buckets, Entry entry, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
         {
-            var hash = StringHelper.CaseInsensitive.GetHashCode(entry.Key);
+            var hash = StringHelper.CaseInsensitive.GetHashCode(key);
             var index = (nuint)((uint)hash & indexFor);
             var target = buckets.At(index);
             if (target is null)
             {
                 //--- Add new entry
-                buckets.At(index) = entry;
+                buckets.At(index) = new(key, value);
                 return true;
             }
 
             while (true)
             {
                 //--- Check duplicate
-                if (StringHelper.CaseInsensitive.Equals(target.Key, entry.Key))
+                if (StringHelper.CaseInsensitive.Equals(target.Key, key))
                     return false;
 
                 //--- Append entry
                 if (target.Next is null)
                 {
-                    target.Next = entry;
+                    target.Next = new(key, value);
                     return true;
                 }
 
@@ -802,12 +798,12 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
     #region Nested Types
-    private sealed class Entry(string key, TEnum value, Entry? next)
+    private sealed class Entry(string key, TEnum value)
     {
         public readonly string Key = key;
         public readonly TEnum Value = value;
         public readonly bool IsAsciiOnly = Ascii.IsValid(key);
-        public Entry? Next = next;
+        public Entry? Next;
     }
     #endregion
 }

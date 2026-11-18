@@ -406,13 +406,13 @@ internal static class JitOptimization
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong[] RentKeysBuffer(int count)
+        public static ulong[] RentUInt64Array(int count)
             => ArrayPool<ulong>.Shared.Rent(count);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ReturnKeysBuffer(ulong[] keys)
-            => ArrayPool<ulong>.Shared.Return(keys);
+        public static void ReturnUInt64Array(ulong[] array)
+            => ArrayPool<ulong>.Shared.Return(array);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -73,7 +73,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         ulong multiplier;
         int shift;
         int maxDistance;
-        var buffer = JitOptimization.EnumKeyDictionary.RentKeysBuffer(source.Length);
+        var buffer = JitOptimization.EnumKeyDictionary.RentUInt64Array(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
@@ -87,7 +87,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         }
         finally
         {
-            JitOptimization.EnumKeyDictionary.ReturnKeysBuffer(buffer);
+            JitOptimization.EnumKeyDictionary.ReturnUInt64Array(buffer);
         }
         return new(source.Length, multiplier, shift, maxDistance);
 

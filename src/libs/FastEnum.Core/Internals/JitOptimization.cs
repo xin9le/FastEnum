@@ -427,6 +427,7 @@ internal static class JitOptimization
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ToUInt64<T>(T value)
+            where T : struct, Enum
         {
             // note:
             //  - Unlike the others here, it is generic over the enum type; it is always inlined into the caller, which is compiled for each enum type anyway.

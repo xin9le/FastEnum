@@ -49,7 +49,7 @@ internal static class EnumInfo<T>
             // note:
             //  - It is used only when the values are not continuous; otherwise the lookup indexes s_orderedMembers directly.
             //  - It stays default when continuous. JIT removes the branch to it, because s_isContinuous is static readonly.
-            s_memberByValue = s_orderedMembers.ToEnumKeyDictionary(static x => x.Value);
+            s_memberByValue = EnumKeyDictionary<T, Member<T>>.Create(s_orderedMembers);
         }
 
         #region Local Functions

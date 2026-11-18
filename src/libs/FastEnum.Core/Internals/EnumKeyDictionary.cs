@@ -9,6 +9,7 @@ namespace FastEnumUtility.Internals;
 
 internal readonly struct EnumKeyDictionary<TKey, TValue>
     where TKey : struct, Enum
+    where TValue : class, IMemberValue<TKey>
 {
     // note:
     //  - I really don't want to make my own custom dictionary.
@@ -63,7 +64,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
 
 
     #region Factories
-    public static EnumKeyDictionary<TKey, TValue> Create(ReadOnlySpan<TValue> source, Func<TValue, TKey> keySelector)
+    public static EnumKeyDictionary<TKey, TValue> Create(ReadOnlySpan<TValue> source)
     {
         // note:
         //  - Working buffers are rented from ArrayPool, so only the table itself is allocated.
@@ -78,7 +79,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         {
             for (var i = 0; i < source.Length; i++)
             {
-                var key = keySelector(source[i]);
+                var key = source[i].Value;
                 buffer[i] = EnumKeyDictionaryHelper.ToUlong(key);
             }
             var keys = buffer.AsSpan(0, source.Length);

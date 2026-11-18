@@ -15,13 +15,15 @@ namespace FastEnumUtility;
 /// Represents the member information of the constant in the specified enumeration.
 /// </summary>
 /// <typeparam name="T">Enum type</typeparam>
-public sealed class Member<T> : IMemberName
+public sealed class Member<T> : IMemberValue<T>, IMemberName
     where T : struct, Enum
 {
+    #region IMemberValue<T>
     /// <summary>
     /// Gets the value of specified enumration member.
     /// </summary>
     public T Value { get; }
+    #endregion
 
 
     #region IMemberName
@@ -91,9 +93,6 @@ public sealed class Member<T> : IMemberName
 
 
 
-/// <summary>
-/// Provides the helpers for <see cref="Member{T}"/> which do not depend on the enum type.
-/// </summary>
 internal static class MemberHelper
 {
     // note:
@@ -106,6 +105,13 @@ internal static class MemberHelper
         .GetCustomAttributes<LabelAttribute>()
         .ToFrozenDictionary(static x => x.Index, static x => x.Value);
     #endregion
+}
+
+
+
+internal interface IMemberValue<T>
+{
+    public T Value { get; }
 }
 
 

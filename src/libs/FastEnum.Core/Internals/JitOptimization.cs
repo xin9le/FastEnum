@@ -187,7 +187,7 @@ internal static class JitOptimization
             {
                 // note:
                 //  - Decides the multiplier and the slot where each key is placed.
-                //  - This is non-generic, so it is JIT-compiled only once no matter how many enum types are used.
+                //  - It does not depend on TValue, which is a reference type anyway, so it is JIT-compiled only once no matter how many enum types are used.
 
                 //--- Table size is the power of 2, and the load factor is 0.5 or less
                 var bits = 1;
@@ -429,6 +429,7 @@ internal static class JitOptimization
         public static ulong ToUInt64<TKey>(TKey key)
         {
             // note:
+            //  - Unlike the others here, it is generic over the enum type; it is always inlined into the caller, which is compiled for each enum type anyway.
             //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
             //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
 

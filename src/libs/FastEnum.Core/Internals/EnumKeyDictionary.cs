@@ -32,7 +32,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     //  - Comparing the key is enough to find the entry.
     //  - A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.
 
-    // Why the table is built by non-generic EnumKeyDictionary class
+    // Why the table is built by JitOptimization.EnumKeyDictionary class
     //  - TKey is a value type, so everything in this struct is JIT-compiled for every enum type.
     //  - Building the table does not depend on TKey once the keys are converted into ulong, so it is compiled only once.
 

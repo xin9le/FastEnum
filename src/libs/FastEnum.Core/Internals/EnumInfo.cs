@@ -80,7 +80,7 @@ internal static class EnumInfo<T>
         {
             // note:
             //  - The orderKeys are the values converted into ulong; signed values are sign-extended.
-            //  - Only the conversion needs T, so it is done here and the rest is left to EnumInfoHelper which is compiled by JIT only once.
+            //  - Only the conversion needs T, so it is done here and the rest is left to JitOptimization.EnumInfo which is compiled by JIT only once.
 
             ulong[]? buffer = null;
             try

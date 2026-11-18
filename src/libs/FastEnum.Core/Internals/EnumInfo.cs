@@ -36,7 +36,7 @@ internal static class EnumInfo<T>
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = toMembers(s_names, s_values);
-        s_orderedMembers = toOrderedMembers(s_members, s_values, s_typeCode);
+        s_orderedMembers = toOrderedMembers(s_members, s_typeCode);
         s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
         s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
         s_minValue = getValueOrDefault(s_orderedMembers, 0);
@@ -76,26 +76,25 @@ internal static class EnumInfo<T>
         }
 
 
-        static Member<T>[] toOrderedMembers(ReadOnlySpan<Member<T>> members, ReadOnlySpan<T> values, TypeCode type)
+        static Member<T>[] toOrderedMembers(ReadOnlySpan<Member<T>> members, TypeCode type)
         {
             // note:
             //  - The orderKeys are the values converted into ulong; signed values are sign-extended.
-            //  - They are on the stack unless the enum is large, so that no array is allocated just for them.
-            //  - When the enum is large, they are rented from ArrayPool instead; the rented array can be longer, so it is sliced.
             //  - Only the conversion needs T, so it is done here and the rest is left to EnumInfoHelper which is compiled by JIT only once.
 
             ulong[]? buffer = null;
             try
             {
-                var length = values.Length;
+                var length = members.Length;
                 Span<ulong> orderKeys
                     = length <= 128
                     ? stackalloc ulong[length]
                     : (buffer = ArrayPool<ulong>.Shared.Rent(length)).AsSpan(0, length);
-
-                for (var i = 0; i < orderKeys.Length; i++)
-                    orderKeys[i] = toUInt64(values[i]);
-
+                for (var i = 0; i < length; i++)
+                {
+                    var value = members[i].Value;
+                    orderKeys[i] = toUInt64(value);
+                }
                 return EnumInfoHelper.ToOrderedMembers(members, orderKeys, type.IsSigned);
             }
             finally

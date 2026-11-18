@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Buffers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -40,11 +40,7 @@ internal static class EnumInfo<T>
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = toMembers(s_names, s_values);
-        s_orderedMembers
-            = s_members
-            .OrderBy(static x => x.Value)
-            .DistinctBy(static x => x.Value)
-            .ToArray();
+        s_orderedMembers = toOrderedMembers(s_members, s_values, s_typeCode);
         s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
         s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
         s_minValue = getValueOrDefault(s_orderedMembers, 0);
@@ -84,10 +80,40 @@ internal static class EnumInfo<T>
         }
 
 
+        static Member<T>[] toOrderedMembers(ReadOnlySpan<Member<T>> members, ReadOnlySpan<T> values, TypeCode type)
+        {
+            // note:
+            //  - The orderKeys are the values converted into ulong; signed values are sign-extended.
+            //  - They are on the stack unless the enum is large, so that no array is allocated just for them.
+            //  - When the enum is large, they are rented from ArrayPool instead; the rented array can be longer, so it is sliced.
+            //  - Only the conversion needs T, so it is done here and the rest is left to EnumInfoHelper which is compiled by JIT only once.
+
+            ulong[]? buffer = null;
+            try
+            {
+                var length = values.Length;
+                Span<ulong> orderKeys
+                    = length <= 128
+                    ? stackalloc ulong[length]
+                    : (buffer = ArrayPool<ulong>.Shared.Rent(length)).AsSpan(0, length);
+
+                for (var i = 0; i < orderKeys.Length; i++)
+                    orderKeys[i] = toUInt64(values[i]);
+
+                return EnumInfoHelper.ToOrderedMembers(members, orderKeys, type.IsSigned);
+            }
+            finally
+            {
+                if (buffer is not null)
+                    ArrayPool<ulong>.Shared.Return(buffer);
+            }
+        }
+
+
         static T getValueOrDefault(ReadOnlySpan<Member<T>> members, Index index)
         {
             // note:
-            //  - s_orderedMembers is already sorted by Comparer<T>.Default, which is the same order that LINQ Min / Max use.
+            //  - s_orderedMembers is already sorted in the same order as Comparer<T>.Default (signed order for signed types), which LINQ Min / Max use.
             //  - So its first / last are the min / max, and it avoids JIT of the generic LINQ methods for each T.
             //  - It is default when empty, same as DefaultIfEmpty().
 
@@ -138,7 +164,7 @@ internal static class EnumInfo<T>
 internal static class EnumInfoHelper
 {
     // note:
-    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
+    //  - Methods here are non-generic or generic only over reference types, so they are compiled by JIT only once and shared by all enum types.
     //  - Even if a method does not use T, it is compiled for each enum type when it is placed in EnumInfo<T>.
 
     #region Methods
@@ -158,6 +184,68 @@ internal static class EnumInfoHelper
                 return i;
         }
         throw new InvalidOperationException();
+    }
+
+
+    public static TMember[] ToOrderedMembers<TMember>(ReadOnlySpan<TMember> members, ReadOnlySpan<ulong> orderKeys, bool isSigned)
+        where TMember : class
+    {
+        // note:
+        //  - Returns the members sorted by value without duplicated values, same as LINQ .OrderBy().DistinctBy() which keep the first one.
+        //  - It is shared by all enum types because TMember is a reference type, so it is compiled by JIT only once.
+        //  - The members are already sorted by the unsigned magnitude of the values, because they follow Enum.GetValues.
+        //  - For signed types, the negative values (= sign bit is set) come after the non-negative ones, and are sorted among themselves.
+        //  - So the sorted order is [negatives] + [non-negatives]; only rotating them is needed.
+        //  - The same values are next to each other in each part, and never across the parts.
+        //  - So comparing with the previous one in the original order is enough to skip the duplicated values, even at the boundary.
+
+        var length = orderKeys.Length;
+        if (length is 0)
+            return [];
+
+        //--- Find where the negative values start
+        var negativeStart = length;
+        if (isSigned)
+        {
+            for (var i = 0; i < length; i++)
+            {
+                if ((long)orderKeys[i] < 0)
+                {
+                    negativeStart = i;
+                    break;
+                }
+            }
+        }
+
+        //--- Count the unique values
+        var count = 1;
+        for (var i = 1; i < length; i++)
+        {
+            var current = orderKeys[i];
+            var previous = orderKeys[i - 1];
+            if (current != previous)
+                count++;
+        }
+
+        //--- Copy from the negative values, wrapping around to the non-negative ones
+        var result = new TMember[count];
+        var written = 0;
+        for (var i = 0; i < length; i++)
+        {
+            var index = negativeStart + i;
+            if (length <= index)
+                index -= length;
+
+            if (0 < index)  // the first one in the original order has no previous one, and is always unique
+            {
+                var current = orderKeys[index];
+                var previous = orderKeys[index - 1];
+                if (current == previous)
+                    continue;  // duplicated value
+            }
+            result[written++] = members[index];
+        }
+        return result;
     }
     #endregion
 }

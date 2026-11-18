@@ -426,7 +426,7 @@ internal static class JitOptimization
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong ToUlong<TKey>(TKey key)
+        public static ulong ToUInt64<TKey>(TKey key)
         {
             // note:
             //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.

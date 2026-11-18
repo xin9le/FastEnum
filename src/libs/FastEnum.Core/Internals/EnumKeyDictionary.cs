@@ -79,7 +79,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
             for (var i = 0; i < source.Length; i++)
             {
                 var key = source[i].Value;
-                buffer[i] = JitOptimization.EnumKeyDictionaryHelper.ToUlong(key);
+                buffer[i] = JitOptimization.EnumKeyDictionaryHelper.ToUInt64(key);
             }
             var keys = buffer.AsSpan(0, source.Length);
             entries = JitOptimization.EnumKeyDictionaryHelper.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
@@ -132,7 +132,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = JitOptimization.EnumKeyDictionaryHelper.ToUlong(key);
+        var bits = JitOptimization.EnumKeyDictionaryHelper.ToUInt64(key);
         var index = JitOptimization.EnumKeyDictionaryHelper.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)

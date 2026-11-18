@@ -247,6 +247,11 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 internal static class CaseStringDictionaryHelper
 {
+    // note:
+    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
+    //  - Even if a method does not use TEnum, it is compiled for each enum type when it is placed in the generic dictionaries.
+
+    #region Methods
     public static int CalculateCapacity(int collectionSize, float loadFactor)
     {
         //--- Calculate estimate size

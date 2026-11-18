@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -258,17 +259,12 @@ internal static class CaseStringDictionaryHelper
         var size = (int)(collectionSize / loadFactor);
 
         //--- Adjust to the power of 2
-        size--;
-        size |= size >> 1;
-        size |= size >> 2;
-        size |= size >> 4;
-        size |= size >> 8;
-        size |= size >> 16;
-        size += 1;
+        //  - RoundUpToPowerOf2(0) is 0, and it becomes the minimum size below.
+        size = (int)BitOperations.RoundUpToPowerOf2((uint)size);
 
         //--- Set minimum size
         const int initialSize = 4;
-        size = Math.Max(size, initialSize);
-        return size;
+        return Math.Max(size, initialSize);
     }
+    #endregion
 }

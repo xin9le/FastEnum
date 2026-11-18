@@ -7,10 +7,6 @@ namespace FastEnumUtility.Internals;
 
 
 
-/// <summary>
-/// Provides cached information about the specified <see cref="Enum"/> type.
-/// </summary>
-/// <typeparam name="T"><see cref="Enum"/> type</typeparam>
 internal static class EnumInfo<T>
     where T : struct, Enum
 {
@@ -41,8 +37,8 @@ internal static class EnumInfo<T>
         s_values = (T[])Enum.GetValues(s_type);
         s_members = toMembers(s_names, s_values);
         s_orderedMembers = toOrderedMembers(s_members, s_values, s_typeCode);
-        s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
-        s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_names, s_members);
+        s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
+        s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
         s_minValue = getValueOrDefault(s_orderedMembers, 0);
         s_maxValue = getValueOrDefault(s_orderedMembers, ^1);
         s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);
@@ -53,7 +49,7 @@ internal static class EnumInfo<T>
             // note:
             //  - It is used only when the values are not continuous; otherwise the lookup indexes s_orderedMembers directly.
             //  - It stays default when continuous. JIT removes the branch to it, because s_isContinuous is static readonly.
-            s_memberByValue = s_orderedMembers.ToEnumKeyDictionary(static x => x.Value);
+            s_memberByValue = EnumKeyDictionary<T, Member<T>>.Create(s_orderedMembers);
         }
 
         #region Local Functions
@@ -158,9 +154,6 @@ internal static class EnumInfo<T>
 
 
 
-/// <summary>
-/// Provides the helpers for <see cref="EnumInfo{T}"/> which do not depend on the enum type.
-/// </summary>
 internal static class EnumInfoHelper
 {
     // note:

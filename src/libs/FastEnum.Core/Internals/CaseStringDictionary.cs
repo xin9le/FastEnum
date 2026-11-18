@@ -9,7 +9,7 @@ namespace FastEnumUtility.Internals;
 
 
 internal sealed class CaseSensitiveStringDictionary<TValue>
-    where TValue : class
+    where TValue : class, IMemberName
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -29,16 +29,16 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
 
 
     #region Factories
-    public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<string> keys, ReadOnlySpan<TValue> values)
+    public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(keys.Length);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
-        for (var i = 0; i < keys.Length; i++)
+        foreach (var x in values)
         {
-            var key = keys[i];
-            var value = values[i];
+            var key = x.Name;
+            var value = x;
             if (!tryAdd(buckets, key, value, indexFor))
                 ThrowHelper.ThrowDuplicatedKeyExists(key);
             size++;
@@ -125,7 +125,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
 
 
 internal sealed class CaseInsensitiveStringDictionary<TValue>
-    where TValue : class
+    where TValue : class, IMemberName
 {
     #region Fields
     private readonly Entry[] _buckets;
@@ -145,16 +145,16 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
 
 
     #region Factories
-    public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<string> keys, ReadOnlySpan<TValue> values)
+    public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(keys.Length);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
-        for (var i = 0; i < keys.Length; i++)
+        foreach (var x in values)
         {
-            var key = keys[i];
-            var value = values[i];
+            var key = x.Name;
+            var value = x;
             if (tryAdd(buckets, key, value, indexFor))
                 size++;
         }

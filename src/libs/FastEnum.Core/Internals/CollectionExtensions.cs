@@ -20,12 +20,6 @@ internal static class CollectionExtensions
             ref var pointer = ref MemoryMarshal.GetReference(@this);
             return ref Unsafe.Add(ref pointer, index);
         }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public EnumKeyDictionary<TKey, T> ToEnumKeyDictionary<TKey>(Func<T, TKey> keySelector)
-            where TKey : struct, Enum
-            => EnumKeyDictionary<TKey, T>.Create(@this, keySelector);
     }
 
 

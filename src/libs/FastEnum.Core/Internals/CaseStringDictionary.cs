@@ -31,7 +31,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
     public static CaseSensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
         const float loadFactor = 0.75f;
-        var capacity = calculateCapacity(source.Length, loadFactor);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length, loadFactor);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -48,27 +48,6 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
 
 
         #region Local Functions
-        static int calculateCapacity(int collectionSize, float loadFactor)
-        {
-            //--- Calculate estimate size
-            var size = (int)(collectionSize / loadFactor);
-
-            //--- Adjust to the power of 2
-            size--;
-            size |= size >> 1;
-            size |= size >> 2;
-            size |= size >> 4;
-            size |= size >> 8;
-            size |= size >> 16;
-            size += 1;
-
-            //--- Set minimum size
-            const int initialSize = 4;
-            size = Math.Max(size, initialSize);
-            return size;
-        }
-
-
         static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
         {
             var hash = StringHelper.CaseSensitive.GetHashCode(key);
@@ -169,7 +148,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
     public static CaseInsensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
         const float loadFactor = 0.75f;
-        var capacity = calculateCapacity(source.Length, loadFactor);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length, loadFactor);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -185,27 +164,6 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
 
 
         #region Local Functions
-        static int calculateCapacity(int collectionSize, float loadFactor)
-        {
-            //--- Calculate estimate size
-            var size = (int)(collectionSize / loadFactor);
-
-            //--- Adjust to the power of 2
-            size--;
-            size |= size >> 1;
-            size |= size >> 2;
-            size |= size >> 4;
-            size |= size >> 8;
-            size |= size >> 16;
-            size += 1;
-
-            //--- Set minimum size
-            const int initialSize = 4;
-            size = Math.Max(size, initialSize);
-            return size;
-        }
-
-
         static bool tryAdd(Entry[] buckets, string key, TEnum value, uint indexFor)
         {
             var hash = StringHelper.CaseInsensitive.GetHashCode(key);
@@ -283,4 +241,29 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
         public Entry? Next;
     }
     #endregion
+}
+
+
+
+internal static class CaseStringDictionaryHelper
+{
+    public static int CalculateCapacity(int collectionSize, float loadFactor)
+    {
+        //--- Calculate estimate size
+        var size = (int)(collectionSize / loadFactor);
+
+        //--- Adjust to the power of 2
+        size--;
+        size |= size >> 1;
+        size |= size >> 2;
+        size |= size >> 4;
+        size |= size >> 8;
+        size |= size >> 16;
+        size += 1;
+
+        //--- Set minimum size
+        const int initialSize = 4;
+        size = Math.Max(size, initialSize);
+        return size;
+    }
 }

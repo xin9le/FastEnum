@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -31,7 +30,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Factories
     public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(values.Length);
+        var capacity = JitOptimization.CaseStringDictionaryHelper.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -147,7 +146,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Factories
     public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(values.Length);
+        var capacity = JitOptimization.CaseStringDictionaryHelper.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -238,32 +237,6 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         public readonly TValue Value = value;
         public readonly bool IsAsciiOnly = Ascii.IsValid(key);
         public Entry? Next;
-    }
-    #endregion
-}
-
-
-
-internal static class CaseStringDictionaryHelper
-{
-    // note:
-    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
-    //  - Even if a method does not use TEnum, it is compiled for each enum type when it is placed in the generic dictionaries.
-
-    #region Methods
-    public static int CalculateCapacity(int collectionSize)
-    {
-        //--- Calculate estimate size
-        const float loadFactor = 0.75f;
-        var size = (int)(collectionSize / loadFactor);
-
-        //--- Adjust to the power of 2
-        //  - RoundUpToPowerOf2(0) is 0, and it becomes the minimum size below.
-        size = (int)BitOperations.RoundUpToPowerOf2((uint)size);
-
-        //--- Set minimum size
-        const int initialSize = 4;
-        return Math.Max(size, initialSize);
     }
     #endregion
 }

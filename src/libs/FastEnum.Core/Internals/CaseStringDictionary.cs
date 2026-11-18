@@ -31,8 +31,7 @@ internal sealed class CaseSensitiveStringDictionary<TEnum>
     #region Factories
     public static CaseSensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
-        const float loadFactor = 0.75f;
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length, loadFactor);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -148,8 +147,7 @@ internal sealed class CaseInsensitiveStringDictionary<TEnum>
     #region Factories
     public static CaseInsensitiveStringDictionary<TEnum> Create(ReadOnlySpan<Member<TEnum>> source)
     {
-        const float loadFactor = 0.75f;
-        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length, loadFactor);
+        var capacity = CaseStringDictionaryHelper.CalculateCapacity(source.Length);
         var buckets = new Entry[capacity];
         var indexFor = (uint)(buckets.Length - 1);
         var size = 0;
@@ -253,9 +251,10 @@ internal static class CaseStringDictionaryHelper
     //  - Even if a method does not use TEnum, it is compiled for each enum type when it is placed in the generic dictionaries.
 
     #region Methods
-    public static int CalculateCapacity(int collectionSize, float loadFactor)
+    public static int CalculateCapacity(int collectionSize)
     {
         //--- Calculate estimate size
+        const float loadFactor = 0.75f;
         var size = (int)(collectionSize / loadFactor);
 
         //--- Adjust to the power of 2

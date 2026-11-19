@@ -434,8 +434,7 @@ internal static class JitOptimization
             //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
             //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
 
-            var size = Unsafe.SizeOf<T>();
-            return size switch
+            return Unsafe.SizeOf<T>() switch
             {
                 sizeof(byte) => Unsafe.As<T, byte>(ref value),
                 sizeof(ushort) => Unsafe.As<T, ushort>(ref value),

@@ -433,14 +433,21 @@ internal static class JitOptimization
             //  - Unlike the others here, it is generic over the enum type; it is always inlined into the caller, which is compiled for each enum type anyway.
             //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
             //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
+            //  - Not a switch expression. JIT folds a switch on a constant only after importing all of its arms, which costs JIT time for every enum type.
+            //    'if' on a constant is folded while importing, so the unused branches are never imported.
+            //  - Unsafe.BitCast() is used instead of Unsafe.As(ref value) so that the address of value is not taken, and value stays in a register.
+            //    With Unsafe.As(), a wider read in an imported but unused branch (e.g. ulong from a 4-byte enum) forces value onto the stack.
 
-            return Unsafe.SizeOf<T>() switch
-            {
-                sizeof(byte) => Unsafe.As<T, byte>(ref value),
-                sizeof(ushort) => Unsafe.As<T, ushort>(ref value),
-                sizeof(uint) => Unsafe.As<T, uint>(ref value),
-                _ => Unsafe.As<T, ulong>(ref value)
-            };
+            if (Unsafe.SizeOf<T>() is sizeof(byte))
+                return Unsafe.BitCast<T, byte>(value);
+
+            if (Unsafe.SizeOf<T>() is sizeof(ushort))
+                return Unsafe.BitCast<T, ushort>(value);
+
+            if (Unsafe.SizeOf<T>() is sizeof(uint))
+                return Unsafe.BitCast<T, uint>(value);
+
+            return Unsafe.BitCast<T, ulong>(value);
         }
         #endregion
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
+using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
 
@@ -74,7 +75,7 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
         this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
         this.FieldInfo = field;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
-        this.Labels = MemberHelper.CreateLabels(this.FieldInfo);
+        this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
     }
 
 
@@ -88,22 +89,6 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
         name = this.Name;
         value = this.Value;
     }
-    #endregion
-}
-
-
-
-internal static class MemberHelper
-{
-    // note:
-    //  - Methods here are non-generic, so they are compiled by JIT only once and shared by all enum types.
-    //  - Lambdas written in Member<T> belong to its generic closure class, so they are compiled for each enum type.
-
-    #region Methods
-    public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
-        => field
-        .GetCustomAttributes<LabelAttribute>()
-        .ToFrozenDictionary(static x => x.Index, static x => x.Value);
     #endregion
 }
 

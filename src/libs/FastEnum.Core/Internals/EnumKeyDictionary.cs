@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -33,7 +32,7 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     //  - Comparing the key is enough to find the entry.
     //  - A general-purpose dictionary must compare both of hash and key, and that extra comparison is measurably slow on this hot path.
 
-    // Why the table is built by non-generic EnumKeyDictionary class
+    // Why the table is built by JitOptimization.EnumKeyDictionary class
     //  - TKey is a value type, so everything in this struct is JIT-compiled for every enum type.
     //  - Building the table does not depend on TKey once the keys are converted into ulong, so it is compiled only once.
 
@@ -70,46 +69,46 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - Working buffers are rented from ArrayPool, so only the table itself is allocated.
         //  - The buffer is rented / returned via non-generic methods; calling ArrayPool directly here makes the first call for every enum type slower.
 
-        EnumKeyDictionaryHelper.Entry<TValue>[] entries;
+        JitOptimization.EnumKeyDictionary.Entry<TValue>[] entries;
         ulong multiplier;
         int shift;
         int maxDistance;
-        var buffer = EnumKeyDictionaryHelper.RentKeysBuffer(source.Length);
+        var buffer = JitOptimization.EnumKeyDictionary.RentUInt64Array(source.Length);
         try
         {
             for (var i = 0; i < source.Length; i++)
             {
                 var key = source[i].Value;
-                buffer[i] = EnumKeyDictionaryHelper.ToUlong(key);
+                buffer[i] = JitOptimization.EnumKeyDictionary.ToUInt64(key);
             }
             var keys = buffer.AsSpan(0, source.Length);
-            entries = EnumKeyDictionaryHelper.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
+            entries = JitOptimization.EnumKeyDictionary.BuildTable(keys, source, out multiplier, out shift, out maxDistance);
             staticCache(entries);
         }
         finally
         {
-            EnumKeyDictionaryHelper.ReturnKeysBuffer(buffer);
+            JitOptimization.EnumKeyDictionary.ReturnUInt64Array(buffer);
         }
         return new(source.Length, multiplier, shift, maxDistance);
 
 
         #region Local Functions
-        static void staticCache(EnumKeyDictionaryHelper.Entry<TValue>[] entries)
+        static void staticCache(JitOptimization.EnumKeyDictionary.Entry<TValue>[] entries)
         {
             // note:
             //  - Hands the table to the static constructor of Cache through the thread static field.
             //  - Cache has the explicit static constructor, so it runs on this thread exactly when the field is read first.
             //  - If the table has been already cached, the static constructor never runs again and the old one stays; it is an error.
 
-            EnumKeyDictionaryHelper.t_pending = entries;
-            EnumKeyDictionaryHelper.Entry<TValue>[] cached;
+            JitOptimization.EnumKeyDictionary.t_pending = entries;
+            JitOptimization.EnumKeyDictionary.Entry<TValue>[] cached;
             try
             {
                 cached = Cache.s_entries;
             }
             finally
             {
-                EnumKeyDictionaryHelper.t_pending = null;
+                JitOptimization.EnumKeyDictionary.t_pending = null;
             }
 
             if (!ReferenceEquals(cached, entries))
@@ -133,8 +132,8 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        var bits = EnumKeyDictionaryHelper.ToUlong(key);
-        var index = EnumKeyDictionaryHelper.ToIndex(bits, this._multiplier, this._shift);
+        var bits = JitOptimization.EnumKeyDictionary.ToUInt64(key);
+        var index = JitOptimization.EnumKeyDictionary.ToIndex(bits, this._multiplier, this._shift);
         ref var entry = ref Cache.s_entries.At(index);
         if (entry.Key == bits)
         {
@@ -174,348 +173,14 @@ internal readonly struct EnumKeyDictionary<TKey, TValue>
         //  - The explicit static constructor makes this class not beforefieldinit; otherwise it could be initialized earlier than 'staticCache()' hands the table.
 
         #region Fields
-        public static readonly EnumKeyDictionaryHelper.Entry<TValue>[] s_entries;
+        public static readonly JitOptimization.EnumKeyDictionary.Entry<TValue>[] s_entries;
         #endregion
 
 
         #region Constructors
         static Cache()
-            => s_entries = (EnumKeyDictionaryHelper.Entry<TValue>[])EnumKeyDictionaryHelper.t_pending!;
+            => s_entries = (JitOptimization.EnumKeyDictionary.Entry<TValue>[])JitOptimization.EnumKeyDictionary.t_pending!;
         #endregion
-    }
-    #endregion
-}
-
-
-
-internal static class EnumKeyDictionaryHelper
-{
-    #region Fields
-    // note:
-    //  - It is non-generic, so that a thread static field is not created for every enum type.
-    [ThreadStatic]
-    internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
-    #endregion
-
-
-    #region Helpers
-    public static Entry<TValue>[] BuildTable<TValue>(ReadOnlySpan<ulong> keys, ReadOnlySpan<TValue> values, out ulong multiplier, out int shift, out int maxDistance)
-    {
-        // note:
-        //  - This is shared by all enum types as long as TValue is a reference type.
-        //  - The rented array can be longer than requested, so it is sliced by the number of values.
-
-        var pool = ArrayPool<int>.Shared;
-        var buffer = pool.Rent(keys.Length);
-        try
-        {
-            var slots = buffer.AsSpan(0, keys.Length);
-            decideSlots(keys, slots, out multiplier, out shift, out maxDistance);
-            var capacity = 1 << (64 - shift);
-            var entries = new Entry<TValue>[capacity + maxDistance];
-
-            //--- Fill all slots as empty
-            // note:
-            //  - An empty slot holds the key that is never looked up at the slot.
-            //  - Therefore, comparing the key is enough and checking whether the slot is empty is not needed.
-            //  - A lookup probes [home, home + maxDistance], so the slot is never reached from the next home.
-            //  - The slots at the end do not have the next home, but they are never reached from the first home because maxDistance is less than (capacity - 1).
-            //  - `key * multiplier == home << shift` is solved by the modular inverse of the multiplier.
-            //  - On the direct index, the multiplier is even and has no inverse; the home itself is the key because the index is the low bits of the key.
-            var isDirect = multiplier == (1UL << shift);
-            var inverse = inverseOf(multiplier);
-            for (var i = 0; i < entries.Length; i++)
-            {
-                var next = i + 1;
-                var home = (ulong)((next < capacity) ? next : 0);
-                var key = isDirect ? home : (home << shift) * inverse;
-                entries[i] = new(key, default!);
-            }
-
-            //--- Place the items
-            for (var i = 0; i < keys.Length; i++)
-            {
-                var index = slots[i];
-                entries[index] = new(keys[i], values[i]);
-            }
-
-            return entries;
-        }
-        finally
-        {
-            pool.Return(buffer);
-        }
-
-
-        #region Local Functions
-        static void decideSlots(ReadOnlySpan<ulong> keys, Span<int> slots, out ulong multiplier, out int shift, out int maxDistance)
-        {
-            // note:
-            //  - Decides the multiplier and the slot where each key is placed.
-            //  - This is non-generic, so it is JIT-compiled only once no matter how many enum types are used.
-
-            //--- Table size is the power of 2, and the load factor is 0.5 or less
-            var bits = 1;
-            while ((1 << bits) < keys.Length * 2)
-                bits++;
-
-            var capacity = 1 << bits;
-            shift = 64 - bits;
-
-            //--- Search the multiplier that makes all keys collision-free
-            multiplier = 0x9E3779B97F4A7C15;  // 2^64 / golden ratio
-            {
-                // note:
-                //  - The rented buffer is dirty, so it must be cleared; otherwise a slot could look in use.
-                //  - The search also ends when the number of tested keys reaches the limit (= 1,024 trials * 64 keys).
-                //  - A large enum either finds the multiplier early or never finds it, so the rest of trials is just a waste of time.
-
-                const int maxTrials = 1024;
-                const int maxSteps = 65536;
-                var steps = 0;
-                var candidate = multiplier;
-                var found = false;
-                var pool = ArrayPool<int>.Shared;
-                var buffer = pool.Rent(capacity);
-                try
-                {
-                    var used = buffer.AsSpan(0, capacity);
-                    used.Clear();
-
-                    //--- Direct index
-                    // note:
-                    //  - (key << shift) >> shift == key & (capacity - 1), so the multiplier of 2^shift makes the low bits of the key the index.
-                    //  - JIT replaces the multiplication by this constant with a shift, so the lookup gets faster without any special code path.
-                    //  - It is tested with the trial number that the search never uses, and is not counted as the search.
-                    var direct = 1UL << shift;
-                    if (isCollisionFree(keys, direct, shift, used, maxTrials + 1, ref steps))
-                    {
-                        candidate = direct;
-                        found = true;
-                    }
-                    steps = 0;
-
-                    //--- Search
-                    for (var trial = 1; !found && trial <= maxTrials && steps < maxSteps; trial++)
-                    {
-                        if (isCollisionFree(keys, candidate, shift, used, trial, ref steps))
-                        {
-                            found = true;
-                            break;
-                        }
-                        candidate = nextMultiplierCandidate(candidate);
-                    }
-                }
-                finally
-                {
-                    pool.Return(buffer);
-                }
-
-                if (found)
-                {
-                    //--- Fast path
-                    // note:
-                    //  - Every key is placed at its home slot, so probing and the extra slots are not needed.
-                    //  - Duplicated keys always collide, so they never reach here.
-
-                    for (var i = 0; i < keys.Length; i++)
-                        slots[i] = (int)ToIndex(keys[i], candidate, shift);
-
-                    multiplier = candidate;
-                    maxDistance = 0;
-                    return;
-                }
-            }
-
-            //--- Collision-free multiplier is not found, so choose the multiplier that makes the probing distance the shortest
-            // note:
-            //  - Probing does not wrap around; in the worst case, all keys line up from the last slot.
-            //  - Looking up an undefined key always probes up to the maximum distance, so the maximum distance comes first.
-            //  - The total distance is the tiebreaker; it is the cost of looking up the defined keys.
-            {
-                var pool = ArrayPool<int>.Shared;
-                var buffer = pool.Rent(capacity + keys.Length);
-                try
-                {
-                    var owners = buffer.AsSpan(0, capacity + keys.Length);  // 0 means empty, otherwise (index of the key + 1)
-                    {
-                        const int maxCandidates = 64;
-                        var candidate = multiplier;
-                        var bestMaxDistance = int.MaxValue;
-                        var bestTotalDistance = int.MaxValue;
-                        for (var i = 0; i < maxCandidates; i++)
-                        {
-                            var (max, total) = measureDistance(keys, candidate, shift, owners);
-                            if (max < bestMaxDistance || (max == bestMaxDistance && total < bestTotalDistance))
-                            {
-                                multiplier = candidate;
-                                bestMaxDistance = max;
-                                bestTotalDistance = total;
-                            }
-                            candidate = nextMultiplierCandidate(candidate);
-                        }
-                        owners.Clear();
-                    }
-
-                    //--- Decide the slots with linear probing
-                    maxDistance = 0;
-                    for (var i = 0; i < keys.Length; i++)
-                    {
-                        var key = keys[i];
-                        var index = (int)ToIndex(key, multiplier, shift);
-                        var distance = 0;
-                        while (owners[index] is not 0)
-                        {
-                            //--- Collided, so it moves to the next slot (linear probing)
-                            var owner = owners[index] - 1;
-                            if (keys[owner] == key)
-                                ThrowHelper.ThrowDuplicatedKeyExists(key);
-
-                            index++;
-                            distance++;
-                        }
-                        owners[index] = i + 1;
-                        slots[i] = index;
-                        maxDistance = Math.Max(maxDistance, distance);
-                    }
-                }
-                finally
-                {
-                    pool.Return(buffer);
-                }
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        static bool isCollisionFree(ReadOnlySpan<ulong> keys, ulong multiplier, int shift, Span<int> used, int trial, ref int steps)
-        {
-            // note:
-            //  - `used` is shared across trials; the slot is in use if it holds the current trial number.
-            //  - `steps` is the number of tested keys accumulated across trials.
-            //  - This is called up to 1,024 times at the first use of an enum type, when the code is typically not optimized yet.
-            //  - Therefore, it is compiled with full optimization from the beginning.
-
-            foreach (var x in keys)
-            {
-                steps++;
-                var index = (int)ToIndex(x, multiplier, shift);
-                ref var slot = ref used[index];
-                if (slot == trial)
-                    return false;
-
-                slot = trial;
-            }
-            return true;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        static (int max, int total) measureDistance(ReadOnlySpan<ulong> keys, ulong multiplier, int shift, Span<int> owners)
-        {
-            // note:
-            //  - Simulates linear probing without deciding the slots.
-            //  - `owners` is shared across candidates, so it is cleared every time.
-            //  - It is compiled with full optimization from the beginning, for the same reason as `isCollisionFree`.
-
-            owners.Clear();
-            var max = 0;
-            var total = 0;
-            foreach (var x in keys)
-            {
-                var index = (int)ToIndex(x, multiplier, shift);
-                var distance = 0;
-                while (owners[index] is not 0)
-                {
-                    index++;
-                    distance++;
-                }
-                owners[index] = 1;
-                max = Math.Max(max, distance);
-                total += distance;
-            }
-            return (max, total);
-        }
-
-
-        static ulong nextMultiplierCandidate(ulong x)
-        {
-            // note:
-            //  - xorshift64. It is deterministic, so the same keys always get the same table.
-            //  - Multiplier must be odd.
-
-            x ^= x << 13;
-            x ^= x >> 7;
-            x ^= x << 17;
-            return x | 1;
-        }
-
-
-        static ulong inverseOf(ulong x)
-        {
-            // note:
-            //  - Modular multiplicative inverse in 2^64 by Newton method. It exists only when the multiplier is odd.
-            //  - Each iteration doubles the number of correct bits. (3 -> 6 -> 12 -> 24 -> 48 -> 96)
-
-            var inverse = x;
-            for (var i = 0; i < 5; i++)
-            {
-                var product = x * inverse;
-                var correction = 2UL - product;
-                inverse *= correction;
-            }
-            return inverse;
-        }
-        #endregion
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong[] RentKeysBuffer(int count)
-        => ArrayPool<ulong>.Shared.Rent(count);
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ReturnKeysBuffer(ulong[] keys)
-        => ArrayPool<ulong>.Shared.Return(keys);
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static nuint ToIndex(ulong key, ulong multiplier, int shift)
-    {
-        // note:
-        //  - It is not converted into int; otherwise the lookup needs an extra instruction to extend it when it is used as the offset.
-
-        return (nuint)((key * multiplier) >> shift);
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ToUlong<TKey>(TKey key)
-    {
-        // note:
-        //  - Unsafe.SizeOf<T>() is JIT-time constant, so only one branch remains.
-        //  - Zero-extended. It does not have to be sign-extended because it is used only as the identity.
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(byte))
-            return Unsafe.As<TKey, byte>(ref key);
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(ushort))
-            return Unsafe.As<TKey, ushort>(ref key);
-
-        if (Unsafe.SizeOf<TKey>() is sizeof(uint))
-            return Unsafe.As<TKey, uint>(ref key);
-
-        return Unsafe.As<TKey, ulong>(ref key);
-    }
-    #endregion
-
-
-    #region Nested Types
-    public readonly struct Entry<TValue>(ulong key, TValue value)
-    {
-        public readonly ulong Key = key;
-        public readonly TValue Value = value;
     }
     #endregion
 }

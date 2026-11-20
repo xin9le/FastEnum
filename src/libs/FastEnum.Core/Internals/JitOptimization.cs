@@ -130,7 +130,7 @@ internal static class JitOptimization
         // note:
         //  - It is non-generic, so that a thread static field is not created for every enum type.
         [ThreadStatic]
-        internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
+        public static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
         #endregion
 
 

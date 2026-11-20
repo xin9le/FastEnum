@@ -97,7 +97,25 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FrozenDictionary<int, string?> Labels { get; }
+    internal FrozenDictionary<int, string?> Labels
+    {
+        get
+        {
+            // note:
+            //  - It is used only by GetLabel(), so it is created at the first access instead of the constructor.
+            //  - The result is never null (it is empty when no LabelAttribute is defined), so null means "not created yet".
+            //  - Interlocked.CompareExchange() publishes only one dictionary even if multiple threads create it at the same time.
+
+            var labels = this._labels;
+            if (labels is null)
+            {
+                var created = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
+                labels = Interlocked.CompareExchange(ref this._labels, created, null) ?? created;
+            }
+            return labels;
+        }
+    }
+    private FrozenDictionary<int, string?>? _labels;
     #endregion
 
 
@@ -114,7 +132,6 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
         this.Name = name;
         this.FieldInfo = field;
         this._enumMemberAttribute = JitOptimization.MemberHelper.s_notFetchedEnumMemberAttribute;
-        this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
     }
 
 

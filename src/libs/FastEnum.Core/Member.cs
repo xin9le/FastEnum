@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -39,7 +40,25 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the name of the specified enumeration member as a UTF-8 byte array.
     /// </summary>
-    public ImmutableArray<byte> NameUtf8 { get; }
+    public ImmutableArray<byte> NameUtf8
+    {
+        get
+        {
+            // note:
+            //  - It is rarely used, so it is created at the first access instead of the constructor.
+            //  - ImmutableArray<T> compares the underlying arrays by reference, so the same array must always be returned.
+            //  - Interlocked.CompareExchange() publishes only one array even if multiple threads create it at the same time.
+
+            var bytes = this._nameUtf8;
+            if (bytes is null)
+            {
+                var created = Encoding.UTF8.GetBytes(this.Name);
+                bytes = Interlocked.CompareExchange(ref this._nameUtf8, created, null) ?? created;
+            }
+            return ImmutableCollectionsMarshal.AsImmutableArray(bytes);
+        }
+    }
+    private byte[]? _nameUtf8;
 
 
     /// <summary>
@@ -72,7 +91,6 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     {
         this.Value = value;
         this.Name = name;
-        this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
         this.FieldInfo = field;
         this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
         this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);

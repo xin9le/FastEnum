@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Frozen;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -458,6 +459,18 @@ internal static class JitOptimization
             public readonly ulong Key = key;
             public readonly TValue Value = value;
         }
+        #endregion
+    }
+
+
+
+    public static class MemberHelper
+    {
+        #region Methods
+        public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
+            => field
+            .GetCustomAttributes<LabelAttribute>()
+            .ToFrozenDictionary(static x => x.Index, static x => x.Value);
         #endregion
     }
 }

@@ -113,7 +113,7 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
         this.Value = value;
         this.Name = name;
         this.FieldInfo = field;
-        this._enumMemberAttribute = JitOptimization.MemberHelper.NotFetchedEnumMemberAttribute;
+        this._enumMemberAttribute = JitOptimization.MemberHelper.s_notFetchedEnumMemberAttribute;
         this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
     }
 

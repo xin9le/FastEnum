@@ -407,12 +407,10 @@ internal static class JitOptimization
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong[] RentUInt64Array(int count)
             => ArrayPool<ulong>.Shared.Rent(count);
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ReturnUInt64Array(ulong[] array)
             => ArrayPool<ulong>.Shared.Return(array);
 

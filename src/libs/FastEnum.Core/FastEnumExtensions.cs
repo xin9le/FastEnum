@@ -175,7 +175,6 @@ public static class FastEnumExtensions
         /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string? GetEnumMemberValue(bool throwIfNotFound = true)
         {
             var member = @this.ToMember();
@@ -205,7 +204,6 @@ public static class FastEnumExtensions
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotFoundException"></exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string? GetLabel(int index = 0, bool throwIfNotFound = true)
         {
             var member = @this.ToMember();
@@ -235,7 +233,6 @@ public static class FastEnumExtensions
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotFoundException"></exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string? GetLabel(int index = 0, bool throwIfNotFound = true)
         {
             ArgumentNullException.ThrowIfNull(@this);

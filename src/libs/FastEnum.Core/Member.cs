@@ -70,7 +70,28 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the <see cref="System.Runtime.Serialization.EnumMemberAttribute"/> of specified enumration member.
     /// </summary>
-    public EnumMemberAttribute? EnumMemberAttribute { get; }
+    public EnumMemberAttribute? EnumMemberAttribute
+    {
+        get
+        {
+            // note:
+            //  - It is rarely used, so it is fetched at the first access instead of the constructor.
+            //  - null is a valid result (the attribute is not defined), so the field starts with a sentinel that means "not fetched yet".
+            //    A sentinel instead of a bool flag keeps the size of Member<T> unchanged.
+            //  - GetCustomAttribute() creates a new instance on every call, so Interlocked.CompareExchange() publishes only one result.
+
+            var notFetched = JitOptimization.MemberHelper.s_notFetchedEnumMemberAttribute;
+            var attr = this._enumMemberAttribute;
+            if (attr == notFetched)
+            {
+                var created = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
+                var original = Interlocked.CompareExchange(ref this._enumMemberAttribute, created, notFetched);
+                attr = (original == notFetched) ? created : original;
+            }
+            return attr;
+        }
+    }
+    private EnumMemberAttribute? _enumMemberAttribute;
 
 
     /// <summary>
@@ -92,7 +113,7 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
         this.Value = value;
         this.Name = name;
         this.FieldInfo = field;
-        this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
+        this._enumMemberAttribute = JitOptimization.MemberHelper.NotFetchedEnumMemberAttribute;
         this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
     }
 

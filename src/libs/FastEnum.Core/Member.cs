@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using FastEnumUtility.Internals;
 
 namespace FastEnumUtility;
@@ -39,7 +40,25 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the name of the specified enumeration member as a UTF-8 byte array.
     /// </summary>
-    public ImmutableArray<byte> NameUtf8 { get; }
+    public ImmutableArray<byte> NameUtf8
+    {
+        get
+        {
+            // note:
+            //  - It is rarely used, so it is created at the first access instead of the constructor.
+            //  - ImmutableArray<T> compares the underlying arrays by reference, so the same array must always be returned.
+            //  - Interlocked.CompareExchange() publishes only one array even if multiple threads create it at the same time.
+
+            var bytes = this._nameUtf8;
+            if (bytes is null)
+            {
+                var created = Encoding.UTF8.GetBytes(this.Name);
+                bytes = Interlocked.CompareExchange(ref this._nameUtf8, created, null) ?? created;
+            }
+            return ImmutableCollectionsMarshal.AsImmutableArray(bytes);
+        }
+    }
+    private byte[]? _nameUtf8;
 
 
     /// <summary>
@@ -51,13 +70,52 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the <see cref="System.Runtime.Serialization.EnumMemberAttribute"/> of specified enumration member.
     /// </summary>
-    public EnumMemberAttribute? EnumMemberAttribute { get; }
+    public EnumMemberAttribute? EnumMemberAttribute
+    {
+        get
+        {
+            // note:
+            //  - It is rarely used, so it is fetched at the first access instead of the constructor.
+            //  - null is a valid result (the attribute is not defined), so the field starts with a sentinel that means "not fetched yet".
+            //    A sentinel instead of a bool flag keeps the size of Member<T> unchanged.
+            //  - GetCustomAttribute() creates a new instance on every call, so Interlocked.CompareExchange() publishes only one result.
+
+            var notFetched = JitOptimization.MemberHelper.s_notFetchedEnumMemberAttribute;
+            var attr = this._enumMemberAttribute;
+            if (attr == notFetched)
+            {
+                var created = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
+                var original = Interlocked.CompareExchange(ref this._enumMemberAttribute, created, notFetched);
+                attr = (original == notFetched) ? created : original;
+            }
+            return attr;
+        }
+    }
+    private EnumMemberAttribute? _enumMemberAttribute;
 
 
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FrozenDictionary<int, string?> Labels { get; }
+    internal FrozenDictionary<int, string?> Labels
+    {
+        get
+        {
+            // note:
+            //  - It is used only by GetLabel(), so it is created at the first access instead of the constructor.
+            //  - The result is never null (it is empty when no LabelAttribute is defined), so null means "not created yet".
+            //  - Interlocked.CompareExchange() publishes only one dictionary even if multiple threads create it at the same time.
+
+            var labels = this._labels;
+            if (labels is null)
+            {
+                var created = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
+                labels = Interlocked.CompareExchange(ref this._labels, created, null) ?? created;
+            }
+            return labels;
+        }
+    }
+    private FrozenDictionary<int, string?>? _labels;
     #endregion
 
 
@@ -72,10 +130,8 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     {
         this.Value = value;
         this.Name = name;
-        this.NameUtf8 = ImmutableCollectionsMarshal.AsImmutableArray(Encoding.UTF8.GetBytes(name));
         this.FieldInfo = field;
-        this.EnumMemberAttribute = this.FieldInfo.GetCustomAttribute<EnumMemberAttribute>();
-        this.Labels = JitOptimization.MemberHelper.CreateLabels(this.FieldInfo);
+        this._enumMemberAttribute = JitOptimization.MemberHelper.s_notFetchedEnumMemberAttribute;
     }
 
 

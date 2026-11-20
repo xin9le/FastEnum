@@ -4,6 +4,7 @@ using System.Collections.Frozen;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace FastEnumUtility.Internals;
 
@@ -130,7 +131,7 @@ internal static class JitOptimization
         // note:
         //  - It is non-generic, so that a thread static field is not created for every enum type.
         [ThreadStatic]
-        internal static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
+        public static object? t_pending;  // the table being handed to EnumKeyDictionary<TKey, TValue>.Cache
         #endregion
 
 
@@ -466,6 +467,15 @@ internal static class JitOptimization
 
     public static class MemberHelper
     {
+        #region Fields
+        /// <summary>
+        /// Marks that <see cref="Member{T}.EnumMemberAttribute"/> has not been fetched yet.
+        /// </summary>
+        /// <remarks>It is distinguished by reference, because <see langword="null"/> means that the attribute is not defined.</remarks>
+        public static readonly EnumMemberAttribute s_notFetchedEnumMemberAttribute = new();
+        #endregion
+
+
         #region Methods
         public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
             => field

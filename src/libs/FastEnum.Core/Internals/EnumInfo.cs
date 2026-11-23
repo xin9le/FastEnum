@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Buffers;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FastEnumUtility.Internals;
 
@@ -36,13 +35,16 @@ internal static class EnumInfo<T>
         s_names = Enum.GetNames(s_type);
         s_values = (T[])Enum.GetValues(s_type);
         s_members = toMembers(s_names, s_values);
-        s_orderedMembers = toOrderedMembers(s_members, s_typeCode);
+        var valueBytes = MemoryMarshal.AsBytes(s_values.AsSpan());
+        s_orderedMembers = JitOptimization.EnumInfo.ToOrderedMembers(s_members, valueBytes, s_typeCode, out s_isContinuous);
         s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
         s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
-        s_minValue = getValueOrDefault(s_orderedMembers, 0);
-        s_maxValue = getValueOrDefault(s_orderedMembers, ^1);
-        s_isContinuous = isContinuous(s_orderedMembers.Length, s_maxValue, s_minValue);
         s_isEmpty = s_values.Length is 0;
+        if (!s_isEmpty)
+        {
+            s_minValue = s_orderedMembers[0].Value;
+            s_maxValue = s_orderedMembers[^1].Value;
+        }
         s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
         if (!s_isContinuous)
         {
@@ -57,7 +59,7 @@ internal static class EnumInfo<T>
         {
             // note:
             //  - A plain loop avoids JIT of the generic LINQ .Select() / .ToArray() for each T.
-            //  - names and values are in the same order (both come from Enum.GetNames / GetValues), so Enum.Parse<T>() is not needed.
+            //  - names and values are in the same order, so Enum.Parse<T>() is not needed.
             //  - All fields are fetched at once instead of Type.GetField() for each name.
 
             var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static);
@@ -73,78 +75,6 @@ internal static class EnumInfo<T>
                 cursor = index + 1;
             }
             return members;
-        }
-
-
-        static Member<T>[] toOrderedMembers(ReadOnlySpan<Member<T>> members, TypeCode type)
-        {
-            // note:
-            //  - The orderKeys are the values converted into ulong; signed values are sign-extended.
-            //  - Only the conversion needs T, so it is done here and the rest is left to JitOptimization.EnumInfo which is compiled by JIT only once.
-
-            ulong[]? buffer = null;
-            try
-            {
-                var length = members.Length;
-                Span<ulong> orderKeys
-                    = length <= 128
-                    ? stackalloc ulong[length]
-                    : (buffer = ArrayPool<ulong>.Shared.Rent(length)).AsSpan(0, length);
-                for (var i = 0; i < length; i++)
-                {
-                    var value = members[i].Value;
-                    orderKeys[i] = toUInt64(value);
-                }
-                return JitOptimization.EnumInfo.ToOrderedMembers(members, orderKeys, type.IsSigned);
-            }
-            finally
-            {
-                if (buffer is not null)
-                    ArrayPool<ulong>.Shared.Return(buffer);
-            }
-        }
-
-
-        static T getValueOrDefault(ReadOnlySpan<Member<T>> members, Index index)
-        {
-            // note:
-            //  - s_orderedMembers is already sorted in the same order as Comparer<T>.Default (signed order for signed types), which LINQ Min / Max use.
-            //  - So its first / last are the min / max, and it avoids JIT of the generic LINQ methods for each T.
-            //  - It is default when empty, same as DefaultIfEmpty().
-
-            if (members.Length is 0)
-                return default;
-
-            var member = members[index];
-            return member.Value;
-        }
-
-
-        static bool isContinuous(int uniqueCount, T max, T min)
-        {
-            if (uniqueCount <= 0)
-                return false;
-
-            var length = toUInt64(max) - toUInt64(min);
-            var count = (ulong)uniqueCount - 1;
-            return length == count;
-        }
-
-
-        static ulong toUInt64(T value)
-        {
-            return s_typeCode switch
-            {
-                TypeCode.SByte => (ulong)Unsafe.BitCast<T, sbyte>(value),
-                TypeCode.Byte => Unsafe.BitCast<T, byte>(value),
-                TypeCode.Int16 => (ulong)Unsafe.BitCast<T, short>(value),
-                TypeCode.UInt16 => Unsafe.BitCast<T, ushort>(value),
-                TypeCode.Int32 => (ulong)Unsafe.BitCast<T, int>(value),
-                TypeCode.UInt32 => Unsafe.BitCast<T, uint>(value),
-                TypeCode.Int64 => (ulong)Unsafe.BitCast<T, long>(value),
-                TypeCode.UInt64 => Unsafe.BitCast<T, ulong>(value),
-                _ => throw new InvalidOperationException(),
-            };
         }
         #endregion
     }

@@ -17,21 +17,21 @@ internal static class UnderlyingOperationGeneric<T>
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int>.GetName(value);
+                return GenericOperation<sbyte, byte, int, nuint>.GetName(value);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int>.GetName(value);
+                return GenericOperation<byte, byte, int, nuint>.GetName(value);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int>.GetName(value);
+                return GenericOperation<short, ushort, int, nuint>.GetName(value);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int>.GetName(value);
+                return GenericOperation<ushort, ushort, int, nuint>.GetName(value);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint>.GetName(value);
+                return GenericOperation<int, uint, uint, uint>.GetName(value);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint>.GetName(value);
+                return GenericOperation<uint, uint, uint, uint>.GetName(value);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong>.GetName(value);
+                return GenericOperation<long, ulong, ulong, ulong>.GetName(value);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong>.GetName(value);
+                return GenericOperation<ulong, ulong, ulong, ulong>.GetName(value);
             default:
                 ThrowHelper.ThrowUnexpectedCodeReached();
                 return null;
@@ -44,14 +44,14 @@ internal static class UnderlyingOperationGeneric<T>
     {
         return EnumInfo<T>.s_typeCode switch
         {
-            TypeCode.SByte => GenericOperation<sbyte, byte, int>.IsDefined(value),
-            TypeCode.Byte => GenericOperation<byte, byte, int>.IsDefined(value),
-            TypeCode.Int16 => GenericOperation<short, ushort, int>.IsDefined(value),
-            TypeCode.UInt16 => GenericOperation<ushort, ushort, int>.IsDefined(value),
-            TypeCode.Int32 => GenericOperation<int, uint, uint>.IsDefined(value),
-            TypeCode.UInt32 => GenericOperation<uint, uint, uint>.IsDefined(value),
-            TypeCode.Int64 => GenericOperation<long, ulong, ulong>.IsDefined(value),
-            TypeCode.UInt64 => GenericOperation<ulong, ulong, ulong>.IsDefined(value),
+            TypeCode.SByte => GenericOperation<sbyte, byte, int, nuint>.IsDefined(value),
+            TypeCode.Byte => GenericOperation<byte, byte, int, nuint>.IsDefined(value),
+            TypeCode.Int16 => GenericOperation<short, ushort, int, nuint>.IsDefined(value),
+            TypeCode.UInt16 => GenericOperation<ushort, ushort, int, nuint>.IsDefined(value),
+            TypeCode.Int32 => GenericOperation<int, uint, uint, uint>.IsDefined(value),
+            TypeCode.UInt32 => GenericOperation<uint, uint, uint, uint>.IsDefined(value),
+            TypeCode.Int64 => GenericOperation<long, ulong, ulong, ulong>.IsDefined(value),
+            TypeCode.UInt64 => GenericOperation<ulong, ulong, ulong, ulong>.IsDefined(value),
             _ => false,
         };
     }
@@ -63,21 +63,21 @@ internal static class UnderlyingOperationGeneric<T>
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int>.ToNumberString(value);
+                return GenericOperation<sbyte, byte, int, nuint>.ToNumberString(value);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int>.ToNumberString(value);
+                return GenericOperation<byte, byte, int, nuint>.ToNumberString(value);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int>.ToNumberString(value);
+                return GenericOperation<short, ushort, int, nuint>.ToNumberString(value);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int>.ToNumberString(value);
+                return GenericOperation<ushort, ushort, int, nuint>.ToNumberString(value);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint>.ToNumberString(value);
+                return GenericOperation<int, uint, uint, uint>.ToNumberString(value);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint>.ToNumberString(value);
+                return GenericOperation<uint, uint, uint, uint>.ToNumberString(value);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong>.ToNumberString(value);
+                return GenericOperation<long, ulong, ulong, ulong>.ToNumberString(value);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong>.ToNumberString(value);
+                return GenericOperation<ulong, ulong, ulong, ulong>.ToNumberString(value);
             default:
                 ThrowHelper.ThrowUnexpectedCodeReached();
                 return null!;
@@ -91,21 +91,21 @@ internal static class UnderlyingOperationGeneric<T>
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int>.TryParseValue(text, out result);
+                return GenericOperation<sbyte, byte, int, nuint>.TryParseValue(text, out result);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int>.TryParseValue(text, out result);
+                return GenericOperation<byte, byte, int, nuint>.TryParseValue(text, out result);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int>.TryParseValue(text, out result);
+                return GenericOperation<short, ushort, int, nuint>.TryParseValue(text, out result);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int>.TryParseValue(text, out result);
+                return GenericOperation<ushort, ushort, int, nuint>.TryParseValue(text, out result);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint>.TryParseValue(text, out result);
+                return GenericOperation<int, uint, uint, uint>.TryParseValue(text, out result);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint>.TryParseValue(text, out result);
+                return GenericOperation<uint, uint, uint, uint>.TryParseValue(text, out result);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong>.TryParseValue(text, out result);
+                return GenericOperation<long, ulong, ulong, ulong>.TryParseValue(text, out result);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong>.TryParseValue(text, out result);
+                return GenericOperation<ulong, ulong, ulong, ulong>.TryParseValue(text, out result);
             default:
                 result = default;
                 return false;
@@ -119,21 +119,21 @@ internal static class UnderlyingOperationGeneric<T>
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int>.TryGetMember(value, out result);
+                return GenericOperation<sbyte, byte, int, nuint>.TryGetMember(value, out result);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int>.TryGetMember(value, out result);
+                return GenericOperation<byte, byte, int, nuint>.TryGetMember(value, out result);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int>.TryGetMember(value, out result);
+                return GenericOperation<short, ushort, int, nuint>.TryGetMember(value, out result);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int>.TryGetMember(value, out result);
+                return GenericOperation<ushort, ushort, int, nuint>.TryGetMember(value, out result);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint>.TryGetMember(value, out result);
+                return GenericOperation<int, uint, uint, uint>.TryGetMember(value, out result);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint>.TryGetMember(value, out result);
+                return GenericOperation<uint, uint, uint, uint>.TryGetMember(value, out result);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong>.TryGetMember(value, out result);
+                return GenericOperation<long, ulong, ulong, ulong>.TryGetMember(value, out result);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong>.TryGetMember(value, out result);
+                return GenericOperation<ulong, ulong, ulong, ulong>.TryGetMember(value, out result);
             default:
                 result = default;
                 return false;
@@ -142,10 +142,11 @@ internal static class UnderlyingOperationGeneric<T>
 
 
     #region Nested Types
-    public static class GenericOperation<TNumber, TRange, TWide>
+    public static class GenericOperation<TNumber, TRange, TWide, TIndex>
         where TNumber : unmanaged, IBinaryInteger<TNumber>
         where TRange : unmanaged, IBinaryInteger<TRange>, IUnsignedNumber<TRange>
         where TWide : unmanaged, IBinaryInteger<TWide>
+        where TIndex : unmanaged, IBinaryInteger<TIndex>, IUnsignedNumber<TIndex>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? GetName(T value)
@@ -213,9 +214,9 @@ internal static class UnderlyingOperationGeneric<T>
 
                 var val = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(value));
                 var min = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(EnumInfo<T>.s_minValue));
-                var index = TWide.CreateTruncating(TRange.CreateTruncating(val - min));
+                var index = TIndex.CreateTruncating(TRange.CreateTruncating(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
-                if (index < TWide.CreateTruncating((uint)members.Length))
+                if (index < TIndex.CreateTruncating((uint)members.Length))
                 {
                     result = members.At(nuint.CreateTruncating(index));
                     return true;

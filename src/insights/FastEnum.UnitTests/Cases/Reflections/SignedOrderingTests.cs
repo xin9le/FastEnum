@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using FastEnumUtility.UnitTests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
@@ -12,44 +13,26 @@ public sealed class SignedOrderingTests
     [TestMethod]
     public void ContinuousValuesAcrossZeroKeepFirstAlias()
     {
-        FastEnum.IsContinuous<AcrossZero>().ShouldBeTrue();
-        FastEnum.GetMinValue<AcrossZero>().ShouldBe(AcrossZero.MinusTwo);
-        FastEnum.GetMaxValue<AcrossZero>().ShouldBe(AcrossZero.One);
+        FastEnum.IsContinuous<AcrossZeroEnum>().ShouldBeTrue();
+        FastEnum.GetMinValue<AcrossZeroEnum>().ShouldBe(AcrossZeroEnum.MinusTwo);
+        FastEnum.GetMaxValue<AcrossZeroEnum>().ShouldBe(AcrossZeroEnum.One);
 
-        var values = Enum.GetValues<AcrossZero>();
-        var names = Enum.GetNames<AcrossZero>();
-        var firstAlias = Array.IndexOf(values, AcrossZero.MinusOne);
-        FastEnum.GetName(AcrossZero.MinusOne).ShouldBe(names[firstAlias]);
-        FastEnum.Parse<AcrossZero>(nameof(AcrossZero.Alias)).ShouldBe(AcrossZero.MinusOne);
-        FastEnum.IsDefined((AcrossZero)2).ShouldBeFalse();
+        var values = Enum.GetValues<AcrossZeroEnum>();
+        var names = Enum.GetNames<AcrossZeroEnum>();
+        var firstAlias = Array.IndexOf(values, AcrossZeroEnum.MinusOne);
+        FastEnum.GetName(AcrossZeroEnum.MinusOne).ShouldBe(names[firstAlias]);
+        FastEnum.Parse<AcrossZeroEnum>(nameof(AcrossZeroEnum.Alias)).ShouldBe(AcrossZeroEnum.MinusOne);
+        FastEnum.IsDefined((AcrossZeroEnum)2).ShouldBeFalse();
     }
 
 
     [TestMethod]
     public void ContinuousNegativeValuesKeepSignedBounds()
     {
-        FastEnum.IsContinuous<NegativeOnly>().ShouldBeTrue();
-        FastEnum.GetMinValue<NegativeOnly>().ShouldBe(NegativeOnly.First);
-        FastEnum.GetMaxValue<NegativeOnly>().ShouldBe(NegativeOnly.Last);
-        FastEnum.GetName(NegativeOnly.Middle).ShouldBe(nameof(NegativeOnly.Middle));
-        FastEnum.IsDefined((NegativeOnly)(long.MinValue + 3)).ShouldBeFalse();
-    }
-
-
-    private enum AcrossZero : sbyte
-    {
-        One = 1,
-        MinusOne = -1,
-        Zero = 0,
-        MinusTwo = -2,
-        Alias = MinusOne,
-    }
-
-
-    private enum NegativeOnly : long
-    {
-        First = long.MinValue,
-        Middle,
-        Last,
+        FastEnum.IsContinuous<NegativeOnlyEnum>().ShouldBeTrue();
+        FastEnum.GetMinValue<NegativeOnlyEnum>().ShouldBe(NegativeOnlyEnum.First);
+        FastEnum.GetMaxValue<NegativeOnlyEnum>().ShouldBe(NegativeOnlyEnum.Last);
+        FastEnum.GetName(NegativeOnlyEnum.Middle).ShouldBe(nameof(NegativeOnlyEnum.Middle));
+        FastEnum.IsDefined((NegativeOnlyEnum)(long.MinValue + 3)).ShouldBeFalse();
     }
 }

@@ -478,3 +478,23 @@ public enum SparseNonZeroEnum : int
     A = 1,
     B = 3,
 }
+
+
+
+public enum AcrossZeroEnum : sbyte
+{
+    One = 1,
+    MinusOne = -1,
+    Zero = 0,
+    MinusTwo = -2,
+    Alias = MinusOne,
+}
+
+
+
+public enum NegativeOnlyEnum : long
+{
+    First = long.MinValue,
+    Middle,
+    Last,
+}

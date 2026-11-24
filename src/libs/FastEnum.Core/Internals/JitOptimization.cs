@@ -64,8 +64,10 @@ internal static class JitOptimization
         public static TMember[] ToOrderedMembers<TMember>(TMember[] members, ReadOnlySpan<byte> values, TypeCode type, out bool isContinuous)
             where TMember : class
         {
-            // Enum.GetValues sorts by unsigned magnitude. View the existing array as unsigned
-            // storage so each width shares the same ordering code for signed and unsigned enums.
+            // note:
+            //  - Enum.GetValues sorts by unsigned magnitude. View the existing array as unsigned
+            //  - storage so each width shares the same ordering code for signed and unsigned enums.
+
             return type switch
             {
                 TypeCode.SByte or TypeCode.Byte => orderMembers(members, values, type.IsSigned, out isContinuous),

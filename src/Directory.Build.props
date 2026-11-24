@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
         <UseArtifactsOutput>true</UseArtifactsOutput>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
     
 </Project>

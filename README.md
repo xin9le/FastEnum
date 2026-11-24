@@ -1,5 +1,5 @@
 ﻿# FastEnum
-FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than .NET. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature.
+FastEnum is **extremely fast** enum utilities for C#/.NET. It's much faster than .NET. Provided methods are all achieved **zero allocation** and are designed easy to use like `System.Enum`. This library is quite useful to significantly improve your performance because enum is really popular feature. It is also fully compatible with **Native AOT** and trimming.
 
 [![Releases](https://img.shields.io/github/release/xin9le/FastEnum.svg)](https://github.com/xin9le/FastEnum/releases)
 [![Nuget packages](https://img.shields.io/nuget/v/FastEnum.svg)](https://www.nuget.org/packages/FastEnum/)
@@ -24,6 +24,8 @@ Intel Core Ultra 7 155H 3.00GHz, 1 CPU, 22 logical and 16 physical cores
 
 # Support Platform
 - .NET 10.0+
+- Native AOT / Trimming
+    - Both the regular API and the source code generation API work without any trimming or AOT warnings.
 
 > [!Important]
 > For those who wish to use this on older platforms, please use v1.8.0. It supports follows.

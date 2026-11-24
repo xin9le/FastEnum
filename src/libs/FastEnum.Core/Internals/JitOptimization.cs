@@ -76,63 +76,64 @@ internal static class JitOptimization
                 TypeCode.Int64 or TypeCode.UInt64 => orderMembers(members, MemoryMarshal.Cast<byte, ulong>(values), type.IsSigned, out isContinuous),
                 _ => throw new InvalidOperationException(),
             };
-        }
 
 
-        private static TMember[] orderMembers<TStorage, TMember>(TMember[] members, ReadOnlySpan<TStorage> values, bool isSigned, out bool isContinuous)
-            where TStorage : unmanaged, IBinaryInteger<TStorage>, IUnsignedNumber<TStorage>, IMinMaxValue<TStorage>
-            where TMember : class
-        {
-            var length = values.Length;
-            if (length is 0)
+            #region Local Functions
+            static TMember[] orderMembers<TStorage>(TMember[] members, ReadOnlySpan<TStorage> values, bool isSigned, out bool isContinuous)
+                where TStorage : unmanaged, IBinaryInteger<TStorage>, IUnsignedNumber<TStorage>, IMinMaxValue<TStorage>
             {
-                isContinuous = false;
-                return members;
-            }
-
-            var start = 0;
-            if (isSigned)
-            {
-                var maxNonNegative = TStorage.MaxValue >> 1;
-                for (var i = 0; i < length; i++)
+                var length = values.Length;
+                if (length is 0)
                 {
-                    if (values[i] > maxNonNegative)
+                    isContinuous = false;
+                    return members;
+                }
+
+                var start = 0;
+                if (isSigned)
+                {
+                    var maxNonNegative = TStorage.MaxValue >> 1;
+                    for (var i = 0; i < length; i++)
                     {
-                        start = i;
-                        break;
+                        if (values[i] > maxNonNegative)
+                        {
+                            start = i;
+                            break;
+                        }
                     }
                 }
+
+                var count = 1;
+                for (var i = 1; i < length; i++)
+                {
+                    if (values[i] != values[i - 1])
+                        count++;
+                }
+
+                var min = values[start];
+                var max = values[start == 0 ? length - 1 : start - 1];
+                // Subtract at storage width so consecutive signed values can cross zero.
+                isContinuous = ulong.CreateTruncating(unchecked(max - min)) == (ulong)(count - 1);
+                if (count == length && start == 0)
+                    return members;
+
+                // Rotate the negative values to the front and keep the first member for each value.
+                var result = new TMember[count];
+                var written = 0;
+                for (var i = 0; i < length; i++)
+                {
+                    var index = start + i;
+                    if (length <= index)
+                        index -= length;
+
+                    if (index > 0 && values[index] == values[index - 1])
+                        continue;
+
+                    result[written++] = members[index];
+                }
+                return result;
             }
-
-            var count = 1;
-            for (var i = 1; i < length; i++)
-            {
-                if (values[i] != values[i - 1])
-                    count++;
-            }
-
-            var min = values[start];
-            var max = values[start == 0 ? length - 1 : start - 1];
-            // Subtract at storage width so consecutive signed values can cross zero.
-            isContinuous = ulong.CreateTruncating(unchecked(max - min)) == (ulong)(count - 1);
-            if (count == length && start == 0)
-                return members;
-
-            // Rotate the negative values to the front and keep the first member for each value.
-            var result = new TMember[count];
-            var written = 0;
-            for (var i = 0; i < length; i++)
-            {
-                var index = start + i;
-                if (length <= index)
-                    index -= length;
-
-                if (index > 0 && values[index] == values[index - 1])
-                    continue;
-
-                result[written++] = members[index];
-            }
-            return result;
+            #endregion
         }
         #endregion
     }

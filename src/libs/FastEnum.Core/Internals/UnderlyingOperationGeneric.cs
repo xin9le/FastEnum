@@ -39,7 +39,6 @@ internal static class UnderlyingOperationGeneric<T>
     }
 
 
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined(T value)
     {

@@ -34,7 +34,7 @@ internal static class EnumInfo<T>
         s_type = typeof(T);
         s_typeCode = Type.GetTypeCode(s_type);
         s_names = Enum.GetNames(s_type);
-        s_values = (T[])Enum.GetValues(s_type);
+        s_values = Enum.GetValues<T>();
         s_members = toMembers(s_names, s_values);
         s_orderedMembers = toOrderedMembers(s_members, s_typeCode);
         s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);

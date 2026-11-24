@@ -63,7 +63,7 @@ As you can see, the replacement from `System.Enum` is very easy. You never confu
 
 
 # Source code generation
-FastEnum is fundamentally implemented based on caching enum metadata upon its initial invocation. This approach alone achieves speeds that significantly surpass those of standard .NET, making it the optimal choice for the majority of users. Nevertheless, we acknowledge the existence of mission-critical scenarios where the ultimate pursuit of speed is paramount. To address such cases, we have introduced an API in v2 that leverages source code generation to achieve even higher performance.
+FastEnum is fundamentally implemented based on caching enum metadata upon its initial invocation. This approach alone achieves speeds that significantly surpass those of standard .NET. Since v2, FastEnum also provides an API that leverages source code generation, which embeds the lookup tables into your assembly at compile time and eliminates the initialization cost on the first invocation.
 
 ```cs
 [FastEnum<HttpStatusCode>]  // Annotate target enum type
@@ -75,6 +75,9 @@ var x2 = FastEnum.IsDefined<HttpStatusCode, HttpStatusCodeBooster>(HttpStatusCod
 var x3 = FastEnum.Parse<HttpStatusCode, HttpStatusCodeBooster>("OK");
 var x4 = FastEnum.TryParse<HttpStatusCode, HttpStatusCodeBooster>("OK", out var value);
 ```
+
+> [!TIP]
+> For most users, we recommend the regular (Reflection-based) API over the source code generation API. It requires no placeholder type, yet delivers almost the same performance as the source-generated version. If even the one-time initialization cost matters to you, consider the source code generation API.
 
 
 

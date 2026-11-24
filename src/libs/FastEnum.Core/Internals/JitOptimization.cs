@@ -70,16 +70,16 @@ internal static class JitOptimization
 
             return type switch
             {
-                TypeCode.SByte or TypeCode.Byte => orderMembers(members, values, type.IsSigned, out isContinuous),
-                TypeCode.Int16 or TypeCode.UInt16 => orderMembers(members, MemoryMarshal.Cast<byte, ushort>(values), type.IsSigned, out isContinuous),
-                TypeCode.Int32 or TypeCode.UInt32 => orderMembers(members, MemoryMarshal.Cast<byte, uint>(values), type.IsSigned, out isContinuous),
-                TypeCode.Int64 or TypeCode.UInt64 => orderMembers(members, MemoryMarshal.Cast<byte, ulong>(values), type.IsSigned, out isContinuous),
+                TypeCode.SByte or TypeCode.Byte => core(members, values, type.IsSigned, out isContinuous),
+                TypeCode.Int16 or TypeCode.UInt16 => core(members, MemoryMarshal.Cast<byte, ushort>(values), type.IsSigned, out isContinuous),
+                TypeCode.Int32 or TypeCode.UInt32 => core(members, MemoryMarshal.Cast<byte, uint>(values), type.IsSigned, out isContinuous),
+                TypeCode.Int64 or TypeCode.UInt64 => core(members, MemoryMarshal.Cast<byte, ulong>(values), type.IsSigned, out isContinuous),
                 _ => throw new InvalidOperationException(),
             };
 
 
             #region Local Functions
-            static TMember[] orderMembers<TStorage>(TMember[] members, ReadOnlySpan<TStorage> values, bool isSigned, out bool isContinuous)
+            static TMember[] core<TStorage>(TMember[] members, ReadOnlySpan<TStorage> values, bool isSigned, out bool isContinuous)
                 where TStorage : unmanaged, IBinaryInteger<TStorage>, IUnsignedNumber<TStorage>, IMinMaxValue<TStorage>
             {
                 var length = values.Length;

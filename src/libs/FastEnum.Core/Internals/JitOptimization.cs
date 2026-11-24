@@ -4,6 +4,7 @@ using System.Collections.Frozen;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 namespace FastEnumUtility.Internals;
@@ -13,7 +14,7 @@ namespace FastEnumUtility.Internals;
 internal static class JitOptimization
 {
     // note:
-    //  - Methods here are non-generic or generic only over reference types, so they are compiled by JIT only once and shared by all enum types.
+    //  - Initialization here is shared across enum types. It is non-generic or specialized only for reference types and primitive storage types.
 
 
     public static class CaseStringDictionary
@@ -60,62 +61,73 @@ internal static class JitOptimization
         }
 
 
-        public static TMember[] ToOrderedMembers<TMember>(ReadOnlySpan<TMember> members, ReadOnlySpan<ulong> orderKeys, bool isSigned)
+        public static TMember[] ToOrderedMembers<TMember>(TMember[] members, ReadOnlySpan<byte> values, TypeCode type, out bool isContinuous)
             where TMember : class
         {
-            // note:
-            //  - Returns the members sorted by value without duplicated values, same as LINQ .OrderBy().DistinctBy() which keep the first one.
-            //  - It is shared by all enum types because TMember is a reference type, so it is compiled by JIT only once.
-            //  - The members are already sorted by the unsigned magnitude of the values, because they follow Enum.GetValues.
-            //  - For signed types, the negative values (= sign bit is set) come after the non-negative ones, and are sorted among themselves.
-            //  - So the sorted order is [negatives] + [non-negatives]; only rotating them is needed.
-            //  - The same values are next to each other in each part, and never across the parts.
-            //  - So comparing with the previous one in the original order is enough to skip the duplicated values, even at the boundary.
+            // Enum.GetValues sorts by unsigned magnitude. View the existing array as unsigned
+            // storage so each width shares the same ordering code for signed and unsigned enums.
+            return type switch
+            {
+                TypeCode.SByte or TypeCode.Byte => orderMembers(members, values, type.IsSigned, out isContinuous),
+                TypeCode.Int16 or TypeCode.UInt16 => orderMembers(members, MemoryMarshal.Cast<byte, ushort>(values), type.IsSigned, out isContinuous),
+                TypeCode.Int32 or TypeCode.UInt32 => orderMembers(members, MemoryMarshal.Cast<byte, uint>(values), type.IsSigned, out isContinuous),
+                TypeCode.Int64 or TypeCode.UInt64 => orderMembers(members, MemoryMarshal.Cast<byte, ulong>(values), type.IsSigned, out isContinuous),
+                _ => throw new InvalidOperationException(),
+            };
+        }
 
-            var length = orderKeys.Length;
+
+        private static TMember[] orderMembers<TStorage, TMember>(TMember[] members, ReadOnlySpan<TStorage> values, bool isSigned, out bool isContinuous)
+            where TStorage : unmanaged, IBinaryInteger<TStorage>, IUnsignedNumber<TStorage>, IMinMaxValue<TStorage>
+            where TMember : class
+        {
+            var length = values.Length;
             if (length is 0)
-                return [];
+            {
+                isContinuous = false;
+                return members;
+            }
 
-            //--- Find where the negative values start
-            var negativeStart = length;
+            var start = 0;
             if (isSigned)
             {
+                var maxNonNegative = TStorage.MaxValue >> 1;
                 for (var i = 0; i < length; i++)
                 {
-                    if ((long)orderKeys[i] < 0)
+                    if (values[i] > maxNonNegative)
                     {
-                        negativeStart = i;
+                        start = i;
                         break;
                     }
                 }
             }
 
-            //--- Count the unique values
             var count = 1;
             for (var i = 1; i < length; i++)
             {
-                var current = orderKeys[i];
-                var previous = orderKeys[i - 1];
-                if (current != previous)
+                if (values[i] != values[i - 1])
                     count++;
             }
 
-            //--- Copy from the negative values, wrapping around to the non-negative ones
+            var min = values[start];
+            var max = values[start == 0 ? length - 1 : start - 1];
+            // Subtract at storage width so consecutive signed values can cross zero.
+            isContinuous = ulong.CreateTruncating(unchecked(max - min)) == (ulong)(count - 1);
+            if (count == length && start == 0)
+                return members;
+
+            // Rotate the negative values to the front and keep the first member for each value.
             var result = new TMember[count];
             var written = 0;
             for (var i = 0; i < length; i++)
             {
-                var index = negativeStart + i;
+                var index = start + i;
                 if (length <= index)
                     index -= length;
 
-                if (0 < index)  // the first one in the original order has no previous one, and is always unique
-                {
-                    var current = orderKeys[index];
-                    var previous = orderKeys[index - 1];
-                    if (current == previous)
-                        continue;  // duplicated value
-                }
+                if (index > 0 && values[index] == values[index - 1])
+                    continue;
+
                 result[written++] = members[index];
             }
             return result;

@@ -142,10 +142,17 @@ internal static class UnderlyingOperationGeneric<T>
 
 
     #region Nested Types
-    public static class GenericOperation<TNumber, TRange, TWide, TIndex>
-        where TNumber : unmanaged, IBinaryInteger<TNumber>
-        where TRange : unmanaged, IBinaryInteger<TRange>, IUnsignedNumber<TRange>
-        where TWide : unmanaged, IBinaryInteger<TWide>
+    /// <summary>
+    /// Provides the operations for the specified underlying type.
+    /// </summary>
+    /// <typeparam name="TUnderlying">The underlying type of the enum.</typeparam>
+    /// <typeparam name="TUnsigned">The unsigned type of the same size as <typeparamref name="TUnderlying"/>. The subtraction result is truncated to it for the range check.</typeparam>
+    /// <typeparam name="TCompute">The type in which the subtraction is computed. 8/16 bits uses <see cref="int"/>, the same as the C# integer promotion.</typeparam>
+    /// <typeparam name="TIndex">The type of the index to the ordered members. 8/16 bits uses <see cref="nuint"/> to reuse the zero extension as the offset.</typeparam>
+    public static class GenericOperation<TUnderlying, TUnsigned, TCompute, TIndex>
+        where TUnderlying : unmanaged, IBinaryInteger<TUnderlying>
+        where TUnsigned : unmanaged, IBinaryInteger<TUnsigned>, IUnsignedNumber<TUnsigned>
+        where TCompute : unmanaged, IBinaryInteger<TCompute>
         where TIndex : unmanaged, IBinaryInteger<TIndex>, IUnsignedNumber<TIndex>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -161,11 +168,11 @@ internal static class UnderlyingOperationGeneric<T>
                 // note:
                 //  - (min <= val) && (val <= max) is folded into this single unsigned comparison; the subtraction relies on wraparound.
 
-                var min = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(EnumInfo<T>.s_minValue));
-                var max = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(EnumInfo<T>.s_maxValue));
-                var val = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(value));
-                var upper = TRange.CreateTruncating(max - min);
-                var lower = TRange.CreateTruncating(val - min);
+                var min = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(EnumInfo<T>.s_minValue));
+                var max = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(EnumInfo<T>.s_maxValue));
+                var val = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(value));
+                var upper = TUnsigned.CreateTruncating(max - min);
+                var lower = TUnsigned.CreateTruncating(val - min);
                 return lower <= upper;
             }
             else
@@ -182,7 +189,7 @@ internal static class UnderlyingOperationGeneric<T>
             //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
             //  - Integer formatting depends on the culture only for the negative sign, which is the same behavior as System.Enum.ToString().
 
-            var x = Unsafe.BitCast<T, TNumber>(value);
+            var x = Unsafe.BitCast<T, TUnderlying>(value);
 #pragma warning disable IDE0079
 #pragma warning disable CA1305
             return x.ToString()!;
@@ -195,8 +202,8 @@ internal static class UnderlyingOperationGeneric<T>
         public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
         {
             Unsafe.SkipInit(out result);
-            ref var x = ref Unsafe.As<T, TNumber>(ref result);
-            return TNumber.TryParse(text, CultureInfo.InvariantCulture, out x);
+            ref var x = ref Unsafe.As<T, TUnderlying>(ref result);
+            return TUnderlying.TryParse(text, CultureInfo.InvariantCulture, out x);
         }
 
 
@@ -212,9 +219,9 @@ internal static class UnderlyingOperationGeneric<T>
                 //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
                 //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
 
-                var val = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(value));
-                var min = TWide.CreateTruncating(Unsafe.BitCast<T, TNumber>(EnumInfo<T>.s_minValue));
-                var index = TIndex.CreateTruncating(TRange.CreateTruncating(val - min));
+                var val = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(value));
+                var min = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(EnumInfo<T>.s_minValue));
+                var index = TIndex.CreateTruncating(TUnsigned.CreateTruncating(val - min));
                 var members = EnumInfo<T>.s_orderedMembers;
                 if (index < TIndex.CreateTruncating((uint)members.Length))
                 {

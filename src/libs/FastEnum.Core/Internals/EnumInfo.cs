@@ -38,19 +38,19 @@ internal static class EnumInfo<T>
         s_orderedMembers = JitOptimization.EnumInfo.ToOrderedMembers(s_members, MemoryMarshal.AsBytes(s_values), s_typeCode, out s_isContinuous);
         s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
         s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
-        s_isEmpty = s_values.Length is 0;
-        if (!s_isEmpty)
-        {
-            s_minValue = s_orderedMembers[0].Value;
-            s_maxValue = s_orderedMembers[^1].Value;
-        }
-        s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
         if (!s_isContinuous)
         {
             // note:
             //  - It is used only when the values are not continuous; otherwise the lookup indexes s_orderedMembers directly.
             //  - It stays default when continuous. JIT removes the branch to it, because s_isContinuous is static readonly.
             s_memberByValue = EnumKeyDictionary<T, Member<T>>.Create(s_orderedMembers);
+        }
+        s_isEmpty = s_values.Length is 0;
+        s_isFlags = s_type.IsDefined(typeof(FlagsAttribute), true);
+        if (!s_isEmpty)
+        {
+            s_minValue = s_orderedMembers[0].Value;
+            s_maxValue = s_orderedMembers[^1].Value;
         }
 
         #region Local Functions

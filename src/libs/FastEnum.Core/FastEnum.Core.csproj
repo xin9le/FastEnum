@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>FastEnumUtility</RootNamespace>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <!-- NuGet -->

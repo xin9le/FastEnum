@@ -6,32 +6,41 @@ using System.Runtime.CompilerServices;
 
 namespace FastEnumUtility.Internals;
 
+using SByteOperation = UnderlyingOperation.GenericOperation<sbyte, byte, int, nuint>;
+using ByteOperation = UnderlyingOperation.GenericOperation<byte, byte, int, nuint>;
+using Int16Operation = UnderlyingOperation.GenericOperation<short, ushort, int, nuint>;
+using UInt16Operation = UnderlyingOperation.GenericOperation<ushort, ushort, int, nuint>;
+using Int32Operation = UnderlyingOperation.GenericOperation<int, uint, uint, uint>;
+using UInt32Operation = UnderlyingOperation.GenericOperation<uint, uint, uint, uint>;
+using Int64Operation = UnderlyingOperation.GenericOperation<long, ulong, ulong, ulong>;
+using UInt64Operation = UnderlyingOperation.GenericOperation<ulong, ulong, ulong, ulong>;
 
 
-internal static class UnderlyingOperation<T>
-    where T : struct, Enum
+
+internal static class UnderlyingOperation
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetName(T value)
+    public static string? GetName<T>(T value)
+        where T : struct, Enum
     {
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int, nuint>.GetName(value);
+                return SByteOperation.GetName(value);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int, nuint>.GetName(value);
+                return ByteOperation.GetName(value);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int, nuint>.GetName(value);
+                return Int16Operation.GetName(value);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int, nuint>.GetName(value);
+                return UInt16Operation.GetName(value);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint, uint>.GetName(value);
+                return Int32Operation.GetName(value);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint, uint>.GetName(value);
+                return UInt32Operation.GetName(value);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong, ulong>.GetName(value);
+                return Int64Operation.GetName(value);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong, ulong>.GetName(value);
+                return UInt64Operation.GetName(value);
             default:
                 ThrowHelper.ThrowUnexpectedCodeReached();
                 return null;
@@ -40,44 +49,46 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDefined(T value)
+    public static bool IsDefined<T>(T value)
+        where T : struct, Enum
     {
         return EnumInfo<T>.s_typeCode switch
         {
-            TypeCode.SByte => GenericOperation<sbyte, byte, int, nuint>.IsDefined(value),
-            TypeCode.Byte => GenericOperation<byte, byte, int, nuint>.IsDefined(value),
-            TypeCode.Int16 => GenericOperation<short, ushort, int, nuint>.IsDefined(value),
-            TypeCode.UInt16 => GenericOperation<ushort, ushort, int, nuint>.IsDefined(value),
-            TypeCode.Int32 => GenericOperation<int, uint, uint, uint>.IsDefined(value),
-            TypeCode.UInt32 => GenericOperation<uint, uint, uint, uint>.IsDefined(value),
-            TypeCode.Int64 => GenericOperation<long, ulong, ulong, ulong>.IsDefined(value),
-            TypeCode.UInt64 => GenericOperation<ulong, ulong, ulong, ulong>.IsDefined(value),
+            TypeCode.SByte => SByteOperation.IsDefined(value),
+            TypeCode.Byte => ByteOperation.IsDefined(value),
+            TypeCode.Int16 => Int16Operation.IsDefined(value),
+            TypeCode.UInt16 => UInt16Operation.IsDefined(value),
+            TypeCode.Int32 => Int32Operation.IsDefined(value),
+            TypeCode.UInt32 => UInt32Operation.IsDefined(value),
+            TypeCode.Int64 => Int64Operation.IsDefined(value),
+            TypeCode.UInt64 => UInt64Operation.IsDefined(value),
             _ => false,
         };
     }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToNumberString(T value)
+    public static string ToNumberString<T>(T value)
+        where T : struct, Enum
     {
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int, nuint>.ToNumberString(value);
+                return SByteOperation.ToNumberString(value);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int, nuint>.ToNumberString(value);
+                return ByteOperation.ToNumberString(value);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int, nuint>.ToNumberString(value);
+                return Int16Operation.ToNumberString(value);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int, nuint>.ToNumberString(value);
+                return UInt16Operation.ToNumberString(value);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint, uint>.ToNumberString(value);
+                return Int32Operation.ToNumberString(value);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint, uint>.ToNumberString(value);
+                return UInt32Operation.ToNumberString(value);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong, ulong>.ToNumberString(value);
+                return Int64Operation.ToNumberString(value);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong, ulong>.ToNumberString(value);
+                return UInt64Operation.ToNumberString(value);
             default:
                 ThrowHelper.ThrowUnexpectedCodeReached();
                 return null!;
@@ -86,26 +97,27 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+    public static bool TryParseValue<T>(ReadOnlySpan<char> text, out T result)
+        where T : struct, Enum
     {
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int, nuint>.TryParseValue(text, out result);
+                return SByteOperation.TryParseValue(text, out result);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int, nuint>.TryParseValue(text, out result);
+                return ByteOperation.TryParseValue(text, out result);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int, nuint>.TryParseValue(text, out result);
+                return Int16Operation.TryParseValue(text, out result);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int, nuint>.TryParseValue(text, out result);
+                return UInt16Operation.TryParseValue(text, out result);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint, uint>.TryParseValue(text, out result);
+                return Int32Operation.TryParseValue(text, out result);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint, uint>.TryParseValue(text, out result);
+                return UInt32Operation.TryParseValue(text, out result);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong, ulong>.TryParseValue(text, out result);
+                return Int64Operation.TryParseValue(text, out result);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong, ulong>.TryParseValue(text, out result);
+                return UInt64Operation.TryParseValue(text, out result);
             default:
                 result = default;
                 return false;
@@ -114,26 +126,27 @@ internal static class UnderlyingOperation<T>
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
+    public static bool TryGetMember<T>(T value, [NotNullWhen(true)] out Member<T>? result)
+        where T : struct, Enum
     {
         switch (EnumInfo<T>.s_typeCode)
         {
             case TypeCode.SByte:
-                return GenericOperation<sbyte, byte, int, nuint>.TryGetMember(value, out result);
+                return SByteOperation.TryGetMember(value, out result);
             case TypeCode.Byte:
-                return GenericOperation<byte, byte, int, nuint>.TryGetMember(value, out result);
+                return ByteOperation.TryGetMember(value, out result);
             case TypeCode.Int16:
-                return GenericOperation<short, ushort, int, nuint>.TryGetMember(value, out result);
+                return Int16Operation.TryGetMember(value, out result);
             case TypeCode.UInt16:
-                return GenericOperation<ushort, ushort, int, nuint>.TryGetMember(value, out result);
+                return UInt16Operation.TryGetMember(value, out result);
             case TypeCode.Int32:
-                return GenericOperation<int, uint, uint, uint>.TryGetMember(value, out result);
+                return Int32Operation.TryGetMember(value, out result);
             case TypeCode.UInt32:
-                return GenericOperation<uint, uint, uint, uint>.TryGetMember(value, out result);
+                return UInt32Operation.TryGetMember(value, out result);
             case TypeCode.Int64:
-                return GenericOperation<long, ulong, ulong, ulong>.TryGetMember(value, out result);
+                return Int64Operation.TryGetMember(value, out result);
             case TypeCode.UInt64:
-                return GenericOperation<ulong, ulong, ulong, ulong>.TryGetMember(value, out result);
+                return UInt64Operation.TryGetMember(value, out result);
             default:
                 result = default;
                 return false;
@@ -156,12 +169,14 @@ internal static class UnderlyingOperation<T>
         where TIndex : unmanaged, IBinaryInteger<TIndex>, IUnsignedNumber<TIndex>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? GetName(T value)
+        public static string? GetName<T>(T value)
+            where T : struct, Enum
             => TryGetMember(value, out var member) ? member.Name : null;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDefined(T value)
+        public static bool IsDefined<T>(T value)
+            where T : struct, Enum
         {
             if (EnumInfo<T>.s_isContinuous)
             {
@@ -183,7 +198,8 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToNumberString(T value)
+        public static string ToNumberString<T>(T value)
+            where T : struct, Enum
         {
             // note:
             //  - ToString() without IFormatProvider is faster because it goes straight to the digit-formatting fast path and returns cached strings for small values.
@@ -199,7 +215,8 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryParseValue(ReadOnlySpan<char> text, out T result)
+        public static bool TryParseValue<T>(ReadOnlySpan<char> text, out T result)
+            where T : struct, Enum
         {
             Unsafe.SkipInit(out result);
             ref var x = ref Unsafe.As<T, TUnderlying>(ref result);
@@ -208,7 +225,8 @@ internal static class UnderlyingOperation<T>
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetMember(T value, [NotNullWhen(true)] out Member<T>? result)
+        public static bool TryGetMember<T>(T value, [NotNullWhen(true)] out Member<T>? result)
+            where T : struct, Enum
         {
             if (EnumInfo<T>.s_isContinuous)
             {

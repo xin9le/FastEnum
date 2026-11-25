@@ -58,7 +58,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? GetName<T>(T value)
         where T : struct, Enum
-        => UnderlyingOperation<T>.GetName(value);
+        => UnderlyingOperation.GetName(value);
 
 
     /// <summary>
@@ -82,7 +82,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Member<T>? GetMember<T>(T value)
         where T : struct, Enum
-        => UnderlyingOperation<T>.TryGetMember(value, out var member) ? member : null;
+        => UnderlyingOperation.TryGetMember(value, out var member) ? member : null;
     #endregion
 
 
@@ -131,7 +131,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(T value)
         where T : struct, Enum
-        => UnderlyingOperation<T>.IsDefined(value);
+        => UnderlyingOperation.IsDefined(value);
 
 
     /// <summary>
@@ -239,7 +239,7 @@ public static partial class FastEnum
         }
 
         if (StringHelper.IsNumeric(value.At(0)))
-            return UnderlyingOperation<T>.TryParseValue(value, out result);
+            return UnderlyingOperation.TryParseValue(value, out result);
 
         if (ignoreCase)
             return tryParseNameCaseInsensitive(value, out result);
@@ -287,7 +287,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToString<T>(T value)
         where T : struct, Enum
-        => UnderlyingOperation<T>.GetName(value) ?? UnderlyingOperation<T>.ToNumberString(value);
+        => UnderlyingOperation.GetName(value) ?? UnderlyingOperation.ToNumberString(value);
     #endregion
 }
 
@@ -422,7 +422,7 @@ partial class FastEnum
         }
 
         if (StringHelper.IsNumeric(value.At(0)))
-            return UnderlyingOperation<TEnum>.TryParseValue(value, out result);
+            return UnderlyingOperation.TryParseValue(value, out result);
 
         return TBooster.TryParseName(value, ignoreCase, out result);
     }
@@ -441,6 +441,6 @@ partial class FastEnum
     public static string ToString<TEnum, TBooster>(TEnum value)
         where TEnum : struct, Enum
         where TBooster : IFastEnumBooster<TEnum>
-        => TBooster.GetName(value) ?? UnderlyingOperation<TEnum>.ToNumberString(value);
+        => TBooster.GetName(value) ?? UnderlyingOperation.ToNumberString(value);
     #endregion
 }

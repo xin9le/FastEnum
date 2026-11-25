@@ -6,14 +6,14 @@ using System.Runtime.CompilerServices;
 
 namespace FastEnumUtility.Internals;
 
-using SByteOperation = UnderlyingOperation.GenericOperation<sbyte, byte, int, nuint>;
-using ByteOperation = UnderlyingOperation.GenericOperation<byte, byte, int, nuint>;
-using Int16Operation = UnderlyingOperation.GenericOperation<short, ushort, int, nuint>;
-using UInt16Operation = UnderlyingOperation.GenericOperation<ushort, ushort, int, nuint>;
-using Int32Operation = UnderlyingOperation.GenericOperation<int, uint, uint, uint>;
-using UInt32Operation = UnderlyingOperation.GenericOperation<uint, uint, uint, uint>;
-using Int64Operation = UnderlyingOperation.GenericOperation<long, ulong, ulong, ulong>;
-using UInt64Operation = UnderlyingOperation.GenericOperation<ulong, ulong, ulong, ulong>;
+using SByteOperation = UnderlyingOperation.GenericOperation<sbyte, byte, int>;
+using ByteOperation = UnderlyingOperation.GenericOperation<byte, byte, int>;
+using Int16Operation = UnderlyingOperation.GenericOperation<short, ushort, int>;
+using UInt16Operation = UnderlyingOperation.GenericOperation<ushort, ushort, int>;
+using Int32Operation = UnderlyingOperation.GenericOperation<int, uint, uint>;
+using UInt32Operation = UnderlyingOperation.GenericOperation<uint, uint, uint>;
+using Int64Operation = UnderlyingOperation.GenericOperation<long, ulong, ulong>;
+using UInt64Operation = UnderlyingOperation.GenericOperation<ulong, ulong, ulong>;
 
 
 
@@ -161,12 +161,10 @@ internal static class UnderlyingOperation
     /// <typeparam name="TUnderlying">The underlying type of the enum.</typeparam>
     /// <typeparam name="TUnsigned">The unsigned type of the same size as <typeparamref name="TUnderlying"/>. The subtraction result is truncated to it for the range check.</typeparam>
     /// <typeparam name="TCompute">The type in which the subtraction is computed. 8/16 bits uses <see cref="int"/>, the same as the C# integer promotion.</typeparam>
-    /// <typeparam name="TIndex">The type of the index to the ordered members. 8/16 bits uses <see cref="nuint"/> to reuse the zero extension as the offset.</typeparam>
-    public static class GenericOperation<TUnderlying, TUnsigned, TCompute, TIndex>
+    public static class GenericOperation<TUnderlying, TUnsigned, TCompute>
         where TUnderlying : unmanaged, IBinaryInteger<TUnderlying>
         where TUnsigned : unmanaged, IBinaryInteger<TUnsigned>, IUnsignedNumber<TUnsigned>
         where TCompute : unmanaged, IBinaryInteger<TCompute>
-        where TIndex : unmanaged, IBinaryInteger<TIndex>, IUnsignedNumber<TIndex>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? GetName<T>(T value)
@@ -231,26 +229,56 @@ internal static class UnderlyingOperation
             if (EnumInfo<T>.s_isContinuous)
             {
                 // note:
+                //  - The subtraction wraps around within TUnsigned, so its result is the same as the one computed in the wider type and then truncated.
                 //  - The index must not be truncated to int, otherwise 64-bit values wrap around.
-                //  - It is used as the offset as nuint, so no instruction to sign-extend int is needed.
                 //  - 8/16 bits is widened to nuint right after the subtraction, so its zero extension (movzx) is reused as the offset as it is.
                 //  - 32 bits always needs one zero extension. Widening it after the range check puts it only on the path where the member is found.
                 //  - 64 bits stays ulong until the range check, otherwise it would be truncated before the check on 32-bit platforms.
+                //  - Generic math conversions such as nuint.CreateTruncating() are not used, because their large IL uses up the JIT inlining budget in deep call chains such as GetEnumMemberValue().
+                //    Unsafe.SizeOf() is a JIT-time constant, so only one branch is left.
 
-                var val = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(value));
-                var min = TCompute.CreateTruncating(Unsafe.BitCast<T, TUnderlying>(EnumInfo<T>.s_minValue));
-                var index = TIndex.CreateTruncating(TUnsigned.CreateTruncating(val - min));
+                var val = Unsafe.BitCast<T, TUnsigned>(value);
+                var min = Unsafe.BitCast<T, TUnsigned>(EnumInfo<T>.s_minValue);
+                var index = val - min;
                 var members = EnumInfo<T>.s_orderedMembers;
-                if (index < TIndex.CreateTruncating((uint)members.Length))
+                if (Unsafe.SizeOf<TUnsigned>() == sizeof(byte))
                 {
-                    result = members.At(nuint.CreateTruncating(index));
-                    return true;
+                    nuint offset = Unsafe.As<TUnsigned, byte>(ref index);
+                    if (offset < (uint)members.Length)
+                    {
+                        result = members.At(offset);
+                        return true;
+                    }
+                }
+                else if (Unsafe.SizeOf<TUnsigned>() == sizeof(ushort))
+                {
+                    nuint offset = Unsafe.As<TUnsigned, ushort>(ref index);
+                    if (offset < (uint)members.Length)
+                    {
+                        result = members.At(offset);
+                        return true;
+                    }
+                }
+                else if (Unsafe.SizeOf<TUnsigned>() == sizeof(uint))
+                {
+                    var offset = Unsafe.As<TUnsigned, uint>(ref index);
+                    if (offset < (uint)members.Length)
+                    {
+                        result = members.At(offset);
+                        return true;
+                    }
                 }
                 else
                 {
-                    result = null;
-                    return false;
+                    var offset = Unsafe.As<TUnsigned, ulong>(ref index);
+                    if (offset < (uint)members.Length)
+                    {
+                        result = members.At((nuint)offset);
+                        return true;
+                    }
                 }
+                result = null;
+                return false;
             }
             else
             {

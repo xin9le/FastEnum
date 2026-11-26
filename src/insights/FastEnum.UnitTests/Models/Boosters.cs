@@ -71,3 +71,9 @@ public sealed partial class EmptyEnumBooster
 [FastEnum<CaseInsensitiveEnum>]
 public sealed partial class CaseInsensitiveEnumBooster
 { }
+
+
+
+[FastEnum<IgnoreCaseEnum>]
+public sealed partial class IgnoreCaseEnumBooster
+{ }

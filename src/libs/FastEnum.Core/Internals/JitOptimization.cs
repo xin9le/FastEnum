@@ -34,6 +34,94 @@ internal static class JitOptimization
             const int initialSize = 4;
             return Math.Max(size, initialSize);
         }
+
+
+        public static int CalculateShift(int capacity)
+        {
+            // note:
+            //  - The capacity is the power of 2 and at least 4, so the shift is 30 or less and never 32 (C# masks the shift count by 31).
+            return 32 - BitOperations.Log2((uint)capacity);
+        }
+
+
+        public static uint ChooseMultiplier(ReadOnlySpan<int> hashes, int capacity, int shift)
+        {
+            // note:
+            //  - The hash of StringHelper puts the last character in the low bits and the length in the high bits.
+            //    Masking its low bits uses only the last character for a small table (e.g. all names of DayOfWeek end with 'y' and share one bucket).
+            //  - Multiply-shift takes the high bits of the product, which depend on every bit of the hash.
+            //    However, no single multiplier is the best for every set of names, and the keys are fixed on creation, so the best one is searched.
+            //  - The first candidate is 2^shift; (hash * 2^shift) >> shift is the same as masking the low bits, so the total of positions is never larger than with masking.
+            //  - The cost of a lookup that finds the key is the position in the chain, so the total of positions comes first and the longest chain is the tiebreaker.
+            //    The longest chain can still be longer than with masking, so a miss that falls into it may compare more keys.
+            //  - The search ends as soon as all keys get their own bucket.
+
+            const int maxCandidates = 64;
+            var pool = ArrayPool<int>.Shared;
+            var buffer = pool.Rent(capacity);
+            try
+            {
+                var counts = buffer.AsSpan(0, capacity);
+                var best = 1u << shift;
+                var (bestTotal, bestMax) = measure(hashes, best, shift, counts);
+                var candidate = 0x9E3779B9u;  // 2^32 / golden ratio
+                for (var i = 0; i < maxCandidates && bestTotal > hashes.Length; i++)
+                {
+                    var (total, max) = measure(hashes, candidate, shift, counts);
+                    if (total < bestTotal || (total == bestTotal && max < bestMax))
+                    {
+                        best = candidate;
+                        bestTotal = total;
+                        bestMax = max;
+                    }
+                    candidate = nextCandidate(candidate);
+                }
+                return best;
+            }
+            finally
+            {
+                pool.Return(buffer);
+            }
+
+
+            #region Local Functions
+            static (int total, int max) measure(ReadOnlySpan<int> hashes, uint multiplier, int shift, Span<int> counts)
+            {
+                counts.Clear();
+                var total = 0;
+                var max = 0;
+                foreach (var x in hashes)
+                {
+                    var count = ++counts[(int)ToIndex(x, multiplier, shift)];
+                    total += count;
+                    max = Math.Max(max, count);
+                }
+                return (total, max);
+            }
+
+
+            static uint nextCandidate(uint x)
+            {
+                // note:
+                //  - xorshift32. It is deterministic, so the same names always get the same table.
+                //  - Multiplier must be odd.
+
+                x ^= x << 13;
+                x ^= x >> 17;
+                x ^= x << 5;
+                return x | 1;
+            }
+            #endregion
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static nuint ToIndex(int hash, uint multiplier, int shift)
+        {
+            // note:
+            //  - Computed in 32 bits, so the result is zero-extended to the offset for free.
+            return (nuint)(((uint)hash * multiplier) >> shift);
+        }
         #endregion
     }
 

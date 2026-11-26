@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,16 +14,18 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
+    private readonly uint _multiplier;
+    private readonly int _shift;
     #endregion
 
 
     #region Constructors
-    private CaseSensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
+    private CaseSensitiveStringDictionary(Entry[] buckets, int size, uint multiplier, int shift)
     {
         this._buckets = buckets;
         this._size = size;
-        this._indexFor = indexFor;
+        this._multiplier = multiplier;
+        this._shift = shift;
     }
     #endregion
 
@@ -32,25 +35,39 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     {
         var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
-        var indexFor = (uint)(buckets.Length - 1);
+        var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
+        var pool = ArrayPool<int>.Shared;
+        var buffer = pool.Rent(values.Length);
+        uint multiplier;
         var size = 0;
-        foreach (var x in values)
+        try
         {
-            var key = x.Name;
-            var value = x;
-            if (!tryAdd(buckets, key, value, indexFor))
-                ThrowHelper.ThrowDuplicatedKeyExists(key);
-            size++;
+            var hashes = buffer.AsSpan(0, values.Length);
+            for (var i = 0; i < values.Length; i++)
+                hashes[i] = StringHelper.CaseSensitive.GetHashCode(values[i].Name);
+
+            multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
+            for (var i = 0; i < values.Length; i++)
+            {
+                var key = values[i].Name;
+                var value = values[i];
+                if (!tryAdd(buckets, key, value, hashes[i], multiplier, shift))
+                    ThrowHelper.ThrowDuplicatedKeyExists(key);
+                size++;
+            }
+        }
+        finally
+        {
+            pool.Return(buffer);
         }
 
-        return new(buckets, size, indexFor);
+        return new(buckets, size, multiplier, shift);
 
 
         #region Local Functions
-        static bool tryAdd(Entry[] buckets, string key, TValue value, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TValue value, int hash, uint multiplier, int shift)
         {
-            var hash = StringHelper.CaseSensitive.GetHashCode(key);
-            var index = (nuint)((uint)hash & indexFor);
+            var index = JitOptimization.CaseStringDictionary.ToIndex(hash, multiplier, shift);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -94,7 +111,7 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseSensitive.GetHashCode(key);
-        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
+        var index = JitOptimization.CaseStringDictionary.ToIndex(hash, this._multiplier, this._shift);
         var entry = this._buckets.At(index);
         while (entry is not null)
         {
@@ -129,16 +146,18 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Fields
     private readonly Entry[] _buckets;
     private readonly int _size;
-    private readonly uint _indexFor;  // uint, so that the 32-bit masked hash is zero-extended to the offset for free
+    private readonly uint _multiplier;
+    private readonly int _shift;
     #endregion
 
 
     #region Constructors
-    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, uint indexFor)
+    private CaseInsensitiveStringDictionary(Entry[] buckets, int size, uint multiplier, int shift)
     {
         this._buckets = buckets;
         this._size = size;
-        this._indexFor = indexFor;
+        this._multiplier = multiplier;
+        this._shift = shift;
     }
     #endregion
 
@@ -146,26 +165,42 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     #region Factories
     public static CaseInsensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
+        // note:
+        //  - Names that differ only in case are skipped, but they are counted when choosing the multiplier.
+        //    They share the same hash, so they only make the measured chains a bit longer than the real ones.
+
         var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
-        var indexFor = (uint)(buckets.Length - 1);
+        var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
+        var pool = ArrayPool<int>.Shared;
+        var buffer = pool.Rent(values.Length);
+        uint multiplier;
         var size = 0;
-        foreach (var x in values)
+        try
         {
-            var key = x.Name;
-            var value = x;
-            if (tryAdd(buckets, key, value, indexFor))
-                size++;
+            var hashes = buffer.AsSpan(0, values.Length);
+            for (var i = 0; i < values.Length; i++)
+                hashes[i] = StringHelper.CaseInsensitive.GetHashCode(values[i].Name);
+
+            multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (tryAdd(buckets, values[i].Name, values[i], hashes[i], multiplier, shift))
+                    size++;
+            }
+        }
+        finally
+        {
+            pool.Return(buffer);
         }
 
-        return new(buckets, size, indexFor);
+        return new(buckets, size, multiplier, shift);
 
 
         #region Local Functions
-        static bool tryAdd(Entry[] buckets, string key, TValue value, uint indexFor)
+        static bool tryAdd(Entry[] buckets, string key, TValue value, int hash, uint multiplier, int shift)
         {
-            var hash = StringHelper.CaseInsensitive.GetHashCode(key);
-            var index = (nuint)((uint)hash & indexFor);
+            var index = JitOptimization.CaseStringDictionary.ToIndex(hash, multiplier, shift);
             var target = buckets.At(index);
             if (target is null)
             {
@@ -209,7 +244,7 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
     public bool TryGetValue(ReadOnlySpan<char> key, [MaybeNullWhen(false)] out TValue value)
     {
         var hash = StringHelper.CaseInsensitive.GetHashCode(key);
-        var index = (nuint)((uint)hash & this._indexFor);  // mask in 32-bit, then zero-extend (free right after a 32-bit op, unlike sign extension)
+        var index = JitOptimization.CaseStringDictionary.ToIndex(hash, this._multiplier, this._shift);
         var entry = this._buckets.At(index);
         while (entry is not null)
         {

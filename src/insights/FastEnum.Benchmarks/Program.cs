@@ -4,7 +4,12 @@ using FastEnumUtility.Benchmarks.Scenarios;
 
 
 
-var config = BenchmarkConfig.ForDefault();
+// note:
+//  - FASTENUM_BENCH_BASELINE = the 'src/libs' directory of another tree compares it with this one in one run; see BenchmarkConfig.ForComparison().
+var baselineLibs = System.Environment.GetEnvironmentVariable("FASTENUM_BENCH_BASELINE");
+var config = string.IsNullOrEmpty(baselineLibs)
+    ? BenchmarkConfig.ForDefault()
+    : BenchmarkConfig.ForComparison(baselineLibs);
 //var config = BenchmarkConfig.ForShortRun();
 var switcher = new BenchmarkSwitcher(
 [

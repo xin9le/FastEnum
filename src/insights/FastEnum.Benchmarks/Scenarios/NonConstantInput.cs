@@ -26,6 +26,11 @@ public class NonConstantInput
     private string[] _continuousNamesUndefined = null!;
     private string[] _discontinuousNames = null!;
     private string[] _discontinuousNamesLower = null!;
+    private string[] _discontinuousNamesUndefined = null!;
+    private string[] _dayOfWeekNames = null!;
+    private string[] _dayOfWeekNamesLower = null!;
+    private string[] _consoleKeyNamesLower = null!;
+    private Colors[] _colors = null!;
     #endregion
 
 
@@ -51,7 +56,15 @@ public class NonConstantInput
         this._continuousNamesUndefined = this._continuousNames.Select(static x => $"{x}_").ToArray();
         this._discontinuousNames = pick(random, Enum.GetNames<HttpStatusCode>());
         this._discontinuousNamesLower = this._discontinuousNames.Select(static x => x.ToLowerInvariant()).ToArray();
+        this._discontinuousNamesUndefined = this._discontinuousNames.Select(static x => $"{x}_").ToArray();
+        this._dayOfWeekNames = pick(random, Enum.GetNames<DayOfWeek>());
+        this._dayOfWeekNamesLower = this._dayOfWeekNames.Select(static x => x.ToLowerInvariant()).ToArray();
+        this._consoleKeyNamesLower = pick(random, Enum.GetNames<ConsoleKey>()).Select(static x => x.ToLowerInvariant()).ToArray();  // 1-18 chars
+        this._colors = pick(random, Enum.GetValues<Colors>());
 
+        _ = FastEnum.GetMembers<ConsoleKey>();
+        _ = FastEnum.GetMembers<Colors>();
+        _ = FastEnum.GetMembers<DayOfWeek>();
         _ = FastEnum.GetMembers<Fruits>();
         _ = FastEnum.GetMembers<HttpStatusCode>();
         _ = FastEnum.GetMembers<Permissions>();
@@ -226,6 +239,26 @@ public class NonConstantInput
             sum += FastEnum.TryParse<HttpStatusCode>(x, out var result) ? (int)result : 0;
         return sum;
     }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int TryParse_Discontinuous_Undefined()
+    {
+        var sum = 0;
+        foreach (var x in this._discontinuousNamesUndefined)
+            sum += FastEnum.TryParse<HttpStatusCode>(x, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int TryParse_DayOfWeek()
+    {
+        var sum = 0;
+        foreach (var x in this._dayOfWeekNames)
+            sum += FastEnum.TryParse<DayOfWeek>(x, out var result) ? (int)result : 0;
+        return sum;
+    }
     #endregion
 
 
@@ -246,6 +279,90 @@ public class NonConstantInput
         var sum = 0;
         foreach (var x in this._discontinuousNamesLower)
             sum += FastEnum.TryParse<HttpStatusCode>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int TryParseIgnoreCase_DayOfWeek()
+    {
+        var sum = 0;
+        foreach (var x in this._dayOfWeekNamesLower)
+            sum += FastEnum.TryParse<DayOfWeek>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int TryParseIgnoreCase_ConsoleKey()
+    {
+        var sum = 0;
+        foreach (var x in this._consoleKeyNamesLower)
+            sum += FastEnum.TryParse<ConsoleKey>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+    #endregion
+
+
+    #region TryParse (source generator)
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int Booster_TryParse_Discontinuous()
+    {
+        var sum = 0;
+        foreach (var x in this._discontinuousNames)
+            sum += FastEnum.TryParse<HttpStatusCode, HttpStatusCodeBooster>(x, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int Booster_TryParseIgnoreCase_Continuous()
+    {
+        var sum = 0;
+        foreach (var x in this._continuousNamesLower)
+            sum += FastEnum.TryParse<Fruits, FruitsBooster>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int Booster_TryParseIgnoreCase_Discontinuous()
+    {
+        var sum = 0;
+        foreach (var x in this._discontinuousNamesLower)
+            sum += FastEnum.TryParse<HttpStatusCode, HttpStatusCodeBooster>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int Booster_TryParseIgnoreCase_ConsoleKey()
+    {
+        var sum = 0;
+        foreach (var x in this._consoleKeyNamesLower)
+            sum += FastEnum.TryParse<ConsoleKey, ConsoleKeyBooster>(x, ignoreCase: true, out var result) ? (int)result : 0;
+        return sum;
+    }
+    #endregion
+
+
+    #region Attributes
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int GetLabel()
+    {
+        var sum = 0;
+        foreach (var x in this._colors)
+            sum += x.GetLabel(0)!.Length + x.GetLabel(1)!.Length;
+        return sum;
+    }
+
+
+    [Benchmark(OperationsPerInvoke = Count)]
+    public int GetEnumMemberValue()
+    {
+        var sum = 0;
+        foreach (var x in this._continuous)
+            sum += x.GetEnumMemberValue(throwIfNotFound: false)?.Length ?? 0;
         return sum;
     }
     #endregion

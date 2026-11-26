@@ -293,6 +293,9 @@ public enum IgnoreCaseEnum
     Abcdefghijklmno,        // 15
     Abcdefghijklmnop,       // 16
     Abcdefghijklmnopq,      // 17
+    Abcdefghijklmnopqrstuvwx,           // 24
+    Abcdefghijklmnopqrstuvwxyz_01234,   // 32
+    Abcdefghijklmnopqrstuvwxyz_012345,  // 33
     Abcdefghijklmnopqrstuvwxyz_0123456789,
 
     // ASCII only : digit / underscore / all upper / all lower

@@ -9,6 +9,7 @@ var config = BenchmarkConfig.ForDefault();
 var switcher = new BenchmarkSwitcher(
 [
     typeof(EnumMemberAttribute),
+    typeof(EqualsIgnoreCaseByLength),
     typeof(GetName),
     typeof(GetNames),
     typeof(GetValues),

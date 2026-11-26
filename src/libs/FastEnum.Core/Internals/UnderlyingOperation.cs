@@ -71,7 +71,7 @@ internal static class UnderlyingOperation
     public static string ToNumberString<T>(T value)
         where T : struct, Enum
     {
-        switch (EnumInfo<T>.s_typeCode)
+        switch (TypeCodeOf<T>.s_value)
         {
             case TypeCode.SByte:
                 return SByteOperation.ToNumberString(value);
@@ -100,7 +100,7 @@ internal static class UnderlyingOperation
     public static bool TryParseValue<T>(ReadOnlySpan<char> text, out T result)
         where T : struct, Enum
     {
-        switch (EnumInfo<T>.s_typeCode)
+        switch (TypeCodeOf<T>.s_value)
         {
             case TypeCode.SByte:
                 return SByteOperation.TryParseValue(text, out result);
@@ -155,6 +155,35 @@ internal static class UnderlyingOperation
 
 
     #region Nested Types
+    /// <summary>
+    /// Holds only the type code of the enum, apart from <see cref="EnumInfo{T}"/>.
+    /// </summary>
+    public static class TypeCodeOf<T>
+        where T : struct, Enum
+    {
+        // note:
+        //  - ToNumberString() / TryParseValue() need nothing but the type code. They are also used through IFastEnumBooster<T>,
+        //    whose purpose is to avoid the reflection and the tables that the static constructor of EnumInfo<T> builds.
+        //  - Reading EnumInfo<T>.s_typeCode would run that static constructor just to get the type code.
+        //  - This is a static readonly field too, so JIT folds the switch on it into one branch, but only if this class is already initialized when the caller is compiled.
+        //    EnumInfo<T> reads it in its static constructor, so it is always initialized before the members are looked up.
+        //    Otherwise, e.g. ToString() of a defined value never runs ToNumberString(), and the whole switch stays in the code (+1.2 KB, +8% in ToString_Discontinuous).
+        //  - An enum of char or bool (possible in IL, not in C#) fails here, as it fails in the static constructor of EnumInfo<T>,
+        //    so that parsing a number does not return false silently.
+        public static readonly TypeCode s_value = GetSupportedTypeCode(typeof(T));
+    }
+
+
+    /// <remarks>Not generic, so that JIT compiles it only once for all enum types.</remarks>
+    private static TypeCode GetSupportedTypeCode(Type type)
+    {
+        var code = Type.GetTypeCode(type);
+        if (code is < TypeCode.SByte or > TypeCode.UInt64)
+            throw new InvalidOperationException($"The underlying type of {type} is not supported.");
+        return code;
+    }
+
+
     /// <summary>
     /// Provides the operations for the specified underlying type.
     /// </summary>

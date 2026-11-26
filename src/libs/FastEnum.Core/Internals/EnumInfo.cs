@@ -31,7 +31,7 @@ internal static class EnumInfo<T>
     static EnumInfo()
     {
         s_type = typeof(T);
-        s_typeCode = Type.GetTypeCode(s_type);
+        s_typeCode = UnderlyingOperation.TypeCodeOf<T>.s_value;  // initializes it as well; see the note there
         s_names = Enum.GetNames(s_type);
         s_values = Enum.GetValues<T>();
         s_members = toMembers(s_names, s_values);

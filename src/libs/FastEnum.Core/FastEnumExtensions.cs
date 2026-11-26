@@ -237,7 +237,8 @@ public static class FastEnumExtensions
         {
             ArgumentNullException.ThrowIfNull(@this);
 
-            if (@this.Labels.TryGetValue(index, out var label))
+            var label = @this.GetLabelOrUndefined(index);
+            if (!ReferenceEquals(label, JitOptimization.MemberHelper.s_undefinedLabel))
                 return label;
 
             if (throwIfNotFound)

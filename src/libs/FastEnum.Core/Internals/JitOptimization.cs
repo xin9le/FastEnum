@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Frozen;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -578,10 +577,93 @@ internal static class JitOptimization
 
 
         #region Methods
-        public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
-            => field
-            .GetCustomAttributes<LabelAttribute>()
-            .ToFrozenDictionary(static x => x.Index, static x => x.Value);
+        public static object CreateLabels(FieldInfo field)
+        {
+            // note:
+            //  - FrozenDictionary<int, string?> allocated an intermediate Dictionary<,>, its own arrays and an object on creation for each member.
+            //  - Labels are usually indexed from 0 densely, so they are held in an array indexed by the label index (= string?[]); a lookup is a range check and a load.
+            //    The slot of an undefined index holds s_undefinedLabel, because null is a valid label.
+            //  - A negative or large index would make the array sparse, so such labels are held as pairs and searched linearly (= Label[]).
+            //  - The same index twice throws ArgumentException, the same as ToFrozenDictionary() did.
+            //  - No label shares one empty array.
+
+            var attributes = Attribute.GetCustomAttributes(field, typeof(LabelAttribute), inherit: false);
+            if (attributes.Length is 0)
+                return s_noLabels;
+
+            var labels = new Label[attributes.Length];
+            var maxIndex = 0;
+            var isDense = true;
+            for (var i = 0; i < attributes.Length; i++)
+            {
+                var attr = (LabelAttribute)attributes[i];
+                for (var j = 0; j < i; j++)
+                {
+                    if (labels[j].Index == attr.Index)
+                        throw new ArgumentException($"An item with the same key has already been added. Key: {attr.Index}");
+                }
+                labels[i] = new(attr.Index, attr.Value);
+                maxIndex = Math.Max(maxIndex, attr.Index);
+                isDense &= attr.Index >= 0;
+            }
+
+            const int maxDenseLength = 16;
+            if (!isDense || maxIndex >= Math.Max(maxDenseLength, attributes.Length * 2))
+                return labels;
+
+            var dense = new string?[maxIndex + 1];
+            dense.AsSpan().Fill(s_undefinedLabel);
+            foreach (var x in labels)
+                dense[x.Index] = x.Value;
+            return dense;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string? GetLabelOrUndefined(object labels, int index)
+        {
+            // note:
+            //  - Returns s_undefinedLabel instead of `bool TryGetLabel(..., out string? label)`.
+            //    The out parameter takes the address of the local, so JIT keeps it on the stack and the inlined lookup stores / loads / clears it every time.
+
+            if (labels is string?[] dense)
+                return ((uint)index < (uint)dense.Length) ? dense[index] : s_undefinedLabel;
+
+            return getSparse(Unsafe.As<Label[]>(labels), index);
+
+
+            #region Local Functions
+            static string? getSparse(Label[] labels, int index)
+            {
+                foreach (var x in labels)
+                {
+                    if (x.Index == index)
+                        return x.Value;
+                }
+                return s_undefinedLabel;
+            }
+            #endregion
+        }
+        #endregion
+
+
+        #region Fields
+        private static readonly string?[] s_noLabels = [];
+
+        /// <summary>
+        /// Marks that the label of the index is not defined. It is distinguished by reference, because <see langword="null"/> is a valid label.
+        /// </summary>
+        /// <remarks>A new instance, so it is never the same reference as an interned string literal.</remarks>
+        public static readonly string s_undefinedLabel = new('\0', 1);
+        #endregion
+
+
+        #region Nested Types
+        public readonly struct Label(int index, string? value)
+        {
+            public readonly int Index = index;
+            public readonly string? Value = value;
+        }
         #endregion
     }
 }

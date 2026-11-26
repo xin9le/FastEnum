@@ -234,6 +234,12 @@ public enum AnnotationEnum
 
     [Label(null, 2)]
     Four = 4,
+
+    // sparse indexes
+    [Label("負", -1)]
+    [Label("百", 100)]
+    [Label(null, 3)]
+    Eight = 8,
 }
 
 

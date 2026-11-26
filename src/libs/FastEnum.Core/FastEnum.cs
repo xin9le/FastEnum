@@ -143,7 +143,7 @@ public static partial class FastEnum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefined<T>(ReadOnlySpan<char> name)
         where T : struct, Enum
-        => EnumInfo<T>.s_memberByNameCaseSensitive.ContainsKey(name);
+        => EnumInfo<T>.MemberByNameCaseSensitive.s_value.ContainsKey(name);
 
 
     /// <summary>
@@ -251,7 +251,7 @@ public static partial class FastEnum
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool tryParseNameCaseSensitive(ReadOnlySpan<char> name, out T result)
         {
-            if (EnumInfo<T>.s_memberByNameCaseSensitive.TryGetValue(name, out var member))
+            if (EnumInfo<T>.MemberByNameCaseSensitive.s_value.TryGetValue(name, out var member))
             {
                 result = member.Value;
                 return true;
@@ -264,7 +264,7 @@ public static partial class FastEnum
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool tryParseNameCaseInsensitive(ReadOnlySpan<char> name, out T result)
         {
-            if (EnumInfo<T>.s_memberByNameCaseInsensitive.TryGetValue(name, out var member))
+            if (EnumInfo<T>.MemberByNameCaseInsensitive.s_value.TryGetValue(name, out var member))
             {
                 result = member.Value;
                 return true;

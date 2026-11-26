@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using FastEnumUtility.Generators.Internals;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -35,35 +36,35 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 },
                 transform: static (context, cancellationToken) =>
                 {
+                    // note:
+                    //  - The pipeline compares the value with the previous run, and skips the output step if it is equal.
+                    //  - GeneratorAttributeSyntaxContext holds the semantic model, which is new for every compilation (= every keystroke in IDE).
+                    //    Passing it as is made every booster look changed, so all of them were generated and parsed again on every edit.
+                    //  - Only the strings needed for the output are extracted here, into records compared by value.
+                    //    Symbols and syntax nodes are not kept either, so the old compilations are not held by the pipeline.
+
                     cancellationToken.ThrowIfCancellationRequested();
-                    return context;
+                    return BoosterModel.Create(new GenerateParameters(context), cancellationToken);
                 }
             );
-        var parseOptions = context.ParseOptionsProvider;
-        var source = typeDeclarations.Combine(parseOptions);
 
-        context.RegisterSourceOutput(source, static (context, source) =>
+        context.RegisterSourceOutput(typeDeclarations, static (context, model) =>
         {
-            var syntax = source.Left;
-            var options = (CSharpParseOptions)source.Right;
-            var param = new GenerateParameters(syntax, options);
-
-            var diagnostic = Diagnose(param);
-            if (diagnostic is not null)
+            if (model.Diagnostic is not null)
             {
-                context.ReportDiagnostic(diagnostic);
+                context.ReportDiagnostic(model.Diagnostic.ToDiagnostic());
                 return;
             }
 
-            var code = Generate(param);
-            context.AddSource(param.FileName, code);
+            var code = Generate(model);
+            context.AddSource(model.FileName, code);
         });
     }
     #endregion
 
 
     #region Helpers
-    private static Diagnostic? Diagnose(GenerateParameters param)
+    private static DiagnosticModel? Diagnose(GenerateParameters param)
     {
         var containerType = param.ContainerType;
         var enumType = param.EnumType;
@@ -74,7 +75,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             var descriptor = DiagnosticDescriptorProvider.MustBePartial;
             var location = containerType.SyntaxNode.Identifier.GetLocation();
             var args = containerType.TypeName;
-            return Diagnostic.Create(descriptor, location, args);
+            return DiagnosticModel.Create(descriptor, location, args);
         }
 
         //--- Disallow nested type
@@ -83,7 +84,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
             var descriptor = DiagnosticDescriptorProvider.MustNotBeNested;
             var location = containerType.SyntaxNode.Identifier.GetLocation();
             var args = containerType.TypeName;
-            return Diagnostic.Create(descriptor, location, args);
+            return DiagnosticModel.Create(descriptor, location, args);
         }
 
         //--- Allow public or internal only
@@ -91,8 +92,8 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         {
             var descriptor = DiagnosticDescriptorProvider.MustBePublicOrInternal;
             var location = enumType.SyntaxNode.GetLocation();
-            var args = enumType.SyntaxNode.GetText();
-            return Diagnostic.Create(descriptor, location, args);
+            var args = enumType.SyntaxNode.GetText().ToString();
+            return DiagnosticModel.Create(descriptor, location, args);
         }
 
         //--- Generic type argument must be enum type
@@ -100,15 +101,15 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         {
             var descriptor = DiagnosticDescriptorProvider.MustBeEnumType;
             var location = enumType.SyntaxNode.GetLocation();
-            var args = enumType.SyntaxNode.GetText();
-            return Diagnostic.Create(descriptor, location, args);
+            var args = enumType.SyntaxNode.GetText().ToString();
+            return DiagnosticModel.Create(descriptor, location, args);
         }
 
         return null;
     }
 
 
-    private static string Generate(GenerateParameters param)
+    private static string Generate(BoosterModel param)
     {
         var sb = new StringBuilder();
         emitHeader(sb);
@@ -135,7 +136,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitPragmaWarningDisable(StringBuilder sb, GenerateParameters param)
+        static void emitPragmaWarningDisable(StringBuilder sb, BoosterModel param)
         {
             sb.AppendLine("""
 
@@ -144,28 +145,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
                 """);
 
             //--- supports [Obsolete(DiagnosticId = "xxx")]
-            IEnumerable<ISymbol> types = [param.EnumType.TypeSymbol];
-            IEnumerable<ISymbol> fields = param.EnumType.Fields;
-            var diagnosticIds
-                = types
-                .Concat(fields)
-                .SelectMany(static x => x.GetAttributes())
-                .Where(static x =>
-                {
-                    var @class = x.AttributeClass;
-                    return (@class?.ContainingNamespace.MetadataName == typeof(ObsoleteAttribute).Namespace)
-                        && (@class?.MetadataName is nameof(ObsoleteAttribute));
-                })
-                .SelectMany(static x => x.NamedArguments)
-                .Where(static x => x.Key is "DiagnosticId")
-                .Select(static x => x.Value)
-                .Where(static x => x.Type?.SpecialType is SpecialType.System_String)
-                .Select(static x => (string?)x.Value)
-                .Select(static x => x?.Trim())
-                .Where(static x => !string.IsNullOrWhiteSpace(x))
-                .Distinct()
-                .OrderBy(static x => x);
-            foreach (var x in diagnosticIds)
+            foreach (var x in param.EnumType.ObsoleteDiagnosticIds)
                 sb.AppendLine($"#pragma warning disable {x}");
         }
 
@@ -182,7 +162,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitNamespace(StringBuilder sb, GenerateParameters param)
+        static void emitNamespace(StringBuilder sb, BoosterModel param)
         {
             var container = param.ContainerType;
             if (container.IsGlobalNamespace)
@@ -195,7 +175,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitBooster_Start(StringBuilder sb, GenerateParameters param)
+        static void emitBooster_Start(StringBuilder sb, BoosterModel param)
         {
             var container = param.ContainerType;
             var @enum = param.EnumType;
@@ -208,7 +188,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitGetName(StringBuilder sb, GenerateParameters param)
+        static void emitGetName(StringBuilder sb, BoosterModel param)
         {
             var @enum = param.EnumType;
             sb.AppendLine($$"""
@@ -231,7 +211,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitIsDefined_Enum(StringBuilder sb, GenerateParameters param)
+        static void emitIsDefined_Enum(StringBuilder sb, BoosterModel param)
         {
             var @enum = param.EnumType;
             sb.AppendLine($$"""
@@ -255,7 +235,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitIsDefined_String(StringBuilder sb, GenerateParameters param)
+        static void emitIsDefined_String(StringBuilder sb, BoosterModel param)
         {
             var @enum = param.EnumType;
             sb.AppendLine($$"""
@@ -279,7 +259,7 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
         }
 
 
-        static void emitTryParseName(StringBuilder sb, GenerateParameters param)
+        static void emitTryParseName(StringBuilder sb, BoosterModel param)
         {
             var @enum = param.EnumType;
             sb.AppendLine($$"""
@@ -370,10 +350,101 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
 
     #region Nested Types
+    /// <summary>
+    /// Everything the output step needs, compared by value.
+    /// </summary>
+    private sealed record BoosterModel(string FileName, DiagnosticModel? Diagnostic, ContainerModel ContainerType, EnumModel EnumType)
+    {
+        public static BoosterModel Create(GenerateParameters param, CancellationToken cancellationToken)
+        {
+            var container = param.ContainerType;
+            var containerModel = new ContainerModel(container.IsGlobalNamespace, container.Namespace, container.TypeKind, container.TypeName);
+            var diagnostic = Diagnose(param);
+            if (diagnostic is not null)
+                return new(param.FileName, diagnostic, containerModel, new(param.EnumType.TypeName, new([]), new([]), new([])));
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var @enum = param.EnumType;
+            var enumModel = new EnumModel(
+                @enum.TypeName,
+                new(@enum.Fields.Select(static x => new FieldModel(x.Name)).ToArray()),
+                new(@enum.DistinctedFields.Select(static x => new FieldModel(x.Name)).ToArray()),
+                new(getObsoleteDiagnosticIds(@enum)));
+            return new(param.FileName, null, containerModel, enumModel);
+
+
+            #region Local Functions
+            static string[] getObsoleteDiagnosticIds(EnumTypeMetadata @enum)
+            {
+                //--- supports [Obsolete(DiagnosticId = "xxx")]
+                IEnumerable<ISymbol> types = [@enum.TypeSymbol];
+                IEnumerable<ISymbol> fields = @enum.Fields;
+                return types
+                    .Concat(fields)
+                    .SelectMany(static x => x.GetAttributes())
+                    .Where(static x =>
+                    {
+                        var @class = x.AttributeClass;
+                        return (@class?.ContainingNamespace.MetadataName == typeof(ObsoleteAttribute).Namespace)
+                            && (@class?.MetadataName is nameof(ObsoleteAttribute));
+                    })
+                    .SelectMany(static x => x.NamedArguments)
+                    .Where(static x => x.Key is "DiagnosticId")
+                    .Select(static x => x.Value)
+                    .Where(static x => x.Type?.SpecialType is SpecialType.System_String)
+                    .Select(static x => (string?)x.Value)
+                    .Select(static x => x?.Trim())
+                    .Where(static x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .OrderBy(static x => x)
+                    .ToArray()!;
+            }
+            #endregion
+        }
+    }
+
+
+    private sealed record ContainerModel(bool IsGlobalNamespace, string Namespace, string TypeKind, string TypeName);
+
+
+    private sealed record EnumModel(string TypeName, EquatableArray<FieldModel> Fields, EquatableArray<FieldModel> DistinctedFields, EquatableArray<string> ObsoleteDiagnosticIds);
+
+
+    private sealed record FieldModel(string Name);
+
+
+    /// <summary>
+    /// A diagnostic, compared by value.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="Location"/> is kept as is. A location in source equals another one with the same syntax tree and span,
+    /// and the syntax tree of a file stays the same object until the file is edited, so the model still equals the previous one.
+    /// A location created again from the file path would not be in source, and the compiler would ignore
+    /// #pragma warning disable and .editorconfig for the diagnostic.
+    /// </remarks>
+    private sealed record DiagnosticModel(string Id, Location Location, string Argument)
+    {
+        public static DiagnosticModel Create(DiagnosticDescriptor descriptor, Location location, string argument)
+            => new(descriptor.Id, location, argument);
+
+
+        public Diagnostic ToDiagnostic()
+        {
+            var descriptor = this.Id switch
+            {
+                "FE0001" => DiagnosticDescriptorProvider.MustBePartial,
+                "FE0002" => DiagnosticDescriptorProvider.MustNotBeNested,
+                "FE0003" => DiagnosticDescriptorProvider.MustBePublicOrInternal,
+                _ => DiagnosticDescriptorProvider.MustBeEnumType,
+            };
+            return Diagnostic.Create(descriptor, this.Location, this.Argument);
+        }
+    }
+
+
     private sealed class GenerateParameters
     {
         #region Properties
-        public LanguageVersion LanguageVersion { get; }
         public string FileName { get; }
         public ContainerTypeMetadata ContainerType { get; }
         public EnumTypeMetadata EnumType { get; }
@@ -381,14 +452,13 @@ public sealed class FastEnumBoosterGenerator : IIncrementalGenerator
 
 
         #region Constructors
-        public GenerateParameters(GeneratorAttributeSyntaxContext context, CSharpParseOptions parseOptions)
+        public GenerateParameters(GeneratorAttributeSyntaxContext context)
         {
             var containerNode = (TypeDeclarationSyntax)context.TargetNode;
             var containerSymbol = (INamedTypeSymbol)context.TargetSymbol;
             var enumNode = getEnumNode(containerNode);
             var enumSymbol = getEnumSymbol(context);
 
-            this.LanguageVersion = parseOptions.LanguageVersion;
             this.FileName = createFileName(containerSymbol);
             this.ContainerType = new(containerNode, containerSymbol);
             this.EnumType = new(enumNode, enumSymbol);

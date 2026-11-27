@@ -13,6 +13,7 @@ var config = string.IsNullOrEmpty(baselineLibs)
 //var config = BenchmarkConfig.ForShortRun();
 var switcher = new BenchmarkSwitcher(
 [
+    typeof(Corpus),
     typeof(EnumMemberAttribute),
     typeof(EqualsIgnoreCaseByLength),
     typeof(GetName),

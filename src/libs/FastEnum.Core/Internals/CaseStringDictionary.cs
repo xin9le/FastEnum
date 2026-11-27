@@ -36,13 +36,16 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
-        var pool = ArrayPool<int>.Shared;
-        var buffer = pool.Rent(values.Length);
+        int[]? rented = null;
+        var hashes
+            = (values.Length <= JitOptimization.CaseStringDictionary.MaxStackBufferLength)
+            ? stackalloc int[JitOptimization.CaseStringDictionary.MaxStackBufferLength]
+            : (rented = ArrayPool<int>.Shared.Rent(values.Length));
+        hashes = hashes[..values.Length];
         uint multiplier;
         var size = 0;
         try
         {
-            var hashes = buffer.AsSpan(0, values.Length);
             for (var i = 0; i < values.Length; i++)
                 hashes[i] = StringHelper.CaseSensitive.GetHashCode(values[i].Name);
 
@@ -58,7 +61,8 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
         }
         finally
         {
-            pool.Return(buffer);
+            if (rented is not null)
+                ArrayPool<int>.Shared.Return(rented);
         }
 
         return new(buckets, size, multiplier, shift);
@@ -172,13 +176,16 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
         var buckets = new Entry[capacity];
         var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
-        var pool = ArrayPool<int>.Shared;
-        var buffer = pool.Rent(values.Length);
+        int[]? rented = null;
+        var hashes
+            = (values.Length <= JitOptimization.CaseStringDictionary.MaxStackBufferLength)
+            ? stackalloc int[JitOptimization.CaseStringDictionary.MaxStackBufferLength]
+            : (rented = ArrayPool<int>.Shared.Rent(values.Length));
+        hashes = hashes[..values.Length];
         uint multiplier;
         var size = 0;
         try
         {
-            var hashes = buffer.AsSpan(0, values.Length);
             for (var i = 0; i < values.Length; i++)
                 hashes[i] = StringHelper.CaseInsensitive.GetHashCode(values[i].Name);
 
@@ -191,7 +198,8 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         }
         finally
         {
-            pool.Return(buffer);
+            if (rented is not null)
+                ArrayPool<int>.Shared.Return(rented);
         }
 
         return new(buckets, size, multiplier, shift);

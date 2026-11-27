@@ -43,6 +43,17 @@ internal static class JitOptimization
         }
 
 
+        /// <summary>
+        /// The working buffers of up to this length are taken from the stack instead of ArrayPool (2 KB of int).
+        /// </summary>
+        /// <remarks>
+        /// Two buffers are in use at once (the hashes and the counts). The second buffer of the same size returned to ArrayPool&lt;int&gt;.Shared
+        /// does not fit the thread-local slot and makes the pool create its per-core stacks for the size, which it keeps for the process:
+        /// +25 KB retained at the first use of 21 BCL enums, more than the tables themselves cost.
+        /// </remarks>
+        public const int MaxStackBufferLength = 512;
+
+
         public static uint ChooseMultiplier(ReadOnlySpan<int> hashes, int capacity, int shift)
         {
             // note:
@@ -56,11 +67,14 @@ internal static class JitOptimization
             //  - The search ends as soon as all keys get their own bucket.
 
             const int maxCandidates = 64;
-            var pool = ArrayPool<int>.Shared;
-            var buffer = pool.Rent(capacity);
+            int[]? rented = null;
+            var counts
+                = (capacity <= MaxStackBufferLength)
+                ? stackalloc int[MaxStackBufferLength]
+                : (rented = ArrayPool<int>.Shared.Rent(capacity));
+            counts = counts[..capacity];
             try
             {
-                var counts = buffer.AsSpan(0, capacity);
                 var best = 1u << shift;
                 var (bestTotal, bestMax) = measure(hashes, best, shift, counts);
                 var candidate = 0x9E3779B9u;  // 2^32 / golden ratio
@@ -79,7 +93,8 @@ internal static class JitOptimization
             }
             finally
             {
-                pool.Return(buffer);
+                if (rented is not null)
+                    ArrayPool<int>.Shared.Return(rented);
             }
 
 

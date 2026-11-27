@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
@@ -97,14 +97,15 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
     /// <summary>
     /// Gets the labels of specified enumration member.
     /// </summary>
-    internal FrozenDictionary<int, string?> Labels
+    /// <remarks><see cref="T:string?[]"/> indexed by the label index, or <see cref="JitOptimization.MemberHelper.Label"/>[] for sparse indexes.</remarks>
+    internal object Labels
     {
         get
         {
             // note:
             //  - It is used only by GetLabel(), so it is created at the first access instead of the constructor.
             //  - The result is never null (it is empty when no LabelAttribute is defined), so null means "not created yet".
-            //  - Interlocked.CompareExchange() publishes only one dictionary even if multiple threads create it at the same time.
+            //  - Interlocked.CompareExchange() publishes only one array even if multiple threads create it at the same time.
 
             var labels = this._labels;
             if (labels is null)
@@ -115,7 +116,19 @@ public sealed class Member<T> : IMemberValue<T>, IMemberName
             return labels;
         }
     }
-    private FrozenDictionary<int, string?>? _labels;
+    private object? _labels;
+    #endregion
+
+
+    #region Methods
+    /// <summary>
+    /// Gets the label of the specified index.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns>The label, or <see cref="JitOptimization.MemberHelper.s_undefinedLabel"/> if it is not defined.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal string? GetLabelOrUndefined(int index)
+        => JitOptimization.MemberHelper.GetLabelOrUndefined(this.Labels, index);
     #endregion
 
 

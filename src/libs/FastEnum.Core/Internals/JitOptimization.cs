@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Frozen;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -33,6 +32,120 @@ internal static class JitOptimization
             //--- Set minimum size
             const int initialSize = 4;
             return Math.Max(size, initialSize);
+        }
+
+
+        public static int CalculateShift(int capacity)
+        {
+            // note:
+            //  - The capacity is the power of 2 and at least 4, so the shift is 30 or less and never 32 (C# masks the shift count by 31).
+            return 32 - BitOperations.Log2((uint)capacity);
+        }
+
+
+        /// <summary>
+        /// The working buffers of up to this length are taken from the stack instead of ArrayPool (2 KB of int).
+        /// </summary>
+        /// <remarks>
+        /// Two buffers are in use at once (the hashes and the counts). The second buffer of the same size returned to ArrayPool&lt;int&gt;.Shared
+        /// does not fit the thread-local slot and makes the pool create its per-core stacks for the size, which it keeps for the process:
+        /// +25 KB retained at the first use of 21 BCL enums, more than the tables themselves cost.
+        /// <para>
+        /// A method with stackalloc must not have loops: OSR does not support stackalloc, so such a method skips Tier0 and is compiled
+        /// with full optimization at its first call (+2.4 ms of JIT at the first use of 20 BCL enums). The buffer is taken in a method
+        /// without loops and passed to a NoInlining method that has them.
+        /// </para>
+        /// </remarks>
+        public const int MaxStackBufferLength = 512;
+
+
+        public static uint ChooseMultiplier(ReadOnlySpan<int> hashes, int capacity, int shift)
+        {
+            // note:
+            //  - The hash of StringHelper puts the last character in the low bits and the length in the high bits.
+            //    Masking its low bits uses only the last character for a small table (e.g. all names of DayOfWeek end with 'y' and share one bucket).
+            //  - Multiply-shift takes the high bits of the product, which depend on every bit of the hash.
+            //    However, no single multiplier is the best for every set of names, and the keys are fixed on creation, so the best one is searched.
+            //  - The first candidate is 2^shift; (hash * 2^shift) >> shift is the same as masking the low bits, so the total of positions is never larger than with masking.
+            //  - The cost of a lookup that finds the key is the position in the chain, so the total of positions comes first and the longest chain is the tiebreaker.
+            //    The longest chain can still be longer than with masking, so a miss that falls into it may compare more keys.
+            //  - The search ends as soon as all keys get their own bucket.
+
+            int[]? rented = null;
+            var counts
+                = (capacity <= MaxStackBufferLength)
+                ? stackalloc int[MaxStackBufferLength]
+                : (rented = ArrayPool<int>.Shared.Rent(capacity));
+            try
+            {
+                return search(hashes, counts[..capacity], shift);
+            }
+            finally
+            {
+                if (rented is not null)
+                    ArrayPool<int>.Shared.Return(rented);
+            }
+
+
+            #region Local Functions
+            [MethodImpl(MethodImplOptions.NoInlining)]  // has the loops; see MaxStackBufferLength
+            static uint search(ReadOnlySpan<int> hashes, Span<int> counts, int shift)
+            {
+                const int maxCandidates = 64;
+                var best = 1u << shift;
+                var (bestTotal, bestMax) = measure(hashes, best, shift, counts);
+                var candidate = 0x9E3779B9u;  // 2^32 / golden ratio
+                for (var i = 0; i < maxCandidates && bestTotal > hashes.Length; i++)
+                {
+                    var (total, max) = measure(hashes, candidate, shift, counts);
+                    if (total < bestTotal || (total == bestTotal && max < bestMax))
+                    {
+                        best = candidate;
+                        bestTotal = total;
+                        bestMax = max;
+                    }
+                    candidate = nextCandidate(candidate);
+                }
+                return best;
+            }
+
+
+            static (int total, int max) measure(ReadOnlySpan<int> hashes, uint multiplier, int shift, Span<int> counts)
+            {
+                counts.Clear();
+                var total = 0;
+                var max = 0;
+                foreach (var x in hashes)
+                {
+                    var count = ++counts[(int)ToIndex(x, multiplier, shift)];
+                    total += count;
+                    max = Math.Max(max, count);
+                }
+                return (total, max);
+            }
+
+
+            static uint nextCandidate(uint x)
+            {
+                // note:
+                //  - xorshift32. It is deterministic, so the same names always get the same table.
+                //  - Multiplier must be odd.
+
+                x ^= x << 13;
+                x ^= x >> 17;
+                x ^= x << 5;
+                return x | 1;
+            }
+            #endregion
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static nuint ToIndex(int hash, uint multiplier, int shift)
+        {
+            // note:
+            //  - Computed in 32 bits, so the result is zero-extended to the offset for free.
+            return (nuint)(((uint)hash * multiplier) >> shift);
         }
         #endregion
     }
@@ -490,10 +603,93 @@ internal static class JitOptimization
 
 
         #region Methods
-        public static FrozenDictionary<int, string?> CreateLabels(FieldInfo field)
-            => field
-            .GetCustomAttributes<LabelAttribute>()
-            .ToFrozenDictionary(static x => x.Index, static x => x.Value);
+        public static object CreateLabels(FieldInfo field)
+        {
+            // note:
+            //  - FrozenDictionary<int, string?> allocated an intermediate Dictionary<,>, its own arrays and an object on creation for each member.
+            //  - Labels are usually indexed from 0 densely, so they are held in an array indexed by the label index (= string?[]); a lookup is a range check and a load.
+            //    The slot of an undefined index holds s_undefinedLabel, because null is a valid label.
+            //  - A negative or large index would make the array sparse, so such labels are held as pairs and searched linearly (= Label[]).
+            //  - The same index twice throws ArgumentException, the same as ToFrozenDictionary() did.
+            //  - No label shares one empty array.
+
+            var attributes = Attribute.GetCustomAttributes(field, typeof(LabelAttribute), inherit: false);
+            if (attributes.Length is 0)
+                return s_noLabels;
+
+            var labels = new Label[attributes.Length];
+            var maxIndex = 0;
+            var isDense = true;
+            for (var i = 0; i < attributes.Length; i++)
+            {
+                var attr = (LabelAttribute)attributes[i];
+                for (var j = 0; j < i; j++)
+                {
+                    if (labels[j].Index == attr.Index)
+                        throw new ArgumentException($"An item with the same key has already been added. Key: {attr.Index}");
+                }
+                labels[i] = new(attr.Index, attr.Value);
+                maxIndex = Math.Max(maxIndex, attr.Index);
+                isDense &= attr.Index >= 0;
+            }
+
+            const int maxDenseLength = 16;
+            if (!isDense || maxIndex >= Math.Max(maxDenseLength, attributes.Length * 2))
+                return labels;
+
+            var dense = new string?[maxIndex + 1];
+            dense.AsSpan().Fill(s_undefinedLabel);
+            foreach (var x in labels)
+                dense[x.Index] = x.Value;
+            return dense;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string? GetLabelOrUndefined(object labels, int index)
+        {
+            // note:
+            //  - Returns s_undefinedLabel instead of `bool TryGetLabel(..., out string? label)`.
+            //    The out parameter takes the address of the local, so JIT keeps it on the stack and the inlined lookup stores / loads / clears it every time.
+
+            if (labels is string?[] dense)
+                return ((uint)index < (uint)dense.Length) ? dense[index] : s_undefinedLabel;
+
+            return getSparse(Unsafe.As<Label[]>(labels), index);
+
+
+            #region Local Functions
+            static string? getSparse(Label[] labels, int index)
+            {
+                foreach (var x in labels)
+                {
+                    if (x.Index == index)
+                        return x.Value;
+                }
+                return s_undefinedLabel;
+            }
+            #endregion
+        }
+        #endregion
+
+
+        #region Fields
+        private static readonly string?[] s_noLabels = [];
+
+        /// <summary>
+        /// Marks that the label of the index is not defined. It is distinguished by reference, because <see langword="null"/> is a valid label.
+        /// </summary>
+        /// <remarks>A new instance, so it is never the same reference as an interned string literal.</remarks>
+        public static readonly string s_undefinedLabel = new('\0', 1);
+        #endregion
+
+
+        #region Nested Types
+        public readonly struct Label(int index, string? value)
+        {
+            public readonly int Index = index;
+            public readonly string? Value = value;
+        }
         #endregion
     }
 }

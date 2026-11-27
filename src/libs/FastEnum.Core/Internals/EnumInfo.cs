@@ -16,8 +16,6 @@ internal static class EnumInfo<T>
     public static readonly T[] s_values;
     public static readonly Member<T>[] s_members;
     public static readonly Member<T>[] s_orderedMembers;
-    public static readonly CaseSensitiveStringDictionary<Member<T>> s_memberByNameCaseSensitive;
-    public static readonly CaseInsensitiveStringDictionary<Member<T>> s_memberByNameCaseInsensitive;
     public static readonly EnumKeyDictionary<T, Member<T>> s_memberByValue;
     public static readonly T s_minValue;
     public static readonly T s_maxValue;
@@ -31,13 +29,11 @@ internal static class EnumInfo<T>
     static EnumInfo()
     {
         s_type = typeof(T);
-        s_typeCode = Type.GetTypeCode(s_type);
+        s_typeCode = UnderlyingOperation.TypeCodeOf<T>.s_value;  // initializes it as well; see the note there
         s_names = Enum.GetNames(s_type);
         s_values = Enum.GetValues<T>();
         s_members = toMembers(s_names, s_values);
         s_orderedMembers = JitOptimization.EnumInfo.ToOrderedMembers(s_members, MemoryMarshal.AsBytes(s_values), s_typeCode, out s_isContinuous);
-        s_memberByNameCaseSensitive = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
-        s_memberByNameCaseInsensitive = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
         if (!s_isContinuous)
         {
             // note:
@@ -76,6 +72,35 @@ internal static class EnumInfo<T>
             return members;
         }
         #endregion
+    }
+    #endregion
+
+
+    #region Nested Types
+    // note:
+    //  - The lookup tables by name are used only by IsDefined(name) / Parse() / TryParse(), and the case-insensitive one only with ignoreCase.
+    //    They are built at their first use, so an application that only formats values (GetName / ToString / IsDefined(value)) never pays for them.
+    //  - Each lives in its own nested class, because the static constructor of a class is the cheapest lazy initialization:
+    //    Tier1 code compiled after the initialization reads the field as a constant without any check, the same as the fields of EnumInfo<T>.
+    //  - The static constructors are explicit, so the classes are not beforefieldinit.
+    //    JIT may run the static constructor of a beforefieldinit class while compiling a method that refers to it,
+    //    so TryParse() would build both tables even if ignoreCase is never true.
+
+    public static class MemberByNameCaseSensitive
+    {
+        public static readonly CaseSensitiveStringDictionary<Member<T>> s_value;
+
+        static MemberByNameCaseSensitive()
+            => s_value = CaseSensitiveStringDictionary<Member<T>>.Create(s_members);
+    }
+
+
+    public static class MemberByNameCaseInsensitive
+    {
+        public static readonly CaseInsensitiveStringDictionary<Member<T>> s_value;
+
+        static MemberByNameCaseInsensitive()
+            => s_value = CaseInsensitiveStringDictionary<Member<T>>.Create(s_members);
     }
     #endregion
 }

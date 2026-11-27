@@ -178,7 +178,10 @@ internal static class StringHelper
             //
             // Why this is faster:
             //  - `MemoryExtensions.Equals()` isn't inlined and branches on StringComparison every time.
-            //  - Enum names are short, so two overlapping loads cover the whole string without a loop. (4-8 chars: 64 bits x 2 / 8-16 chars: 128 bits x 2)
+            //  - Enum names are short, so overlapping loads cover the whole string without a loop.
+            //    (4-8 chars: 64 bits x 2 / 8-16 chars: 128 bits x 2 / 17-32 chars: 256 bits x 2 or 128 bits x 4)
+            //  - About a fifth of the names of BCL enums are longer than 16 chars. OrdinalIgnoreCase takes 2.6-2.8 ns for 17-32 chars, and this takes 1.6-1.7 ns.
+            //  - Shorter than 4 chars is left to OrdinalIgnoreCase; it was measured as fast as, or faster than, two overlapping 32-bit loads.
 
             var length = ascii.Length;
             if (length != other.Length)
@@ -188,12 +191,36 @@ internal static class StringHelper
             ref var y = ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(other));
             if (length >= 8)
             {
-                if (length <= 16 && Vector128.IsHardwareAccelerated)
+                if (length <= 16)
                 {
-                    var tail = (nuint)(uint)(length - 8) * sizeof(char);
-                    var head = diff128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
-                    var rest = diff128(Vector128.LoadUnsafe(ref x, tail).AsUInt16(), Vector128.LoadUnsafe(ref y, tail).AsUInt16());
-                    return (head | rest) == Vector128<ushort>.Zero;
+                    if (Vector128.IsHardwareAccelerated)
+                    {
+                        var tail = (nuint)(uint)(length - 8) * sizeof(char);
+                        var head = diff128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
+                        var rest = diff128(Vector128.LoadUnsafe(ref x, tail).AsUInt16(), Vector128.LoadUnsafe(ref y, tail).AsUInt16());
+                        return (head | rest) == Vector128<ushort>.Zero;
+                    }
+                }
+                else if (length <= 32)
+                {
+                    if (Vector256.IsHardwareAccelerated)
+                    {
+                        var tail = (nuint)(uint)(length - 16) * sizeof(char);
+                        var head = diff256(Vector256.LoadUnsafe(ref x).AsUInt16(), Vector256.LoadUnsafe(ref y).AsUInt16());
+                        var rest = diff256(Vector256.LoadUnsafe(ref x, tail).AsUInt16(), Vector256.LoadUnsafe(ref y, tail).AsUInt16());
+                        return (head | rest) == Vector256<ushort>.Zero;
+                    }
+                    if (Vector128.IsHardwareAccelerated)
+                    {
+                        const nuint second = 8 * sizeof(char);
+                        var third = (nuint)(uint)(length - 16) * sizeof(char);
+                        var fourth = (nuint)(uint)(length - 8) * sizeof(char);
+                        var a = diff128(Vector128.LoadUnsafe(ref x).AsUInt16(), Vector128.LoadUnsafe(ref y).AsUInt16());
+                        var b = diff128(Vector128.LoadUnsafe(ref x, second).AsUInt16(), Vector128.LoadUnsafe(ref y, second).AsUInt16());
+                        var c = diff128(Vector128.LoadUnsafe(ref x, third).AsUInt16(), Vector128.LoadUnsafe(ref y, third).AsUInt16());
+                        var d = diff128(Vector128.LoadUnsafe(ref x, fourth).AsUInt16(), Vector128.LoadUnsafe(ref y, fourth).AsUInt16());
+                        return (a | b | c | d) == Vector128<ushort>.Zero;
+                    }
                 }
             }
             else if (length >= 4)
@@ -231,6 +258,19 @@ internal static class StringHelper
                 var offset = lower - Vector128.Create((ushort)'a');  // distance from 'a' (wraps around if below 'a')
                 var alphabetCount = Vector128.Create((ushort)26);
                 var letter = Vector128.LessThan(offset, alphabetCount);  // all bits set if 'a' <= lower <= 'z'
+                var caseBit = letter & caseMask;
+                return (ascii ^ other) & ~caseBit;
+            }
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Vector256<ushort> diff256(Vector256<ushort> ascii, Vector256<ushort> other)
+            {
+                var caseMask = Vector256.Create((ushort)0x20);
+                var lower = ascii | caseMask;
+                var offset = lower - Vector256.Create((ushort)'a');  // distance from 'a' (wraps around if below 'a')
+                var alphabetCount = Vector256.Create((ushort)26);
+                var letter = Vector256.LessThan(offset, alphabetCount);  // all bits set if 'a' <= lower <= 'z'
                 var caseBit = letter & caseMask;
                 return (ascii ^ other) & ~caseBit;
             }

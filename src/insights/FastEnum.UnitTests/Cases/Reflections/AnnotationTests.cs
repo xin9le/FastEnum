@@ -75,6 +75,17 @@ public class AnnotationTests
 
         TEnum.Four.GetLabel(2, throwIfNotFound: false).ShouldBeNull();
         TEnum.Four.GetLabel(2, throwIfNotFound: true).ShouldBeNull();
+        TEnum.Four.GetLabel(0, throwIfNotFound: false).ShouldBeNull();
+        Should.Throw<NotFoundException>(static () => TEnum.Four.GetLabel(0, throwIfNotFound: true));
+        Should.Throw<NotFoundException>(static () => TEnum.Four.GetLabel(3, throwIfNotFound: true));
+        Should.Throw<NotFoundException>(static () => TEnum.Four.GetLabel(-1, throwIfNotFound: true));
+
+        TEnum.Eight.GetLabel(-1, throwIfNotFound: true).ShouldBe("負");
+        TEnum.Eight.GetLabel(100, throwIfNotFound: true).ShouldBe("百");
+        TEnum.Eight.GetLabel(3, throwIfNotFound: true).ShouldBeNull();
+        TEnum.Eight.GetLabel(0, throwIfNotFound: false).ShouldBeNull();
+        Should.Throw<NotFoundException>(static () => TEnum.Eight.GetLabel(0, throwIfNotFound: true));
+        Should.Throw<NotFoundException>(static () => TEnum.Eight.GetLabel(99, throwIfNotFound: true));
 
         const TEnum undefined = (TEnum)123;
         undefined.GetLabel(0, throwIfNotFound: false).ShouldBeNull();

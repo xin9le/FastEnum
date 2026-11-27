@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# cmd.exe may fail to find a label for goto / call in a batch file with LF line endings
+*.bat text eol=crlf
+*.ps1 text eol=crlf

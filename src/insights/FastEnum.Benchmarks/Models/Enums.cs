@@ -6,6 +6,31 @@ namespace FastEnumUtility.Benchmarks.Models;
 
 
 
+/// <summary>
+/// Enum whose members have labels.
+/// </summary>
+public enum Colors
+{
+    [Label("red"), Label("#FF0000", 1)]
+    Red,
+    [Label("green"), Label("#00FF00", 1)]
+    Green,
+    [Label("blue"), Label("#0000FF", 1)]
+    Blue,
+    [Label("cyan"), Label("#00FFFF", 1)]
+    Cyan,
+    [Label("magenta"), Label("#FF00FF", 1)]
+    Magenta,
+    [Label("yellow"), Label("#FFFF00", 1)]
+    Yellow,
+    [Label("black"), Label("#000000", 1)]
+    Black,
+    [Label("white"), Label("#FFFFFF", 1)]
+    White,
+}
+
+
+
 [EnumExtensions]
 public enum Fruits : byte
 {

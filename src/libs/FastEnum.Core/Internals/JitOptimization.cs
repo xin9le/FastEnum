@@ -50,6 +50,11 @@ internal static class JitOptimization
         /// Two buffers are in use at once (the hashes and the counts). The second buffer of the same size returned to ArrayPool&lt;int&gt;.Shared
         /// does not fit the thread-local slot and makes the pool create its per-core stacks for the size, which it keeps for the process:
         /// +25 KB retained at the first use of 21 BCL enums, more than the tables themselves cost.
+        /// <para>
+        /// A method with stackalloc must not have loops: OSR does not support stackalloc, so such a method skips Tier0 and is compiled
+        /// with full optimization at its first call (+2.4 ms of JIT at the first use of 20 BCL enums). The buffer is taken in a method
+        /// without loops and passed to a NoInlining method that has them.
+        /// </para>
         /// </remarks>
         public const int MaxStackBufferLength = 512;
 
@@ -66,15 +71,27 @@ internal static class JitOptimization
             //    The longest chain can still be longer than with masking, so a miss that falls into it may compare more keys.
             //  - The search ends as soon as all keys get their own bucket.
 
-            const int maxCandidates = 64;
             int[]? rented = null;
             var counts
                 = (capacity <= MaxStackBufferLength)
                 ? stackalloc int[MaxStackBufferLength]
                 : (rented = ArrayPool<int>.Shared.Rent(capacity));
-            counts = counts[..capacity];
             try
             {
+                return search(hashes, counts[..capacity], shift);
+            }
+            finally
+            {
+                if (rented is not null)
+                    ArrayPool<int>.Shared.Return(rented);
+            }
+
+
+            #region Local Functions
+            [MethodImpl(MethodImplOptions.NoInlining)]  // has the loops; see MaxStackBufferLength
+            static uint search(ReadOnlySpan<int> hashes, Span<int> counts, int shift)
+            {
+                const int maxCandidates = 64;
                 var best = 1u << shift;
                 var (bestTotal, bestMax) = measure(hashes, best, shift, counts);
                 var candidate = 0x9E3779B9u;  // 2^32 / golden ratio
@@ -91,14 +108,8 @@ internal static class JitOptimization
                 }
                 return best;
             }
-            finally
-            {
-                if (rented is not null)
-                    ArrayPool<int>.Shared.Return(rented);
-            }
 
 
-            #region Local Functions
             static (int total, int max) measure(ReadOnlySpan<int> hashes, uint multiplier, int shift, Span<int> counts)
             {
                 counts.Clear();

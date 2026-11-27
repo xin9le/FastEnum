@@ -33,23 +33,34 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
     #region Factories
     public static CaseSensitiveStringDictionary<TValue> Create(ReadOnlySpan<TValue> values)
     {
-        var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
-        var buckets = new Entry[capacity];
-        var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
         int[]? rented = null;
         var hashes
             = (values.Length <= JitOptimization.CaseStringDictionary.MaxStackBufferLength)
             ? stackalloc int[JitOptimization.CaseStringDictionary.MaxStackBufferLength]
             : (rented = ArrayPool<int>.Shared.Rent(values.Length));
-        hashes = hashes[..values.Length];
-        uint multiplier;
-        var size = 0;
         try
         {
+            return build(values, hashes[..values.Length]);
+        }
+        finally
+        {
+            if (rented is not null)
+                ArrayPool<int>.Shared.Return(rented);
+        }
+
+
+        #region Local Functions
+        [MethodImpl(MethodImplOptions.NoInlining)]  // has the loops; see JitOptimization.CaseStringDictionary.MaxStackBufferLength
+        static CaseSensitiveStringDictionary<TValue> build(ReadOnlySpan<TValue> values, Span<int> hashes)
+        {
+            var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
+            var buckets = new Entry[capacity];
+            var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
             for (var i = 0; i < values.Length; i++)
                 hashes[i] = StringHelper.CaseSensitive.GetHashCode(values[i].Name);
 
-            multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
+            var multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
+            var size = 0;
             for (var i = 0; i < values.Length; i++)
             {
                 var key = values[i].Name;
@@ -58,17 +69,10 @@ internal sealed class CaseSensitiveStringDictionary<TValue>
                     ThrowHelper.ThrowDuplicatedKeyExists(key);
                 size++;
             }
-        }
-        finally
-        {
-            if (rented is not null)
-                ArrayPool<int>.Shared.Return(rented);
+            return new(buckets, size, multiplier, shift);
         }
 
-        return new(buckets, size, multiplier, shift);
 
-
-        #region Local Functions
         static bool tryAdd(Entry[] buckets, string key, TValue value, int hash, uint multiplier, int shift)
         {
             var index = JitOptimization.CaseStringDictionary.ToIndex(hash, multiplier, shift);
@@ -173,28 +177,14 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
         //  - Names that differ only in case are skipped, but they are counted when choosing the multiplier.
         //    They share the same hash, so they only make the measured chains a bit longer than the real ones.
 
-        var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
-        var buckets = new Entry[capacity];
-        var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
         int[]? rented = null;
         var hashes
             = (values.Length <= JitOptimization.CaseStringDictionary.MaxStackBufferLength)
             ? stackalloc int[JitOptimization.CaseStringDictionary.MaxStackBufferLength]
             : (rented = ArrayPool<int>.Shared.Rent(values.Length));
-        hashes = hashes[..values.Length];
-        uint multiplier;
-        var size = 0;
         try
         {
-            for (var i = 0; i < values.Length; i++)
-                hashes[i] = StringHelper.CaseInsensitive.GetHashCode(values[i].Name);
-
-            multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
-            for (var i = 0; i < values.Length; i++)
-            {
-                if (tryAdd(buckets, values[i].Name, values[i], hashes[i], multiplier, shift))
-                    size++;
-            }
+            return build(values, hashes[..values.Length]);
         }
         finally
         {
@@ -202,10 +192,28 @@ internal sealed class CaseInsensitiveStringDictionary<TValue>
                 ArrayPool<int>.Shared.Return(rented);
         }
 
-        return new(buckets, size, multiplier, shift);
-
 
         #region Local Functions
+        [MethodImpl(MethodImplOptions.NoInlining)]  // has the loops; see JitOptimization.CaseStringDictionary.MaxStackBufferLength
+        static CaseInsensitiveStringDictionary<TValue> build(ReadOnlySpan<TValue> values, Span<int> hashes)
+        {
+            var capacity = JitOptimization.CaseStringDictionary.CalculateCapacity(values.Length);
+            var buckets = new Entry[capacity];
+            var shift = JitOptimization.CaseStringDictionary.CalculateShift(capacity);
+            for (var i = 0; i < values.Length; i++)
+                hashes[i] = StringHelper.CaseInsensitive.GetHashCode(values[i].Name);
+
+            var multiplier = JitOptimization.CaseStringDictionary.ChooseMultiplier(hashes, capacity, shift);
+            var size = 0;
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (tryAdd(buckets, values[i].Name, values[i], hashes[i], multiplier, shift))
+                    size++;
+            }
+            return new(buckets, size, multiplier, shift);
+        }
+
+
         static bool tryAdd(Entry[] buckets, string key, TValue value, int hash, uint multiplier, int shift)
         {
             var index = JitOptimization.CaseStringDictionary.ToIndex(hash, multiplier, shift);
